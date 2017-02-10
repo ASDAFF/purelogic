@@ -1,7 +1,0 @@
-<?
-if($INCLUDE_FROM_CACHE!='Y')return false;
-$datecreate = '001486557907';
-$dateexpire = '001486561507';
-$ser_content = 'a:2:{s:7:"CONTENT";s:0:"";s:4:"VARS";a:5:{s:48:"tbl_iblock_list_01d5f5794a82577b4006d751e5384ae7";a:4:{s:7:"columns";s:258:"CATALOG_TYPE,NAME,ACTIVE,SORT,TIMESTAMP_X,ID,CATALOG_AVAILABLE,SUBSCRIPTIONS,PROPERTY_449,PROPERTY_255,PROPERTY_256,PROPERTY_257,PROPERTY_258,PROPERTY_259,PROPERTY_260,PROPERTY_261,PROPERTY_262,PROPERTY_263,PROPERTY_444,PROPERTY_264,PROPERTY_445,PROPERTY_448";s:2:"by";s:11:"timestamp_x";s:5:"order";s:4:"desc";s:9:"page_size";s:2:"20";}s:43:"tbl_iblock_a373f313a97e8c4848c080aa59b19d14";a:4:{s:7:"columns";s:78:"NAME,SORT,ACTIVE,ELEMENT_CNT,SECTION_CNT,LID,TIMESTAMP_X,ID,WORKFLOW_TEMPLATES";s:2:"by";s:11:"timestamp_x";s:5:"order";s:4:"desc";s:9:"page_size";s:2:"20";}s:52:"tbl_iblock_el_searche7f823126eefa9f1039401e48ffc7452";a:4:{s:7:"columns";s:49:"ID,TIMESTAMP_X,USER_NAME,ACTIVE,NAME,WF_STATUS_ID";s:2:"by";s:4:"name";s:5:"order";s:3:"asc";s:9:"page_size";s:3:"500";}s:51:"tbl_iblock_element_f906380eca53c404744e9a61977b2e55";a:4:{s:7:"columns";s:119:"CATALOG_TYPE,NAME,ACTIVE,SORT,TIMESTAMP_X,ID,CATALOG_AVAILABLE,CATALOG_PURCHASING_PRICE,CATALOG_GROUP_1,CATALOG_GROUP_2";s:2:"by";s:11:"timestamp_x";s:5:"order";s:4:"desc";s:9:"page_size";s:2:"20";}s:50:"tbl_product_admin_f906380eca53c404744e9a61977b2e55";a:4:{s:7:"columns";s:78:"CATALOG_TYPE,NAME,ACTIVE,SORT,TIMESTAMP_X,ID,CATALOG_AVAILABLE,CATALOG_GROUP_2";s:2:"by";s:11:"timestamp_x";s:5:"order";s:4:"desc";s:9:"page_size";s:2:"20";}}}';
-return true;
-?>
