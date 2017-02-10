@@ -1,0 +1,9 @@
+<?
+require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
+$APPLICATION->SetTitle("Title");
+?><?$APPLICATION->IncludeComponent(
+	"bitrix:sale.basket.basket.line",
+	"",
+Array(),
+false
+);?><br><?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>

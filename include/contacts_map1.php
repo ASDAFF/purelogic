@@ -1,0 +1,2 @@
+<iframe class="voroneg_map" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d39573.56145304386!2d39.2681913!3d51.690084!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x413b2f86984afd9b%3A0xbb761f09acd0b801!2z0L_RgNC-0YHQvy4g0JvQtdC90LjQvdGB0LrQuNC5LCAxNjAsINCS0L7RgNC-0L3QtdC2LCDQktC-0YDQvtC90LXQttGB0LrQsNGPINC-0LHQuy4sINCg0L7RgdGB0LjRjywgMzk0MDYz!5e0!3m2!1sru!2sua!4v1464894034143" width="100%" height="600" frameborder="0" style="border:0" allowfullscreen></iframe>
+	

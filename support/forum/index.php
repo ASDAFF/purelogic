@@ -1,0 +1,87 @@
+<?
+require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
+$APPLICATION->SetTitle("Title");
+?><?$APPLICATION->IncludeComponent(
+	"bitrix:forum", 
+	".default", 
+	array(
+		"AJAX_POST" => "N",
+		"ATTACH_MODE" => array(
+			0 => "NAME",
+		),
+		"ATTACH_SIZE" => "",
+		"CACHE_TIME" => "3600",
+		"CACHE_TIME_FOR_FORUM_STAT" => "3600",
+		"CACHE_TIME_USER_STAT" => "60",
+		"CACHE_TYPE" => "A",
+		"CHECK_CORRECT_TEMPLATES" => "N",
+		"DATE_FORMAT" => "",
+		"DATE_TIME_FORMAT" => "",
+		"EDITOR_CODE_DEFAULT" => "N",
+		"FID" => array(
+		),
+		"FORUMS_PER_PAGE" => "10",
+		"HELP_CONTENT" => "",
+		"IMAGE_SIZE" => "500",
+		"MESSAGES_PER_PAGE" => "10",
+		"NAME_TEMPLATE" => "",
+		"NO_WORD_LOGIC" => "N",
+		"PAGE_NAVIGATION_TEMPLATE" => "",
+		"PAGE_NAVIGATION_WINDOW" => "",
+		"PATH_TO_AUTH_FORM" => "",
+		"RATING_ID" => array(
+		),
+		"RATING_TYPE" => "",
+		"RESTART" => "N",
+		"RULES_CONTENT" => "",
+		"SEF_MODE" => "N",
+		"SEND_MAIL" => "",
+		"SEO_USER" => "",
+		"SEO_USE_AN_EXTERNAL_SERVICE" => "N",
+		"SET_DESCRIPTION" => "N",
+		"SET_NAVIGATION" => "N",
+		"SET_PAGE_PROPERTY" => "N",
+		"SET_TITLE" => "Y",
+		"SHOW_AUTHOR_COLUMN" => "N",
+		"SHOW_AUTH_FORM" => "Y",
+		"SHOW_FIRST_POST" => "N",
+		"SHOW_FORUMS" => "N",
+		"SHOW_FORUM_USERS" => "N",
+		"SHOW_LEGEND" => "N",
+		"SHOW_NAVIGATION" => "N",
+		"SHOW_RATING" => "",
+		"SHOW_STATISTIC_BLOCK" => array(
+		),
+		"SHOW_SUBSCRIBE_LINK" => "N",
+		"SHOW_TAGS" => "Y",
+		"SHOW_VOTE" => "N",
+		"THEME" => "",
+		"TIME_INTERVAL_FOR_USER_STAT" => "",
+		"TMPLT_SHOW_ADDITIONAL_MARKER" => "",
+		"TOPICS_PER_PAGE" => "10",
+		"USER_FIELDS" => array(
+		),
+		"USER_PROPERTY" => array(
+		),
+		"USE_LIGHT_VIEW" => "Y",
+		"USE_NAME_TEMPLATE" => "N",
+		"USE_RSS" => "Y",
+		"WORD_LENGTH" => "",
+		"WORD_WRAP_CUT" => "",
+		"COMPONENT_TEMPLATE" => ".default",
+		"RSS_CACHE" => "undefined",
+		"RSS_TYPE_RANGE" => array(
+			0 => "undefined",
+		),
+		"RSS_COUNT" => "30",
+		"RSS_TN_TITLE" => "undefined",
+		"RSS_TN_DESCRIPTION" => "undefined",
+		"VARIABLE_ALIASES" => array(
+			"FID" => "FID",
+			"TID" => "TID",
+			"MID" => "MID",
+			"UID" => "UID",
+		)
+	),
+	false
+);?><?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>

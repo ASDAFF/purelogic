@@ -1,0 +1,936 @@
+/*==========  Desktop First Method  ==========*/
+
+/* Large Devices, Wide Screens */
+@media only screen and (max-width : 1200px) {
+  body{
+    overflow-x: hidden!important;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  .main_vhod{
+    margin-left: 0;
+  }
+  .obl_podskaz{
+    display: none;
+  }
+  .user_acaunnt.zakaz h2 {
+    display: inline-block;
+    float: left;
+    margin: 0;
+    margin-top: 7px;
+    font-size: 36px;
+  }
+  .icon_but {
+    height: auto;
+  }
+  .user_acaunnt input.user_name{
+    margin-top: 19px;
+    margin-left: 1px;
+  }
+  #user_form > div.radio > div:nth-child(4) > div > p{
+        display: -webkit-box;
+  }
+  .vmeste_wr {
+    width: 22%;
+  }
+  .vmeste_v_korzinu {
+    width: 20%
+  }
+  body > section.user_acaunnt > div > div > div:nth-child(3) > section > div > div{
+    margin-bottom: 623px;
+  }
+  .card_setion_name::after ,.card_setion_name::before{
+    display: none!important;
+  }
+  .ranee_smotreli_slider .owl-nav .owl-next,.slider_novosti .owl-nav .owl-next,.new_slider .owl-nav .owl-next,.video_poduct_slider .owl-nav .owl-next {
+    right: 0
+  }
+  .ranee_smotreli_slider .owl-nav .owl-prev,.slider_novosti .owl-nav .owl-prev,.new_slider .owl-nav .owl-prev,.video_poduct_slider .owl-nav .owl-prev{
+    left: 0
+  }
+  #search .input {
+    width: 177px;
+  }
+  .logo {
+    width: 100%;
+    margin-top: 15px;
+  }
+  .main_vhod a {
+    padding: 5px 5px;
+  }
+  .dostavka_sl h2{
+    font-size: 26px;
+  }
+  ul.topnav li a{
+    line-height: 17px;
+    padding:4px 7px;
+  }
+  ul.topnav span {
+    margin-top: 3px;
+  }
+  ul.topnav.pogergka_menu span,.article{
+    margin-top: 0px;
+  }
+  .topnav> a{
+    line-height: 16px;
+    padding: 5px 0;
+  }
+  .about_a {
+    height: 131px;
+  }
+  
+  .slider_popular .item {
+    width: 100%;
+  }
+  .stanok_slider .owl-nav .owl-next{
+    right: 20px;
+  }
+  .stanok_slider .owl-nav .owl-prev{
+    left: 20px;
+  }
+  .main_logo_menu li a {
+    margin-right: 24px;
+  }
+  .podergka_plitki .main_katalog_img {
+    width: 90%;
+  }
+  body > section.pocupay_vmeste > div > div.vmeste_wr.hidden-sm.hidden-xs > div.vmeste_item::before{
+      content: "="!important;
+    font-size: 40px;
+    padding: 0 14px;
+    background-color: #c7c7c7;
+    color: #fff;
+    position: absolute;
+    right: -47px;
+    top: 41%;
+  }
+  .slider_popular .owl-nav .owl-next {
+    right: -40px;
+  }
+  .slider_popular .owl-nav .owl-prev {
+    left: -40px;
+  }
+  .slider_popular {
+    width: 93%;
+    height: 240px;
+    margin-top: 20px;
+    margin: 25px auto;
+  }
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (max-width : 992px) {
+ h1,
+  .h1 {
+    font-size: 24px;
+  }
+  h2,
+  .h2 {
+    font-size: 22px;
+  }
+  h3,
+  .h3 {
+    font-size: 20px;
+  }
+  h4,
+  .h4 {
+    font-size: 20px;
+  }
+  h5,
+  .h5 {
+    font-size: 16px;
+  }
+  .video_product .section_name h3 {
+    display: inline-table;
+    padding: 1px 15px;
+    margin-bottom: 20px;
+  }
+  .padding-left_0{
+    padding-left: 15px!important;
+  }
+  .padding_0{
+    padding: 0 15px !important;
+  }
+  .icon_soc {
+    float: left;
+    display: inline-block;
+    margin-top: 11px;
+  }
+  body > section.user_acaunnt.zakaz > div > div > div:nth-child(3) > div.zakaz_name > p:nth-child(1),body > section.user_acaunnt.zakaz > div > div > div:nth-child(4) > div.zakaz_name > p:nth-child(1){
+    width: 100%;
+    margin-top: 25px;
+  }
+  .templete_2_wr .togle_clas_tovar{
+    width: 97%;
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+  .recomend_product::before{
+       background-color: #FFF;
+  }
+  .table_td_wr .col-md-1,.table_td_wr .col-md-3 ,.table_td_wr .col-md-2 ,.table_td_wr .col-md-4,.table_td_wr .col-md-5{
+      padding: 10px !important;
+      border-bottom: 1px solid #e6e6e6;
+      text-align: right;
+      padding-left: 36%!important;
+  }
+  .table_wr .a_name_prod {
+    width: auto;
+  }
+  .user_acaunnt input.user_name {
+    margin-top: -8px;
+    margin-left: 16px;
+  }
+  .tovar_wr h4{
+    margin-top: 40px;
+  }
+   .table_wr{
+    border: 1px solid #c7c7c7;
+   }
+  .table_td_wr .col-md-1:before,.table_td_wr .col-md-3:before ,.table_td_wr .col-md-2:before ,.table_td_wr .col-md-4:before,.table_td_wr .col-md-5:before   {
+     content: attr(data-label);
+     display: inline-block; 
+      background-color: #94b82f;
+      text-align: center;
+      color: #fff;
+     width: 35%;
+     height: auto;
+     position: absolute;
+     left: 0
+  }
+  .card_setion_name{
+    margin-top: 15px;
+  }
+  #user_form > div.oplata_sposob > h3{
+    margin-top: 50px;
+  }
+  .recomend_produc_wr{
+    margin-top: 15px;
+  }
+  .table_hd_wr{
+    display: none;
+  }
+  .card .add_in_card input[type="text"]{
+    float: right;
+  }
+
+   .logo {
+    width: 80%;
+    margin-top: 10px;
+  }
+  .header_phone span:nth-child(2) {
+    font-weight: 600;
+    font-size: 13px;
+    margin: 0px 0px;
+  }
+  .header_phone{
+    margin-right: 10px;
+  }
+  .obrat_zvonok a {
+    font-size: 13px;
+    line-height: 1;
+    margin-left: 2px;
+  }
+  .korzina{
+    margin-left: 0;
+  }
+  body > section.main_logo_vhod > div > div > div.col-md-9.col-lg-8.col-sm-6.col-xs-7 > div > a.hidden-xs{
+    margin-left: 20px;
+  }
+  .vspomnit_parol{
+      margin-left: 20px;
+  }
+   section.main_katalog > div.section_name{
+      display: none!important;
+    }
+    .topnav{
+      display: none;
+    }
+    .topnav_adapt{
+      display: none;
+    }
+    ul.topnav_adapt li a {
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 10px;
+      padding: 4px 22px 4px;
+      text-decoration: none;
+      line-height: 19px;
+      position: relative;
+  }
+  .about_a img {
+    width: 30%;
+    height: auto;
+    display: table;
+    margin: 13% auto 13%;
+  }
+  .main_logo_menu li a {
+    margin-right: 19px;
+    font-size: 19px;
+  }
+  ul.topnav{
+    margin-bottom: 20px;
+  }
+  .contacts .togle_wr p{
+    line-height: 67px;
+  }
+  .contacts,.kompany,.product,.catalog_spisok,.video_wr ,.donwload,.news,.main_video,.new_detail,.kat_wr_catalog_main, .catalog_categories_wr,.kak_zakaz{
+    margin-top:0;
+  }
+  .map_name span {
+    font-size: 23px;
+    margin: 6px 10px;
+  }
+  .product_slider{
+    margin-top: 20px;
+  }
+  .map_name h3 {
+    font-size: 23px;
+  }
+  #user_form > div.radio > div:nth-child(4) > div > input[type="radio"]{
+        margin-top: -1px;
+    margin-left: -18px;
+  }
+  #user_form > div.oplata_sposob > div.col-md-5.col-xs-12.padding-left_0 > ul.oplata_icon{
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+  #user_form > div.oplata_sposob > p:nth-child(5){
+    padding-left: 15px;
+  }
+  .vmeste_wr {
+    width: 32%;
+  }
+  .vmeste_v_korzinu {
+    width: 23%;
+  }
+  .user_header{
+    margin-left: 25px;
+  }
+  body > section.pocupay_vmeste > div > div:nth-child(3) > div.vmeste_item::before{
+      content: "="!important;
+    font-size: 40px;
+    padding: 0 14px;
+    background-color: #c7c7c7;
+    color: #fff;
+    position: absolute;
+    right: -47px;
+    top: 41%;
+  }
+  .ser_img_wr img {
+       border-radius: inherit!important;
+    width: 100%;
+    opacity: 1;
+    height: auto;
+  }
+  .ser_img_wr {
+    display: table;
+    width: 100%;
+    margin: 0 auto;
+    margin-bottom: 23px;
+  }
+  .primer_service img {
+    width: auto;
+    height: auto;
+    margin-top: 24px;
+    display: inline-block;
+  }
+  .nygnyytovar_wr .nugniy_tovar {
+    width: 100%;
+    height: auto; 
+    margin-top: 35px;
+  }
+  .templete_2_wr {
+    margin-top: 0px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  .icon_but{
+    
+    height: auto;
+    
+  }
+  .main_vhod a:first-child {
+    margin-right: -4px;
+  }
+  body > header > div > div > div.col-md-7.col-lg-6.col-sm-4.col-xs-6.padding_left_xs_0 > div > div.col-md-3.col-lg-3.col-sm-8.col-xs-6 > a{
+    margin-left: 0;
+  }
+  #user_form > div:nth-child(19) > div.col-md-8.padding-left_0,#user_form > div:nth-child(20) > div:nth-child(2),#user_form > div:nth-child(20) > div:nth-child(1){
+    padding: 0!important;
+  }
+  #user_form > div:nth-child(19) > div.col-md-4.padding-left_0{
+    padding: 0!important;
+  }
+  #user_form > div.col-md-3.col-sm-12 > div.col-md-8.col-sm-7.padding-left_0 > input[type="text"],#user_form > div.col-md-2.col-sm-12 > div.col-md-6.col-sm-7.padding_0 > input[type="text"]{
+        width: 97%;
+    margin-left: 12px;
+
+  }
+  
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+	#breadcrumbs-two {
+    overflow: initial; 
+    width: 100%;
+    margin-left: -5px;
+  }
+  .user_acaunnt input.user_name {
+    margin-top: 13px;
+    margin-left: 1px;
+    width: 100%;
+  }
+  .time_ucaunt p{
+    width: 100%;
+  }
+  body > section.user_acaunnt > div > div > div.col-md-8 > div > span{
+    display: none;
+  }
+  .skidka_wr {
+    width: 182px;
+  }
+  .recomend_produc_wr{
+    margin-right: 0;
+  }
+  .new_slider .owl-nav .owl-next,.new_slider .owl-nav .owl-prev{display: none!important;}
+  .select_language .wSelect-theme-classic.wSelect {
+    color: #fff;
+    background-color: #333;
+    font-size: 14px;
+    line-height: 17px;
+    width: 37px!important;
+    font-weight: 500;
+    margin-top: 9px;
+  }
+  .select_language .wSelect-selected {
+    padding: 4px 0 1.5px 9px;
+  }
+  .icon_korzina {
+    width: 34px;
+    height: 25px;
+    background-image: url(../img/icon/korzina.png);
+    background-color: #333;
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-position: center;
+    float: left;
+    margin-right: 0px;
+    border: 1px solid rgba(255, 255, 255, 0.67);
+    margin-top: -1px;
+  }
+  .search_sm {
+    font-size: 23px;
+    color: #333;
+    margin: 6px  0 0 0;
+    display: inline-block;
+  }
+  #breadcrumbs-two li {
+    float: left;
+    margin: 0px 4px 0 3px;
+  }
+  #breadcrumbs-two a {
+     background: none;
+    padding: 2px 2px;
+    float: left;
+    text-decoration: none;
+    color: #94b82f;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+    
+    margin-bottom: 7px;
+    font-weight: 400;
+  }
+  #breadcrumbs-two li:first-child> a {
+        margin-left: -15px;
+  }
+  #breadcrumbs-two a::after{
+    display: none;
+  }
+  #breadcrumbs-two a::before {
+    content: "/";
+    position: absolute;
+    margin-top: 0;
+     border-width: none;
+     border-color: none;
+    border-width:none; 
+     border-style: none;
+    left: -6px;
+    top: 3px;
+  }
+  .pogergka_menu{
+    display: none;
+  }
+  .advensed_fiback {
+    margin-top: 0px;
+  }
+  ul.topnav{
+    margin-bottom: 20px;
+  }
+  .recomend_product::before{
+       background-color: #FFF;
+  }
+  .icon_text_news {
+    margin-top: 16px;
+  }
+  .novosti_slider h2{
+    font-size: 30px;
+  }
+
+	/*Disable Animation on Mobile Devices*/
+	.animated {
+		/*CSS transitions*/
+		-o-transition-property: none !important;
+		-moz-transition-property: none !important;
+		-ms-transition-property: none !important;
+		-webkit-transition-property: none !important;
+		transition-property: none !important;
+		/*CSS transforms*/
+		-o-transform: none !important;
+		-moz-transform: none !important;
+		-ms-transform: none !important;
+		-webkit-transform: none !important;
+		transform: none !important;
+		/*CSS animations*/
+		-webkit-animation: none !important;
+		-moz-animation: none !important;
+		-o-animation: none !important;
+		-ms-animation: none !important;
+		animation: none !important;
+	}
+  h1,
+  .h1 {
+    font-size: 25px;
+  }
+  h2,
+  .h2 {
+    font-size: 22px;
+  }
+
+  .icon_wr_sm{
+    display: flex;
+    width: auto;
+    float: right;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+  .select_language{
+    width: 0;
+  }
+    .padding_left_xs_0{
+      padding-left: 0;
+    }
+    .header_phone span:nth-child(2) {
+     font-weight: 600;
+     font-size: 18px;
+    } 
+    .footer_social p{
+      text-align: left;
+    }
+    .social_icon{
+      float: left;
+    }
+    .nugniy_tovar h2{
+      font-size: 24px;
+    }
+    .section_name h3 {
+      display: inline-table;
+      padding: 0px 20px;
+    }
+    .about_a img {
+    width: 65%;
+    height: auto;
+    display: table;
+    margin: 20% auto 10%;
+  }
+  .main_logo_menu ul>li{
+    width: 100%;
+
+  }
+  .main_logo_menu ul>li>a {
+    float: left;
+    display: inline-block;
+    width: 100%;
+    padding: 10px;
+    background-color: #94b82f;
+    padding-left: 27px;
+    
+  }
+  .main_logo_menu ul>li>a:hover{
+    color: #333;
+  }
+  .main_logo_menu .black_bg a{
+    background-color: #333;
+    color: #fff;
+   
+  }
+  .main_logo_menu .black_bg a:hover{
+    color: #94b82f;
+  }
+  .padding-xs-0{
+    padding: 0!important;
+  }
+  .main_logo .logo {
+    width: 263px;
+    display: inline-block;
+    margin-top: 25px;
+    float: left;
+  }
+  .main_logo_menu{
+    display: none;
+  }
+  .name_section {
+    width: 100%;
+    margin: 10px 0;
+    font-size: 26px;
+    font-weight: 500;
+  }
+  .vmeste_wr {
+    width: 100%;
+    margin-bottom: 64px;
+  }
+  .vmeste_item::before {
+    content: "+";
+    font-size: 40px;
+    padding: 0 14px;
+    background-color: #c7c7c7;
+    color: #fff;
+    position: absolute;
+    right: 50%;
+    top: inherit;
+    z-index: 2;
+    margin-bottom: 8px;
+    bottom: -110px;
+  }
+  body > section.pocupay_vmeste > div > div:nth-child(3) > div.vmeste_item::before{
+      content: "="!important;
+     font-size: 40px;
+    padding: 0 14px;
+    background-color: #c7c7c7;
+    color: #fff;
+    position: absolute;
+    right: 50%;
+    top: inherit;
+    z-index: 2;
+    margin-bottom: 8px;
+    bottom: -136px;
+  }
+  .vmeste_v_korzinu {
+    width: 99%;
+    height: 152px;
+    z-index: 10
+  }
+  .primer_service img {
+    width: 100%;
+    height: auto;
+    margin-top: 24px;
+    display: inline-block;
+  }
+  .vmeste_v_korzinu a{
+    margin-top: 20px;
+  }
+  .vmeste_v_korzinu a {
+    display: table;
+    width: 49%;
+    margin: 28px auto 0;
+  }
+  body > section.product > div > div > div.col-md-8 > div.col-md-8.col-sm-8 > h5{
+    margin-top: 20px;
+  }
+  .pocupay_vmeste::before {
+    display: none!important;
+  }
+  .vmeste_wr,.vmeste_item {
+    margin-right: 0px;
+  }
+  .tovar_wr h4{
+    margin-top: 15px;
+  }
+  
+  .user_acaunnt #breadcrumbs-two{
+      width: 100%;
+      display: inline-block;
+  }
+  #user_form > div.col-md-3.col-sm-12 > div.col-md-8.col-sm-7.padding-left_0 > input[type="text"],#user_form > div.col-md-2.col-sm-12 > div.col-md-6.col-sm-7.padding_0 > input[type="text"]{
+        width: 100%;
+    margin-left: 0px;
+
+  }
+  .slider_popular .owl-nav .owl-next {
+    display: none!important;
+  }
+  .slider_popular .owl-nav .owl-prev {
+    display: none!important;
+  }
+  body > section.user_acaunnt > div > div > div:nth-child(3) > section > div > div,body > section.user_acaunnt > div > div > div:nth-child(4) > section > div > div {
+    margin-bottom: 10px;
+    width: 188px;
+    text-align: center;
+    display: table;
+    padding-right: 22px;
+    margin: 10px auto 34px;
+  }
+}
+@media only screen and (max-width : 730px) {
+  .logo {
+    width: 100%;
+    margin-top: 15px;
+  }
+  .stanok_slider .item {
+    width: 100%;
+    height: 572px;
+  }
+  .stanok_slider{
+    width: 100%;
+    height: 572px;
+  }
+
+}
+
+@media only screen and (max-width : 601px) {
+  .slider_popular .item {
+        width: 100%;
+  }
+  .vspomnit_parol{
+    display: none!important;
+  }
+  .stanok_slider {
+    width: 100%;
+    height: 400px;
+  }
+  .stanok_slider .item {
+    width: 100%;
+    height: 400px;
+  }
+  .video_prod_nav>li>a {
+    display: inline-block;
+    font-size: 20px;
+    margin-right: 8px;
+  }
+  .video_prod_nav>li>.active_prod{
+    margin-top: -6px;
+    margin-right: 3px;
+  }
+}
+/* --------------------------------------------------------------------- 480px ------------------------------------------*/
+@media only screen and (max-width : 480px) {
+  h1,
+  .h1 {
+    font-size: 18px;
+  }
+  h2,
+  .h2 {
+    font-size: 22px;
+  }
+  h3,
+  .h3 {
+    font-size: 14px;
+  }
+  p{
+    font-size: 13px;
+  }
+
+  .name_section {
+    width: 100%;
+    margin: 10px 0;
+    font-size: 21px;
+    font-weight: 500;
+  }
+  #user_form .oplata_sposob .oplata_icon li {
+   
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    margin-right: 4px;
+  }
+
+  .table_td_wr .col-md-1:before,.table_td_wr .col-md-3:before ,.table_td_wr .col-md-2:before ,.table_td_wr .col-md-4:before,.table_td_wr .col-md-5:before   {
+    
+     width: 35%;
+   
+  }
+  .slider_popular .owl-nav .owl-next,.stanok_slider .owl-nav .owl-next,.slider_novosti .owl-nav .owl-next {
+    display: none!important;
+  }
+  .slider_popular .owl-nav .owl-prev,.stanok_slider .owl-nav .owl-prev,.slider_novosti .owl-nav .owl-prev {
+    display: none!important;
+  }
+
+  .pad_sm_0{
+    padding: 0px;
+  }
+  .logo {
+    width: 100%;
+    margin-top: 20px;
+  }
+  .main_logo .logo {
+    width: 170px;
+    display: inline-block;
+    margin-top: 35px;
+    float: left;
+  }
+  .map_name span {
+    font-size: 17px;
+    margin: 6px 5px;
+  }
+  .map_name h3 {
+    font-size: 17px;
+  }
+  .vmeste_v_korzinu a {
+    display: inline-block;
+    width: 92%;
+  }
+  .vid_wr{
+  display: inline-block;
+  width: 100%;
+  height: 250px;
+  margin-top:20px;
+  margin-bottom:20px;
+}
+.vid_wr iframe{
+  display: inline-block;
+  width: 100%;
+  height: 250px;
+}
+body > section.pocupay_vmeste > div > div:nth-child(3) > div.vmeste_item::before {
+    content: "="!important;
+    font-size: 40px;
+    padding: 0 14px;
+    background-color: #c7c7c7;
+    color: #fff;
+    position: absolute;
+    right: 42%;
+    top: inherit;
+    z-index: 2;
+    margin-bottom: 8px;
+    bottom: -136px;
+}
+} 
+@media only screen and (max-width : 410px) {
+  .header_phone span:nth-child(2) {
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .user_head{
+    margin-left: 0;
+  }
+  
+   .logo {
+    width: 100%;
+    margin-top: 20px;
+  }
+  .icon_phone_header {
+    width: 19px;
+  }
+  .search_sm {
+    margin: 7px 20px 0 0px;
+  }
+  .main_vhod a {
+    padding: 4px 3px;
+    font-size: 12px;
+  }
+  .main_vhod a:first-child {
+    margin-right: 9px;
+  }
+  .stanok_slider .item {
+    width: 100%;
+    height: 270px;
+  }
+  .stanok_slider {
+    width: 100%;
+    height: 270px;
+  }
+  .social_icon li a {
+    font-size: 23px;
+  }
+  .social_icon li .vk img {
+    width: 30%;
+  }
+  .social_icon li .pen img {
+    width: 41%;
+  }
+  .social_icon li a{
+    padding: 8px 11px;
+  }
+  .social_icon li .fs {
+    padding: 8px 15px;
+  }
+  .social_icon li .vk{
+   padding:9px;
+
+    width: 52px;
+    height: 47px;
+   
+    position: relative;
+  }
+  .pen_icon,.vk_icon{
+    height: 25px;
+  }
+  .social_icon li .pen{
+    padding:8px;
+
+    width: 52px;
+    height: 47px;
+   
+    position: relative;
+  }
+  .video_prod_nav>li>a {
+    display: inline-block;
+    font-size: 18px;
+    margin-right: 5px;
+  }
+  .time_ucaunt p {
+    margin: 0;
+    font-size: 9px;
+    display: inline-block;
+    float: left;
+  }
+  .user_header{
+    margin-left: 10px;
+  }
+  .vmeste_item::before{
+    right: 40%;
+  }
+}
+@media only screen and (max-width : 360px) {
+  .logo {
+    width: 114%;
+    margin-top: 23px;
+  }
+
+}
+
+/* Custom, iPhone Retina */
+@media only screen and (max-width : 320px) {
+
+}
+
+
+/*==========  Mobile First Method  ==========*/
+
+/* Custom, iPhone Retina */
+@media only screen and (min-width : 320px) {
+
+}
+
+/* Extra Small Devices, Phones */
+@media only screen and (min-width : 480px) {
+
+}
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px) {
+
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (min-width : 992px) {
+
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (min-width : 1200px) {
+
+}
