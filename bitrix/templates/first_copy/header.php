@@ -66,8 +66,8 @@ $(this).append($("#"+$(this).attr("data-id")));
     $(".topnav, .lftnnv").accordion({
         accordion:false,
         speed: 10,
-        closedSign: '>',
-        openedSign: '^' 
+        closedSign: '+',
+        openedSign: '-'
     });
 });
 </script>

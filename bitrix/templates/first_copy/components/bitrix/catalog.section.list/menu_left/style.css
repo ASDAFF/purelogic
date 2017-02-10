@@ -68,12 +68,6 @@
     padding: 0px;
     margin: 0px 0px 0 8px!important;
 }
-.its_first_perents_l li ul li a{
-    text-decoration: underline;
-}
-.its_second_perents_l li ul li a{
-    text-decoration: underline;
-}
 
 .its_first_l>li ul li:hover > a {
     background: #8FBB3F;

@@ -28,10 +28,13 @@
  		$this.find("li").each(function() {
  			if($(this).find("ul").size() != 0){
  				//add the multilevel sign next to the link
-				if(!$(this).find("a:first").parent().hasClass("selected"))
- 				$(this).find("a:first").parent().prepend("<span>"+ opts.closedSign +"</span>");
- 				else
-				$(this).find("a:first").parent().prepend("<span>"+ opts.openedSign +"</span>");
+				if(!$(this).find("a:first").parent().hasClass("selected")){
+					$(this).find("a:first").parent().prepend("<span style='cursor: pointer;text-decoration: underline;'>" + opts.closedSign + "</span>");
+					$(this).find("span:first").text(opts.closedSign + " " + $(this).find("a:first").text());
+					$(this).find("a:first").remove();
+				}else {
+					$(this).find("a:first").parent().prepend("<span style='cursor: pointer;text-decoration: underline;'>" + opts.openedSign + "</span>");
+				}
  				//avoid jumping to the top of the page when the href is an #
  				if($(this).find("a:first").attr('href') == "#"){
  		  			$(this).find("a:first").click(function(){return false;});
@@ -48,6 +51,7 @@
   		$this.find("li span").click(function() {
   			if($(this).parent().find("ul").size() != 0){
   				if(opts.accordion){
+
   					//Do nothing when the list is open
   					if(!$(this).parent().find("ul").is(':visible')){
   						parents = $(this).parent().parents("ul");
@@ -61,6 +65,7 @@
   								}
   							});
   							if(close){
+
   								if($(this).parent().find("ul") != visible[visibleIndex]){
   									$(visible[visibleIndex]).slideUp(opts.speed, function(){
   										$(this).parent("li").find("span:first").html(opts.closedSign);
@@ -71,9 +76,11 @@
   						});
   					}
   				}
+
+
   				if($(this).parent().find("ul:first").is(":visible")){
   					$(this).parent().find("ul:first").slideUp(opts.speed, function(){
-  						$(this).parent("li").find("span:first").delay(opts.speed).html(opts.closedSign);
+  						$(this).parent("li").find("span:first").delay(opts.speed).html(opts.closedSign + " " + $(this).parent("li").find("span:first").text().slice(1));
   					});
 
 					$('.its_second_perents_l > li').click(function() {
@@ -84,7 +91,7 @@
   					
   				}else{
   					$(this).parent().find("ul:first").slideDown(opts.speed, function(){
-  						$(this).parent("li").find("span:first").delay(opts.speed).html(opts.openedSign);
+  						$(this).parent("li").find("span:first").delay(opts.speed).html(opts.openedSign + " " + $(this).parent("li").find("span:first").text().slice(1));
   					});
 
 					$('.its_second_perents_l > li').click(function(){

@@ -1490,3 +1490,7 @@ header{height:100px;}
 .new_left_menu{
     position: relative;
 }
+
+span{
+    font-family: 'DINPro', sans-serif;
+}
