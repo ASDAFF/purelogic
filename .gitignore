@@ -4,3 +4,4 @@ bitrix/.settings.php
 .idea/*
 bitrix/managed_cache/*
 bitrix/cache/*
+bitrix/stack_cache/*
