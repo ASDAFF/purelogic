@@ -1,3 +1,4 @@
 upload/*
 bitrix/php_interface/*
 bitrix/.settings.php
+.idea/*
