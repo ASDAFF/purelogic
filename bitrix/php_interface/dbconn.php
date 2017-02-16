@@ -3,9 +3,9 @@ define("BX_USE_MYSQLI", true);
 define("DBPersistent", false);
 $DBType = "mysql";
 $DBHost = "localhost";
-$DBLogin = "tpurelogic_s";
-$DBPassword = "3cBe3FM3wi";
-$DBName = "tpurelogic_s";
+$DBLogin = "purelogic_s";
+$DBPassword = "iteXGzwXTK";
+$DBName = "purelogic_s";
 $DBDebug = false;
 $DBDebugToFile = false;
 

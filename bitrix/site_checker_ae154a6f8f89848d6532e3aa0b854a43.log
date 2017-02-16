@@ -1,134 +1,18 @@
-2017-Feb-10 10:38:24 Наличие необходимых модулей php (check_php_modules): Ok
+2017-Feb-16 08:50:38 Наличие необходимых модулей php (check_php_modules): Ok
 Все необходимые модули установлены
-2017-Feb-10 10:38:24 Обязательные параметры PHP (check_php_settings): Ok
+2017-Feb-16 08:50:38 Обязательные параметры PHP (check_php_settings): Ok
 Настройки правильные
-2017-Feb-10 10:38:24 Модули веб-сервера (check_security): Warning
+2017-Feb-16 08:50:38 Модули веб-сервера (check_security): Warning
 Замечание. Загружен модуль mod_dav/mod_dav_fs, WebDav не будет работать
-2017-Feb-10 10:38:24 Значения переменных сервера (check_server_vars): Ok
+2017-Feb-16 08:50:38 Значения переменных сервера (check_server_vars): Ok
 Корректные
-2017-Feb-10 10:38:24 Сохранение сессии (check_session): Ok
+2017-Feb-16 08:50:38 Сохранение сессии (check_session): Ok
 50% done
-2017-Feb-10 10:38:24 Сохранение сессии (check_session): Ok
-Успешно
-2017-Feb-10 10:38:24 Параметры настройки UTF (mbstring и константа BX_UTF) (check_mbstring): Ok
+2017-Feb-16 08:50:38 Параметры настройки UTF (mbstring и константа BX_UTF) (check_mbstring): Ok
 Правильные. Сайт работает в UTF кодировке
-2017-Feb-10 10:38:25 Служебные скрипты в корне сайта (check_install_scripts): Fail
-Ошибка! Файл существует: restore.php
-Файл существует: bitrix_server_test.php
-Файл существует: bitrixsetup.php
-
-2017-Feb-10 10:38:25 Работа с сокетами (check_socket): Ok
-Connection to tpurelogic.prime-ltd.su:80	Success
+2017-Feb-16 08:50:38 Служебные скрипты в корне сайта (check_install_scripts): Ok
+Отсутствуют
+2017-Feb-16 08:50:38 Работа с сокетами (check_socket): Ok
+Connection to new.purelogic.ru:80	Success
 
 Успешно
-2017-Feb-10 10:38:25 Параметры подключения к базе данных (check_dbconn_settings): Ok
-Успешно
-2017-Feb-10 10:38:25 Лишний вывод в файлах конфигурации (check_dbconn): Ok
-Connection to tpurelogic.prime-ltd.su:80	Success
-
-Успешно
-2017-Feb-10 10:38:25 Выполнение агентов на cron (check_bx_crontab): Warning
-Замечание. Агенты выполняются на хитах, рекомендуется перевести выполнение агентов на cron
-2017-Feb-10 10:38:25 Сохранение сессии без UserAgent (check_session_ua): Ok
-50% done
-Connection to tpurelogic.prime-ltd.su:80	Success
-
-2017-Feb-10 10:38:25 Сохранение сессии без UserAgent (check_session_ua): Ok
-Connection to tpurelogic.prime-ltd.su:80	Success
-
-Успешно
-2017-Feb-10 10:38:26 Настройки сайтов (check_sites): Fail
-Ошибка! Путь к корню сайта должен быть пустой, установлено: /home/tpurelogic/web/tpurelogic.prime-ltd.su/public_html
-2017-Feb-10 10:38:26 Передача объектов по ссылке (check_clone): Ok
-Успешно
-2017-Feb-10 10:38:26 Размер стека и pcre.recursion_limit (check_pcre_recursion): Ok
-Connection to tpurelogic.prime-ltd.su:80	Success
-
-Успешно
-2017-Feb-10 10:38:26 Вызов method_exists на строке (check_method_exists): Ok
-Connection to tpurelogic.prime-ltd.su:80	Success
-
-Успешно
-2017-Feb-10 10:38:26 Загрузка файла (check_upload): Ok
-Connection to tpurelogic.prime-ltd.su:80	Success
-
-Успешно
-2017-Feb-10 10:38:26 Загрузка файла больше 4Мб (check_upload_big): Ok
-Connection to tpurelogic.prime-ltd.su:80	Success
-
-Успешно
-2017-Feb-10 10:38:26 Загрузка файла через php://input (check_upload_raw): Ok
-Connection to tpurelogic.prime-ltd.su:80	Success
-
-Успешно
-2017-Feb-10 10:38:26 Передача POST запроса с большим числом параметров (check_post): Ok
-Connection to tpurelogic.prime-ltd.su:80	Success
-
-Успешно
-2017-Feb-10 10:38:26 Отправка почты (check_mail): Ok
-Успешно
-2017-Feb-10 10:38:27 Отправка почтового сообщения больше 64Кб (check_mail_big): Ok
-Успешно
-2017-Feb-10 10:38:27 Проверка на наличие неотправленных сообщений (check_mail_b_event): Ok
-Успешно
-2017-Feb-10 10:38:27 Внутреннее перенаправление (функция LocalRedirect) (check_localredirect): Ok
-50% done
-Connection to tpurelogic.prime-ltd.su:80	Success
-
-2017-Feb-10 10:38:27 Внутреннее перенаправление (функция LocalRedirect) (check_localredirect): Ok
-Connection to tpurelogic.prime-ltd.su:80	Success
-
-Успешно
-2017-Feb-10 10:38:27 Фактическое ограничение памяти (check_memory_limit): Ok
-20% done
-Connection to tpurelogic.prime-ltd.su:80	Success
-
-2017-Feb-10 10:38:27 Фактическое ограничение памяти (check_memory_limit): Ok
-40% done
-Connection to tpurelogic.prime-ltd.su:80	Success
-
-2017-Feb-10 10:38:27 Фактическое ограничение памяти (check_memory_limit): Ok
-60% done
-Connection to tpurelogic.prime-ltd.su:80	Success
-
-2017-Feb-10 10:38:28 Фактическое ограничение памяти (check_memory_limit): Ok
-80% done
-Connection to tpurelogic.prime-ltd.su:80	Success
-
-2017-Feb-10 10:38:29 Фактическое ограничение памяти (check_memory_limit): Ok
-Connection to tpurelogic.prime-ltd.su:80	Success
-
-Не менее 256 М
-2017-Feb-10 10:38:29 Работа с файлами кеша (check_cache): Ok
-Успешно
-2017-Feb-10 10:38:30 Доступ к серверу обновлений (check_update): Ok
-Успешно
-2017-Feb-10 10:38:30 HTTP авторизация (check_http_auth): Ok
-Connection to tpurelogic.prime-ltd.su:80	Success
-
-Успешно
-2017-Feb-10 10:38:30 Создание и запуск файла (check_exec): Ok
-Connection to tpurelogic.prime-ltd.su:80	Success
-
-Успешно
-2017-Feb-10 10:38:30 Функция getimagesize для swf (check_getimagesize): Ok
-Успешно
-2017-Feb-10 10:38:30 Версия MySQL-сервера (check_mysql_bug_version): Ok
-Успешно
-2017-Feb-10 10:38:31 Время на БД и веб-сервере (check_mysql_time): Ok
-Успешно
-2017-Feb-10 10:38:31 Режим работы MySQL (check_mysql_mode): Ok
-Успешно
-2017-Feb-10 10:38:31 Кодировка соединения (check_mysql_connection_charset): Ok
-character_set_connection=utf8, collation_connection=utf8_unicode_ci, character_set_results=utf8
-Успешно
-2017-Feb-10 10:38:31 Кодировка базы данных (check_mysql_db_charset): Ok
-CHARSET=utf8, COLLATION=utf8_unicode_ci
-Успешно
-2017-Feb-10 10:38:34 Кодировки таблиц в БД (check_mysql_table_charset): Fail
-Кодировка таблицы "b_bxmod_auth_smscontrol" (cp1251) отличается от кодировки базы (utf8)
-Кодировка поля "phone" таблицы "b_bxmod_auth_smscontrol" (cp1251) отличается от кодировки базы (utf8)
-
-Ошибка! Кодировки таблиц имеют ошибки, общее число ошибок: 2, из них автоматически могут быть исправлены: 0.
-2017-Feb-10 10:38:34 Структура базы данных (check_mysql_table_structure): Warning
-Замечание. Не проверено из-за ошибок кодировки таблиц

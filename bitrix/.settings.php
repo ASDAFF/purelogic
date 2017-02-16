@@ -45,9 +45,9 @@ return array (
       array (
         'className' => '\\Bitrix\\Main\\DB\\MysqliConnection',
         'host' => 'localhost',
-        'database' => 'tpurelogic_s',
-        'login' => 'tpurelogic_s',
-        'password' => '3cBe3FM3wi',
+        'database' => 'purelogic_s',
+        'login' => 'purelogic_s',
+        'password' => 'iteXGzwXTK',
         'options' => 2,
       ),
     ),
