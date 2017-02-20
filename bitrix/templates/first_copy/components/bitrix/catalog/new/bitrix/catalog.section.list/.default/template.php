@@ -59,45 +59,6 @@ if ('Y' == $arParams['SHOW_PARENT_NAME'] && 0 < $arResult['SECTION']['ID'])
 		);
 	?></h3><?
 }?>
-<?=$arResult["DESCRIPTION"];?>
-<?
-if (0 < $arResult["SECTIONS_COUNT"])
-{
-?>
-<div class="row" style="margin-left:0px">
-<?foreach ($arResult['SECTIONS'] as &$arSection)
-			{
-				$this->AddEditAction($arSection['ID'], $arSection['EDIT_LINK'], $strSectionEdit);
-				$this->AddDeleteAction($arSection['ID'], $arSection['DELETE_LINK'], $strSectionDelete, $arSectionDeleteParams);
 
-				if (false == $arSection['PICTURE'])
-					$arSection['PICTURE'] = array(
-						'SRC' => "/img/article.jpg",
-						'ALT' => (
-							'' != $arSection["IPROPERTY_VALUES"]["SECTION_PICTURE_FILE_ALT"]
-							? $arSection["IPROPERTY_VALUES"]["SECTION_PICTURE_FILE_ALT"]
-							: $arSection["NAME"]
-						),
-						'TITLE' => (
-							'' != $arSection["IPROPERTY_VALUES"]["SECTION_PICTURE_FILE_TITLE"]
-							? $arSection["IPROPERTY_VALUES"]["SECTION_PICTURE_FILE_TITLE"]
-							: $arSection["NAME"]
-						)
-					);
-				?>
-<div class="col-md-3  col-sm-6 padding-left_0" id="<? echo $this->GetEditAreaId($arSection['ID']); ?>">
-					<a href="<?=$arSection["SECTION_PAGE_URL"];?>" class="overlay">
-						<div class="katalog_prod_wrap">
-							<p><?=$arSection["NAME"];?></p>
-							<div class="main_katalog_img" style=" background-image: url(<?=$arSection["PICTURE"]["SRC"];?>);"></div>
-						</div>
-						<div class="katalog_hover">
-							<img src="/img/hover_img.png" alt="">
-						</div>
-					</a>
-				</div>
-<?}?>
+
 </div>
-<?
-}
-?></div>

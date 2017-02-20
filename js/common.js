@@ -1,5 +1,13 @@
 $(document).ready(function() {
 
+    //console.log(123321);
+    $('.other-btn-product-docs').mouseenter(function(){
+        $('.other-block-product-docs',$(this).parent()).css('display','block');
+    });
+    $('.other-block-product-docs').mouseleave(function(){
+        $(this).removeAttr('style');
+    })
+
 $( ".new_left_menu li" ).mouseenter(function() {
 
     $('.background-icon-menu',this).css('display','none');
@@ -75,8 +83,13 @@ jQuery(this).parent().find('input[name="quantity"]').val(parseInt(jQuery(this).p
 jQuery(".open_descr").click(function(){
 jQuery(this).toggleClass("yes");
 jQuery(this).parent().parent().find(".detail_text").toggleClass("no");
-jQuery(this).closest(".tovar_wr").find(".to_grey").toggleClass("yes");
+jQuery(this).closest(".tovar_wr").find(".back-fon-yelow").toggleClass("yes");
 });
+    jQuery(".open_product").click(function(){
+        jQuery(this).toggleClass("yes");
+        jQuery(this).parent().parent().find(".box-products-group").toggleClass("no");
+        //jQuery(this).closest(".tovar_wr").find(".col-md-9").toggleClass("yes");
+    });
 
 jQuery(".index_slider .l-r .right_news").click(function(){
 

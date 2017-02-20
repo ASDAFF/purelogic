@@ -118,7 +118,11 @@ if ($verticalGrid)
 {
 	?><div class="bx_content_section"><?
 }
-?><?$APPLICATION->IncludeComponent(
+?>
+
+<?
+
+$APPLICATION->IncludeComponent(
 	"bitrix:catalog.section.list",
 	"",
 	array(
@@ -139,7 +143,12 @@ if ($verticalGrid)
 	),
 	$component,
 	array("HIDE_ICONS" => "Y")
-);?><?
+);
+
+?>
+
+
+<?
 if($arParams["USE_COMPARE"]=="Y")
 {
 	?><?$APPLICATION->IncludeComponent(
@@ -173,11 +182,11 @@ $intSectionID = 0;
 
 if($_GET["template"]=="normal")
 $_SESSION["template"]="";
-if($_GET["template"]=="list")
-$_SESSION["template"]="list";
+if($_GET["template"]=="window")
+$_SESSION["template"]="window";
 ?>
 
-<div class="plitka"><div class="pltk <?if($_SESSION["template"]=="list"){?>current<?}?>"><form method="get" action=""><input name="template" type="hidden" value="list"><button class="for_image"><img src="/img/plitka1.png" alt=""/></button></form></div><div class="pltk <?if($_SESSION["template"]==""){?>current<?}?>"><form method="get" action=""><input name="template" type="hidden" value="normal"><button class="for_image"><img src="/img/plitka.png" alt=""/></button></form></div>
+<div class="plitka"><div class="pltk <?if($_SESSION["template"]=="list"){?>current<?}?>"><form method="get" action=""><input name="template" type="hidden" value="window"><button class="for_image"><img src="/img/plitka1.png" alt=""/></button></form></div><div class="pltk <?if($_SESSION["template"]==""){?>current<?}?>"><form method="get" action=""><input name="template" type="hidden" value="normal"><button class="for_image"><img src="/img/plitka.png" alt=""/></button></form></div>
 <div class="clear"></div>
 </div>
 <?$intSectionID = $APPLICATION->IncludeComponent(

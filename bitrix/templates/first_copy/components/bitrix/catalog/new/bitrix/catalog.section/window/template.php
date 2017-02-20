@@ -11,9 +11,90 @@
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
+
+if (!empty($arResult['ITEMS'])) {
 ?>
-<?
-if (!empty($arResult['ITEMS']))
+<div class="row">
+	<?
+foreach ($arResult['ITEMS'] as $arItem) {
+	?>
+	<div class="tovar_wr list_tov col-md-6" id="bx_328740560_37864">
+		<div class="col-md-6  col-sm-6 col-xs-12 element padding-left_0" style="padding-right: 0px;">
+			<div class="icons-product-box">
+				<? if($arItem["PROPERTIES"]["NOVINKA"]["VALUE"] == 'Y'): ?>
+					<img src="<?=SITE_TEMPLATE_PATH?>/img/icon1.png">
+				<? endif; ?>
+				<? if($arItem["PROPERTIES"]["DOSTAVKA"]["VALUE"] == 'Y'): ?>
+					<img src="<?=SITE_TEMPLATE_PATH?>/img/icon2.png">
+				<? endif; ?>
+				<? if($arItem["PROPERTIES"]["KACHESTVO"]["VALUE"] == 'Y'): ?>
+					<img src="<?=SITE_TEMPLATE_PATH?>/img/icon3.png">
+				<? endif; ?>
+				<? if($arItem["PROPERTIES"]["AKCYIA"]["VALUE"] == 'Y'): ?>
+					<img src="<?=SITE_TEMPLATE_PATH?>/img/icon4.png">
+				<? endif; ?>
+			</div>
+
+			<?
+			if(empty($arItem['PREVIEW_PICTURE']['SRC'])){$arItem['PREVIEW_PICTURE']['SRC'] = SITE_TEMPLATE_PATH.'/img/no_photo.png';} ?>
+			<img style="max-width: 230px;" src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>">
+			<div class="price-element-product"><?=$arItem['CATALOG_PRICE_1']?> <?=$arItem['CATALOG_CURRENCY_1']?></div>
+			<form action="" method="get" class="add_in_card">
+				<input type="text" name="quantity" value="1">
+				<input type="submit" value="">
+				<input name="action" type="hidden" value="ADD2BASKET">
+				<input type="hidden" name="id" value="<?= $arItem["ID"]; ?>">
+			</form>
+
+		</div>
+		<div class="col-md-6 col-sm-12" style="padding-right: 0px;">
+
+			<div class="btn-product-docs-element">
+				<a href="<?// $arItem['UF_SAYT_CHERTEG'] ?>">Чертеж</a>
+				<a href="<?// $arItem['UF_SAYT_POLEZNAYINF'] ?>">Документация</a>
+				<a href="<?// $arItem['UF_RUK_PO_EKSPUATACI'] ?>">Руководство</a>
+				<a href="<?// $arItem['UF_SAYT_POLEZNAYINF'] ?>">Документация</a>
+				<a href="javascript:void(0)" class="other-btn-product-docs">&darr;</a>
+				<div class="other-block-product-docs">
+					<ul>
+						<li>123</li>
+						<li>123</li>
+						<li>123</li>
+						<li>123</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="clear"></div>
+
+		</div>
+		<div class="col-md-12 col-sm-6 col-xs-12 back-fon-yelow">
+
+			<div class="head-product-box">
+				<h4><a href="<?=$arItem['DETAIL_PAGE_URL'] ?>"><?=$arItem['NAME'] ?></a></h4>
+
+				<div class="open_descr">описание</div>
+			</div>
+
+			<div class="preview-text"><?= $arItem['PREVIEW_TEXT'] ?></div>
+			<div class="detail_text no"><?= $arItem['DETAIL_TEXT'] ?></div>
+
+		</div>
+
+		<div class="clear"></div>
+	</div>
+
+	<?
+	}
+	?>
+</div>
+	<?
+}
+
+
+
+
+if (empty($arResult['ITEMS']))
 {?>
 <div class="row">
 <!--

@@ -82,7 +82,7 @@ $APPLICATION->SetTitle("");
 		"HIDE_NOT_AVAILABLE" => "N",
 		"IBLOCK_ID" => "18",
 		"IBLOCK_TYPE" => "1c_catalog",
-		"INCLUDE_SUBSECTIONS" => "Y",
+		"INCLUDE_SUBSECTIONS" => "N",
 		"INSTANT_RELOAD" => "N",
 		"LABEL_PROP" => "-",
 		"LINE_ELEMENT_COUNT" => "3",

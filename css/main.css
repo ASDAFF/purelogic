@@ -1878,12 +1878,8 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
 	background-color: #94b82f;
 	border: none;
 }
-.product_slider .add_in_card{
-	display: inline-block;
-	float: left;
-	margin-top: 9px;
-	margin-left: 10px;
-}
+
+
 .pocupay_vmeste::before{
 	content: "";
 	width: 100%;
@@ -2057,15 +2053,10 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
 .tovar_wr{
 	width: 100%;
 	height: 250px;
-	margin-bottom: 20px;
+	margin-bottom: 100px;
 }
-.tovar_wr h4{
-	font-size: 16px;
-    font-weight: 400;
-    font-family: "ubuntu";
-    font-style: italic;
-    margin: 12px 0 0 0;
-}
+
+
 .tovar_wr p{
 	    margin: 8px 0;
     font-weight: 200;
@@ -2073,27 +2064,41 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
 .tovar_wr p>span{
 	font-weight: 500;
 }
-.tovar_wr a{
+.tovar_wr .btn-product-docs > a{
 	width: 99%;
 	font-size: 15px;
 	padding: 5px 0;
 	border: 1px solid #c7c7c7;
-	display: inline-block;
 	text-align: center;
 	margin-top: 20px;
 	color: #7d7d7d;
 	font-weight: 500;
 }
-.tovar_wr a:hover{
+.tovar_wr .btn-product-docs > a:hover{
 	background-color: #94b82f;
 	border: transparent;
-	border-bottom: 2px solid #4a5d13;
+	border-bottom: 1px solid #4a5d13;
 	color: #fff;
-	display: inline-block;
 	margin-top: 20px;
 	width: 99%;
 	font-size: 15px;
 	padding: 5px 0;
+}
+.tovar_wr .btn-product-docs > a.other-btn-product-docs:hover{
+	background-color: #fff;
+	color: #7d7d7d;
+	font-size: 15px;
+	padding: 5px 0;
+	border-bottom: 0px;
+	border: 1px solid #d7d7d7;
+}
+.tovar_wr .btn-product-docs-element > a.other-btn-product-docs:hover{
+	background-color: #fff;
+	color: #7d7d7d;
+	font-size: 15px;
+	padding: 5px 0;
+	border-bottom: 0px;
+	border: 1px solid #d7d7d7;
 }
 
 

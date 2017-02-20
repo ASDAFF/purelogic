@@ -1003,18 +1003,8 @@ p.prop_t {
     margin-bottom: 20px;
     font-size: 15px;
 }
-.open_descr {
-    display: inline;
-    margin-left: 10px;
-    background-color: #7d7d7d;
-    font-size: 11px;
-    color: #fff;
-	transition:all 0.5s ease;
-    font-weight: 300;
-    cursor: pointer;
-    line-height: 17px;
-    padding: 0 10px;
-}
+
+
 .open_descr:after {
 content:"+";
 display:block;
@@ -1024,20 +1014,8 @@ display:block;
     top: 7px;
     right: 5px;
 }
-.open_descr {
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 10px;
-    background-color: #7d7d7d;
-    font-size: 11px;
-    color: #fff;
-    transition: all 0.5s ease;
-    font-weight: 300;
-    cursor: pointer;
-    position: relative;
-    line-height: 13px;
-    padding: 2px 19px 2px 10px;
-}
+
+
 .open_descr.yes{font-size:0px; width:19px; height:19px; padding:0px; background-color:#94b82f}
 .open_descr.yes:after {
     content: "-";
@@ -1070,26 +1048,16 @@ h4.title_prod {
 	margin-bottom:0px;
 }
 
-.product_slider .add_in_card {
-    display: block;
-    margin-top: 9px;
-    margin-left: 10px;
-    position: absolute;
-    top: 0px;
-    right: 11px;
-}
+
+
 .to_grey {
     background-color: #fff;
     transition: all 0.5s ease;
     padding: 10px 10px;
     margin: -10px;
 }
-.tovar_wr a:hover {
-    background-color: #94b82f;
-    border: transparent;
-    border-bottom: 1px solid #4a5d13;
 
-}
+
 .to_grey.yes{background-color:#fafbf4;}
 .pltk {
     float: right;
@@ -1145,7 +1113,7 @@ button.for_image {
     font-size: 14px;
 }
 .templete_2_wr.col-md-6{clear:none; float:none; width:50%; display:inline-block; vertical-align:top;}
-.tovar_wr.col-md-6{clear:none; float:none; width:50%;display:inline-block; vertical-align:top;}
+.tovar_wr.col-md-6{clear:none; float:none; width:49%;display:inline-block; vertical-align:top;}
 .tovar_wr{height:auto;}
 a.it_pr{    margin-top: 0px; margin-bottom:20px;}
 .list_tov .to_grey{    margin: 10px -25px 0;}

@@ -49,8 +49,9 @@ if($arParams["SECTION_ID"] > 0 && $arParams["SECTION_ID"]."" != $arParams["~SECT
 	return;
 }
 
-if (!isset($arParams["INCLUDE_SUBSECTIONS"]) || !in_array($arParams["INCLUDE_SUBSECTIONS"], array('Y', 'A', 'N')))
+if (!isset($arParams["INCLUDE_SUBSECTIONS"]) || !in_array($arParams["INCLUDE_SUBSECTIONS"], array('Y', 'A', 'N'))) {
 	$arParams["INCLUDE_SUBSECTIONS"] = 'Y';
+}
 $arParams["SHOW_ALL_WO_SECTION"] = $arParams["SHOW_ALL_WO_SECTION"]==="Y";
 $arParams["SET_LAST_MODIFIED"] = $arParams["SET_LAST_MODIFIED"]==="Y";
 $arParams["USE_MAIN_ELEMENT_SECTION"] = $arParams["USE_MAIN_ELEMENT_SECTION"]==="Y";
@@ -668,6 +669,8 @@ if($this->startResultCache(false, array($arrFilter, ($arParams["CACHE_GROUPS"]==
 	);
 	if ($bIBlockCatalog)
 		$arSelect[] = "CATALOG_QUANTITY";
+
+
 	$arFilter = array(
 		"IBLOCK_ID" => $arParams["IBLOCK_ID"],
 		"IBLOCK_LID" => SITE_ID,
