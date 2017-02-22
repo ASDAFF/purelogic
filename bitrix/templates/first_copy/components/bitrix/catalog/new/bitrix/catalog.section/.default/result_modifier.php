@@ -463,18 +463,21 @@ if (!empty($arResult['ITEMS']))
 		}
 	}
 }
+
+
+
+
+
 $arResult['GROUP_BLOCK'] = 'N';
 
-	$arFilter = array('IBLOCK_ID' => $arResult['IBLOCK_ID'],'>LEFT_MARGIN' => $arResult['LEFT_MARGIN'],'<RIGHT_MARGIN' => $arResult['RIGHT_MARGIN'],'>DEPTH_LEVEL' => $arResult['DEPTH_LEVEL']);
-	$rsSect = CIBlockSection::GetList(array('left_margin' => 'asc'),$arFilter,false,array("UF_*"));
+	$arFilter = array('IBLOCK_ID' => $arResult['IBLOCK_ID'],'SECTION_ID' => $arResult['ID'],'GLOBAL_ACTIVE'=>'Y');
+	$rsSect = CIBlockSection::GetList(array($by=>$order),$arFilter,false,array("UF_*"));
 	$section_inc = 0;
 	while ($arSect = $rsSect->GetNext())
 	{
-
 		if($arSect['UF_SAYT_PAPKA_TIP'] == 2){
 			$arResult['GROUP_BLOCK'] = 'Y';
-			if($section_inc == 0){unset($arResult['ITEMS']);}
-			$arResult['ITEMS'][] = $arSect;
+			$arResult['ITEMS_SECTION'][] = $arSect;
 			$arSelect = Array("ID", "IBLOCK_ID", "NAME", "DATE_ACTIVE_FROM","SORT","PREVIEW_TEXT","DETAIL_TEXT","DETAIL_TEXT_TYPE","DATE_CREATE","IBLOCK_SECTION_ID","DETAIL_PAGE_URL","PREVIEW_PICTURE","DETAIL_PICTURE","LANG_DIR","EXTERNAL_ID","IBLOCK_TYPE_ID","LID","CATALOG_PRICE_ID_1","CATALOG_PRICE_1","CATALOG_CURRENCY_1","PROPERTY_*");
 			$arFilter = Array("IBLOCK_ID"=>$arResult['IBLOCK_ID'],"SECTION_ID"=>$arSect['ID'], "ACTIVE"=>"Y");
 			$res = CIBlockElement::GetList(Array(), $arFilter, false, Array("nPageSize"=>50), $arSelect);
@@ -482,15 +485,14 @@ $arResult['GROUP_BLOCK'] = 'N';
 				$arFields = $ob->GetFields();
 				$arProps = $ob->GetProperties();
 				$arFields['PROPERTIES'] = $arProps;
-				$arResult['ITEMS'][$section_inc]['ELEMENT'][] = $arFields;
+				$arResult['ITEMS_SECTION'][$section_inc]['ELEMENT'][] = $arFields;
 			}
+			$section_inc++;
 		}
-		$section_inc++;
+
 	}
 
 
-//var_dump($arResult);
-//die();
 
 
 ?>

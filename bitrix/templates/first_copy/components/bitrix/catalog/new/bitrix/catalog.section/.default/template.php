@@ -15,7 +15,7 @@ $this->setFrameMode(true);
 
 <?
 if($arResult['GROUP_BLOCK'] == 'Y'){
-	foreach($arResult['ITEMS'] as $arSection){
+	foreach($arResult['ITEMS_SECTION'] as $arSection){
 		$arImgSection = explode(';',$arSection['UF_KARTINKI']);
 		foreach($arImgSection as $key => $img){
 			if(preg_match('/min.jpg/',$img)){
@@ -207,6 +207,8 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 			<?
 		}
 	}
+
+
 	if (empty($arResult['ITEMS'])) {
 
 		foreach ($arResult['ITEMS'] as $arItem) {
@@ -923,6 +925,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 		<?= $arResult["NAV_STRING"] ?><?
 	} ?>
 
+	<?= $arResult["NAV_STRING"] ?>
 	<?
 }
 	?>
