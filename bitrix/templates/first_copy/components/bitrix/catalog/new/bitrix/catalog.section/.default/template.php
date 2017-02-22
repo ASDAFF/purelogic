@@ -16,6 +16,14 @@ $this->setFrameMode(true);
 <?
 if($arResult['GROUP_BLOCK'] == 'Y'){
 	foreach($arResult['ITEMS'] as $arSection){
+		$arImgSection = explode(';',$arSection['UF_KARTINKI']);
+		foreach($arImgSection as $key => $img){
+			if(preg_match('/min.jpg/',$img)){
+				$oneImgSrction = '/kartinki_dlya_razdelov/' . $img;
+				unset($arImgSection[$key]);
+			}
+			if(empty($img)){unset($arImgSection[$key]);}
+		}
 	?>
 	<div class="tovar_wr" id="bx_3966226736_37864">
 		<div class="col-md-3  col-sm-6 col-xs-12  padding-left_0">
@@ -36,7 +44,14 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 				<img src="<?=SITE_TEMPLATE_PATH?>/img/icon4.png">
 				<? endif; ?>
 			</div>
-			<img src="<?=CFile::GetPath($arSection["PICTURE"]);?>">
+			<a href="<?=$oneImgSrction?>" class="image fancybox-thumbs" data-fancybox-group="thumb<?=$arSection['ID']?>">
+			<img src="<?=$oneImgSrction;?>">
+			</a>
+			<? foreach($arImgSection as $img):?>
+			<a href="/kartinki_dlya_razdelov/<?=$img?>" class="image fancybox-thumbs" data-fancybox-group="thumb<?=$arSection['ID']?>" style="display: none">
+				<img src="/kartinki_dlya_razdelov/<?=$img;?>">
+			</a>
+			<?endforeach;?>
 		</div>
 		<div class="col-md-9 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;padding-bottom: 25px;">
 			<div class="head-product-box">
@@ -88,6 +103,41 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 		<div class="clear"></div>
 	</div>
 
+
+
+
+
+		<script>
+			$(function(){
+
+				$('.fancybox-thumbs').each(function(i,elem) {
+
+					if ($(this).attr("href") == "") {
+						var src = $(this).find("img").attr("src");
+						$(this).attr("href", src);
+					}
+				});
+
+				$("a.image").fancybox();
+
+				$('.fancybox-thumbs').fancybox({
+					prevEffect : 'none',
+					nextEffect : 'none',
+
+					closeBtn  : true,
+					arrows    : true,
+					nextClick : true,
+
+					helpers : {
+						thumbs : {
+							width  : 50,
+							height : 50
+						}
+					}
+				});
+
+			});
+		</script>
 
 
 	<?

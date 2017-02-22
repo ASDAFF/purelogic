@@ -36,6 +36,9 @@ $APPLICATION->SetAdditionalCSS("/css/media.css");
 $APPLICATION->SetAdditionalCSS("/css/jquery.mCustomScrollbar.css");
 $APPLICATION->AddHeadScript("/libs/modernizr/modernizr.js");
 
+$APPLICATION->SetAdditionalCSS("/css/fancybox/jquery.fancybox.css");
+$APPLICATION->SetAdditionalCSS("/css/fancybox/jquery.fancybox-buttons.css");
+$APPLICATION->SetAdditionalCSS("/css/fancybox/jquery.fancybox-thumbs.css");
 ?>
 <script src="/libs/jquery/jquery-1.11.3.min.js"></script>
 
@@ -56,6 +59,12 @@ $APPLICATION->AddHeadScript("/libs/modernizr/modernizr.js");
 
 	<script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>
 	<script src="/js/masterslider.js"></script>
+
+
+	<script src="/js/fancybox/jquery.fancybox.pack.js"></script>
+	<script src="/js/fancybox/jquery.fancybox-buttons.js"></script>
+	<script src="/js/fancybox/jquery.fancybox-thumbs.js"></script>
+
 
 
 	<script language="javascript">
