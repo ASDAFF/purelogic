@@ -102,42 +102,39 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 		</div>
 		<div class="clear"></div>
 	</div>
-
-
-
-
-
-		<script>
-			$(function(){
-
-				$(".fancybox-one").on("click", function () {
-					$(".fancybox-thumbs",$(this).parent()).eq(0).trigger("click");
-					return false;
-				});
-			//	$("a.image").fancybox();
-
-				$('.fancybox-thumbs').fancybox({
-					prevEffect : 'none',
-					nextEffect : 'none',
-
-					closeBtn  : true,
-					arrows    : true,
-					nextClick : true,
-
-					helpers : {
-						thumbs : {
-							width  : 50,
-							height : 50
-						}
-					}
-				});
-
-			});
-		</script>
-
-
 	<?
 	}
+	?>
+
+	<script>
+		$(function(){
+
+			$(".fancybox-one").on("click", function () {
+				$(".fancybox-thumbs",$(this).parent()).eq(0).trigger("click");
+				return false;
+			});
+			//	$("a.image").fancybox();
+
+			$('.fancybox-thumbs').fancybox({
+				prevEffect : 'none',
+				nextEffect : 'none',
+
+				closeBtn  : true,
+				arrows    : true,
+				nextClick : true,
+
+				helpers : {
+					thumbs : {
+						width  : 50,
+						height : 50
+					}
+				}
+			});
+
+		});
+	</script>
+
+	<?
 }else {
 
 	if (!empty($arResult['ITEMS'])) {
