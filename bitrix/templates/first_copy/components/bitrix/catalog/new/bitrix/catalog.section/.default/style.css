@@ -202,3 +202,7 @@ h5 a:hover{
 .tovar_wr .btn-product-docs > a:last-child:hover{
     background-color: #fff!important;
 }
+
+#fancybox-thumbs > ul{
+    margin: 0 auto;
+}

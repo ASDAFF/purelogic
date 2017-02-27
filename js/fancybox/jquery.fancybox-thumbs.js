@@ -23,7 +23,7 @@
 		defaults : {
 			width    : 50,       // thumbnail width
 			height   : 50,       // thumbnail height
-			position : 'bottom', // 'top' or 'bottom'
+			position : 'top', // 'top' or 'bottom'
 			source   : function ( item ) {  // function to obtain the URL of the thumbnail image
 				var href;
 
@@ -123,7 +123,7 @@
 			}
 
 			//Increase bottom margin to give space for thumbs
-			obj.margin[ opts.position === 'top' ? 0 : 2 ] += ((opts.height) + 15);
+			obj.margin[ opts.position === 'top' ? 0 : 2 ] -= ((opts.height) + 15);
 		},
 
 		afterShow: function (opts, obj) {
@@ -143,7 +143,7 @@
 		onUpdate: function (opts, obj) {
 			if (this.list) {
 				this.list.stop(true).animate({
-					'left': '500px'//Math.floor($(window).width() * 0.5 - (obj.index * this.width + this.width * 0.5)) Сдвигание нижних картиночек которые маленькие... ну вы поняли
+					'left':0 // Math.floor($(window).width() * 0.5 - (obj.index * this.width + this.width * 0.5)) // Сдвигание нижних картиночек которые маленькие... ну вы поняли
 				}, 150);
 			}
 		},
