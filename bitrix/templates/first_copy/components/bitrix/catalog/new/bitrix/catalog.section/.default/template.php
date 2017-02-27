@@ -44,7 +44,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 				<img src="<?=SITE_TEMPLATE_PATH?>/img/icon4.png">
 				<? endif; ?>
 			</div>
-			<a href="<?=$oneImgSrction?>" class="image fancybox-thumbs" data-fancybox-group="thumb<?=$arSection['ID']?>">
+			<a href="<?=$oneImgSrction?>" class="image fancybox-one" data-fancybox-group="thumb<?=$arSection['ID']?>">
 			<img src="<?=$oneImgSrction;?>">
 			</a>
 			<? foreach($arImgSection as $img):?>
@@ -110,15 +110,11 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 		<script>
 			$(function(){
 
-				$('.fancybox-thumbs').each(function(i,elem) {
-
-					if ($(this).attr("href") == "") {
-						var src = $(this).find("img").attr("src");
-						$(this).attr("href", src);
-					}
+				$(".fancybox-one").on("click", function () {
+					$(".fancybox-thumbs",$(this).parent()).eq(0).trigger("click");
+					return false;
 				});
-
-				$("a.image").fancybox();
+			//	$("a.image").fancybox();
 
 				$('.fancybox-thumbs').fancybox({
 					prevEffect : 'none',
