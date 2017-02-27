@@ -83,12 +83,13 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 			<div class="open_product">развернуть </div>
 			<div class="box-products-group no">
 				<? foreach($arSection['ELEMENT'] as $element){
-					$price = CPrice::GetBasePrice($element['ID']);
+					$db_res_p = CPrice::GetList(array(), array("PRODUCT_ID" => $element['ID']));
+					$price = $db_res_p->Fetch();
 				?>
 					<div class="box-product-gr">
 						<h5><a href="<?=$element['DETAIL_PAGE_URL']?>"><?=$element['NAME']?></a></h5>
 						<p><?=$element['DETAIL_TEXT']?></p>
-						<div class="box-product-price"><?=$price['PRICE']?> <?=$price['CURRENCY']?></div>
+						<div class="box-product-price"><?=$price['PRICE']?> <?if($price['CURRENCY'] == 'RUB'){?>₽<?}else{ print $price['CURRENCY'];}?></div>
 						<form action="" method="get" class="add_in_card">
 							<input type="text" name="quantity" value="1">
 							<input type="submit" value="">
@@ -140,6 +141,8 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 	if (!empty($arResult['ITEMS'])) {
 
 		foreach ($arResult['ITEMS'] as $arItem) {
+			$db_res_p = CPrice::GetList(array(), array("PRODUCT_ID" => $arItem['ID']));
+			$price = $db_res_p->Fetch();
 			?>
 
 			<div class="tovar_wr" id="bx_3966226736_37864" style="margin-bottom: 50px;">
@@ -159,7 +162,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 						<? endif; ?>
 					</div>
 					<img src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>">
-					<div class="price-element-product"><?=$arItem['CATALOG_PRICE_1']?> <?=$arItem['CATALOG_CURRENCY_1']?></div>
+					<div class="price-element-product"><?=$price['PRICE']?> <?if($price['CURRENCY'] == 'RUB'){?>₽<?}else{ print $price['CURRENCY'];}?></div>
 					<form action="" method="get" class="add_in_card">
 						<input type="text" name="quantity" value="1">
 						<input type="submit" value="">

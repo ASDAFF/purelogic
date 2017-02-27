@@ -17,6 +17,8 @@ if (!empty($arResult['ITEMS'])) {
 <div class="row">
 	<?
 foreach ($arResult['ITEMS'] as $arItem) {
+	$db_res_p = CPrice::GetList(array(), array("PRODUCT_ID" => $arItem['ID']));
+	$price = $db_res_p->Fetch();
 	?>
 	<div class="tovar_wr list_tov col-md-6" id="bx_328740560_37864">
 		<div class="col-md-6  col-sm-6 col-xs-12 element padding-left_0" style="padding-right: 0px;">
@@ -38,7 +40,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 			<?
 			if(empty($arItem['PREVIEW_PICTURE']['SRC'])){$arItem['PREVIEW_PICTURE']['SRC'] = SITE_TEMPLATE_PATH.'/img/no_photo.png';} ?>
 			<img style="max-width: 230px;" src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>">
-			<div class="price-element-product"><?=$arItem['CATALOG_PRICE_1']?> <?=$arItem['CATALOG_CURRENCY_1']?></div>
+			<div class="price-element-product"><?=$price['PRICE']?> <?if($price['CURRENCY'] == 'RUB'){?>₽<?}else{ print $price['CURRENCY'];}?></div>
 			<form action="" method="get" class="add_in_card">
 				<input type="text" name="quantity" value="1">
 				<input type="submit" value="">
