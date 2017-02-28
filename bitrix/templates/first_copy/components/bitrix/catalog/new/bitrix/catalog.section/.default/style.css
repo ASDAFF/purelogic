@@ -35,11 +35,11 @@
 .tovar_wr h4 > a:hover{
     color: #8FBC3F;
 }
-.head-product-box,.preview-text,.detail_text{
-    margin-bottom: 35px;
+.head-product-box,.preview-text{
+    margin-bottom: 20px;
 }
 
-.col-md-9.yes{background-color:#fafbf4;}
+.back-fon-yelow.yes{background-color:#fafbf4;}
 .tovar_wr > .padding-left_0 > a > img{
     max-width: 230px;
     margin-top: 30px;
@@ -127,13 +127,14 @@ h5 a:hover{
     right: 15px;
     font-weight: bold;
     color: #4E4E4E;
+    font-size: 12px;
 }
-.col-md-3.element .add_in_card{
+.col-md-2.element .add_in_card{
     position: absolute;
     bottom: 0px;
     left: 0px;
 }
-.col-md-3.element .add_in_card input[type="text"] {
+.col-md-2.element .add_in_card input[type="text"] {
     width: 50px;
     height: 25px;
     color: #333;
@@ -143,7 +144,7 @@ h5 a:hover{
     padding-left: 0px;
     font-size: 15px;
 }
-.col-md-3.element .add_in_card input[type="submit"] {
+.col-md-2.element .add_in_card input[type="submit"] {
     width: 30px;
     height: 25px;
     background-image: url(/css/../img/icon/korzina.png);
@@ -152,7 +153,7 @@ h5 a:hover{
     background-color: #4E4E4E;
     border: none;
 }
-.col-md-3.element .plus_inpt {
+.col-md-2.element .plus_inpt {
     position: absolute;
     top: 4px;
     left: 34px;
@@ -162,7 +163,7 @@ h5 a:hover{
     font-weight: bold;
 }
 
-.col-md-3.element .minus_inpt {
+.col-md-2.element .minus_inpt {
     position: absolute;
     top: 4px;
     left: 8px;
@@ -178,7 +179,8 @@ h5 a:hover{
 .icons-product-box{
     position: absolute;
     top: 0px;
-    width: 250px;
+    width: 100%;
+    text-align: left;
 }
 
 
@@ -186,7 +188,7 @@ h5 a:hover{
 
 .btn-product-docs .other-block-product-docs{
     position: absolute;
-    top: 60px;
+    top: 35px;
     right: 10px;
     z-index: 10;
     background: #fff;
@@ -205,4 +207,11 @@ h5 a:hover{
 
 #fancybox-thumbs > ul{
     margin: 0 auto;
+}
+
+.tovar_wr > .col-md-2{
+    text-align: center;
+}
+.padding-right-null{
+    padding-right: 0px!important;
 }

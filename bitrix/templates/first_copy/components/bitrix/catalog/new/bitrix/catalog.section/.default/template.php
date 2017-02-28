@@ -26,7 +26,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 		}
 	?>
 	<div class="tovar_wr" id="bx_3966226736_37864">
-		<div class="col-md-3  col-sm-6 col-xs-12  padding-left_0">
+		<div class="col-md-2  col-sm-6 col-xs-12  padding-left_0 padding-right-null">
 			<div class="icons-product-box">
 				<? if($arSection['UF_NOVINKA'] == 1): ?>
 				<img src="<?=SITE_TEMPLATE_PATH?>/img/icon1.png">
@@ -53,15 +53,16 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 			</a>
 			<?endforeach;?>
 		</div>
-		<div class="col-md-9 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;padding-bottom: 25px;">
+		<div class="col-md-10 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;padding-bottom: 25px;">
 			<div class="head-product-box">
 				<h4><a href="<?=$arSection['SECTION_PAGE_URL']?>"><?=$arSection['UF_PAPKA_ZAGOLOVOK']?></a></h4>
 				<div class="open_descr">описание </div>
 			</div>
 
 			<div class="preview-text"><?=$arSection['UF_SAYT_PAPKA_OPIS']?></div>
+			<? if(strlen($arSection['DESCRIPTION']) > 1){ ?>
 			<div class="detail_text no"><?=$arSection['DESCRIPTION']?></div>
-
+			<? } ?>
 			<div class="btn-product-docs">
 				<a href="<?=$arSection['UF_SAYT_CHERTEG']?>">Чертеж</a>
 				<a href="<?=$arSection['UF_SAYT_POLEZNAYINF']?>">Документация</a>
@@ -146,7 +147,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 			?>
 
 			<div class="tovar_wr" id="bx_3966226736_37864" style="margin-bottom: 50px;">
-				<div class="col-md-3  col-sm-6 col-xs-12  padding-left_0 element" style="position: relative;">
+				<div class="col-md-2  col-sm-6 col-xs-12  padding-left_0 element" style="position: relative;">
 					<div class="icons-product-box">
 						<? if($arItem["PROPERTIES"]["NOVINKA"]["VALUE"] == 'Y'): ?>
 						<img src="<?=SITE_TEMPLATE_PATH?>/img/icon1.png">
@@ -171,7 +172,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 					</form>
 
 				</div>
-				<div class="col-md-9 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;">
+				<div class="col-md-10 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;">
 					<div class="head-product-box">
 						<h4><a href="<?=$arItem['DETAIL_PAGE_URL'] ?>"><?=$arItem['NAME'] ?></a></h4>
 
