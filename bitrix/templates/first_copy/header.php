@@ -576,8 +576,9 @@ $dir = $APPLICATION->GetCurDir();
 		"SECTION_ID" => $_REQUEST["SECTION_ID"],
 		"SECTION_URL" => "",
 		"SECTION_USER_FIELDS" => array(
-			0 => "UF_KARTINKI",
-			1 => "",
+			0 => "UF_SAYT_PAPKA_TIP",
+			1 => "UF_KARTINKI",
+			2 => "",
 		),
 		"SHOW_PARENT_NAME" => "Y",
 		"TOP_DEPTH" => "5",
