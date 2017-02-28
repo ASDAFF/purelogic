@@ -47,17 +47,21 @@ $arSectionDeleteParams = array("CONFIRM" => GetMessage('CT_BCSL_ELEMENT_DELETE_C
 ?><div class="<? echo $arCurView['CONT']; ?>"><?
 if ('Y' == $arParams['SHOW_PARENT_NAME'] && 0 < $arResult['SECTION']['ID'])
 {
+
 	$this->AddEditAction($arResult['SECTION']['ID'], $arResult['SECTION']['EDIT_LINK'], $strSectionEdit);
 	$this->AddDeleteAction($arResult['SECTION']['ID'], $arResult['SECTION']['DELETE_LINK'], $strSectionDelete, $arSectionDeleteParams);
 
-	?><h3 class="name_section">
-	<?
-		echo (
-			isset($arResult['SECTION']["IPROPERTY_VALUES"]["SECTION_PAGE_TITLE"]) && $arResult['SECTION']["IPROPERTY_VALUES"]["SECTION_PAGE_TITLE"] != ""
-			? $arResult['SECTION']["IPROPERTY_VALUES"]["SECTION_PAGE_TITLE"]
-			: $arResult['SECTION']['NAME']
-		);
-	?></h3><?
+		$uf_arresult = CIBlockSection::GetList(Array(), Array("IBLOCK_ID" => $arParams["IBLOCK_ID"], "ID" => $arResult['SECTION']['ID']), false, array('UF_PAPKA_ZAGOLOVOK','UF_SAYT_PAPKA_OPIS'));
+		if($uf_value = $uf_arresult->GetNext()) {
+			?>
+			<h3 class="name_section">
+			<?=$uf_value['UF_PAPKA_ZAGOLOVOK']?>
+			</h3>
+			<p>
+			<?=$uf_value['UF_SAYT_PAPKA_OPIS']?>
+			</p>
+			<?
+		}
 }?>
 
 

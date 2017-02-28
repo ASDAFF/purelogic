@@ -55,7 +55,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 		</div>
 		<div class="col-md-9 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;padding-bottom: 25px;">
 			<div class="head-product-box">
-				<h4><a href="<?=$arSection['SECTION_PAGE_URL']?>"><?=$arSection['NAME']?></a></h4>
+				<h4><a href="<?=$arSection['SECTION_PAGE_URL']?>"><?=$arSection['UF_PAPKA_ZAGOLOVOK']?></a></h4>
 				<div class="open_descr">описание </div>
 			</div>
 
