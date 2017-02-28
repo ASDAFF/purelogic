@@ -557,30 +557,32 @@ $dir = $APPLICATION->GetCurDir();
 		<a class="menu-toggle main_menu hidden-lg hidden-md" href="#"><span>Menu</span></a>
 		<p>Все категории</p>
 	</div>
-			<?$APPLICATION->IncludeComponent("bitrix:catalog.section.list", "menu_left_not_home", Array(
-	"ADD_SECTIONS_CHAIN" => "N",	// Включать раздел в цепочку навигации
-		"CACHE_GROUPS" => "Y",	// Учитывать права доступа
-		"CACHE_TIME" => "36000000",	// Время кеширования (сек.)
-		"CACHE_TYPE" => "A",	// Тип кеширования
-		"COUNT_ELEMENTS" => "Y",	// Показывать количество элементов в разделе
-		"IBLOCK_ID" => "18",	// Инфоблок
-		"IBLOCK_TYPE" => "1c_catalog",	// Тип инфоблока
-		"SECTION_CODE" => "",	// Код раздела
-		"SECTION_FIELDS" => array(	// Поля разделов
+			<?$APPLICATION->IncludeComponent(
+	"bitrix:catalog.section.list", 
+	"menu_left_not_home", 
+	array(
+		"ADD_SECTIONS_CHAIN" => "N",
+		"CACHE_GROUPS" => "Y",
+		"CACHE_TIME" => "36000000",
+		"CACHE_TYPE" => "A",
+		"COUNT_ELEMENTS" => "Y",
+		"IBLOCK_ID" => "18",
+		"IBLOCK_TYPE" => "1c_catalog",
+		"SECTION_CODE" => "",
+		"SECTION_FIELDS" => array(
 			0 => "NAME",
 			1 => "",
 		),
-		"SECTION_ID" => $_REQUEST["SECTION_ID"],	// ID раздела
-		"SECTION_URL" => "",	// URL, ведущий на страницу с содержимым раздела
-		"SECTION_USER_FIELDS" => array(	// Свойства разделов
-			0 => "UF_MENU_PIC",
-			1 => "UF_MENU_PIC_H",
-			2 => "",
+		"SECTION_ID" => $_REQUEST["SECTION_ID"],
+		"SECTION_URL" => "",
+		"SECTION_USER_FIELDS" => array(
+			0 => "UF_KARTINKI",
+			1 => "",
 		),
-		"SHOW_PARENT_NAME" => "Y",	// Показывать название раздела
-		"TOP_DEPTH" => "5",	// Максимальная отображаемая глубина разделов
-		"VIEW_MODE" => "LIST",	// Вид списка подразделов
-		"COMPONENT_TEMPLATE" => "menu_left"
+		"SHOW_PARENT_NAME" => "Y",
+		"TOP_DEPTH" => "5",
+		"VIEW_MODE" => "LIST",
+		"COMPONENT_TEMPLATE" => "menu_left_not_home"
 	),
 	false
 );?>

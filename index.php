@@ -7,9 +7,9 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 <div class="container">
 	<div class="left_index">
 		 <?$APPLICATION->IncludeComponent(
-	"bitrix:catalog.section.list",
-	"menu_left",
-	Array(
+	"bitrix:catalog.section.list", 
+	"menu_left", 
+	array(
 		"ADD_SECTIONS_CHAIN" => "N",
 		"CACHE_GROUPS" => "Y",
 		"CACHE_TIME" => "36000000",
@@ -19,14 +19,21 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"IBLOCK_ID" => "18",
 		"IBLOCK_TYPE" => "1c_catalog",
 		"SECTION_CODE" => "",
-		"SECTION_FIELDS" => array(0=>"NAME",1=>"",),
+		"SECTION_FIELDS" => array(
+			0 => "NAME",
+			1 => "",
+		),
 		"SECTION_ID" => $_REQUEST["SECTION_ID"],
 		"SECTION_URL" => "",
-		"SECTION_USER_FIELDS" => array(0=>"UF_MENU_PIC",1=>"UF_MENU_PIC_H",2=>"",),
+		"SECTION_USER_FIELDS" => array(
+			0 => "UF_KARTINKI",
+			1 => "",
+		),
 		"SHOW_PARENT_NAME" => "Y",
 		"TOP_DEPTH" => "4",
 		"VIEW_MODE" => "LIST"
-	)
+	),
+	false
 );?> <?$APPLICATION->IncludeComponent(
 	"bitrix:news.list",
 	"index_left",

@@ -52,14 +52,25 @@ if (0 < $arResult["SECTIONS_COUNT"])
 <ul class="new_left_menu">
 <?	foreach ($arResult['SECTIONS'] as &$arSection)
 			{
+				if(!empty($arSection['UF_KARTINKI']) and $arSection['DEPTH_LEVEL'] == 1) {
+					$arImgSection = explode(';', $arSection['UF_KARTINKI']);
+					foreach ($arImgSection as $key => $img) {
+						if (preg_match('/ico.png/', $img)) {
+							$oneImgSrctionIco = '/kartinki_dlya_razdelov/' . $img;
+						}
+						if (preg_match('/hover.png/', $img)) {
+							$oneImgSrctionHover = '/kartinki_dlya_razdelov/' . $img;
+						}
+					}
+				}
 				$this->AddEditAction($arSection['ID'], $arSection['EDIT_LINK'], $strSectionEdit);
 				$this->AddDeleteAction($arSection['ID'], $arSection['DELETE_LINK'], $strSectionDelete, $arSectionDeleteParams);
 				if($arSection["DEPTH_LEVEL"]==1){?>
 				
 				<li data-id="uli_<?=$arSection["ID"];?>">
 					<span>
-						<div style="background-image: url(<?=CFile::GetPath($arSection["UF_MENU_PIC"]);?>)" class="background-icon-menu"></div>
-						<div style="background-image: url(<?=CFile::GetPath($arSection["UF_MENU_PIC_H"]);?>)" class="background-icon-menu uf-menu-pic-hover"></div>
+						<div style="background-image: url(<?=$oneImgSrctionIco?>)" class="background-icon-menu"></div>
+						<div style="background-image: url(<?=$oneImgSrctionHover?>)" class="background-icon-menu uf-menu-pic-hover"></div>
 					</span>
 					<a href="<?=$arSection["SECTION_PAGE_URL"];?>">
 						<span class="object">

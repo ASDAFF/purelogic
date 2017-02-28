@@ -96,4 +96,5 @@ if (0 < $arResult['SECTIONS_COUNT'])
 		}
 	}
 }
+
 ?>

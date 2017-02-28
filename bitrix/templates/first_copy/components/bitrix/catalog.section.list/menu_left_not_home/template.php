@@ -52,12 +52,21 @@ if (0 < $arResult["SECTIONS_COUNT"])
 <ul class="new_left_menu">
 <?	foreach ($arResult['SECTIONS'] as &$arSection)
 			{
+				if(!empty($arSection['UF_KARTINKI']) and $arSection['DEPTH_LEVEL'] == 1) {
+					$arImgSection = explode(';', $arSection['UF_KARTINKI']);
+					foreach ($arImgSection as $key => $img) {
+						if (preg_match('/ico.png/', $img)) {
+							$oneImgSrctionIco = '/kartinki_dlya_razdelov/' . $img;
+						}
+					}
+				}
+
 				$this->AddEditAction($arSection['ID'], $arSection['EDIT_LINK'], $strSectionEdit);
 				$this->AddDeleteAction($arSection['ID'], $arSection['DELETE_LINK'], $strSectionDelete, $arSectionDeleteParams);
 				if($arSection["DEPTH_LEVEL"]==1){?>
 				
 				<li data-id="uli_<?=$arSection["ID"];?>">
-					<span style="background-image: url(<?=CFile::GetPath($arSection["UF_MENU_PIC"]);?>)"></span>
+					<span style="background-image: url(<?=$oneImgSrctionIco?>)"></span>
 				</li>
 				<?}}?>
 </ul><?}?>
