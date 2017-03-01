@@ -471,7 +471,7 @@ if (!empty($arResult['ITEMS']))
 $arResult['GROUP_BLOCK'] = 'N';
 
 	$arFilter = array('IBLOCK_ID' => $arResult['IBLOCK_ID'],'SECTION_ID' => $arResult['ID'],'GLOBAL_ACTIVE'=>'Y');
-	$rsSect = CIBlockSection::GetList(array($by=>$order),$arFilter,false,array("UF_*"));
+	$rsSect = CIBlockSection::GetList(array("UF_SORTIROVKA"=>"ASC","SORT"=>"ASC"),$arFilter,false,array("UF_*"));
 	$section_inc = 0;
 	while ($arSect = $rsSect->GetNext())
 	{
