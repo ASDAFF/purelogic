@@ -192,6 +192,7 @@ while ($arSect = $rsSect->GetNext())
 {
 	if($arSect['UF_SAYT_PAPKA_TIP'] == 2) {
 		$type_two = $arSect['UF_SAYT_PAPKA_TIP'];
+		$_SESSION["template"]="";
 		break;
 	}
 }
