@@ -78,7 +78,9 @@
 <?}?>
 <?if(CSite::InDir('/catalog/')&&!$_GET["q"]){?>
 <?if (!defined('ERROR_404') || ERROR_404 != 'Y') {?>
-<?$APPLICATION->IncludeComponent(
+<?
+		/*
+		$APPLICATION->IncludeComponent(
 	"bitrix:catalog.viewed.products", 
 	"new", 
 	array(
@@ -156,7 +158,9 @@
 		"LABEL_PROP_18" => "-"
 	),
 	false
-);?>
+);
+		*/
+		?>
 <?}?>
 <?}?>
 
@@ -216,7 +220,7 @@
 	)
 );?>
 <?}?>
-	<? if ($APPLICATION->GetCurPage(false) == '/'||CSite::InDir('/catalog/')&&!$_GET["q"]||$APPLICATION->GetCurPage(false) == '/support/'||$APPLICATION->GetCurPage(false) == '/support/help/'||$APPLICATION->GetCurPage() == '/vhod/registration.php'){?>	
+	<? if (CSite::InDir('/catalog/')&&!$_GET["q"]){?>
 	<?if(!defined('ERROR_404') || ERROR_404 != 'Y'){?>
 <section class="nugniy_tovar">
 	<div class="container">

@@ -28,7 +28,8 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"SECTION_USER_FIELDS" => array(
 			0 => "UF_SAYT_PAPKA_TIP",
 			1 => "UF_KARTINKI",
-			2 => "",
+			2 => "UF_SORTIROVKA",
+			3 => "",
 		),
 		"SHOW_PARENT_NAME" => "Y",
 		"TOP_DEPTH" => "4",
