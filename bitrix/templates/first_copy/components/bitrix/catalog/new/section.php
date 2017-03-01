@@ -184,9 +184,40 @@ if($_GET["template"]=="normal")
 $_SESSION["template"]="";
 if($_GET["template"]=="window")
 $_SESSION["template"]="window";
+
+
+$arFilter = array('IBLOCK_ID' => $arParams["IBLOCK_ID"],'SECTION_ID' => $arResult["VARIABLES"]['SECTION_ID'],'GLOBAL_ACTIVE'=>'Y');
+$rsSect = CIBlockSection::GetList(array($by=>$order),$arFilter,false,array("UF_SAYT_PAPKA_TIP"));
+while ($arSect = $rsSect->GetNext())
+{
+	if($arSect['UF_SAYT_PAPKA_TIP'] == 2) {
+		$type_two = $arSect['UF_SAYT_PAPKA_TIP'];
+		break;
+	}
+}
 ?>
 
-<div class="plitka"><div class="pltk <?if($_SESSION["template"]=="list"){?>current<?}?>"><form method="get" action=""><input name="template" type="hidden" value="window"><button class="for_image"><img src="/img/plitka1.png" alt=""/></button></form></div><div class="pltk <?if($_SESSION["template"]==""){?>current<?}?>"><form method="get" action=""><input name="template" type="hidden" value="normal"><button class="for_image"><img src="/img/plitka.png" alt=""/></button></form></div>
+<div class="plitka"><div class="pltk <?if($_SESSION["template"]=="list"){?>current<?}?>">
+<? if($type_two != 2){ ?>
+	<form method="get" action="">
+		<input name="template" type="hidden" value="window">
+		<button class="for_image">
+			<img src="/img/plitka1.png" alt=""/>
+		</button>
+	</form>
+<? } ?>
+</div>
+	<div class="pltk <?if($_SESSION["template"]==""){?>current<?}?>">
+<? if($type_two != 2){ ?>
+		<form method="get" action="">
+			<input name="template" type="hidden" value="normal">
+			<button class="for_image">
+				<img src="/img/plitka.png" alt=""/>
+			</button>
+		</form>
+<? } ?>
+	</div>
+
 <div class="clear"></div>
 </div>
 <?$intSectionID = $APPLICATION->IncludeComponent(
