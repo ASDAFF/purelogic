@@ -215,3 +215,10 @@ h5 a:hover{
 .padding-right-null{
     padding-right: 0px!important;
 }
+
+.tovar_wr > .col-md-2.element img{
+    margin-bottom: 15px;
+}
+.tovar_wr > .col-md-2.element{
+    padding: 15px 0px;
+}
