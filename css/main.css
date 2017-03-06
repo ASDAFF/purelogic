@@ -2935,8 +2935,8 @@ body > section.user_acaunnt > div > div > div.col-md-4 > div:nth-child(2) > div 
   
     color: #FFF;
     position: absolute;
-    top: 43%;
-    left: -30px;
+    top: 40%;
+    left: 0px;
 }
 .new_slider .owl-nav .owl-next{
 	display: inline-block;
@@ -2944,8 +2944,8 @@ body > section.user_acaunnt > div > div > div.col-md-4 > div:nth-child(2) > div 
    
     color:#FFF;
     position: absolute;
-    top: 43%;
-    right: -30px;
+    top: 40%;
+    right: 0px;
 }
 .new_slider .owl-nav .owl-next:hover,.new_slider .owl-nav .owl-prev:hover{
 	color: #333;
