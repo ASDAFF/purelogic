@@ -1,27 +1,27 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
-$APPLICATION->SetTitle("Title");
+$APPLICATION->SetTitle("Как заказать у нас?");
 ?>
 <h1 class="dbl_lines">Как заказать у нас? <span class="green"> Очень просто!</span></h1>
 
 <div class="row">
-    <div class="col-md-1">
+    <div class="col-md-1 col-md-1-width">
         <div class="num-order">
             <h1>1</h1>
         </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 col-md-2-width">
         <img src="/img/num-cart.png">
     </div>
-    <div class="col-md-5" style="height: 130px">
+    <div class="col-md-5" style="height: 100%">
         <h1>Выбор товара</h1>
         <p>Выберите в каталоге продукции интересующий Вас товар и добавьте его в корзину.</p>
-        <div class="down-img">
+        <div class="down-img" style="height: 100px">
             <img src="/img/linker.png">
             <span class="border-link"></span>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 col-md-4-width">
         <div class="num-order-block-text">
             <p>
                 Чтобы добавить товар в корзину, нажмите на зелёную кнопку с изображением тележки в карточке товара. По умолчанию указано количество 1 шт. - изменить количество товара можно заполнив поле ввода рядом с кнопкой либо перейдя в корзину. Общее количество товара в корзине указано рядом со значком корзины в шапке сайта.
@@ -31,24 +31,24 @@ $APPLICATION->SetTitle("Title");
 </div>
 
     <div class="row">
-        <div class="col-md-1">
+        <div class="col-md-1 col-md-1-width">
             <div class="num-order">
                 <h1>2</h1>
             </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-2 col-md-2-width">
             <img src="/img/pen.png">
         </div>
-        <div class="col-md-5" style="height: 410px">
+        <div class="col-md-5" style="height: 100%">
             <h1>Оформление заявки</h1>
             <p>Перейдите в корзину и заполните необходимые поля для оформления заявки, после заполнения нажмите кнопку "Подтвердить заказ", Ваш заказ автоматически будет отправлен менеджеру на обработку.</p>
             <p>Заявку также можно направить на электронную почту info@purelogic.ru, указав данные из списков справа.</p>
-            <div class="down-img">
+            <div class="down-img" style="height: 250px">
                 <img src="/img/linker.png">
                 <span class="border-link"></span>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 col-md-4-width">
             <div class="num-order-block-text">
                 <p>Для физических лиц:</p>
                 <ul>
@@ -81,23 +81,23 @@ $APPLICATION->SetTitle("Title");
     </div>
 
     <div class="row">
-        <div class="col-md-1">
+        <div class="col-md-1 col-md-1-width">
             <div class="num-order">
                 <h1>3</h1>
             </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-2 col-md-2-width">
             <img src="/img/money.png">
         </div>
-        <div class="col-md-5" style="height: 75px">
+        <div class="col-md-5" style="height: 100%">
             <h1>Оплата</h1>
             <p>В ответ на заявку менеджер выставит счёт в электронном виде с доставкой на электронную почту. Оплатите счет через банк. Если перед оплатой Вам необходимо что-либо уточнить или согласовать, свяжитесь с нами по бесплатному номеру 8 (800) 555-63-74</p>
-            <div class="down-img">
+            <div class="down-img" style="height: 100px">
                 <img src="/img/linker.png">
                 <span class="border-link"></span>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 col-md-4-width">
             <div class="num-order-block-text">
                 <p>
                     Обращаем Ваше внимание, что цены на товары и услуги не являются публичной офертой. Информация о товаре, услугах и ценах носит исключительно информационный характер. Актуальную стоимость, наличие товара и услуг просьба уточнять дополнительно в офисах продаж. Пожалуйста ознакомьтесь, с офертой.
@@ -107,15 +107,15 @@ $APPLICATION->SetTitle("Title");
     </div>
 
     <div class="row">
-        <div class="col-md-1">
+        <div class="col-md-1 col-md-1-width">
             <div class="num-order">
                 <h1>4</h1>
             </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-2 col-md-2-width">
             <img src="/img/box.png">
         </div>
-        <div class="col-md-5" style="height: 350px">
+        <div class="col-md-5" style="height: 100%">
             <h1>Отгрузка и доставка</h1>
             <p>
                 Ваш товар будет отгружен в транспортную компанию (ТК) при 100% предоплате, отгрузка производится ежедневно в рабочие дни при
@@ -124,12 +124,12 @@ $APPLICATION->SetTitle("Title");
             <p>
                 Примерные тарифы на перевозку грузов Вы можете найти на сайтах перевозчиков по указанным ссылкам: "Деловые линии", ПЭК, СПСР, EMS.
             </p>
-            <div class="down-img">
+            <div class="down-img" style="height: 100px">
                 <img src="/img/linker.png">
                 <span class="border-link"></span>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 col-md-4-width">
             <div class="num-order-block-text">
                 <p>
                     Полезная информация:
@@ -168,7 +168,6 @@ $APPLICATION->SetTitle("Title");
 .down-img{
     text-align: center;
     position: relative;
-    height: 100%;
 }
 .down-img img{
     position: absolute;
@@ -182,11 +181,35 @@ $APPLICATION->SetTitle("Title");
 }
 .num-order-block-text{
     background: #94B730;
-    padding: 15px 25px;
+    padding: 10px 25px;
+}
+.num-order-block-text p {
+    font-size: 13px;
+}
+.num-order-block-text ul li {
+    font-size: 13px;
 }
 .row{
     margin-bottom: 15px;
 }
+
+@media (min-width: 992px) {
+    .col-md-1-width {
+        width: 4.333333%;
+    }
+
+    .col-md-2-width {
+        width: 13.666667%;
+    }
+
+    .col-md-4-width {
+        width: 39.333333%;
+    }
+}
+.col-md-5 > h1{
+    margin: 0px;
+}
+
 </style>
 
 
