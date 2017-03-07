@@ -66,7 +66,9 @@ if (0 < $arResult["SECTIONS_COUNT"])
 				if($arSection["DEPTH_LEVEL"]==1){?>
 				
 				<li data-id="uli_<?=$arSection["ID"];?>">
+
 					<span style="background-image: url(<?=$oneImgSrctionIco?>)"></span>
+					<div class="text-name-section"><?=$arSection['NAME']?> </div>
 				</li>
 				<?}}?>
 </ul><?}?>
@@ -210,8 +212,8 @@ jQuery('.lftnnv.section_leftnav > ul > li').each(function(){
 </script>
 	<style>
 		.for_left_b .new_left_menu>li {
-			width: 70px;
-			height: 70px;
+			width: 100%;
+			height: 40px;
 			background-color: transparent;
 		}
 		.new_left_menu>li>span {
@@ -221,7 +223,7 @@ jQuery('.lftnnv.section_leftnav > ul > li').each(function(){
 			background: transparent;
 		}
 		.go_menu_left {
-			margin-left: 70px;
+			margin-left: 187px;
 		}
 	</style>
 </div>

@@ -93,6 +93,7 @@ padding-top:7px;
     right: -15px;
 }
 	.for_left_b .bx_sitemap.fix {
+    width: 181px;
     position: fixed;
     z-index: 22;
 	padding-top:7px;
