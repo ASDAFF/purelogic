@@ -1,18 +1,18 @@
-2017-Feb-22 12:26:29 Наличие необходимых модулей php (check_php_modules): Ok
+2017-Mar-07 08:29:04 Наличие необходимых модулей php (check_php_modules): Ok
 Все необходимые модули установлены
-2017-Feb-22 12:26:29 Обязательные параметры PHP (check_php_settings): Ok
+2017-Mar-07 08:29:04 Обязательные параметры PHP (check_php_settings): Ok
 Настройки правильные
-2017-Feb-22 12:26:29 Модули веб-сервера (check_security): Warning
+2017-Mar-07 08:29:04 Модули веб-сервера (check_security): Warning
 Замечание. Загружен модуль mod_dav/mod_dav_fs, WebDav не будет работать
-2017-Feb-22 12:26:29 Значения переменных сервера (check_server_vars): Ok
+2017-Mar-07 08:29:04 Значения переменных сервера (check_server_vars): Ok
 Корректные
-2017-Feb-22 12:26:29 Сохранение сессии (check_session): Ok
+2017-Mar-07 08:29:04 Сохранение сессии (check_session): Ok
 50% done
-2017-Feb-22 12:26:29 Параметры настройки UTF (mbstring и константа BX_UTF) (check_mbstring): Ok
+2017-Mar-07 08:29:04 Параметры настройки UTF (mbstring и константа BX_UTF) (check_mbstring): Ok
 Правильные. Сайт работает в UTF кодировке
-2017-Feb-22 12:26:29 Служебные скрипты в корне сайта (check_install_scripts): Ok
+2017-Mar-07 08:29:04 Служебные скрипты в корне сайта (check_install_scripts): Ok
 Отсутствуют
-2017-Feb-22 12:26:29 Работа с сокетами (check_socket): Ok
+2017-Mar-07 08:29:04 Работа с сокетами (check_socket): Ok
 Connection to new.purelogic.ru:80	Success
 
 Успешно

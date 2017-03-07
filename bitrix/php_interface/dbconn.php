@@ -28,5 +28,6 @@ define("BX_DIR_PERMISSIONS", 0755);
 define("BX_DISABLE_INDEX_PAGE", true);
 
 date_default_timezone_set("Europe/Moscow");
+ini_set("memory_limit", "2024M")
 
 ?>
