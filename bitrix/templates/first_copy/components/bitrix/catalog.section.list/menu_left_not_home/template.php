@@ -214,7 +214,6 @@ jQuery('.lftnnv.section_leftnav > ul > li').each(function(){
 		.for_left_b .new_left_menu>li {
 			width: 100%;
 			height: 40px;
-			background-color: transparent;
 		}
 		.new_left_menu>li>span {
 			margin: 0px;

@@ -717,8 +717,6 @@ ul{padding:0px; margin:0px;}
 }
 .for_left_b .new_left_menu>li {
     width: 111px;
-    height: 96px;
-    background-color: #cfcfd0;
     clear: both;
     overflow: hidden;
     transition:all 0.5s ease;
