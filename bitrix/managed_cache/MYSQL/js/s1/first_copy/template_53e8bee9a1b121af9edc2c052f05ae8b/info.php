@@ -1,1 +1,0 @@
-<? $arFilesInfo = array( 'FILES' => array("/libs/modernizr/modernizr.js" => "147582395911992","/bitrix/components/bitrix/search.title/script.js" => "14758239676110","/bitrix/templates/first_copy/components/bitrix/sale.basket.basket.line/new/script.js" => "14758239783834",), 'CUR_SEL_CNT' => '0', 'CUR_IE_CNT' => '0'); ?>
