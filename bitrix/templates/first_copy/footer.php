@@ -361,7 +361,7 @@
 				
 				
 			</div>
-			<div class="col-md-4 hidden-sm hidden-xs">
+			<div class="col-md-3 hidden-sm hidden-xs">
 				<div class="footer_adres">
 					
 					<?$APPLICATION->IncludeComponent("bitrix:main.include", "", array("AREA_FILE_SHOW" => "file", "PATH" => SITE_DIR."include/footer.php"), false);?>
@@ -370,7 +370,14 @@
 				</div>
 				
 			</div>
-			<div class="col-md-5 col-lg-6 col-sm-7">
+			<div class="col-md-3 hidden-sm hidden-xs">
+			<p style="color: #fff">Все цены на товары и услуги указаны с учетом НДС.</p>
+			<p></p>
+			<p></p>
+			<p style="color: #fff">Обращаем Ваше внимание, что цены на товары и услуги не являются публичной офертой. Информация о товаре, услугах и ценах носит исключительно информационный характер. Актуальную стоимость и наличие товара и услуг просьба уточнять дополнительно в офисах продаж.</p>
+			</div>
+
+			<div class="col-md-4 col-lg-4 col-sm-7">
 				<div class="footer_social">
 				<?
 				if (!function_exists('EditData')) {function EditData ($DATA) // конвертирует формат даты с 04.11.2008 в 04 Ноября, 2008
