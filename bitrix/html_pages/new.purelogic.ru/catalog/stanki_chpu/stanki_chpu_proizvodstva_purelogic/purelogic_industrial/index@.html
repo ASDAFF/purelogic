@@ -1,0 +1,1475 @@
+
+  
+		
+		
+		<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="ru"> <!--<![endif]-->
+
+<head>
+
+	<meta charset="utf-8">
+
+	<title>PureLogic Industrial</title>
+	
+	 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="robots" content="index, follow" />
+<style type="text/css">.bx-composite-btn {background: url(/bitrix/images/main/composite/sprite-1x.png) no-repeat right 0 #e94524;border-radius: 15px;color: #ffffff !important;display: inline-block;line-height: 30px;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;font-size: 12px !important;font-weight: bold !important;height: 31px !important;padding: 0 42px 0 17px !important;vertical-align: middle !important;text-decoration: none !important;}@media screen   and (min-device-width: 1200px)   and (max-device-width: 1600px)   and (-webkit-min-device-pixel-ratio: 2)  and (min-resolution: 192dpi) {.bx-composite-btn {background-image: url(/bitrix/images/main/composite/sprite-2x.png);background-size: 42px 124px;}}.bx-composite-btn-fixed {position: absolute;top: -45px;right: 15px;z-index: 10;}.bx-btn-white {background-position: right 0;color: #fff !important;}.bx-btn-black {background-position: right -31px;color: #000 !important;}.bx-btn-red {background-position: right -62px;color: #555 !important;}.bx-btn-grey {background-position: right -93px;color: #657b89 !important;}.bx-btn-border {border: 1px solid #d4d4d4;height: 29px !important;line-height: 29px !important;}.bx-composite-loading {display: block;width: 40px;height: 40px;background: url(/bitrix/images/main/composite/loading.gif);}</style>
+<script type="text/javascript" data-skip-moving="true">(function(w, d) {var v = w.frameCacheVars = {'CACHE_MODE':'HTMLCACHE','banner':{'url':'http://www.1c-bitrix.ru/composite/','text':'Быстро с 1С-Битрикс','bgcolor':'#E94524','style':'white'},'storageBlocks':[],'dynamicBlocks':{'bx_basketFKauiI':{'hash':'7300a924806bef415eedd67dc1062948'},'iIjGFB':{'hash':'15f898ea69cd11c3a6296cfec03d2f5c'},'8k8aZS':{'hash':'7d4187d6283d8bbc28bb157602be85e8'},'LkGdQn':{'hash':'2980d8cc6e342246c0b3bcc7fab908c4'},'5623zQ':{'hash':'de354c2a52b601e025251b581c32368f'},'4enrz3':{'hash':'951f8c8854bbce889a7a97cf16356ef3'},'tcWCfJ':{'hash':'afd8422a5a346d9a52e1561025581a23'}},'AUTO_UPDATE':true,'AUTO_UPDATE_TTL':'120'};var inv = false;if (v.AUTO_UPDATE === false){if (v.AUTO_UPDATE_TTL && v.AUTO_UPDATE_TTL > 0){var lm = Date.parse(d.lastModified);if (!isNaN(lm)){var td = new Date().getTime();if ((lm + v.AUTO_UPDATE_TTL * 1000) >= td){w.frameRequestStart = false;w.preventAutoUpdate = true;return;}inv = true;}}else{w.frameRequestStart = false;w.preventAutoUpdate = true;return;}}var r = w.XMLHttpRequest ? new XMLHttpRequest() : (w.ActiveXObject ? new w.ActiveXObject("Microsoft.XMLHTTP") : null);if (!r) { return; }w.frameRequestStart = true;var m = v.CACHE_MODE; var l = w.location; var x = new Date().getTime();var q = "?bxrand=" + x + (l.search.length > 0 ? "&" + l.search.substring(1) : "");var u = l.protocol + "//" + l.host + l.pathname + q;r.open("GET", u, true);r.setRequestHeader("BX-ACTION-TYPE", "get_dynamic");r.setRequestHeader("BX-CACHE-MODE", m);r.setRequestHeader("BX-CACHE-BLOCKS", v.dynamicBlocks ? JSON.stringify(v.dynamicBlocks) : "");if (inv){r.setRequestHeader("BX-INVALIDATE-CACHE", "Y");}try { r.setRequestHeader("BX-REF", d.referrer || "");} catch(e) {}if (m === "APPCACHE"){r.setRequestHeader("BX-APPCACHE-PARAMS", JSON.stringify(v.PARAMS));r.setRequestHeader("BX-APPCACHE-URL", v.PAGE_URL ? v.PAGE_URL : "");}r.onreadystatechange = function() {if (r.readyState != 4) { return; }var a = r.getResponseHeader("BX-RAND");var b = w.BX && w.BX.frameCache ? w.BX.frameCache : false;if (a != x || !((r.status >= 200 && r.status < 300) || r.status === 304 || r.status === 1223 || r.status === 0)){var f = {error:true, reason:a!=x?"bad_rand":"bad_status", url:u, xhr:r, status:r.status};if (w.BX && w.BX.ready){BX.ready(function() {setTimeout(function(){BX.onCustomEvent("onFrameDataRequestFail", [f]);}, 0);});}else{w.frameRequestFail = f;}return;}if (b){b.onFrameDataReceived(r.responseText);if (!w.frameUpdateInvoked){b.update(false);}w.frameUpdateInvoked = true;}else{w.frameDataString = r.responseText;}};r.send();})(window, document);</script>
+
+
+<link href="/bitrix/cache/css/s1/first_copy/kernel_main/kernel_main.css?148820759444417" type="text/css"  rel="stylesheet" />
+<link href="/bitrix/cache/css/s1/first_copy/page_b85cc48d07666b63d3072c7b52509b05/page_b85cc48d07666b63d3072c7b52509b05.css?14883560255512" type="text/css"  rel="stylesheet" />
+<link href="/bitrix/cache/css/s1/first_copy/template_cd444e67401d454b6a5e118854362b7d/template_cd444e67401d454b6a5e118854362b7d.css?1488884796299470" type="text/css"  data-template-style="true"  rel="stylesheet" />
+<script type="text/javascript">if(!window.BX)window.BX={message:function(mess){if(typeof mess=='object') for(var i in mess) BX.message[i]=mess[i]; return true;}};</script>
+<script type="text/javascript">(window.BX||top.BX).message({'JS_CORE_LOADING':'Загрузка...','JS_CORE_NO_DATA':'- Нет данных -','JS_CORE_WINDOW_CLOSE':'Закрыть','JS_CORE_WINDOW_EXPAND':'Развернуть','JS_CORE_WINDOW_NARROW':'Свернуть в окно','JS_CORE_WINDOW_SAVE':'Сохранить','JS_CORE_WINDOW_CANCEL':'Отменить','JS_CORE_WINDOW_CONTINUE':'Продолжить','JS_CORE_H':'ч','JS_CORE_M':'м','JS_CORE_S':'с','JSADM_AI_HIDE_EXTRA':'Скрыть лишние','JSADM_AI_ALL_NOTIF':'Показать все','JSADM_AUTH_REQ':'Требуется авторизация!','JS_CORE_WINDOW_AUTH':'Войти','JS_CORE_IMAGE_FULL':'Полный размер'});</script>
+<script type="text/javascript">(window.BX||top.BX).message({'LANGUAGE_ID':'ru','FORMAT_DATE':'DD.MM.YYYY','FORMAT_DATETIME':'DD.MM.YYYY HH:MI:SS','COOKIE_PREFIX':'BITRIX_SM','SERVER_TZ_OFFSET':'10800','SITE_ID':'s1','SITE_DIR':'/'});</script>
+
+
+<script type="text/javascript" src="/bitrix/cache/js/s1/first_copy/kernel_main/kernel_main.js?1488256934278939"></script>
+<script type="text/javascript" src="/bitrix/js/main/core/core_db.min.js?14867397365048"></script>
+<script type="text/javascript" src="/bitrix/js/main/core/core_frame_cache.min.js?148673973611191"></script>
+<script type="text/javascript">BX.setJSList(['/bitrix/js/main/core/core.js?148673973673480','/bitrix/js/main/core/core_ajax.js?148673973621031','/bitrix/js/main/json/json2.min.js?14867397363467','/bitrix/js/main/core/core_ls.js?14867397367365','/bitrix/js/main/session.js?14867397362511','/bitrix/js/main/core/core_window.js?148673973674754','/bitrix/js/main/core/core_popup.js?148673973629812','/bitrix/js/main/core/core_date.js?148673973634241','/bitrix/js/main/utils.js?148673973619858','/bitrix/js/main/core/core_fx.js?14867397369592','/libs/modernizr/modernizr.js?148673973811992','/bitrix/components/bitrix/search.title/script.js?14867397356110','/bitrix/templates/first_copy/components/bitrix/sale.basket.basket.line/new/script.js?14867397383834']); </script>
+<script type="text/javascript">BX.setCSSList(['/bitrix/js/main/core/css/core.css?14867397362854','/bitrix/js/main/core/css/core_popup.css?148673973629699','/bitrix/js/main/core/css/core_date.css?14867397369657','/bitrix/templates/first_copy/components/bitrix/catalog/new/style.css?1486739738697','/bitrix/templates/first_copy/components//bitrix/system.pagenavigation/.default/style.css?1486739738147','/bitrix/templates/first_copy/components/bitrix/catalog/new/bitrix/catalog.section/.default/style.css?14883560123966','/css/jquery-ui.css?148673973836159','/css/dbpasCarousel-master/jquery.dbpas.carousel.css?14867397381669','/libs/font-awesome-4.2.0/css/font-awesome.min.css?148673973821984','/libs/bootstrap/css/bootstrap-grid.min.css?148673973815691','/libs/popup/magnific-popup.css?14867397387783','/libs/owl-carousel/owl.carousel.css?14867397384614','/css/masterslider.css?14867397383890','/css/fonts.css?14867397381565','/css/main.css?148880010186595','/css/media.css?148673973819163','/css/jquery.mCustomScrollbar.css?148673973854842','/css/fancybox/jquery.fancybox.css?14877791114140','/css/fancybox/jquery.fancybox-buttons.css?14877791112415','/css/fancybox/jquery.fancybox-thumbs.css?1488207485724','/bitrix/templates/first_copy/components/bitrix/catalog.section.list/menu_left_not_home/style.css?14888847781038','/bitrix/templates/first_copy/template_styles.css?148888477834527']); </script>
+<script type="text/javascript">
+					(function () {
+						"use strict";
+
+						var counter = function ()
+						{
+							var cookie = (function (name) {
+								var parts = ("; " + document.cookie).split("; " + name + "=");
+								if (parts.length == 2) {
+									try {return JSON.parse(decodeURIComponent(parts.pop().split(";").shift()));}
+									catch (e) {}
+								}
+							})("BITRIX_CONVERSION_CONTEXT_s1");
+
+							if (! cookie || cookie.EXPIRE < BX.message("SERVER_TIME"))
+							{
+								var request = new XMLHttpRequest();
+								request.open("POST", "/bitrix/tools/conversion/ajax_counter.php", true);
+								request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+								request.send(
+									"SITE_ID="      + encodeURIComponent(BX.message("SITE_ID")) + "&" +
+									"sessid="       + encodeURIComponent(BX.bitrix_sessid())    + "&" +
+									"HTTP_REFERER=" + encodeURIComponent(document.referrer)
+								);
+							}
+						};
+
+						if (window.frameRequestStart === true)
+							BX.addCustomEvent("onFrameDataReceived", counter);
+						else
+							BX.ready(counter);
+					})();
+				</script>
+
+
+
+<script type="text/javascript" src="/bitrix/cache/js/s1/first_copy/template_896ccf37149aec475deffe668ca1c36e/template_896ccf37149aec475deffe668ca1c36e.js?148820759423160"></script>
+<script type="text/javascript">var _ba = _ba || []; _ba.push(["aid", "995193e87f23caf02a5b0d2816ec19a3"]); _ba.push(["host", "new.purelogic.ru"]); (function() {var ba = document.createElement("script"); ba.type = "text/javascript"; ba.async = true;ba.src = (document.location.protocol == "https:" ? "https://" : "http://") + "bitrix.info/ba.js";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(ba, s);})();</script>
+
+
+	
+<script src="/libs/jquery/jquery-1.11.3.min.js"></script>
+
+
+
+
+		<script src="/libs/waypoints/waypoints.min.js"></script>
+
+	<script src="/js/jquery-ui.js"></script>
+	<script src="/js/dbpasCarousel-master/jquery.dbpas.carousel.js"></script>
+
+	<script src="/libs/plugins-scroll/plugins-scroll.js"></script>
+	<script src="/libs/owl-carousel/owl.carousel.min.js"></script>
+	<script src="/libs/popup/magnific-popup.js"></script>
+	<script src="/js/common.js"></script>
+	<script src="/js/accordion.js"></script>
+	<script src="/js/wSelect.min.js"></script>
+
+	<script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script src="/js/masterslider.js"></script>
+
+
+	<script src="/js/fancybox/jquery.fancybox.pack.js"></script>
+	<script src="/js/fancybox/jquery.fancybox-buttons.js"></script>
+	<script src="/js/fancybox/jquery.fancybox-thumbs.js"></script>
+
+
+
+	<script language="javascript">
+	$(document).ready(function() {
+	$( ".new_left_menu>li" ).each(function(){
+$(this).append($("#"+$(this).attr("data-id")));
+});
+    $(".topnav, .lftnnv").accordion({
+        accordion:false,
+        speed: 10,
+        closedSign: '+',
+        openedSign: '-'
+    });
+});
+</script>
+	<link rel="shortcut icon" href="/img/favicon/favicon.png" type="image/x-icon">
+	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:400,300,300italic,700,500,500italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+<!-- ПРЕЛОАД
+		<div class="loader">
+			<div class="loader_inner"></div>
+		</div>
+-->
+<div id="panel">
+					</div>
+		<div class="big-back-formenu"></div>
+<header>
+	<div class="opticly-background-header"></div>
+	<div class="container">
+		<div class="row">
+		<div class="col-md-3 col-lg-3 col-sm-3 col-xs-12">
+				<div class="logo">
+					
+					<a href="/"><img src="/img/main_logo.png" alt=""></a>					
+				</div>
+				<a class="menu-toggle_cat hidden-lg hidden-md hidden-sm " href="#"><span>Menu</span></a>
+			</div>
+						<div class="col-md-9 col-lg-9 col-sm-9 hidden-xs col-xs-12 padding_left_xs_0">
+				<div class="icon_wr_sm">
+					<div class="col-md-4 col-lg-3 hidden-xs hidden-sm">
+					<div class="header_phone">
+					<span class="icon_phone_header"><i class="fa fa-phone" aria-hidden="true"></i></span>
+				
+				<span class="icon_phone_header_number">8 800 555-63-74 </span>
+<!--
+<h6><span style="color: #ffffff;"><b><span style="color: #ffffff;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; Бесплатный звонок по России</span><br>
+ </b></span></h6>
+ -->
+				</div>
+				</div>
+
+				<div class="col-md-4 col-lg-3 hidden-xs hidden-sm">
+					<div class="call_back_header">
+						<span>Обратный звонок</span>
+					</div>
+				</div>
+										<div class="hidden-md hidden-lg col-sm-2 col-xs-2">
+						<a href="#reg-01" class="search_sm"><i class="fa fa-search" aria-hidden="true"></i></a>
+					</div>
+					<!-- popup -->
+
+							<div id="reg-01" class="popup-modal reg_popup slider mfp-hide">
+	                            <div id="login-form">
+		                            
+	                            	
+	                               <div id="search" >
+	<form action="/catalog/">
+		
+			<input id="title-search-input" type="text" name="q" class="input" placeholder="Поиск" autocomplete="off" class="bx-form-control"/>
+			<input type="submit" name="s" value="" class="submit" />
+		
+	</form>
+</div>
+<script>
+	BX.ready(function(){
+		new JCTitleSearch({
+			'AJAX_PAGE' : '/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/purelogic_industrial/',
+			'CONTAINER_ID': 'search',
+			'INPUT_ID': 'title-search-input',
+			'MIN_QUERY_LEN': 2
+		});
+	});
+</script>
+
+	                            </div>
+	                        </div>
+
+
+					<div class="col-md-4 col-lg-3 col-sm-2 col-xs-3">
+						<div class="korzina">
+						<div id="cucuca">
+							<script>
+var bx_basketFKauiI = new BitrixSmallCart;
+</script>
+<div id="bx_basketFKauiI" class="bx-basket bx-opener">
+<a href="/cart/" class="korzina_btn">
+							<span  class="icon_korzina"></span>
+							<p class="hidden-xs hidden-sm cnea">0 товаров</p>
+							<p class="korzina_price hidden-xs hidden-sm">0 RUB</p>
+						</a>
+						
+	<!--
+индикатор бесплатной доставки
+<div class="fixed_dlv enought">
+	<div class="img_fx_dl">
+	
+		<img src="/images/dst_da.png" alt=""/> <span></span><div class="descr_nov">До оформления бесплатной доставки осталось приобрести на сумму:</div><img src="/images/dst_da_w.png" alt=""/> <span class="galka"><img src="/images/galka.png" alt=""/></span><div class="descr_nov">Для вас доступна услуга бесплатной доставки</div>	
+	
+	</div>
+	<div class="shkala">
+	<div class="zapolnenie" style="height:%">
+	</div>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+	</div>
+</div>
+-->
+</div>
+<script type="text/javascript">
+	bx_basketFKauiI.siteId       = 's1';
+	bx_basketFKauiI.cartId       = 'bx_basketFKauiI';
+	bx_basketFKauiI.ajaxPath     = '/bitrix/components/bitrix/sale.basket.basket.line/ajax.php';
+	bx_basketFKauiI.templateName = 'new';
+	bx_basketFKauiI.arParams     =  {'PATH_TO_BASKET':'/cart/','PATH_TO_PERSONAL':'/personal/','SHOW_PERSONAL_LINK':'N','SHOW_NUM_PRODUCTS':'Y','SHOW_TOTAL_PRICE':'Y','SHOW_PRODUCTS':'N','POSITION_FIXED':'N','SHOW_AUTHOR':'N','PATH_TO_REGISTER':'/login/','PATH_TO_PROFILE':'/personal/','COMPONENT_TEMPLATE':'new','PATH_TO_ORDER':'/personal/order/make/','SHOW_EMPTY_VALUES':'Y','HIDE_ON_BASKET_PAGES':'N','CACHE_TYPE':'A','SHOW_DELAY':'Y','SHOW_NOTAVAIL':'Y','SHOW_SUBSCRIBE':'Y','SHOW_IMAGE':'Y','SHOW_PRICE':'Y','SHOW_SUMMARY':'Y','POSITION_VERTICAL':'top','POSITION_HORIZONTAL':'right','AJAX':'N','~PATH_TO_BASKET':'/cart/','~PATH_TO_PERSONAL':'/personal/','~SHOW_PERSONAL_LINK':'N','~SHOW_NUM_PRODUCTS':'Y','~SHOW_TOTAL_PRICE':'Y','~SHOW_PRODUCTS':'N','~POSITION_FIXED':'N','~SHOW_AUTHOR':'N','~PATH_TO_REGISTER':'/login/','~PATH_TO_PROFILE':'/personal/','~COMPONENT_TEMPLATE':'new','~PATH_TO_ORDER':'/personal/order/make/','~SHOW_EMPTY_VALUES':'Y','~HIDE_ON_BASKET_PAGES':'N','~CACHE_TYPE':'A','~SHOW_DELAY':'Y','~SHOW_NOTAVAIL':'Y','~SHOW_SUBSCRIBE':'Y','~SHOW_IMAGE':'Y','~SHOW_PRICE':'Y','~SHOW_SUMMARY':'Y','~POSITION_VERTICAL':'top','~POSITION_HORIZONTAL':'right','~AJAX':'N','cartId':'bx_basketFKauiI'}; // TODO \Bitrix\Main\Web\Json::encode
+	bx_basketFKauiI.closeMessage = 'Скрыть';
+	bx_basketFKauiI.openMessage  = 'Раскрыть';
+	bx_basketFKauiI.activate();
+</script></div>
+						
+							<div class="korzina_podskazka">
+								<p>Товар добавлен</p>
+								<a class="btn_grey" href="/cart/">Перейти в козину</a>
+							</div>		
+						</div>
+					</div>
+					<div class="col-md-4 col-lg-3 col-sm-8 col-xs-6  paddrght0">
+												<a href="#" class="hidden-xs user_head"><img src="/img/icon/voskl.png" alt=""></a>
+							<a href="#" class="hidden-xs user_head"><img src="/img/icon/person.png" alt=""></a>
+							<div class="select_language">
+								<select id="demo" class="lang_choice" tabindex="1">
+							        <option selected >ru</option> 
+							       
+								  
+							       
+							      
+							                   
+							    </select>
+							</div>
+					
+					</div>
+				</div>	
+				
+			</div>
+
+		</div>
+		
+	</div>
+</header>
+
+<!-- Форма входа при клике  -->
+<section class="main_logo_vhod">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-3 col-lg-3  col-sm-6 col-xs-5 ">
+				<div class="logo">
+								</div>
+			</div>
+			<div class="col-md-9 col-lg-8 col-sm-6 col-xs-7 ">
+				<div class="main_vhod">
+					<a href="/vhod/registration.php">регистрация</a>
+					<div id="bxdynamic_iIjGFB_start" style="display:none"></div>
+<div class="bx-system-auth-form form_vtt1">
+<div class="error_yo">
+</div>
+
+<form name="system_auth_form6zOYVN" method="post" class="hidden-sm form_author1 hidden-xs" target="_top" action="/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/purelogic_industrial/">
+	<input type="hidden" name="backurl" value="/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/purelogic_industrial/" />
+	<input type="hidden" name="AUTH_FORM" value="Y" />
+	<input type="hidden" name="TYPE" value="AUTH" />
+
+ <label for="email">e-mail</label>
+                            <input type="text" name="USER_LOGIN"  required value="ashebalin@purelogic.ru"  />
+                            <label for="password">пароль</label>
+                            
+                   <input type="password" name="USER_PASSWORD"   required autocomplete="off" />        
+                            <input type="submit" value="войти">
+	
+</form>
+
+</div>
+<div id="bxdynamic_iIjGFB_end" style="display:none"></div> 
+					
+                    <a href="#reg-03" class="btn hidden-md hidden-lg user_header" >войти</a> 
+
+                    <div id="reg-03" class="popup-modal reg_popup slider mfp-hide">
+                            <div id="login-form">
+	                            <div class="logo_popup">
+	                            	<a href="/"><img src="/img/main_logo.png" alt=""></a>	                            </div>
+                            	
+                                <div id="bxdynamic_8k8aZS_start" style="display:none"></div>
+<div class="bx-system-auth-form form_vtt2">
+<div class="error_yo">
+</div>
+
+<form name="system_auth_formPqgS8z" method="post" class="hidden-sm form_author2 hidden-xs" target="_top" action="/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/purelogic_industrial/">
+	<input type="hidden" name="backurl" value="/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/purelogic_industrial/" />
+	<input type="hidden" name="AUTH_FORM" value="Y" />
+	<input type="hidden" name="TYPE" value="AUTH" />
+
+ <label for="email">e-mail</label>
+                            <input type="text" name="USER_LOGIN"  required value="ashebalin@purelogic.ru"  />
+                            <label for="password">пароль</label>
+                            
+                   <input type="password" name="USER_PASSWORD"   required autocomplete="off" />        
+                            <input type="submit" value="войти">
+	
+</form>
+
+</div>
+<div id="bxdynamic_8k8aZS_end" style="display:none"></div> 
+                            </div>
+                        </div>
+					<a href="/vhod/?forgot_password=yes" class="vspomnit_parol">вспомнить пароль</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+
+
+<section class="main_logo">
+	<span class="menu_opticaly"></span>
+	<div class="container">
+		<div class="row">
+
+
+			<div class="col-md-8 col-lg-9 col-sm-12  padding-xs-0 col-xs-12">
+
+				<div class="main_logo_menu ">
+					<ul>
+
+						<div id="bxdynamic_LkGdQn_start" style="display:none"></div>
+
+			<li><a href="/catalog/" ">Каталог</a></li>
+		
+			<li><a href="/how_do/" ">Как заказать</a></li>
+		
+			<li><a href="/about/" ">О компании</a></li>
+		
+			<li><a href="/about/contacts/" class="last_a"">Контакты</a></li>
+		
+
+
+<div id="bxdynamic_LkGdQn_end" style="display:none"></div>						<li class="hidden-lg hidden-sm hidden-md black_bg "><a href="#reg-05" class="obr_zvon_popop" >Обратный звонок</a></li>
+						<li class="hidden-lg hidden-sm hidden-md black_bg"><a href="#reg-03" class="vhod_pop" >Личный кабинет</a></li>
+						<!-- Popup kabinet -->
+						<div id="reg-03" class="popup-modal reg_popup slider mfp-hide">
+							<div id="login-form">
+								<div class="logo_popup">
+									<img src="/img/main_logo.png" alt="">
+								</div>
+
+								<div id="bxdynamic_5623zQ_start" style="display:none"></div>
+<div class="bx-system-auth-form form_vtt">
+<div class="error_yo">
+</div>
+
+<form name="system_auth_formlIuNZ4" method="post" class="form_author" id="user_form" target="_top" action="/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/purelogic_industrial/">
+	<input type="hidden" name="backurl" value="/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/purelogic_industrial/" />
+	<input type="hidden" name="AUTH_FORM" value="Y" />
+	<input type="hidden" name="TYPE" value="AUTH" />
+
+ 
+                            <input type="text" name="USER_LOGIN" placeholder="E-mail" required value="ashebalin@purelogic.ru"  />
+                            
+                            
+                   <input type="password" name="USER_PASSWORD" placeholder="Пароль"  required autocomplete="off" />        
+                            <input type="submit" class="btn" value="войти">
+	
+</form>
+
+</div>
+<div id="bxdynamic_5623zQ_end" style="display:none"></div>							</div>
+						</div>
+						<!-- Popup obrat_zvonok -->
+						<div id="reg-05" class="popup-modal reg_popup slider mfp-hide">
+							<div id="login-form">
+								<h2>Обратный звонок</h2>
+								<form action="#" id="user_form" >
+									<input type="text" name="" placeholder="Имя" />
+									<input type="text" name="" placeholder="Телефон" />
+									<input type="submit" name="" value="Перезвоните мне" class="submit btn" />
+								</form>
+							</div>
+						</div>
+
+
+					</ul>
+				</div>
+			</div>
+			<div class="col-md-4 col-lg-3 col-sm-5 hidden-sm сol-xs-12">
+				<div id="search" >
+	<form action="/catalog/">
+		
+			<input id="title-search-input" type="text" name="q" class="input" placeholder="Поиск" autocomplete="off" class="bx-form-control"/>
+			<input type="submit" name="s" value="" class="submit" />
+		
+	</form>
+</div>
+<script>
+	BX.ready(function(){
+		new JCTitleSearch({
+			'AJAX_PAGE' : '/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/purelogic_industrial/',
+			'CONTAINER_ID': 'search',
+			'INPUT_ID': 'title-search-input',
+			'MIN_QUERY_LEN': 2
+		});
+	});
+</script>
+
+
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+	$(function(){
+		$('#bx-panel-hider').click(function(){
+		var h =	$('.opticly-background-header').css('height');
+		});
+		$('#bx-panel-expander').click(function(){
+		});
+	});
+</script>
+
+<section class="slider_main hidden-sm hidden-xs"></section>
+
+ 
+<section class="main_katalog catalog_categories_wr">
+<div class="container">
+<div class="row">
+			<div class="col-md-2 for_left_b">
+			<div class="togle_wr hidden-lg hidden-md"> 
+		<a class="menu-toggle main_menu hidden-lg hidden-md" href="#"><span>Menu</span></a>
+		<p>Все категории</p>
+	</div>
+			<div class="bx_sitemap"><ul class="new_left_menu">
+				
+				<li data-id="uli_14055">
+
+					<span style="background-image: url()"></span>
+					<div class="text-name-section">ПРОИЗВОДСТВО </div>
+				</li>
+								
+				<li data-id="uli_14171">
+
+					<span style="background-image: url()"></span>
+					<div class="text-name-section">ОСНАСТКА </div>
+				</li>
+								
+				<li data-id="uli_14349">
+
+					<span style="background-image: url(/kartinki_dlya_razdelov/188511b0-6910-11e6-80d5-000c292b16be/ico.png)"></span>
+					<div class="text-name-section">МЕХАНИКА </div>
+				</li>
+								
+				<li data-id="uli_14469">
+
+					<span style="background-image: url(/kartinki_dlya_razdelov/bee264be-6934-11e6-80d5-000c292b16be/ico.png)"></span>
+					<div class="text-name-section">НАПРАВЛЯЮЩИЕ </div>
+				</li>
+								
+				<li data-id="uli_14628">
+
+					<span style="background-image: url(/kartinki_dlya_razdelov/bee264be-6934-11e6-80d5-000c292b16be/ico.png)"></span>
+					<div class="text-name-section">ПРИВОДНАЯ ТЕХНИКА </div>
+				</li>
+								
+				<li data-id="uli_14766">
+
+					<span style="background-image: url(/kartinki_dlya_razdelov/bee264be-6934-11e6-80d5-000c292b16be/ico.png)"></span>
+					<div class="text-name-section">ЭЛЕКТРОНИКА </div>
+				</li>
+								
+				<li data-id="uli_14927">
+
+					<span style="background-image: url(/kartinki_dlya_razdelov/bee264be-6934-11e6-80d5-000c292b16be/ico.png)"></span>
+					<div class="text-name-section">СОФТ ДЛЯ ЧПУ </div>
+				</li>
+								
+				<li data-id="uli_14934">
+
+					<span style="background-image: url(/kartinki_dlya_razdelov/bee264be-6934-11e6-80d5-000c292b16be/ico.png)"></span>
+					<div class="text-name-section">УСЛУГИ </div>
+				</li>
+								
+				<li data-id="uli_14939">
+
+					<span style="background-image: url(/kartinki_dlya_razdelov/26f6a0bf-c5b2-11e6-80e0-000c292b16be/ico.png)"></span>
+					<div class="text-name-section">СТАНКИ ЧПУ </div>
+				</li>
+				</ul></div>
+<div class="its_r_mns">
+<div class="">
+<div class=" ">
+		</div></div>
+
+	<div id="uli_14055" class="go_menu_left"><div class="lftnnv section_leftnav">
+
+	
+		<ul  >
+		<li class="selected" id="bx_1847241719_14056"><a href="/catalog/proizvodstvo/universalnye_stanki_sieg/">Универсальные станки SIEG</a></li>
+		<li class="selected" id="bx_1847241719_14064"><a href="/catalog/proizvodstvo/markirovochnye_stanki/">Маркировочные станки</a></li>
+		<li class="selected" id="bx_1847241719_14065"><a href="/catalog/proizvodstvo/mini_stanki_i_aksessuary/">Мини-станки и аксессуары</a>
+			<ul  >
+			<li  id="bx_1847241719_14066"><a href="/catalog/proizvodstvo/mini_stanki_i_aksessuary/aksessuary_dlya_mini_stankov/">Аксессуары для мини-станков</a></li>
+			<li  id="bx_1847241719_14067"><a href="/catalog/proizvodstvo/mini_stanki_i_aksessuary/mini_stanki/">Мини-станки</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14068"><a href="/catalog/proizvodstvo/sistemy_plazmennoy_rezki/">Системы плазменной резки</a>
+			<ul  >
+			<li  id="bx_1847241719_14069"><a href="/catalog/proizvodstvo/sistemy_plazmennoy_rezki/sistemy_plazmennoy_rezki_metalcut/">Системы плазменной резки MetalCut</a></li>
+			<li  id="bx_1847241719_14070"><a href="/catalog/proizvodstvo/sistemy_plazmennoy_rezki/sistemy_plazmennoy_rezki_hypertherm/">Системы плазменной резки Hypertherm</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14071"><a href="/catalog/proizvodstvo/3d_printery/">3D-принтеры</a></li>
+		<li class="selected" id="bx_1847241719_14074"><a href="/catalog/proizvodstvo/pnevmatika/">Пневматика</a>
+			<ul  >
+			<li  id="bx_1847241719_14075"><a href="/catalog/proizvodstvo/pnevmatika/pnevmaticheskie_klapany/">Пневматические клапаны</a></li>
+			<li  id="bx_1847241719_14080"><a href="/catalog/proizvodstvo/pnevmatika/pnevmotsilindry_i_prinadlezhnosti/">Пневмоцилиндры и принадлежности</a></li>
+			<li  id="bx_1847241719_14088"><a href="/catalog/proizvodstvo/pnevmatika/podgotovka_vozdukha/">Подготовка воздуха</a></li>
+			<li  id="bx_1847241719_14095"><a href="/catalog/proizvodstvo/pnevmatika/raspredeliteli_i_pedali/">Распределители и педали</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14135"><a href="/catalog/proizvodstvo/komplektuyushchie_dlya_plazmorezov/">Комплектующие для плазморезов</a>
+			<ul  >
+			<li  id="bx_1847241719_14136"><a href="/catalog/proizvodstvo/komplektuyushchie_dlya_plazmorezov/gazovye_rezaki_i_komplektuyushchie/">Газовые резаки и комплектующие</a></li>
+			<li  id="bx_1847241719_14145"><a href="/catalog/proizvodstvo/komplektuyushchie_dlya_plazmorezov/kontrol_vysoty_fakela_rezaka_thc/">Контроль высоты факела резака THC</a></li>
+			<li  id="bx_1847241719_14146"><a href="/catalog/proizvodstvo/komplektuyushchie_dlya_plazmorezov/podemniki_i_zashchitnye_derzhateli_rezaka/">Подъемники и защитные держатели резака</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14147"><a href="/catalog/proizvodstvo/lazernoe_oborudovanie/">Лазерное оборудование</a>
+			<ul  >
+			<li  id="bx_1847241719_14148"><a href="/catalog/proizvodstvo/lazernoe_oborudovanie/lazernye_gravery_chpu/">Лазерные граверы ЧПУ</a></li>
+			<li  id="bx_1847241719_14149"><a href="/catalog/proizvodstvo/lazernoe_oborudovanie/aksessuary_dlya_lazernogo_oborudovaniya/">Аксессуары для лазерного оборудования</a></li>
+			<li  id="bx_1847241719_14151"><a href="/catalog/proizvodstvo/lazernoe_oborudovanie/komplektuyushchie_dlya_co2_lazernykh_stankov/">Комплектующие для CO2 лазерных станков</a></li>
+			<li  id="bx_1847241719_14161"><a href="/catalog/proizvodstvo/lazernoe_oborudovanie/poluprovodnikovye_lazernye_moduli/">Полупроводниковые лазерные модули</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14167"><a href="/catalog/proizvodstvo/zatochnye_stanki_dlya_frez_i_sverel/">Заточные станки для фрез и сверел</a></li>
+		</ul>
+	</li>
+	</ul>
+	</div></div>
+
+	<div id="uli_14171" class="go_menu_left"><div class="lftnnv section_leftnav">
+
+	
+			<ul  >
+			<li  id="bx_1847241719_14173"><a href="/catalog/osnastka/izmeritelnyy_instrument_i_aksessuary/aksessuary_dlya_izmeritelnogo_instrumenta/">Аксессуары для измерительного инструмента</a></li>
+			<li  id="bx_1847241719_14178"><a href="/catalog/osnastka/izmeritelnyy_instrument_i_aksessuary/izmeritelnye_golovki_indikatory_shchupy/">Измерительные головки, индикаторы, щупы</a></li>
+			<li  id="bx_1847241719_14184"><a href="/catalog/osnastka/izmeritelnyy_instrument_i_aksessuary/kalibry_mery_lekala_i_ugolniki/">Калибры, меры, лекала и угольники</a></li>
+			<li  id="bx_1847241719_14188"><a href="/catalog/osnastka/izmeritelnyy_instrument_i_aksessuary/mikrometry_analogovye_i_tsifrovye/">Микрометры аналоговые и цифровые</a></li>
+			<li  id="bx_1847241719_14193"><a href="/catalog/osnastka/izmeritelnyy_instrument_i_aksessuary/takhometry/">Тахометры</a></li>
+			<li  id="bx_1847241719_14194"><a href="/catalog/osnastka/izmeritelnyy_instrument_i_aksessuary/uglomery_i_uklonomery_tsifrovye/">Угломеры и уклономеры цифровые</a></li>
+			<li  id="bx_1847241719_14195"><a href="/catalog/osnastka/izmeritelnyy_instrument_i_aksessuary/shtangentsirkuli_analogovye_i_tsifrovye/">Штангенциркули аналоговые и цифровые</a></li>
+			<li  id="bx_1847241719_14199"><a href="/catalog/osnastka/izmeritelnyy_instrument_i_aksessuary/elektronno_tsifrovye_lineyki/">Электронно-цифровые линейки</a></li>
+			<li  id="bx_1847241719_14202"><a href="/catalog/osnastka/izmeritelnyy_instrument_i_aksessuary/opticheskie_lineyki_i_displei_dro/">Оптические линейки и дисплеи, DRO</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14205"><a href="/catalog/osnastka/instrument_i_osnastka_tokarnykh_stankov/">Инструмент и оснастка токарных станков</a>
+			<ul  >
+			<li  id="bx_1847241719_14206"><a href="/catalog/osnastka/instrument_i_osnastka_tokarnykh_stankov/patrony_dlya_tokarnogo_stanka/">Патроны для токарного станка</a></li>
+			<li  id="bx_1847241719_14211"><a href="/catalog/osnastka/instrument_i_osnastka_tokarnykh_stankov/zadnie_tsentry_dlya_tokarnykh_stankov/">Задние центры для токарных станков</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14217"><a href="/catalog/osnastka/instrument_i_osnastka_frezernykh_stankov/">Инструмент и оснастка фрезерных станков</a>
+			<ul  >
+			<li  id="bx_1847241719_14218"><a href="/catalog/osnastka/instrument_i_osnastka_frezernykh_stankov/kromkoiskateli_i_tsentroiskateli/">Кромкоискатели и центроискатели</a></li>
+			<li  id="bx_1847241719_14221"><a href="/catalog/osnastka/instrument_i_osnastka_frezernykh_stankov/osnastka_dlya_prizhima_zagotovok_t_slot/">Оснастка для прижима заготовок, Т-слот</a></li>
+			<li  id="bx_1847241719_14226"><a href="/catalog/osnastka/instrument_i_osnastka_frezernykh_stankov/indikatory_ustanovki_vysoty_instrumenta/">Индикаторы установки высоты инструмента</a></li>
+			<li  id="bx_1847241719_14227"><a href="/catalog/osnastka/instrument_i_osnastka_frezernykh_stankov/frezy/">Фрезы</a></li>
+			<li  id="bx_1847241719_14250"><a href="/catalog/osnastka/instrument_i_osnastka_frezernykh_stankov/gravery/">Граверы</a></li>
+			<li  id="bx_1847241719_14259"><a href="/catalog/osnastka/instrument_i_osnastka_frezernykh_stankov/tsangi_gayki_i_shchetki_kress/">Цанги, гайки и щетки KRESS</a></li>
+			<li  id="bx_1847241719_14263"><a href="/catalog/osnastka/instrument_i_osnastka_frezernykh_stankov/tsangi_gayki_shtreveli_i_patrony_er/">Цанги, гайки, штревели и патроны ER</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14275"><a href="/catalog/osnastka/oborudovanie_i_aksessuary_dlya_payki/">Оборудование и аксессуары для пайки</a>
+			<ul  >
+			<li  id="bx_1847241719_14276"><a href="/catalog/osnastka/oborudovanie_i_aksessuary_dlya_payki/dymouloviteli_dlya_payki/">Дымоуловители для пайки</a></li>
+			<li  id="bx_1847241719_14277"><a href="/catalog/osnastka/oborudovanie_i_aksessuary_dlya_payki/payalnye_stantsii_i_aksessuary/">Паяльные станции и аксессуары</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14278"><a href="/catalog/osnastka/nozhi_i_derzhateli_nozhey_dlya_plotterov/">Ножи и держатели ножей для плоттеров</a></li>
+		<li class="selected" id="bx_1847241719_14281"><a href="/catalog/osnastka/sverlilnye_patrony_i_opravki/">Сверлильные патроны и оправки</a></li>
+		<li class="selected" id="bx_1847241719_14293"><a href="/catalog/osnastka/tiski_stanochnye_lekalnye_sverlilnye/">Тиски станочные, лекальные, сверлильные</a></li>
+		<li class="selected" id="bx_1847241719_14297"><a href="/catalog/osnastka/okhlazhdenie_i_smazka/">Охлаждение и смазка</a>
+			<ul  >
+			<li  id="bx_1847241719_14298"><a href="/catalog/osnastka/okhlazhdenie_i_smazka/sistemy_sozh_i_maslyanogo_tumana/">Системы СОЖ и масляного тумана</a></li>
+			<li  id="bx_1847241719_14306"><a href="/catalog/osnastka/okhlazhdenie_i_smazka/smazka_sozh_maslo_i_fiksator_rezby/">Смазка, СОЖ, масло и фиксатор резьбы</a></li>
+			<li  id="bx_1847241719_14307"><a href="/catalog/osnastka/okhlazhdenie_i_smazka/sistemy_smazki_napravlyayushchikh_i_peredach/">Системы смазки направляющих и передач</a></li>
+			<li  id="bx_1847241719_14327"><a href="/catalog/osnastka/okhlazhdenie_i_smazka/elektricheskie_osevye_ventilyatory_i_aksessuary/">Электрические осевые вентиляторы и аксессуары</a>
+				<ul  style="display:none">
+				<li  id="bx_1847241719_14328"><a href="/catalog/osnastka/okhlazhdenie_i_smazka/elektricheskie_osevye_ventilyatory_i_aksessuary/osevye_elektricheskie_ventilyatory_12v/">Осевые электрические вентиляторы 12В</a></li>
+				<li  id="bx_1847241719_14329"><a href="/catalog/osnastka/okhlazhdenie_i_smazka/elektricheskie_osevye_ventilyatory_i_aksessuary/osevye_elektricheskie_ventilyatory_220v/">Осевые электрические вентиляторы ~220В</a></li>
+				<li  id="bx_1847241719_14330"><a href="/catalog/osnastka/okhlazhdenie_i_smazka/elektricheskie_osevye_ventilyatory_i_aksessuary/zashchitnye_reshetki_dlya_ventilyatorov_stal/">Защитные решетки для вентиляторов, сталь</a></li>
+				<li  id="bx_1847241719_14331"><a href="/catalog/osnastka/okhlazhdenie_i_smazka/elektricheskie_osevye_ventilyatory_i_aksessuary/zashchitnye_reshetki_dlya_ventilyatorov_plastik/">Защитные решетки для вентиляторов, пластик</a></li>
+				<li  id="bx_1847241719_14332"><a href="/catalog/osnastka/okhlazhdenie_i_smazka/elektricheskie_osevye_ventilyatory_i_aksessuary/reshetki_dlya_ventilyatorov_s_filtrom_tip_fb/">Решетки для вентиляторов с фильтром, тип FB</a></li>
+				<li  id="bx_1847241719_14333"><a href="/catalog/osnastka/okhlazhdenie_i_smazka/elektricheskie_osevye_ventilyatory_i_aksessuary/reshetki_dlya_ventilyatorov_s_filtrom_tip_fk/">Решетки для вентиляторов с фильтром, тип FK</a></li>
+				<li  id="bx_1847241719_14334"><a href="/catalog/osnastka/okhlazhdenie_i_smazka/elektricheskie_osevye_ventilyatory_i_aksessuary/smennye_filtry_dlya_reshetok_tip_fe_fk/">Сменные фильтры для решеток, тип FE-FK</a></li>
+				</ul>
+			</li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14335"><a href="/catalog/osnastka/raskhodnye_detali_dlya_plazmorezov/">Расходные детали для плазморезов</a>
+			<ul  >
+			<li  id="bx_1847241719_14336"><a href="/catalog/osnastka/raskhodnye_detali_dlya_plazmorezov/raskhodnye_detali_hypertherm/">Расходные детали Hypertherm</a></li>
+			<li  id="bx_1847241719_14342"><a href="/catalog/osnastka/raskhodnye_detali_dlya_plazmorezov/raskhodnye_detali_metalcut/">Расходные детали Metalcut</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14348"><a href="/catalog/osnastka/ruchnye_pnevmaticheskie_gravery/">Ручные пневматические граверы</a></li>
+		</ul>
+	</li>
+	</ul>
+	</div></div>
+
+	<div id="uli_14349" class="go_menu_left"><div class="lftnnv section_leftnav">
+
+	
+		<ul  >
+		<li class="selected" id="bx_1847241719_14350"><a href="/catalog/mekhanika/povorotnye_osi/">Поворотные оси&nbsp;(9)</a>
+			<ul  >
+			<li  id="bx_1847241719_14351"><a href="/catalog/mekhanika/povorotnye_osi/povorotnaya_os_purelogic_plar_01/">Поворотная ось PureLogic PLAR-01&nbsp;(1)</a></li>
+			<li  id="bx_1847241719_14352"><a href="/catalog/mekhanika/povorotnye_osi/povorotnye_osi_kitay/">Поворотные оси Китай&nbsp;(7)</a></li>
+			<li  id="bx_1847241719_14353"><a href="/catalog/mekhanika/povorotnye_osi/povorotnaya_os_purelogic_plar_02/">Поворотная ось PureLogic PLAR-02&nbsp;(1)</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14354"><a href="/catalog/mekhanika/alyuminievyy_stanochnyy_profil_aksessuary/">Алюминиевый станочный профиль, аксессуары&nbsp;(260)</a>
+			<ul  >
+			<li  id="bx_1847241719_14355"><a href="/catalog/mekhanika/alyuminievyy_stanochnyy_profil_aksessuary/alyuminievyy_profil/">Алюминиевый профиль&nbsp;(43)</a></li>
+			<li  id="bx_1847241719_14360"><a href="/catalog/mekhanika/alyuminievyy_stanochnyy_profil_aksessuary/aksessuary_k_alyuminievomu_profilyu/">Аксессуары к алюминиевому профилю&nbsp;(75)</a>
+				<ul  style="display:none">
+				<li  id="bx_1847241719_14364"><a href="/catalog/mekhanika/alyuminievyy_stanochnyy_profil_aksessuary/aksessuary_k_alyuminievomu_profilyu/kolesnye_opory/">Колесные опоры&nbsp;(8)</a></li>
+				</ul>
+			
+			</li>
+			<li  id="bx_1847241719_14366"><a href="/catalog/mekhanika/alyuminievyy_stanochnyy_profil_aksessuary/krepyezh_k_alyuminievomu_profilyu/">Крепёж к алюминиевому профилю&nbsp;(142)</a>
+				<ul  style="display:none">
+				<li  id="bx_1847241719_14369"><a href="/catalog/mekhanika/alyuminievyy_stanochnyy_profil_aksessuary/krepyezh_k_alyuminievomu_profilyu/gayka_dlya_t_bolta/">Гайка для Т-болта&nbsp;(2)</a></li>
+				</ul>
+			</li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14379"><a href="/catalog/mekhanika/mufty_i_kardannye_perdachi/">Муфты и карданные пердачи&nbsp;(134)</a>
+			<ul  >
+			<li  id="bx_1847241719_14380"><a href="/catalog/mekhanika/mufty_i_kardannye_perdachi/mufty_soedinitelnye/">Муфты соединительные&nbsp;(98)</a></li>
+			<li  id="bx_1847241719_14389"><a href="/catalog/mekhanika/mufty_i_kardannye_perdachi/mufty_zapornye_i_koltsa/">Муфты запорные и кольца&nbsp;(29)</a></li>
+			<li  id="bx_1847241719_14393"><a href="/catalog/mekhanika/mufty_i_kardannye_perdachi/kardannye_peredachi/">Карданные передачи&nbsp;(7)</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14395"><a href="/catalog/mekhanika/podshipniki_kacheniya/">Подшипники качения&nbsp;(123)</a>
+			<ul  >
+			<li  id="bx_1847241719_14396"><a href="/catalog/mekhanika/podshipniki_kacheniya/radialnye_podshipniki/">Радиальные подшипники&nbsp;(55)</a></li>
+			<li  id="bx_1847241719_14405"><a href="/catalog/mekhanika/podshipniki_kacheniya/radialno_upornye_podshipniki/">Радиально-упорные подшипники&nbsp;(45)</a></li>
+			<li  id="bx_1847241719_14413"><a href="/catalog/mekhanika/podshipniki_kacheniya/upornye_podshipniki/">Упорные подшипники&nbsp;(3)</a></li>
+			<li  id="bx_1847241719_14415"><a href="/catalog/mekhanika/podshipniki_kacheniya/sfericheskie_sharnirnye_podshipniki/">Сферические шарнирные подшипники&nbsp;(15)</a></li>
+			<li  id="bx_1847241719_14418"><a href="/catalog/mekhanika/podshipniki_kacheniya/podshipniki_dlya_remonta_shpindeley/">Подшипники для ремонта шпинделей&nbsp;(5)</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14420"><a href="/catalog/mekhanika/alyuminievye_zagotovki/">Алюминиевые заготовки&nbsp;(33)</a></li>
+		<li class="selected" id="bx_1847241719_14422"><a href="/catalog/mekhanika/vibroopory_i_upory_ogranichiteli/">Виброопоры и упоры-ограничители&nbsp;(12)</a></li>
+		<li class="selected" id="bx_1847241719_14426"><a href="/catalog/mekhanika/derzhateli_dvigateley_nema/">Держатели двигателей NEMA&nbsp;(13)</a></li>
+		<li class="selected" id="bx_1847241719_14432"><a href="/catalog/mekhanika/kabel_kanaly_gibkie/">Кабель-каналы гибкие&nbsp;(35)</a></li>
+		<li class="selected" id="bx_1847241719_14437"><a href="/catalog/mekhanika/podshipnikovye_uzly/">Подшипниковые узлы&nbsp;(16)</a></li>
+		<li class="selected" id="bx_1847241719_14440"><a href="/catalog/mekhanika/privodnye_golovki_stankov_i_aksessuary/">Приводные головки станков и аксессуары&nbsp;(13)</a></li>
+		<li class="selected" id="bx_1847241719_14444"><a href="/catalog/mekhanika/din_reyka_krepleniya/">DIN-рейка, крепления&nbsp;(6)</a></li>
+		<li class="selected" id="bx_1847241719_14445"><a href="/catalog/mekhanika/sharovye_nakonechniki/">Шаровые наконечники&nbsp;(32)</a>
+			<ul  >
+			<li  id="bx_1847241719_14449"><a href="/catalog/mekhanika/sharovye_nakonechniki/sharovye_nakonechniki_seriya_sqzxx/">Шаровые наконечники, серия SQZxx&nbsp;(8)</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14450"><a href="/catalog/mekhanika/zadnie_babki/">Задние бабки&nbsp;(4)</a>
+			<ul  >
+			<li  id="bx_1847241719_14451"><a href="/catalog/mekhanika/zadnie_babki/zadnie_babki_purelogic/">Задние бабки PureLogic&nbsp;(1)</a></li>
+			<li  id="bx_1847241719_14452"><a href="/catalog/mekhanika/zadnie_babki/zadnie_babki_kitay/">Задние бабки Китай&nbsp;(3)</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14453"><a href="/catalog/mekhanika/komplektuyushchie_dlya_3d_printerov/">Комплектующие для 3D принтеров&nbsp;(90)</a>
+			<ul  >
+			<li  id="bx_1847241719_14454"><a href="/catalog/mekhanika/komplektuyushchie_dlya_3d_printerov/mekhanicheskie_komplektuyushchie/">Механические комплектующие&nbsp;(42)</a></li>
+			<li  id="bx_1847241719_14463"><a href="/catalog/mekhanika/komplektuyushchie_dlya_3d_printerov/plastikovye_niti_dlya_pechati_na_3d_printere/">Пластиковые нити для печати на 3D-принтере&nbsp;(48)</a>
+				<ul  style="display:none">
+				<li  id="bx_1847241719_14467"><a href="/catalog/mekhanika/komplektuyushchie_dlya_3d_printerov/plastikovye_niti_dlya_pechati_na_3d_printere/pla_plastikovaya_nit_diametr_1_75mm/">PLA пластиковая нить, диаметр 1.75мм&nbsp;(9)</a></li>
+				<li  id="bx_1847241719_14468"><a href="/catalog/mekhanika/komplektuyushchie_dlya_3d_printerov/plastikovye_niti_dlya_pechati_na_3d_printere/pla_plastikovaya_nit_diametr_3mm/">PLA пластиковая нить, диаметр 3мм&nbsp;(9)</a></li>
+				</ul>
+			</li>
+			</ul>
+		</li>
+		</ul>
+	</li>
+	</ul>
+	</div></div>
+
+	<div id="uli_14469" class="go_menu_left"><div class="lftnnv section_leftnav">
+
+	
+		<ul  >
+		<li class="selected" id="bx_1847241719_14470"><a href="/catalog/napravlyayushchie/shariko_vintovye_peredachi_shvp/">Шарико-винтовые передачи (ШВП)&nbsp;(279)</a>
+			<ul  >
+			<li  id="bx_1847241719_14471"><a href="/catalog/napravlyayushchie/shariko_vintovye_peredachi_shvp/gotovye_shvp_obrabotannye/">Готовые ШВП, обработанные&nbsp;(32)</a></li>
+			<li  id="bx_1847241719_14475"><a href="/catalog/napravlyayushchie/shariko_vintovye_peredachi_shvp/shvp_znt/">ШВП ZNT&nbsp;(21)</a></li>
+			<li  id="bx_1847241719_14481"><a href="/catalog/napravlyayushchie/shariko_vintovye_peredachi_shvp/shvp_tbi/">ШВП TBI&nbsp;(74)</a>
+				<ul  style="display:none">
+				<li  id="bx_1847241719_14485"><a href="/catalog/napravlyayushchie/shariko_vintovye_peredachi_shvp/shvp_tbi/gayki_shvp_tbi_seriya_dfu/">Гайки ШВП TBI, серия DFU&nbsp;(9)</a></li>
+				</ul>
+			
+			</li>
+			<li  id="bx_1847241719_14490"><a href="/catalog/napravlyayushchie/shariko_vintovye_peredachi_shvp/shvp_hiwin/">ШВП Hiwin&nbsp;(23)</a></li>
+			<li  id="bx_1847241719_14493"><a href="/catalog/napravlyayushchie/shariko_vintovye_peredachi_shvp/moduli_krepleniya_gaek_shvp/">Модули крепления гаек ШВП&nbsp;(14)</a></li>
+			<li  id="bx_1847241719_14496"><a href="/catalog/napravlyayushchie/shariko_vintovye_peredachi_shvp/opory_vintov_flantsevye_purelogic/">Опоры винтов фланцевые PureLogic&nbsp;(11)</a></li>
+			<li  id="bx_1847241719_14501"><a href="/catalog/napravlyayushchie/shariko_vintovye_peredachi_shvp/opory_khodovogo_vinta_bf_bk_ff_fk/">Опоры ходового винта BF, BK, FF, FK&nbsp;(28)</a></li>
+			<li  id="bx_1847241719_14506"><a href="/catalog/napravlyayushchie/shariko_vintovye_peredachi_shvp/aksessuary_i_remkomplekty_dlya_shvp/">Аксессуары и ремкомплекты для ШВП&nbsp;(76)</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14513"><a href="/catalog/napravlyayushchie/zubchatye_reyki_i_shesterni/">Зубчатые рейки и шестерни&nbsp;(98)</a></li>
+		<li class="selected" id="bx_1847241719_14520"><a href="/catalog/napravlyayushchie/profilnye_napravlyayushchie/">Профильные направляющие&nbsp;(114)</a>
+			<ul  >
+			<li  id="bx_1847241719_14521"><a href="/catalog/napravlyayushchie/profilnye_napravlyayushchie/profilnye_napravlyayushchie_hsac/">Профильные направляющие HSAC&nbsp;(28)</a></li>
+			<li  id="bx_1847241719_14526"><a href="/catalog/napravlyayushchie/profilnye_napravlyayushchie/profilnye_napravlyayushchie_hiwin/">Профильные направляющие Hiwin&nbsp;(56)</a></li>
+			<li  id="bx_1847241719_14534"><a href="/catalog/napravlyayushchie/profilnye_napravlyayushchie/profilnye_napravlyayushchie_thk/">Профильные направляющие THK&nbsp;(18)</a></li>
+			<li  id="bx_1847241719_14538"><a href="/catalog/napravlyayushchie/profilnye_napravlyayushchie/profilnye_napravlyayushchie_lha/">Профильные направляющие LHA&nbsp;(12)</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14542"><a href="/catalog/napravlyayushchie/zubchatye_i_klinovye_remennye_peredachi/">Зубчатые и клиновые ременные передачи&nbsp;(139)</a>
+			<ul  >
+			<li  id="bx_1847241719_14543"><a href="/catalog/napravlyayushchie/zubchatye_i_klinovye_remennye_peredachi/zubchatye_remni_/">Зубчатые ремни &nbsp;(57)</a></li>
+			<li  id="bx_1847241719_14549"><a href="/catalog/napravlyayushchie/zubchatye_i_klinovye_remennye_peredachi/zubchatye_shkivy_i_krepyezhnye_plastiny/">Зубчатые шкивы и крепёжные пластины&nbsp;(75)</a></li>
+			<li  id="bx_1847241719_14556"><a href="/catalog/napravlyayushchie/zubchatye_i_klinovye_remennye_peredachi/klinovye_shkivy_stalnye/">Клиновые шкивы стальные&nbsp;(7)</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14558"><a href="/catalog/napravlyayushchie/rolikovye_napravlyayushchie_i_roliki/">Роликовые направляющие и ролики&nbsp;(68)</a>
+			<ul  >
+			<li  id="bx_1847241719_14559"><a href="/catalog/napravlyayushchie/rolikovye_napravlyayushchie_i_roliki/v_obraznye_napravlyayushchie/">V-образные направляющие&nbsp;(17)</a></li>
+			<li  id="bx_1847241719_14563"><a href="/catalog/napravlyayushchie/rolikovye_napravlyayushchie_i_roliki/rolikovye_napravlyayushchie_znt/">Роликовые направляющие ZNT&nbsp;(20)</a></li>
+			<li  id="bx_1847241719_14566"><a href="/catalog/napravlyayushchie/rolikovye_napravlyayushchie_i_roliki/roliki_opornye_i_transportnye/">Ролики опорные и транспортные&nbsp;(13)</a></li>
+			<li  id="bx_1847241719_14570"><a href="/catalog/napravlyayushchie/rolikovye_napravlyayushchie_i_roliki/u_obraznye_i_v_obraznye_roliki/">U-образные и V-образные ролики&nbsp;(18)</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14574"><a href="/catalog/napravlyayushchie/tsilindricheskie_napravlyayushchie_znt/">Цилиндрические направляющие ZNT&nbsp;(145)</a>
+			<ul  >
+			<li  id="bx_1847241719_14575"><a href="/catalog/napravlyayushchie/tsilindricheskie_napravlyayushchie_znt/polirovannye_valy_i_derzhateli_znt/">Полированные валы и держатели ZNT&nbsp;(34)</a></li>
+			<li  id="bx_1847241719_14579"><a href="/catalog/napravlyayushchie/tsilindricheskie_napravlyayushchie_znt/lineynye_podshipniki_znt/">Линейные подшипники ZNT&nbsp;(76)</a></li>
+			<li  id="bx_1847241719_14586"><a href="/catalog/napravlyayushchie/tsilindricheskie_napravlyayushchie_znt/moduli_s_lineynym_podshipnikom_znt/">Модули с линейным подшипником ZNT&nbsp;(35)</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14591"><a href="/catalog/napravlyayushchie/tsilindricheskie_relsy_znt/">Цилиндрические рельсы ZNT&nbsp;(35)</a></li>
+		<li class="selected" id="bx_1847241719_14598"><a href="/catalog/napravlyayushchie/moduli_lineynogo_peremeshcheniya/">Модули линейного перемещения&nbsp;(38)</a></li>
+		<li class="selected" id="bx_1847241719_14607"><a href="/catalog/napravlyayushchie/gofrozashchita_napravlyayushchikh_i_peredach/">Гофрозащита направляющих и передач&nbsp;(75)</a></li>
+		<li class="selected" id="bx_1847241719_14611"><a href="/catalog/napravlyayushchie/zubchato_vintovye_chervyachnye_peredachi/">Зубчато-винтовые, червячные передачи&nbsp;(12)</a></li>
+		<li class="selected" id="bx_1847241719_14614"><a href="/catalog/napravlyayushchie/trapetseidalnye_peredachi_vint_gayka/">Трапецеидальные передачи винт-гайка&nbsp;(42)</a></li>
+		<li class="selected" id="bx_1847241719_14622"><a href="/catalog/napravlyayushchie/tsepnye_peredachi/">Цепные передачи&nbsp;(28)</a></li>
+		<li class="selected" id="bx_1847241719_14626"><a href="/catalog/napravlyayushchie/moduli_peremeshcheniya_po_zubchatoy_reyke/">Модули перемещения по зубчатой рейке&nbsp;(3)</a></li>
+		</ul>
+	</li>
+	</ul>
+	</div></div>
+
+	<div id="uli_14628" class="go_menu_left"><div class="lftnnv section_leftnav">
+
+	
+		<ul  >
+		<li class="selected" id="bx_1847241719_14629"><a href="/catalog/privodnaya_tekhnika/shpindeli_i_aksessuary/">Шпиндели и аксессуары</a>
+			<ul  >
+			<li  id="bx_1847241719_14630"><a href="/catalog/privodnaya_tekhnika/shpindeli_i_aksessuary/shpindeli_kollektornye_dc/">Шпиндели коллекторные DC</a></li>
+			<li  id="bx_1847241719_14631"><a href="/catalog/privodnaya_tekhnika/shpindeli_i_aksessuary/shpindeli_kollektornye_kress_i_analogi/">Шпиндели коллекторные KRESS и аналоги</a></li>
+			<li  id="bx_1847241719_14632"><a href="/catalog/privodnaya_tekhnika/shpindeli_i_aksessuary/shpindeli_zhidkostnogo_okhlazhdeniya/">Шпиндели жидкостного охлаждения</a></li>
+			<li  id="bx_1847241719_14637"><a href="/catalog/privodnaya_tekhnika/shpindeli_i_aksessuary/shpindeli_vozdushnogo_okhlazhdeniya/">Шпиндели воздушного охлаждения</a></li>
+			<li  id="bx_1847241719_14642"><a href="/catalog/privodnaya_tekhnika/shpindeli_i_aksessuary/shpindeli_s_avtosmenoy_instrumenta/">Шпиндели с автосменой инструмента</a></li>
+			<li  id="bx_1847241719_14646"><a href="/catalog/privodnaya_tekhnika/shpindeli_i_aksessuary/sistemy_pyleudaleniya_aspiratsiya/">Системы пылеудаления, аспирация</a></li>
+			<li  id="bx_1847241719_14655"><a href="/catalog/privodnaya_tekhnika/shpindeli_i_aksessuary/krepleniya_i_prizhimy_dlya_shpindeley/">Крепления и прижимы для шпинделей</a></li>
+			<li  id="bx_1847241719_14662"><a href="/catalog/privodnaya_tekhnika/shpindeli_i_aksessuary/sistemy_okhlazhdeniya_shpindeley/">Системы охлаждения шпинделей</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14668"><a href="/catalog/privodnaya_tekhnika/shagovye_dvigateli_i_aksessuary/">Шаговые двигатели и аксессуары</a>
+			<ul  >
+			<li  id="bx_1847241719_14669"><a href="/catalog/privodnaya_tekhnika/shagovye_dvigateli_i_aksessuary/shagovye_aktuatory/">Шаговые актуаторы</a></li>
+			<li  id="bx_1847241719_14675"><a href="/catalog/privodnaya_tekhnika/shagovye_dvigateli_i_aksessuary/shagovye_dvigateli/">Шаговые двигатели</a></li>
+			<li  id="bx_1847241719_14679"><a href="/catalog/privodnaya_tekhnika/shagovye_dvigateli_i_aksessuary/shagovye_dvigateli_s_tormozom/">Шаговые двигатели с тормозом</a></li>
+			<li  id="bx_1847241719_14682"><a href="/catalog/privodnaya_tekhnika/shagovye_dvigateli_i_aksessuary/shagovye_dvigateli_s_enkoderom/">Шаговые двигатели с энкодером</a></li>
+			<li  id="bx_1847241719_14686"><a href="/catalog/privodnaya_tekhnika/shagovye_dvigateli_i_aksessuary/shd_s_tsilindricheskim_reduktorom/">ШД с цилиндрическим редуктором</a></li>
+			<li  id="bx_1847241719_14690"><a href="/catalog/privodnaya_tekhnika/shagovye_dvigateli_i_aksessuary/rukoyatki_dlya_shagovykh_dvigateley/">Рукоятки для шаговых двигателей</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14691"><a href="/catalog/privodnaya_tekhnika/servodvigateli_i_aksessuary/">Серводвигатели и аксессуары</a>
+			<ul  >
+			<li  id="bx_1847241719_14692"><a href="/catalog/privodnaya_tekhnika/servodvigateli_i_aksessuary/servodvigateli_shchetochnye_do_80v/">Серводвигатели щеточные, до 80В</a></li>
+			<li  id="bx_1847241719_14693"><a href="/catalog/privodnaya_tekhnika/servodvigateli_i_aksessuary/servodvigateli_besshchetochnye_220v/">Серводвигатели бесщеточные, 220В</a></li>
+			<li  id="bx_1847241719_14696"><a href="/catalog/privodnaya_tekhnika/servodvigateli_i_aksessuary/servodvigateli_besshchetochnye_do_80v/">Серводвигатели бесщеточные, до 80В</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14700"><a href="/catalog/privodnaya_tekhnika/privody_na_shagovykh_i_servodvigatelyakh/">Приводы на шаговых и серводвигателях</a>
+			<ul  >
+			<li  id="bx_1847241719_14701"><a href="/catalog/privodnaya_tekhnika/privody_na_shagovykh_i_servodvigatelyakh/privody_na_shagovykh_dvigatelyakh_purelogic/">Приводы на шаговых двигателях PureLogic</a></li>
+			<li  id="bx_1847241719_14704"><a href="/catalog/privodnaya_tekhnika/privody_na_shagovykh_i_servodvigatelyakh/privody_na_shd_i_servodvigatelyakh_leadshine/">Приводы на ШД и серводвигателях Leadshine</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14708"><a href="/catalog/privodnaya_tekhnika/reduktory_motor_reduktory_i_aksessuary/">Редукторы, мотор-редукторы и аксессуары</a>
+			<ul  >
+			<li  id="bx_1847241719_14709"><a href="/catalog/privodnaya_tekhnika/reduktory_motor_reduktory_i_aksessuary/volnovye_garmonicheskie_reduktory/">Волновые (гармонические) редукторы</a></li>
+			<li  id="bx_1847241719_14711"><a href="/catalog/privodnaya_tekhnika/reduktory_motor_reduktory_i_aksessuary/planetarnye_reduktory_i_vtulki/">Планетарные редукторы и втулки</a></li>
+			<li  id="bx_1847241719_14716"><a href="/catalog/privodnaya_tekhnika/reduktory_motor_reduktory_i_aksessuary/tsilindricheskie_reduktory_dlya_shd/">Цилиндрические редукторы для ШД</a></li>
+			<li  id="bx_1847241719_14719"><a href="/catalog/privodnaya_tekhnika/reduktory_motor_reduktory_i_aksessuary/chervyachnye_reduktory_i_motor_redutory/">Червячные редукторы и мотор-редуторы</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14720"><a href="/catalog/privodnaya_tekhnika/kabeli_razemy_perekhodniki_i_filtry/">Кабели, разъемы, переходники и фильтры</a>
+			<ul  >
+			<li  id="bx_1847241719_14721"><a href="/catalog/privodnaya_tekhnika/kabeli_razemy_perekhodniki_i_filtry/soedinitelnye_kabeli_i_razemy/">Соединительные кабели и разъемы</a></li>
+			<li  id="bx_1847241719_14729"><a href="/catalog/privodnaya_tekhnika/kabeli_razemy_perekhodniki_i_filtry/razemy_elektricheskie_soedinitelnye/">Разъемы электрические соединительные</a></li>
+			<li  id="bx_1847241719_14736"><a href="/catalog/privodnaya_tekhnika/kabeli_razemy_perekhodniki_i_filtry/ferritovye_filtry/">Ферритовые фильтры</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14737"><a href="/catalog/privodnaya_tekhnika/knopki_pedali_tumblery_i_kontseviki/">Кнопки, педали, тумблеры и концевики</a>
+			<ul  >
+			<li  id="bx_1847241719_14738"><a href="/catalog/privodnaya_tekhnika/knopki_pedali_tumblery_i_kontseviki/knopki_pereklyuchateli_i_indikatsiya/">Кнопки, переключатели и индикация</a></li>
+			<li  id="bx_1847241719_14748"><a href="/catalog/privodnaya_tekhnika/knopki_pedali_tumblery_i_kontseviki/mikropereklyuchateli_i_kontseviki/">Микропереключатели и концевики</a></li>
+			<li  id="bx_1847241719_14752"><a href="/catalog/privodnaya_tekhnika/knopki_pedali_tumblery_i_kontseviki/pedali_knopki_dzhoystiki_i_pulty/">Педали-кнопки, джойстики и пульты</a></li>
+			<li  id="bx_1847241719_14756"><a href="/catalog/privodnaya_tekhnika/knopki_pedali_tumblery_i_kontseviki/tumblery_perekidnye_pereklyuchateli/">Тумблеры, перекидные переключатели</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14757"><a href="/catalog/privodnaya_tekhnika/shtokovye_lineynye_aktutory/">Штоковые линейные актуторы</a></li>
+		<li class="selected" id="bx_1847241719_14760"><a href="/catalog/privodnaya_tekhnika/roboty_manipulyatory/">Роботы-манипуляторы</a></li>
+		<li class="selected" id="bx_1847241719_14761"><a href="/catalog/privodnaya_tekhnika/beskollektornye_elektrodvigateli/">Бесколлекторные электродвигатели</a></li>
+		<li class="selected" id="bx_1847241719_14764"><a href="/catalog/privodnaya_tekhnika/asinkhronnye_elektrodvigateli_air/">Асинхронные электродвигатели АИР</a></li>
+		</ul>
+	</li>
+	</ul>
+	</div></div>
+
+	<div id="uli_14766" class="go_menu_left"><div class="lftnnv section_leftnav">
+
+	
+		<ul  >
+		<li class="selected" id="bx_1847241719_14767"><a href="/catalog/elektronika/bloki_pitaniya_i_transformatory/">Блоки питания и трансформаторы</a>
+			<ul  >
+			<li  id="bx_1847241719_14768"><a href="/catalog/elektronika/bloki_pitaniya_i_transformatory/bloki_pitaniya_leadshine/">Блоки питания Leadshine</a></li>
+			<li  id="bx_1847241719_14769"><a href="/catalog/elektronika/bloki_pitaniya_i_transformatory/impulsnye_bp_powerdc_standartnye/">Импульсные БП PowerDC, стандартные</a></li>
+			<li  id="bx_1847241719_14778"><a href="/catalog/elektronika/bloki_pitaniya_i_transformatory/impulsnye_bp_powerdc_na_din_reyku/">Импульсные БП PowerDC, на DIN-рейку</a></li>
+			<li  id="bx_1847241719_14782"><a href="/catalog/elektronika/bloki_pitaniya_i_transformatory/impulsnye_bp_mean_well_standartnye/">Импульсные БП MEAN WELL, стандартные</a></li>
+			<li  id="bx_1847241719_14789"><a href="/catalog/elektronika/bloki_pitaniya_i_transformatory/impulsnye_bp_mean_well_na_din_reyku/">Импульсные БП MEAN WELL, на DIN-рейку</a></li>
+			<li  id="bx_1847241719_14790"><a href="/catalog/elektronika/bloki_pitaniya_i_transformatory/elektronika_dlya_blokov_pitaniya/">Электроника для блоков питания</a></li>
+			<li  id="bx_1847241719_14791"><a href="/catalog/elektronika/bloki_pitaniya_i_transformatory/lineynye_bloki_pitaniya/">Линейные блоки питания</a></li>
+			<li  id="bx_1847241719_14792"><a href="/catalog/elektronika/bloki_pitaniya_i_transformatory/laboratornye_bloki_pitaniya/">Лабораторные блоки питания</a></li>
+			<li  id="bx_1847241719_14793"><a href="/catalog/elektronika/bloki_pitaniya_i_transformatory/preobrazovateli_napryazheniya/">Преобразователи напряжения</a></li>
+			<li  id="bx_1847241719_14794"><a href="/catalog/elektronika/bloki_pitaniya_i_transformatory/silovye_transformatory_ponizhayushchie/">Силовые трансформаторы, понижающие</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14797"><a href="/catalog/elektronika/chastotnye_preobrazovateli/">Частотные преобразователи</a>
+			<ul  >
+			<li  id="bx_1847241719_14798"><a href="/catalog/elektronika/chastotnye_preobrazovateli/chastotnye_preobrazovateli_lenze/">Частотные преобразователи LENZE</a></li>
+			<li  id="bx_1847241719_14799"><a href="/catalog/elektronika/chastotnye_preobrazovateli/chastotnye_preobrazovateli_sunfar/">Частотные преобразователи SUNFAR</a>
+				<ul  style="display:none">
+				<li  id="bx_1847241719_14800"><a href="/catalog/elektronika/chastotnye_preobrazovateli/chastotnye_preobrazovateli_sunfar/chastotnye_preobrazovateli_sunfar_seriya_v350/">Частотные преобразователи SUNFAR, серия V350</a></li>
+				<li  id="bx_1847241719_14801"><a href="/catalog/elektronika/chastotnye_preobrazovateli/chastotnye_preobrazovateli_sunfar/aksessuary_dlya_preobrazovateley_sunfar_/">Аксессуары для преобразователей SUNFAR
+</a></li>
+				<li  id="bx_1847241719_14802"><a href="/catalog/elektronika/chastotnye_preobrazovateli/chastotnye_preobrazovateli_sunfar/chastotnye_preobrazovateli_sunfar_seriya_e550/">Частотные преобразователи SUNFAR, серия E550</a></li>
+				</ul>
+			
+			</li>
+			<li  id="bx_1847241719_14803"><a href="/catalog/elektronika/chastotnye_preobrazovateli/chastotnye_preobrazovateli_tecorp/">Частотные преобразователи TECORP</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14804"><a href="/catalog/elektronika/moduli_asu_tp_izmereniya_i_upravleniya/">Модули АСУ ТП, измерения и управления</a>
+			<ul  >
+			<li  id="bx_1847241719_14805"><a href="/catalog/elektronika/moduli_asu_tp_izmereniya_i_upravleniya/voltmetry_ampermetry_i_vattmetry/">Вольтметры, амперметры и ваттметры</a></li>
+			<li  id="bx_1847241719_14806"><a href="/catalog/elektronika/moduli_asu_tp_izmereniya_i_upravleniya/izmeritelnye_paneli_dlya_datchikov/">Измерительные панели для датчиков</a></li>
+			<li  id="bx_1847241719_14807"><a href="/catalog/elektronika/moduli_asu_tp_izmereniya_i_upravleniya/temperaturnye_kontrollery/">Температурные контроллеры</a></li>
+			<li  id="bx_1847241719_14808"><a href="/catalog/elektronika/moduli_asu_tp_izmereniya_i_upravleniya/chastotomery_i_takhometry/">Частотомеры и тахометры</a></li>
+			<li  id="bx_1847241719_14809"><a href="/catalog/elektronika/moduli_asu_tp_izmereniya_i_upravleniya/tsifrovye_schetchiki_impulsov_i_taymery/">Цифровые счетчики импульсов и таймеры</a></li>
+			<li  id="bx_1847241719_14810"><a href="/catalog/elektronika/moduli_asu_tp_izmereniya_i_upravleniya/tverdotelnye_rele_i_radiatory/">Твердотельные реле и радиаторы</a>
+				<ul  style="display:none">
+				<li  id="bx_1847241719_14814"><a href="/catalog/elektronika/moduli_asu_tp_izmereniya_i_upravleniya/tverdotelnye_rele_i_radiatory/radiatory_dlya_tverdotelnykh_rele/">Радиаторы для твердотельных реле</a></li>
+				</ul>
+			</li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14815"><a href="/catalog/elektronika/platy_kommutatsii_vov_konvertory_shim/">Платы коммутации ВОВ, конверторы ШИМ</a>
+			<ul  >
+			<li  id="bx_1847241719_14816"><a href="/catalog/elektronika/platy_kommutatsii_vov_konvertory_shim/platy_kommutatsii_drayverov_shd_cd_vov/">Платы коммутации драйверов ШД/CД, ВОВ</a></li>
+			<li  id="bx_1847241719_14817"><a href="/catalog/elektronika/platy_kommutatsii_vov_konvertory_shim/platy_kommutatsii_perekhodniki_vov/">Платы коммутации, переходники, ВОВ</a></li>
+			<li  id="bx_1847241719_14818"><a href="/catalog/elektronika/platy_kommutatsii_vov_konvertory_shim/preobrazovateli_shim_napryazhenie/">Преобразователи ШИМ&gt;напряжение</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14819"><a href="/catalog/elektronika/porty_pci_usb_modbus_rs485_rs232/">Порты PCI, USB, MODBUS, RS485, RS232</a>
+			<ul  >
+			<li  id="bx_1847241719_14820"><a href="/catalog/elektronika/porty_pci_usb_modbus_rs485_rs232/porty_vvoda_vyvoda_modbus/">Порты ввода/вывода MODBUS</a></li>
+			<li  id="bx_1847241719_14821"><a href="/catalog/elektronika/porty_pci_usb_modbus_rs485_rs232/porty_vvoda_vyvoda_pci_i_pci_e/">Порты ввода/вывода PCI и PCI-E</a></li>
+			<li  id="bx_1847241719_14822"><a href="/catalog/elektronika/porty_pci_usb_modbus_rs485_rs232/porty_vvoda_vyvoda_usb_rs232_rs485/">Порты ввода/вывода USB, RS232, RS485</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14823"><a href="/catalog/elektronika/bloki_rele_bloki_vneshnikh_sobytiy/">Блоки реле, блоки внешних событий</a></li>
+		<li class="selected" id="bx_1847241719_14824"><a href="/catalog/elektronika/programmiruemye_kontrollery_plc_i_hmi/">Программируемые контроллеры PLC и HMI</a></li>
+		<li class="selected" id="bx_1847241719_14830"><a href="/catalog/elektronika/bloki_zapuska_asinkhronnykh_dvigateley/">Блоки запуска асинхронных двигателей</a></li>
+		<li class="selected" id="bx_1847241719_14831"><a href="/catalog/elektronika/bloki_regulirovki_moshchnosti/">Блоки регулировки мощности</a></li>
+		<li class="selected" id="bx_1847241719_14832"><a href="/catalog/elektronika/datchiki_i_enkodery_dlya_asu_tp_i_chpu/">Датчики и энкодеры для АСУ ТП и ЧПУ</a>
+			<ul  >
+			<li  id="bx_1847241719_14833"><a href="/catalog/elektronika/datchiki_i_enkodery_dlya_asu_tp_i_chpu/datchiki_professionalnye/">Датчики профессиональные</a></li>
+			<li  id="bx_1847241719_14839"><a href="/catalog/elektronika/datchiki_i_enkodery_dlya_asu_tp_i_chpu/datchiki_standartnye/">Датчики стандартные</a></li>
+			<li  id="bx_1847241719_14843"><a href="/catalog/elektronika/datchiki_i_enkodery_dlya_asu_tp_i_chpu/datchiki_raznye/">Датчики разные</a></li>
+			<li  id="bx_1847241719_14844"><a href="/catalog/elektronika/datchiki_i_enkodery_dlya_asu_tp_i_chpu/datchiki_urovnya_zhidkosti/">Датчики уровня жидкости</a></li>
+			<li  id="bx_1847241719_14845"><a href="/catalog/elektronika/datchiki_i_enkodery_dlya_asu_tp_i_chpu/tokovye_transformatory_i_shunty/">Токовые трансформаторы и шунты</a></li>
+			<li  id="bx_1847241719_14848"><a href="/catalog/elektronika/datchiki_i_enkodery_dlya_asu_tp_i_chpu/enkodery_dlya_asu_tp_i_chpu/">Энкодеры для АСУ ТП и ЧПУ</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14854"><a href="/catalog/elektronika/svetovaya_i_zvukovaya_signalizatsiya/">Световая и звуковая сигнализация</a>
+			<ul  >
+			<li  id="bx_1847241719_14855"><a href="/catalog/elektronika/svetovaya_i_zvukovaya_signalizatsiya/svetovye_mayachki_i_sireny/">Световые маячки и сирены</a></li>
+			<li  id="bx_1847241719_14860"><a href="/catalog/elektronika/svetovaya_i_zvukovaya_signalizatsiya/svetosignalnye_kolonny_i_bashni/">Светосигнальные колонны и башни</a>
+				<ul  style="display:none">
+				<li  id="bx_1847241719_14861"><a href="/catalog/elektronika/svetovaya_i_zvukovaya_signalizatsiya/svetosignalnye_kolonny_i_bashni/svetosignalnye_kolonny_seriya_lta_204/">Светосигнальные колонны, серия LTA-204</a></li>
+				<li  id="bx_1847241719_14862"><a href="/catalog/elektronika/svetovaya_i_zvukovaya_signalizatsiya/svetosignalnye_kolonny_i_bashni/svetosignalnye_kolonny_seriya_lta_205/">Светосигнальные колонны, серия LTA-205</a></li>
+				</ul>
+			</li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14863"><a href="/catalog/elektronika/chpu_kontrollery_i_chpu_stoyki/">ЧПУ контроллеры и ЧПУ стойки</a>
+			<ul  >
+			<li  id="bx_1847241719_14864"><a href="/catalog/elektronika/chpu_kontrollery_i_chpu_stoyki/kontrollery_dvizheniya_plc_plc1xi/">Контроллеры движения PLC, PLC1Xi</a></li>
+			<li  id="bx_1847241719_14865"><a href="/catalog/elektronika/chpu_kontrollery_i_chpu_stoyki/chpu_kontrollery_plcm_ethernet_usb/">ЧПУ контроллеры PLCM (Ethernet/USB)</a></li>
+			<li  id="bx_1847241719_14866"><a href="/catalog/elektronika/chpu_kontrollery_i_chpu_stoyki/chpu_kontrollery_smoothstepper_i_kflop/">ЧПУ контроллеры SmoothStepper и KFLOP</a></li>
+			<li  id="bx_1847241719_14867"><a href="/catalog/elektronika/chpu_kontrollery_i_chpu_stoyki/chpu_kontrollery_ncstudio/">ЧПУ контроллеры NCStudio</a></li>
+			<li  id="bx_1847241719_14868"><a href="/catalog/elektronika/chpu_kontrollery_i_chpu_stoyki/chpu_dsp_kontrollery_pulty_richauto/">ЧПУ DSP контроллеры-пульты RichAuto</a></li>
+			<li  id="bx_1847241719_14870"><a href="/catalog/elektronika/chpu_kontrollery_i_chpu_stoyki/chpu_kontrollery_topcnc/">ЧПУ контроллеры TOPCNC</a></li>
+			<li  id="bx_1847241719_14871"><a href="/catalog/elektronika/chpu_kontrollery_i_chpu_stoyki/chpu_kontrollery_vstraivaemye/">ЧПУ контроллеры встраиваемые</a></li>
+			<li  id="bx_1847241719_14872"><a href="/catalog/elektronika/chpu_kontrollery_i_chpu_stoyki/nabory_s_chpu_kontrollerami_plcm/">Наборы с ЧПУ контроллерами PLCM</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14873"><a href="/catalog/elektronika/elektronnye_komplektuyushchie_dlya_3d_printerov/">Электронные комплектующие для 3D-принтеров</a></li>
+		<li class="selected" id="bx_1847241719_14874"><a href="/catalog/elektronika/drayvery/">Драйверы</a>
+			<ul  >
+			<li  id="bx_1847241719_14875"><a href="/catalog/elektronika/drayvery/drayvery_beskollektornykh_dvigateley/">Драйверы бесколлекторных двигателей</a></li>
+			<li  id="bx_1847241719_14876"><a href="/catalog/elektronika/drayvery/drayvery_servodvigateley/">Драйверы серводвигателей</a>
+				<ul  style="display:none">
+				<li  id="bx_1847241719_14877"><a href="/catalog/elektronika/drayvery/drayvery_servodvigateley/drayvery_shchetochnykh_sd_do_80v/">Драйверы щеточных СД, до 80В</a></li>
+				<li  id="bx_1847241719_14879"><a href="/catalog/elektronika/drayvery/drayvery_servodvigateley/drayvery_besshchetochnykh_sd_220v/">Драйверы бесщеточных СД, 220В</a></li>
+				</ul>
+			
+			</li>
+			<li  id="bx_1847241719_14882"><a href="/catalog/elektronika/drayvery/drayvery_servo_shagovykh_dvigateley/">Драйверы серво-шаговых двигателей</a>
+				<ul  style="display:none">
+				<li  id="bx_1847241719_14883"><a href="/catalog/elektronika/drayvery/drayvery_servo_shagovykh_dvigateley/drayver_sshd_plds880/">Драйвер СШД PLDS880</a></li>
+				<li  id="bx_1847241719_14884"><a href="/catalog/elektronika/drayvery/drayvery_servo_shagovykh_dvigateley/drayvery_sshd_hyperdrive/">Драйверы СШД Hyperdrive</a></li>
+				<li  id="bx_1847241719_14885"><a href="/catalog/elektronika/drayvery/drayvery_servo_shagovykh_dvigateley/drayvery_sshd_leadshine/">Драйверы СШД Leadshine</a></li>
+				</ul>
+			
+			</li>
+			<li  id="bx_1847241719_14886"><a href="/catalog/elektronika/drayvery/drayvery_shagovykh_dvigateley/">Драйверы шаговых двигателей</a>
+				<ul  style="display:none">
+				<li  id="bx_1847241719_14887"><a href="/catalog/elektronika/drayvery/drayvery_shagovykh_dvigateley/drayvery_purelogic_r_d_novogo_pokoleniya/">Драйверы Purelogic R&D, нового поколения</a></li>
+				<li  id="bx_1847241719_14888"><a href="/catalog/elektronika/drayvery/drayvery_shagovykh_dvigateley/drayvery_purelogic_r_d_standartnye/">Драйверы Purelogic R&D, стандартные</a></li>
+				<li  id="bx_1847241719_14889"><a href="/catalog/elektronika/drayvery/drayvery_shagovykh_dvigateley/drayvery_hyperdrive/">Драйверы Hyperdrive</a></li>
+				<li  id="bx_1847241719_14890"><a href="/catalog/elektronika/drayvery/drayvery_shagovykh_dvigateley/drayvery_leadshine/">Драйверы Leadshine</a></li>
+				<li  id="bx_1847241719_14891"><a href="/catalog/elektronika/drayvery/drayvery_shagovykh_dvigateley/drayvery_yako/">Драйверы Yako</a></li>
+				<li  id="bx_1847241719_14892"><a href="/catalog/elektronika/drayvery/drayvery_shagovykh_dvigateley/drayvery_geckodrive/">Драйверы Geckodrive</a></li>
+				<li  id="bx_1847241719_14893"><a href="/catalog/elektronika/drayvery/drayvery_shagovykh_dvigateley/drayvery_ui_robot/">Драйверы UI Robot</a></li>
+				<li  id="bx_1847241719_14894"><a href="/catalog/elektronika/drayvery/drayvery_shagovykh_dvigateley/drayvery_oem_i_diy/">Драйверы OEM и DIY</a></li>
+				</ul>
+			
+			</li>
+			<li  id="bx_1847241719_14895"><a href="/catalog/elektronika/drayvery/drayvery_shd_mnogokanalnye/">Драйверы ШД многоканальные</a>
+				<ul  style="display:none">
+				<li  id="bx_1847241719_14896"><a href="/catalog/elektronika/drayvery/drayvery_shd_mnogokanalnye/mnogokanalnye_drayvery_purelogic_r_d/">Многоканальные драйверы PureLogic R&D</a></li>
+				<li  id="bx_1847241719_14897"><a href="/catalog/elektronika/drayvery/drayvery_shd_mnogokanalnye/mnogokanalnye_drayvery_leadshine/">Многоканальные драйверы Leadshine</a></li>
+				<li  id="bx_1847241719_14898"><a href="/catalog/elektronika/drayvery/drayvery_shd_mnogokanalnye/mnogokanalnye_drayvery_oem/">Многоканальные драйверы OEM</a></li>
+				</ul>
+			
+			</li>
+			<li  id="bx_1847241719_14899"><a href="/catalog/elektronika/drayvery/drayvery_kollektornykh_dc_dvigateley/">Драйверы коллекторных DC двигателей</a></li>
+			<li  id="bx_1847241719_14900"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/">Наборы электроники</a>
+				<ul  style="display:none">
+				<li  id="bx_1847241719_14901"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_purelogic/">Наборы с драйверами PureLogic</a>
+					<ul  style="display:none">
+					<li  id="bx_1847241719_14902"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_purelogic/nabory_chpu_s_pld440/">Наборы ЧПУ с PLD440</a></li>
+					<li  id="bx_1847241719_14903"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_purelogic/nabory_chpu_s_pld57/">Наборы ЧПУ с PLD57</a></li>
+					<li  id="bx_1847241719_14904"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_purelogic/nabory_chpu_s_pld545_g3/">Наборы ЧПУ с PLD545-G3</a></li>
+					<li  id="bx_1847241719_14905"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_purelogic/nabory_chpu_s_pld86/">Наборы ЧПУ с PLD86</a></li>
+					<li  id="bx_1847241719_14906"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_purelogic/nabory_chpu_s_pld880_g2/">Наборы ЧПУ с PLD880-G2</a></li>
+					<li  id="bx_1847241719_14907"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_purelogic/nabory_chpu_s_pld8220_g2/">Наборы ЧПУ с PLD8220-G2</a></li>
+					</ul>
+				
+				</li>
+				<li  id="bx_1847241719_14908"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_mnogokanalnymi_drayverami/">Наборы с многоканальными драйверами</a>
+					<ul  style="display:none">
+					<li  id="bx_1847241719_14909"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_mnogokanalnymi_drayverami/nabory_chpu_s_plc330/">Наборы ЧПУ с PLC330</a></li>
+					<li  id="bx_1847241719_14910"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_mnogokanalnymi_drayverami/nabory_chpu_s_plc330b/">Наборы ЧПУ с PLC330b</a></li>
+					<li  id="bx_1847241719_14911"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_mnogokanalnymi_drayverami/nabory_chpu_s_plc545/">Наборы ЧПУ с PLC545</a></li>
+					<li  id="bx_1847241719_14912"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_mnogokanalnymi_drayverami/nabory_chpu_s_plc440l/">Наборы ЧПУ с PLC440L</a></li>
+					<li  id="bx_1847241719_14913"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_mnogokanalnymi_drayverami/nabory_chpu_s_mx3660/">Наборы ЧПУ с MX3660</a></li>
+					</ul>
+				
+				</li>
+				<li  id="bx_1847241719_14914"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_hyperdrive/">Наборы с драйверами Hyperdrive</a>
+					<ul  style="display:none">
+					<li  id="bx_1847241719_14915"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_hyperdrive/nabory_chpu_s_hd556/">Наборы ЧПУ с HD556</a></li>
+					<li  id="bx_1847241719_14916"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_hyperdrive/nabory_chpu_s_hd860/">Наборы ЧПУ с HD860</a></li>
+					<li  id="bx_1847241719_14917"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_hyperdrive/nabory_chpu_s_hd2208/">Наборы ЧПУ с HD2208</a></li>
+					</ul>
+				
+				</li>
+				<li  id="bx_1847241719_14918"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_leadshine/">Наборы с драйверами Leadshine</a>
+					<ul  style="display:none">
+					<li  id="bx_1847241719_14920"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_leadshine/nabory_chpu_s_m880a/">Наборы ЧПУ с M880A</a></li>
+					<li  id="bx_1847241719_14921"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_leadshine/nabory_chpu_s_dm442/">Наборы ЧПУ с DM442</a></li>
+					<li  id="bx_1847241719_14922"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_leadshine/nabory_chpu_s_dm556/">Наборы ЧПУ с DM556</a></li>
+					<li  id="bx_1847241719_14923"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_leadshine/nabory_chpu_s_dm870/">Наборы ЧПУ с DM870</a></li>
+					<li  id="bx_1847241719_14924"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_leadshine/nabory_chpu_s_dm2282/">Наборы ЧПУ с DM2282</a></li>
+					<li  id="bx_1847241719_14925"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_leadshine/nabory_chpu_s_em503/">Наборы ЧПУ с EM503</a></li>
+					<li  id="bx_1847241719_14926"><a href="/catalog/elektronika/drayvery/nabory_elektroniki/nabory_s_drayverami_leadshine/nabory_chpu_s_em806/">Наборы ЧПУ с EM806</a></li>
+					</ul>
+				</li>
+				</ul>
+			</li>
+			</ul>
+		</li>
+		</ul>
+	</li>
+	</ul>
+	</div></div>
+
+	<div id="uli_14927" class="go_menu_left"><div class="lftnnv section_leftnav">
+
+	
+		<ul  >
+		<li class="selected" id="bx_1847241719_14928"><a href="/catalog/soft_dlya_chpu/programmnoe_obespechenie/">Программное обеспечение</a>
+			<ul  >
+			<li  id="bx_1847241719_14929"><a href="/catalog/soft_dlya_chpu/programmnoe_obespechenie/puremotion_litsenziya/">PureMotion лицензия</a></li>
+			<li  id="bx_1847241719_14930"><a href="/catalog/soft_dlya_chpu/programmnoe_obespechenie/artcam_express_litsenziya/">ArtCam Express лицензия</a></li>
+			<li  id="bx_1847241719_14931"><a href="/catalog/soft_dlya_chpu/programmnoe_obespechenie/mach3_litsenziya/">Mach3 лицензия</a></li>
+			<li  id="bx_1847241719_14932"><a href="/catalog/soft_dlya_chpu/programmnoe_obespechenie/sheetcam_litsenziya/">SheetCam лицензия</a></li>
+			<li  id="bx_1847241719_14933"><a href="/catalog/soft_dlya_chpu/programmnoe_obespechenie/3d_modeli_komplektuyushchikh_purelogic_r_d/">3D модели комплектующих Purelogic R&D</a></li>
+			</ul>
+		</li>
+		</ul>
+	</li>
+	</ul>
+	</div></div>
+
+	<div id="uli_14934" class="go_menu_left"><div class="lftnnv section_leftnav">
+
+	
+		<ul  >
+		<li class="selected" id="bx_1847241719_14935"><a href="/catalog/uslugi/puskonaladochnye_raboty/">Пусконаладочные работы</a></li>
+		<li class="selected" id="bx_1847241719_14936"><a href="/catalog/uslugi/diagnostika_i_servisnoe_obsluzhivanie/">Диагностика и сервисное обслуживание</a></li>
+		<li class="selected" id="bx_1847241719_14937"><a href="/catalog/uslugi/obrabotka_pod_zakaz/">Обработка под заказ</a></li>
+		<li class="selected" id="bx_1847241719_14938"><a href="/catalog/uslugi/tokarnaya_frezernaya_obrabotka/">Токарная-фрезерная обработка</a></li>
+		</ul>
+	</li>
+	</ul>
+	</div></div>
+
+	<div id="uli_14939" class="go_menu_left"><div class="lftnnv section_leftnav">
+
+	
+		<ul  >
+		<li class="selected" id="bx_1847241719_14940"><a href="/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/">Станки ЧПУ производства PureLogic&nbsp;(17)</a>
+			<ul  >
+			<li  id="bx_1847241719_14941"><a href="/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/purelogic_hobby/">PureLogic Hobby&nbsp;(10)</a></li>
+			<li  id="bx_1847241719_14947"><a href="/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/purelogic_professional/">PureLogic Professional&nbsp;(6)</a></li>
+			<li  id="bx_1847241719_14954"><a href="/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/purelogic_industrial/">PureLogic Industrial&nbsp;(1)</a></li>
+			</ul>
+		
+		</li>
+		<li class="selected" id="bx_1847241719_14956"><a href="/catalog/stanki_chpu/frezerno_gravirovalnye_stanki_chpu_suda/">Фрезерно-гравировальные станки ЧПУ SUDA&nbsp;(22)</a></li>
+		<li class="selected" id="bx_1847241719_14961"><a href="/catalog/stanki_chpu/aksessuary_i_pulty_dlya_stankov_chpu/">Аксессуары и пульты для станков ЧПУ&nbsp;(26)</a>
+			<ul  >
+			<li  id="bx_1847241719_14962"><a href="/catalog/stanki_chpu/aksessuary_i_pulty_dlya_stankov_chpu/aksessuary_dlya_stankov_chpu/">Аксессуары для станков ЧПУ&nbsp;(13)</a></li>
+			<li  id="bx_1847241719_14963"><a href="/catalog/stanki_chpu/aksessuary_i_pulty_dlya_stankov_chpu/pulty_dlya_stankov_chpu/">Пульты для станков ЧПУ&nbsp;(9)</a></li>
+			<li  id="bx_1847241719_14963"><a href="/catalog/stanki_chpu/aksessuary_i_pulty_dlya_stankov_chpu/pulty_dlya_stankov_chpu/">Пульты для станков ЧПУ&nbsp;(9)</a></li>
+			</ul>
+		</li>
+		</ul>
+	</li>
+	</ul>
+</div>
+</div>
+
+<script>
+
+jQuery(".lftnnv.section_leftnav").prepend('<ul class="its_first_l"></ul>');
+jQuery(".lftnnv.section_leftnav").each(function(){
+jQuery(this).children().children().sort(function (a, b) {
+    return $(a).height() < $(b).height() ? 1 : -1;  
+}).appendTo(jQuery(this).find('.its_first_l'));
+});
+jQuery('.lftnnv.section_leftnav').each(function(){
+var all_height=0;
+var yo_height=0;
+var elem=jQuery(this);
+elem.find('.its_first_l>li').each(function(){
+all_height=all_height+jQuery(this).height();
+});
+
+elem.find('.its_first_l>li').each(function(){
+
+yo_height=yo_height+jQuery(this).height();
+if(yo_height>(all_height+100)/2)
+elem.find(".its_second_l").append(jQuery(this));
+});
+
+});
+
+jQuery(".lftnnv.section_leftnav > ul > li").append('<ul class="its_first_perents_l"></ul><ul class="its_second_perents_l"></ul>');
+jQuery(".lftnnv.section_leftnav > ul > li").each(function(){
+	jQuery(this).children().children().sort(function (a, b) {
+		return $(a).height() < $(b).height() ? 1 : -1;
+	}).appendTo(jQuery(this).find('.its_first_perents_l'));
+});
+jQuery('.lftnnv.section_leftnav > ul > li').each(function(){
+	var all_height=0;
+	var yo_height=0;
+	var elem=jQuery(this);
+	elem.find('.its_first_perents_l>li').each(function(){
+		all_height=all_height+jQuery(this).height();
+	});
+
+	elem.find('.its_first_perents_l>li').each(function(){
+
+		yo_height=yo_height+jQuery(this).height();
+		if(yo_height>(all_height+20)/2)
+			elem.find(".its_second_perents_l").append(jQuery(this));
+	});
+
+});
+
+	$(".lftnnv.section_leftnav > ul > li > ul").each(function(){
+		if($(this).attr('class') == undefined){
+			$(this).remove();
+		}
+	});
+</script>
+	<style>
+		.for_left_b .new_left_menu>li {
+			width: 100%;
+			height: 40px;
+		}
+		.new_left_menu>li>span {
+			margin: 0px;
+		}
+		.for_left_b .new_left_menu:hover > li{
+			background: transparent;
+		}
+		.go_menu_left {
+			margin-left: 187px;
+		}
+	</style>
+</div>										</div>
+					<div class="col-md-10 "> 
+					<div class="col-md-12 padding_0"><ul id="breadcrumbs-two">
+			<li  id="bx_breadcrumb_0" class="" itemscope="" >
+				
+				<a href="/" title="Главная страница" itemprop="url">
+					Главная страница
+				</a>
+			</li>
+			<li  id="bx_breadcrumb_1" class="" itemscope="" >
+				
+				<a href="/catalog/" title="Каталог" itemprop="url">
+					Каталог
+				</a>
+			</li>
+			<li  id="bx_breadcrumb_2" class="inside" itemscope="" >
+				
+				<a href="/catalog/stanki_chpu/" title="СТАНКИ ЧПУ" itemprop="url">
+					СТАНКИ ЧПУ
+				</a><div class="mm_br no"><div><a href="/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/">Станки ЧПУ производства PureLogic</a></div><div><a href="/catalog/stanki_chpu/frezerno_gravirovalnye_stanki_chpu_suda/">Фрезерно-гравировальные станки ЧПУ SUDA</a></div><div><a href="/catalog/stanki_chpu/aksessuary_i_pulty_dlya_stankov_chpu/">Аксессуары и пульты для станков ЧПУ</a></div></div><span class="open_brd">&#9660;</span>
+			</li>
+			<li  id="bx_breadcrumb_3" class="inside" itemscope="" >
+				
+				<a href="/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/" title="Станки ЧПУ производства PureLogic" itemprop="url">
+					Станки ЧПУ производства PureLogic
+				</a><div class="mm_br no"><div><a href="/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/purelogic_hobby/">PureLogic Hobby</a></div><div><a href="/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/purelogic_professional/">PureLogic Professional</a></div><div><a href="/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/purelogic_industrial/">PureLogic Industrial</a></div></div><span class="open_brd">&#9660;</span>
+			</li>
+			<li>
+				
+				<a href="/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/purelogic_industrial/" title="PureLogic Industrial" itemprop="url">PureLogic Industrial</a>
+			</li></ul></div>
+ 
+<div class="bx_sitemap">			<h3 class="name_section">
+			Линейка Industrial фрезерно-гравировальных станков ЧПУ производства Purelogic			</h3>
+			<p>
+			В разделе представлены станки соответствующие повышенным требованиям  производства - жёсткости, точности и долговечности. Большой размер рабочего поля и высокая точность позиционирования позволяют организовать масштабное производство в формате 24/7. Компания PureLogic гарантирует индивидуальный подход к каждому клиенту вплоть до внесения изменений в конструкцию для максимального соответствия поставляемого оборудования требованиям бизнес-процесса заказчика. А с применением фирменного программно-аппаратного комплекса управления ЧПУ станком PureMotion, перед Вами откроется вся полнота возможностей многоосевой обработки.
+
+Станки PureLogic хорошо зарекомендовали себя на Российском рынке и имеют отличное соотношение цены и возможностей. Наша организация осуществляет тех. поддержку, гарантийный и послегарантийный ремонт поставляемой продукции. Мы предлагаем услуги по монтажу и запуску приобретенного оборудования на площадях заказчика. Купить ЧПУ станок PureLogic очень просто, свяжитесь с нами по телефону указанному выше. Наши менеджеры всегда готовы ответить на вопросы и помочь сделать правильный выбор.			</p>
+			
+
+</div>
+
+
+<div class="plitka"><div class="pltk ">
+</div>
+	<div class="pltk current">
+	</div>
+
+<div class="clear"></div>
+</div>
+
+	<div class="tovar_wr" id="bx_3966226736_37864">
+		<div class="col-md-2  col-sm-6 col-xs-12  padding-left_0 padding-right-null">
+			<div class="icons-product-box">
+				
+				
+				
+							</div>
+			<a href="/kartinki_dlya_razdelov/ed4b7441-deda-11e6-80e6-000c292b16be/min.jpg" class="image fancybox-one" data-fancybox-group="thumb14955">
+			<img src="/kartinki_dlya_razdelov/ed4b7441-deda-11e6-80e6-000c292b16be/min.jpg">
+			</a>
+						<a href="/kartinki_dlya_razdelov/ed4b7441-deda-11e6-80e6-000c292b16be/plr-0610m_2.jpg" class="image fancybox-thumbs" data-fancybox-group="thumb14955" style="display: none">
+				<img src="/kartinki_dlya_razdelov/ed4b7441-deda-11e6-80e6-000c292b16be/plr-0610m_2.jpg">
+			</a>
+						<a href="/kartinki_dlya_razdelov/ed4b7441-deda-11e6-80e6-000c292b16be/plr-0610m_3.jpg" class="image fancybox-thumbs" data-fancybox-group="thumb14955" style="display: none">
+				<img src="/kartinki_dlya_razdelov/ed4b7441-deda-11e6-80e6-000c292b16be/plr-0610m_3.jpg">
+			</a>
+						<a href="/kartinki_dlya_razdelov/ed4b7441-deda-11e6-80e6-000c292b16be/plr0610m_f.jpg" class="image fancybox-thumbs" data-fancybox-group="thumb14955" style="display: none">
+				<img src="/kartinki_dlya_razdelov/ed4b7441-deda-11e6-80e6-000c292b16be/plr0610m_f.jpg">
+			</a>
+						<a href="/kartinki_dlya_razdelov/ed4b7441-deda-11e6-80e6-000c292b16be/plr-0610m_1.jpg" class="image fancybox-thumbs" data-fancybox-group="thumb14955" style="display: none">
+				<img src="/kartinki_dlya_razdelov/ed4b7441-deda-11e6-80e6-000c292b16be/plr-0610m_1.jpg">
+			</a>
+					</div>
+		<div class="col-md-10 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;padding-bottom: 25px;">
+			<div class="head-product-box">
+				<h4><a href="#">Фрезерный станок ЧПУ PLR-0610M</a></h4>
+				<div class="open_descr">описание </div>
+			</div>
+
+			<div class="preview-text">Широкоформатный стальной фрезерный станок ЧПУ. Станина и рама станка выполнены из стали, узлы сварены. Станок предназначен для 2D/3D обработки цветных металлов и черных металлов, дерева, пластика, текстолита и пр. Рабочая область: 1010*610*190 мм; размер стола: 1300*840мм; рабочий стол: алюминий, Т-СЛОТ; материал станины: сталь; направляющие: HIWIN HGR20; передачи: ШВП X,Z-1605, Y-2005; шаговые двигатели: X,Z-PL86H75, Y-PL86H113; дискретность позиционирования: 0.02мм; максимальная скорость: 7000мм/мин; вес: 242кг</div>
+						<div class="btn-product-docs">
+				<a href="">Чертеж</a>
+				<a href="">Документация</a>
+				<a href="http://www.purelogic.ru/files/downloads/doc/CNC/PLR-0610M_Purelogic.pdf">Руководство</a>
+				<a href="">Документация</a>
+				<a href="javascript:void(0)" style="width: 17%;" class="other-btn-product-docs">&darr;</a>
+				<div class="other-block-product-docs">
+					<ul>
+						<li>123</li>
+						<li>123</li>
+						<li>123</li>
+						<li>123</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-12 col-sm-6 col-xs-12 product-block-all" style="padding-right: 0px;">
+			<div class="open_product">развернуть </div>
+			<div class="box-products-group no">
+									<div class="box-product-gr">
+						<h5><a href="/catalog/stanki_chpu/frezernyy_stanok_chpu_plr_0610m/">Фрезерный станок ЧПУ PLR-0610M</a></h5>
+						<p>станок PLR-0610M</p>
+						<div class="box-product-price">432000.00 ₽</div>
+						<form action="" method="get" class="add_in_card">
+							<input type="text" name="quantity" value="1">
+							<input type="submit" value="">
+							<input name="action" type="hidden" value="ADD2BASKET">
+							<input type="hidden" name="id" value="79441">
+						</form>
+
+					</div>
+							</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	
+	<script>
+		$(function(){
+
+			$(".fancybox-one").on("click", function () {
+				$(".fancybox-thumbs",$(this).parent()).eq(0).trigger("click");
+				return false;
+			});
+			//	$("a.image").fancybox();
+
+			$('.fancybox-thumbs').fancybox({
+				prevEffect : 'none',
+				nextEffect : 'none',
+
+				closeBtn  : true,
+				arrows    : true,
+				nextClick : true,
+
+				helpers : {
+					thumbs : {
+						width  : 50,
+						height : 50
+					}
+				}
+			});
+
+		});
+	</script>
+
+	<br> 
+</div></div></section> 
+ 
+
+		<section class="nugniy_tovar">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-7">
+			<h2>Не нашли нужный товар?</h2>
+				<p>Заполните все поля формы, оставив контактные данные, и наши специалисты оперативно свяжутся с Вами.</p>				
+			</div>
+			<div class="col-md-5 f-catch">
+					<script type="text/javascript">if (window.location.hash != '' && window.location.hash != '#') top.BX.ajax.history.checkRedirectStart('bxajaxid', '4763e2d68a2fbb90394c65c130b8551f')</script><div id="comp_4763e2d68a2fbb90394c65c130b8551f"><div id="bxdynamic_4enrz3_start" style="display:none"></div><form name="nenashli" action="/catalog/stanki_chpu/stanki_chpu_proizvodstva_purelogic/purelogic_industrial/" method="POST" enctype="multipart/form-data"><input type="hidden" name="sessid" id="sessid_15" value="" /><input type="hidden" name="WEB_FORM_ID" value="1" /><input type="hidden" name="lang" value="ru" /> 
+<div class="col-md-6"> 						<input type="text" placeholder="Ваше имя" name="form_text_1" value="" size="0" /> 						<input type="text" placeholder="Наименование товара" name="form_text_2" value="" size="0" /> 					</div>
+ 					 
+<div class="col-md-6"> 						<input type="text" placeholder="Контактный телефон" name="form_text_3" value="" size="0" /> 						 
+ <input type="text" name="captcha_word" size="30" maxlength="50" value="" class="inputtext" /> 						<input type="hidden" name="captcha_sid" value="0c00fdc018e6a6e8ec293531113976cf" /><img src="/bitrix/tools/captcha.php?captcha_sid=0c00fdc018e6a6e8ec293531113976cf" width="180" height="40" /> 	
+ 					 <input  type="submit" name="web_form_submit" value="Отправить" /> 					</div>
+ </form><div id="bxdynamic_4enrz3_end" style="display:none"></div></div><script type="text/javascript">if (top.BX.ajax.history.bHashCollision) top.BX.ajax.history.checkRedirectFinish('bxajaxid', '4763e2d68a2fbb90394c65c130b8551f');</script><script type="text/javascript">top.BX.ready(BX.defer(function() {window.AJAX_PAGE_STATE = new top.BX.ajax.component('comp_4763e2d68a2fbb90394c65c130b8551f'); top.BX.ajax.history.init(window.AJAX_PAGE_STATE);}))</script>				
+			</div>
+		</div>
+	</div>
+</section>
+<style>
+.f-catch img {
+    height: 31px;
+    margin-bottom: 10px;
+}
+</style>
+
+
+<footer>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-3 col-lg-2 padding_right_0 col-sm-5 hidden-xs">
+									<ul class="footer_nav">
+						<li><a href="/catalog/mekhanika/povorotnye_osi/povorotnaya_os_purelogic_plar_02/"> Поворотная ось...</a></li>
+						<li><a href="/catalog/stanki_chpu/aksessuary_i_pulty_dlya_stankov_chpu/pulty_dlya_stankov_chpu/"> Пульты для станков...</a></li>
+						<li><a href="/catalog/soft_dlya_chpu/programmnoe_obespechenie/artcam_express_litsenziya/"> ArtCam Express...</a></li>
+						<li><a href="/catalog/napravlyayushchie/rolikovye_napravlyayushchie_i_roliki/v_obraznye_napravlyayushchie/"> V-образные...</a></li>
+						<li><a href="/css/fancybox/blank.gif">Страница не найдена</a></li>
+						<li><a href="/catalog/stanki_chpu/frezerno_gravirovalnye_stanki_chpu_suda/">...</a></li>
+						<li><a href="/catalog/osnastka/instrument_i_osnastka_frezernykh_stankov/frezy/">Фрезы</a></li>
+						<li><a href="/catalog/osnastka/okhlazhdenie_i_smazka/">Охлаждение и смазка</a></li>
+						</ul>
+						
+				
+				
+			</div>
+			<div class="col-md-4 hidden-sm hidden-xs">
+				<div class="footer_adres">
+					
+					<p> <a href="#">Схема проезда</a> г. Москва, <br/>1-й Добрынинский переулок, 15/7, офис 9  <br/>Телефон +7 (495) 505-63-74</p>
+					<p><a href="#">Схема проезда</a> г. Воронеж, <br/>Ленинский пр-т, 160, офис 148 <br/>Телефон +7 (473) 204-51-56</p>
+					<p>8 (800) 555-63-74 (звонок по России бесплатный)</p>					
+
+				</div>
+				
+			</div>
+			<div class="col-md-5 col-lg-6 col-sm-7">
+				<div class="footer_social">
+									<p>Сейчас <span>14 Марта, 2017 14:21:51</span> </p>
+					<div id="bxdynamic_tcWCfJ_start" style="display:none"></div><p>Перерыв</p><div id="bxdynamic_tcWCfJ_end" style="display:none"></div>
+					<ul class="social_icon">
+	<li><a class="vk" href="http://vk.com/purelogic">
+	<div class="vk_icon">
+	</div>
+ </a></li>
+	<li><a class="fs" href="http://www.facebook.com/pages/Purelogic-RD/537251916397242"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+	<li><a class="tw" href="http://twitter.com/PurelogicRND"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+	<li><a class="yot" href="http://www.youtube.com/channel/UCj5qToQUJQvhBaonL0DU_5A"><i class="fa fa-youtube-play" aria-hidden="true"></i></a></li>
+	<li><a class="pen" href="http://purelogicrnd.livejournal.com/"><span class="pen_icon"></span></a></li>
+</ul>
+<p class="podpis">
+	 © Purelogic R&amp;D, 2005-2016
+</p>					
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+</footer>
+
+
+
+
+
+
+
+<!--[if lt IE 9]>
+	<script src="libs/html5shiv/es5-shim.min.js"></script>
+	<script src="libs/html5shiv/html5shiv.min.js"></script>
+	<script src="libs/html5shiv/html5shiv-printshiv.min.js"></script>
+	<script src="libs/respond/respond.min.js"></script>
+	<![endif]-->
+<!-- ПРЕЛОАД ДЛЯ СТРАНИЦ -->
+<script>
+	$(window).load(function() {
+
+	//	$(".loader_inner").fadeOut();
+	//	$(".loader").delay(400).fadeOut("slow");
+
+	});
+</script>
+
+<div class="hidden"></div>
+
+
+
+
+	</body>
+</html><!--5188be0adfe24c962a136661daab13e3-->

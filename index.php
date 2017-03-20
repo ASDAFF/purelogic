@@ -7,9 +7,9 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 <div class="container">
 	<div class="left_index">
 		 <?$APPLICATION->IncludeComponent(
-	"bitrix:catalog.section.list", 
-	"menu_left", 
-	array(
+	"bitrix:catalog.section.list",
+	"menu_left",
+	Array(
 		"ADD_SECTIONS_CHAIN" => "N",
 		"CACHE_GROUPS" => "Y",
 		"CACHE_TIME" => "36000000",
@@ -19,23 +19,14 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"IBLOCK_ID" => "18",
 		"IBLOCK_TYPE" => "1c_catalog",
 		"SECTION_CODE" => "",
-		"SECTION_FIELDS" => array(
-			0 => "NAME",
-			1 => "",
-		),
+		"SECTION_FIELDS" => array(0=>"NAME",1=>"",),
 		"SECTION_ID" => $_REQUEST["SECTION_ID"],
 		"SECTION_URL" => "",
-		"SECTION_USER_FIELDS" => array(
-			0 => "UF_SAYT_PAPKA_TIP",
-			1 => "UF_KARTINKI",
-			2 => "UF_SORTIROVKA",
-			3 => "",
-		),
+		"SECTION_USER_FIELDS" => array(0=>"UF_SAYT_PAPKA_TIP",1=>"UF_KARTINKI",2=>"UF_SORTIROVKA",3=>"",),
 		"SHOW_PARENT_NAME" => "Y",
 		"TOP_DEPTH" => "4",
 		"VIEW_MODE" => "LIST"
-	),
-	false
+	)
 );?> <?$APPLICATION->IncludeComponent(
 	"bitrix:news.list",
 	"index_left",
@@ -92,9 +83,7 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"SORT_ORDER1" => "DESC",
 		"SORT_ORDER2" => "ASC"
 	)
-);?>
-		 <!-- При адаптиве меню -->
-		<?
+);?> <!-- При адаптиве меню --> <?
 		/*
 		$APPLICATION->IncludeComponent(
 	"bitrix:menu",
@@ -115,11 +104,10 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 	)
 );
 		*/
-		?>
-	<?$APPLICATION->IncludeComponent(
-	"bitrix:news.list", 
-	"home_baner_page", 
-	array(
+		?> <?$APPLICATION->IncludeComponent(
+	"bitrix:news.list",
+	"home_baner_page",
+	Array(
 		"ACTIVE_DATE_FORMAT" => "d.m.Y",
 		"ADD_SECTIONS_CHAIN" => "Y",
 		"AJAX_MODE" => "N",
@@ -132,6 +120,7 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"CACHE_TIME" => "36000000",
 		"CACHE_TYPE" => "A",
 		"CHECK_DATES" => "Y",
+		"COMPONENT_TEMPLATE" => "home_baner_page",
 		"DETAIL_URL" => "",
 		"DISPLAY_BOTTOM_PAGER" => "Y",
 		"DISPLAY_DATE" => "Y",
@@ -139,10 +128,7 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"DISPLAY_PICTURE" => "Y",
 		"DISPLAY_PREVIEW_TEXT" => "Y",
 		"DISPLAY_TOP_PAGER" => "N",
-		"FIELD_CODE" => array(
-			0 => "",
-			1 => "",
-		),
+		"FIELD_CODE" => array(0=>"",1=>"",),
 		"FILTER_NAME" => "",
 		"HIDE_LINK_WHEN_NO_DETAIL" => "N",
 		"IBLOCK_ID" => "30",
@@ -161,10 +147,7 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"PARENT_SECTION" => "",
 		"PARENT_SECTION_CODE" => "",
 		"PREVIEW_TRUNCATE_LEN" => "",
-		"PROPERTY_CODE" => array(
-			0 => "",
-			1 => "",
-		),
+		"PROPERTY_CODE" => array(0=>"",1=>"",),
 		"SET_BROWSER_TITLE" => "N",
 		"SET_LAST_MODIFIED" => "N",
 		"SET_META_DESCRIPTION" => "N",
@@ -175,16 +158,12 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"SORT_BY1" => "ACTIVE_FROM",
 		"SORT_BY2" => "SORT",
 		"SORT_ORDER1" => "DESC",
-		"SORT_ORDER2" => "ASC",
-		"COMPONENT_TEMPLATE" => "home_baner_page"
-	),
-	false
+		"SORT_ORDER2" => "ASC"
+	)
 );?>
-
 	</div>
-		<div class="right_index">
-
-			<?$APPLICATION->IncludeComponent(
+	<div class="right_index">
+		 <?$APPLICATION->IncludeComponent(
 	"bitrix:news.list",
 	"new",
 	Array(
@@ -240,10 +219,7 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"SORT_ORDER1" => "DESC",
 		"SORT_ORDER2" => "ASC"
 	)
-);?>
-
-
-			<?
+);?> <?
 			if($_SESSION['news_hidden_home'] != 'N') {
 				$APPLICATION->IncludeComponent("bitrix:news.list", "news_home_right", Array(
 					"ACTIVE_DATE_FORMAT" => "d.m.Y",    // Формат показа даты
@@ -306,10 +282,7 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 					false
 				);
 			}
-			?>
-
-
-			<?$APPLICATION->IncludeComponent(
+			?> <?$APPLICATION->IncludeComponent(
 	"bitrix:catalog.section.list",
 	"home_product",
 	Array(
@@ -329,28 +302,24 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"TOP_DEPTH" => "2",
 		"VIEW_MODE" => "LINE"
 	)
-);?>
-
-
-			<section class="about_main">
-					<div class="h2-about-home">О компании</div>
-					<div class="green-bg">
-						<?$APPLICATION->IncludeComponent(
-							"bitrix:main.include",
-							"",
-							Array(
-								"AREA_FILE_SHOW" => "file",
-								"AREA_FILE_SUFFIX" => "",
-								"EDIT_TEMPLATE" => "",
-								"PATH" => "/include/about.php"
-							)
-						);?>
-				</div>
-			</section>
-
-
-
+);?> <section class="about_main">
+		<div class="h2-about-home">
+			Группа компаний PureLogic R&D 
 		</div>
+		<div class="green-bg">
+			 <?$APPLICATION->IncludeComponent(
+	"bitrix:main.include",
+	"",
+	Array(
+		"AREA_FILE_SHOW" => "file",
+		"AREA_FILE_SUFFIX" => "",
+		"EDIT_TEMPLATE" => "",
+		"PATH" => "/include/about.php"
+	)
+);?>
+		</div>
+ </section>
+	</div>
 	<div class="clear">
 	</div>
 </div>

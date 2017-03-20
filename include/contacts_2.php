@@ -1,7 +1,8 @@
-<h3 class="name_section">Реквизиты</h3>
-				<h5>OOO "ПЛ"</h5>
-				<p>Юридический адрес: Россия, 394033, г. Воронеж, Ленинский проспект, 160</p>
-				<p>ИНН 7726580330 КПП 366101001</p>
-				<p>ОКПО 83217493 р/c 40702810703510003650</p>
-				<p>Банк: Филиал 3652 ВТБ 24 (ЗАО) г. Воронеж</p>
-				<p>К/с 30101810100000000738 БИК 042007738</p>
+<h3 class="name_section">Наша группа<br> ВКонтакте</h3>
+<script type="text/javascript" src="//vk.com/js/api/openapi.js?142"></script>
+
+<!-- VK Widget -->
+<div id="vk_groups"></div>
+<script type="text/javascript">
+VK.Widgets.Group("vk_groups", {mode: 5, no_cover: 1, width: "252"}, 24314720);
+</script>
