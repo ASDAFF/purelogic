@@ -68,7 +68,7 @@ if (0 < $arResult["SECTIONS_COUNT"])
 				<li data-id="uli_<?=$arSection["ID"];?>">
 
 					<span style="background-image: url(<?=$oneImgSrctionIco?>)"></span>
-					<div class="text-name-section" <? if(strlen($arSection['NAME']) > 30){?>style="padding:0px"<?}?>><?=$arSection['NAME']?> </div>
+					<div class="text-name-section" <? if(strlen($arSection['NAME']) > 30){?>style="padding:0px"<?}?>><?=strlen($arSection['NAME']);?><?=$arSection['NAME']?> </div>
 				</li>
 				<?}}?>
 </ul><?}?>
