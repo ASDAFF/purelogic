@@ -21,7 +21,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 	$price = $db_res_p->Fetch();
 	?>
 	<div class="tovar_wr list_tov col-md-6" id="bx_328740560_37864">
-		<div class="col-md-6  col-sm-6 col-xs-12 element padding-left_0" style="padding-right: 0px;">
+		<div class="col-md-4  col-sm-6 col-xs-12 element padding-left_0" style="padding-right: 0px;">
 			<div class="icons-product-box">
 				<? if($arItem["PROPERTIES"]["NOVINKA"]["VALUE"] == 'Y'): ?>
 					<img src="<?=SITE_TEMPLATE_PATH?>/img/icon1.png">
@@ -40,7 +40,46 @@ foreach ($arResult['ITEMS'] as $arItem) {
 			<?
 			if(empty($arItem['PREVIEW_PICTURE']['SRC'])){$arItem['PREVIEW_PICTURE']['SRC'] = SITE_TEMPLATE_PATH.'/img/no_photo.png';} ?>
 			<img style="max-width: 230px;" src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>">
-			<div class="price-element-product"><?=$price['PRICE']?> <?if($price['CURRENCY'] == 'RUB'){?>₽<?}else{ print $price['CURRENCY'];}?></div>
+
+		</div>
+		<div class="col-md-8 col-sm-12" style="padding-right: 0px;">
+
+			<div class="head-product-box">
+				<h4><a href="<?=$arItem['DETAIL_PAGE_URL'] ?>"><?=$arItem['NAME'] ?></a></h4>
+			</div>
+
+			<div class="btn-product-docs-element">
+
+				<table>
+					<tr>
+					<td>
+						<div class="button-user-prop">
+						<a href="<?// $arItem['UF_SAYT_CHERTEG'] ?>">Чертеж</a>
+						</div>
+					</td>
+					<td>
+						<div class="button-user-prop">
+						<a href="<?// $arItem['UF_SAYT_POLEZNAYINF'] ?>">Документация</a>
+						</div>
+					</td>
+					</tr>
+					<tr>
+					<td>
+						<div class="button-user-prop">
+						<a href="<?// $arItem['UF_RUK_PO_EKSPUATACI'] ?>">Руководство</a>
+						</div>
+					</td>
+					<td>
+						<div class="button-user-prop">
+						<a href="<?// $arItem['UF_SAYT_POLEZNAYINF'] ?>">Документация2222</a>
+						</div>
+					</td>
+					</tr>
+				</table>
+
+			</div>
+			<div class="price-element-product"><?=$price['PRICE']?> <?if($price['CURRENCY'] == 'RUB'){?><span class="green">₽</span><?}else{ print $price['CURRENCY'];}?></div>
+
 			<form action="" method="get" class="add_in_card">
 				<input type="text" name="quantity" value="1">
 				<input type="submit" value="">
@@ -48,39 +87,12 @@ foreach ($arResult['ITEMS'] as $arItem) {
 				<input type="hidden" name="id" value="<?= $arItem["ID"]; ?>">
 			</form>
 
-		</div>
-		<div class="col-md-6 col-sm-12" style="padding-right: 0px;">
-
-			<div class="btn-product-docs-element">
-				<a href="<?// $arItem['UF_SAYT_CHERTEG'] ?>">Чертеж</a>
-				<a href="<?// $arItem['UF_SAYT_POLEZNAYINF'] ?>">Документация</a>
-				<a href="<?// $arItem['UF_RUK_PO_EKSPUATACI'] ?>">Руководство</a>
-				<a href="<?// $arItem['UF_SAYT_POLEZNAYINF'] ?>">Документация</a>
-				<a href="javascript:void(0)" class="other-btn-product-docs">&darr;</a>
-				<div class="other-block-product-docs">
-					<ul>
-						<li>123</li>
-						<li>123</li>
-						<li>123</li>
-						<li>123</li>
-					</ul>
-				</div>
-			</div>
-
 			<div class="clear"></div>
 
 		</div>
 		<div class="col-md-12 col-sm-6 col-xs-12 back-fon-yelow">
 
-			<div class="head-product-box">
-				<h4><a href="<?=$arItem['DETAIL_PAGE_URL'] ?>"><?=$arItem['NAME'] ?></a></h4>
-
-				<div class="open_descr">описание</div>
-			</div>
-
 			<div class="preview-text"><?= $arItem['PREVIEW_TEXT'] ?></div>
-			<div class="detail_text no"><?= $arItem['DETAIL_TEXT'] ?></div>
-
 		</div>
 
 		<div class="clear"></div>
@@ -90,6 +102,16 @@ foreach ($arResult['ITEMS'] as $arItem) {
 	}
 	?>
 </div>
+	<script>
+		$(function(){
+			$('.preview-text').readmore({
+				speed: 75,
+				maxHeight: 70,
+				moreLink: '<a href="#" style="color:#7BB3E8">[Показать полностью]</a>',
+				lessLink: '<a href="#" style="color:#7BB3E8">[Скрыть текст]</a>'
+			});
+		});
+	</script>
 	<?
 }
 

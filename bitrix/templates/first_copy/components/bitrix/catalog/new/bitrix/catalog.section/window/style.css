@@ -1,9 +1,7 @@
 .price-element-product{
-    position: absolute;
-    bottom: 3px;
-    right: 15px;
     font-weight: bold;
     color: #4E4E4E;
+    font-size: 22px;
 }
 .col-md-6.element .add_in_card{
     position: absolute;
@@ -49,25 +47,25 @@
     font-weight: bold;
 }
 
-.tovar_wr .btn-product-docs-element > a:hover {
+.button-user-prop:hover{
     background-color: #94b82f;
     border: transparent;
     border-bottom: 1px solid #4a5d13;
-    color: #fff;
-    width: 99%;
     font-size: 15px;
-    padding: 5px 0;
 }
-.tovar_wr .btn-product-docs-element > a {
-    display: block;
-    width: 99%;
-    font-size: 15px;
-    padding: 5px 0;
+.button-user-prop:hover a{
+    color: #fff!important;
+}
+.tovar_wr .btn-product-docs-element tr td a {
+    color: #000;
+}
+
+.button-user-prop{
     border: 1px solid #c7c7c7;
+    width: 150px;
+    margin: 2px;
     text-align: center;
-    margin-bottom: 20px;
-    color: #7d7d7d;
-    font-weight: 500;
+    padding: 5px 0px;
 }
 
 .open_descr {
@@ -119,4 +117,12 @@
 
 .tovar_wr .btn-product-docs-element > a:last-child:hover{
     background-color: #fff!important;
+}
+
+.add_in_card{
+    position: relative;
+    margin-bottom: 10px;
+}
+.add_in_card input[type="submit"]{
+    width: 45px!important;
 }

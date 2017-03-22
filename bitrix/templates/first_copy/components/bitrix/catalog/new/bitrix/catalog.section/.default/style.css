@@ -5,6 +5,7 @@
 .btn-product-docs{
     position: relative;
     display: flex;
+    margin-bottom: 10px;
 }
 
 .tovar_wr .btn-product-docs > a{
@@ -36,7 +37,7 @@
     color: #8FBC3F;
 }
 .head-product-box,.preview-text{
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .back-fon-yelow.yes{background-color:#fafbf4;}
@@ -52,13 +53,14 @@
 
 .box-product-gr .add_in_card {
     position: absolute;
-    bottom: 5px;
+    top: 12px;
     right: 0px;
 }
 .box-product-price{
     position: absolute;
-    right: 0px;
-    top: 0px;
+    right: 140px;
+    top: 10px;
+    font-size: 22px;
 }
 .box-product-gr:last-child{
     border-bottom: 0px;
@@ -122,12 +124,9 @@ h5 a:hover{
 
 
 .price-element-product{
-    position: absolute;
-    bottom: 3px;
-    right: 15px;
-    font-weight: bold;
+    font-weight: 500;
     color: #4E4E4E;
-    font-size: 12px;
+    font-size: 22px;
 }
 .col-md-2.element .add_in_card{
     position: absolute;
@@ -198,12 +197,8 @@ h5 a:hover{
     display: none;
 }
 
-.tovar_wr .btn-product-docs > a:last-child{
-    margin-right: 0px;
-}
-.tovar_wr .btn-product-docs > a:last-child:hover{
-    background-color: #fff!important;
-}
+
+
 
 #fancybox-thumbs > ul{
     margin: 0 auto;
@@ -221,4 +216,17 @@ h5 a:hover{
 }
 .tovar_wr > .col-md-2.element{
     padding: 15px 0px;
+}
+
+.head-product-box > h4{
+    margin-top: 25px;
+    margin-bottom: 20px;
+}
+
+.col-md-6 > .btn-product-docs{
+    margin-top: 25px;
+}
+
+.col-md-6 > .price-element-product{
+    margin-bottom: 20px;
 }

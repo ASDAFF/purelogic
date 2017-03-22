@@ -1859,7 +1859,7 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
 
 }
 .add_in_card input[type="text"]{
-	width: 35px;
+	width: 85px;
 	height: 20px;
 	color: #333;
 	border: 1px solid #94b82f;
@@ -1869,8 +1869,8 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
 	font-size: 12px;
 }
 .add_in_card input[type="submit"]{
-	width: 20px;
-	height: 20px;
+	width: 35px;
+	height: 25px;
 	background-image: url(../img/icon/korzina.png);
 	background-repeat: no-repeat;
 	background-position: center;
@@ -1916,7 +1916,7 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
     background-color: transparent;
 }
 .add_in_card input[type="text"]{
-	width: 35px;
+	width: 85px;
 	height: 20px;
 	color: #333;
 	border: 1px solid #94b82f;
@@ -2129,14 +2129,14 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
     background-color: transparent;
 }
 .add_in_card input[type="text"]{
-	width: 35px;
-	height: 20px;
+	width: 85px;
+	height: 25px;
 	color: #333;
 	border: 1px solid #94b82f;
 	position: relative;
 	float: left;
     padding-left: 7px;
-    font-size: 15px;
+    font-size: 20px;
 }
 .recomend_produc_wr .add_in_card input[type="submit"]{
 	width: 20px;

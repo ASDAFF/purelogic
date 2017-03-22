@@ -56,13 +56,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 		<div class="col-md-10 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;padding-bottom: 25px;">
 			<div class="head-product-box">
 				<h4><a href="#"><?=$arSection['UF_PAPKA_ZAGOLOVOK']?></a></h4>
-				<div class="open_descr">описание </div>
 			</div>
-
-			<div class="preview-text"><?=$arSection['UF_SAYT_PAPKA_OPIS']?></div>
-			<? if(strlen($arSection['DESCRIPTION']) > 1){ ?>
-			<div class="detail_text no"><?=$arSection['DESCRIPTION']?></div>
-			<? } ?>
 			<div class="btn-product-docs">
 				<a href="<?=$arSection['UF_SAYT_CHERTEG']?>">Чертеж</a>
 				<a href="<?=$arSection['UF_SAYT_POLEZNAYINF']?>">Документация</a>
@@ -78,6 +72,9 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 					</ul>
 				</div>
 			</div>
+
+			<div class="preview-text"><?=$arSection['UF_SAYT_PAPKA_OPIS']?></div>
+
 		</div>
 
 		<div class="col-md-12 col-sm-6 col-xs-12 product-block-all" style="padding-right: 0px;">
@@ -90,7 +87,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 					<div class="box-product-gr">
 						<h5><a href="<?=$element['DETAIL_PAGE_URL']?>"><?=$element['NAME']?></a></h5>
 						<p><?=$element['DETAIL_TEXT']?></p>
-						<div class="box-product-price"><?=$price['PRICE']?> <?if($price['CURRENCY'] == 'RUB'){?>₽<?}else{ print $price['CURRENCY'];}?></div>
+						<div class="box-product-price"><?=$price['PRICE']?> <?if($price['CURRENCY'] == 'RUB'){?><span class="green">₽</span><?}else{ print $price['CURRENCY'];}?></div>
 						<form action="" method="get" class="add_in_card">
 							<input type="text" name="quantity" value="1">
 							<input type="submit" value="">
@@ -110,6 +107,12 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 
 	<script>
 		$(function(){
+			$('.preview-text').readmore({
+				speed: 75,
+				maxHeight: 70,
+				moreLink: '<a href="#" style="color:#7BB3E8">[Показать полностью]</a>',
+				lessLink: '<a href="#" style="color:#7BB3E8">[Скрыть текст]</a>'
+			});
 
 			$(".fancybox-one").on("click", function () {
 				$(".fancybox-thumbs",$(this).parent()).eq(0).trigger("click");
@@ -163,46 +166,59 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 						<? endif; ?>
 					</div>
 					<img src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>">
-					<div class="price-element-product"><?=$price['PRICE']?> <?if($price['CURRENCY'] == 'RUB'){?>₽<?}else{ print $price['CURRENCY'];}?></div>
-					<form action="" method="get" class="add_in_card">
-						<input type="text" name="quantity" value="1">
-						<input type="submit" value="">
-						<input name="action" type="hidden" value="ADD2BASKET">
-						<input type="hidden" name="id" value="<?= $arItem["ID"]; ?>">
-					</form>
+
 
 				</div>
 				<div class="col-md-10 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;">
-					<div class="head-product-box">
-						<h4><a href="<?=$arItem['DETAIL_PAGE_URL'] ?>"><?=$arItem['NAME'] ?></a></h4>
+					<div class="col-md-6">
+						<div class="head-product-box">
+							<h4><a href="<?=$arItem['DETAIL_PAGE_URL'] ?>"><?=$arItem['NAME'] ?></a></h4>
+						</div>
+						<div class="col-md-6 padding_0">
+							<div class="price-element-product"><?=$price['PRICE']?> <?if($price['CURRENCY'] == 'RUB'){?><span class="green">₽</span><?}else{ print $price['CURRENCY'];}?></div>
+						</div>
+						<div class="col-md-6 padding_0">
+							<form action="" method="get" class="add_in_card">
+								<input type="text" name="quantity" value="1">
+								<input type="submit" value="">
+								<input name="action" type="hidden" value="ADD2BASKET">
+								<input type="hidden" name="id" value="<?= $arItem["ID"]; ?>">
+							</form>
+						</div>
 
-						<div class="open_descr">описание</div>
+
 					</div>
-
-					<div class="preview-text"><?= $arItem['PREVIEW_TEXT'] ?></div>
-					<div class="detail_text no"><?= $arItem['DETAIL_TEXT'] ?></div>
-
-					<div class="btn-product-docs">
-						<a href="<?// $arItem['UF_SAYT_CHERTEG'] ?>">Чертеж</a>
-						<a href="<?// $arItem['UF_SAYT_POLEZNAYINF'] ?>">Документация</a>
-						<a href="<?// $arItem['UF_RUK_PO_EKSPUATACI'] ?>">Руководство</a>
-						<a href="<?// $arItem['UF_SAYT_POLEZNAYINF'] ?>">Документация</a>
-						<a href="javascript:void(0)" style="width: 17%;" class="other-btn-product-docs">&darr;</a>
-						<div class="other-block-product-docs">
-							<ul>
-								<li>123</li>
-								<li>123</li>
-								<li>123</li>
-								<li>123</li>
-							</ul>
+					<div class="col-md-6 padding_0">
+						<div class="btn-product-docs">
+							<a href="<?// $arItem['UF_SAYT_CHERTEG'] ?>">Чертеж</a>
+							<a href="<?// $arItem['UF_SAYT_POLEZNAYINF'] ?>">Документация</a>
+							<a href="<?// $arItem['UF_RUK_PO_EKSPUATACI'] ?>">Еще</a>
 						</div>
 					</div>
+
+					<div class="col-md-12">
+						<div class="preview-text"><?= $arItem['PREVIEW_TEXT'] ?></div>
+					</div>
+
 				</div>
 				<div class="clear"></div>
 			</div>
 
 			<?
 		}
+		?>
+		<script>
+			$(function(){
+				$('.preview-text').readmore({
+					speed: 75,
+					maxHeight: 70,
+					moreLink: '<a href="#" style="color:#7BB3E8">[Показать полностью]</a>',
+					lessLink: '<a href="#" style="color:#7BB3E8">[Скрыть текст]</a>'
+				});
+			});
+		</script>
+
+		<?
 	}
 
 

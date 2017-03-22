@@ -1097,19 +1097,21 @@ button.for_image {
 .abot_clas .add_in_card{position:relative;}
 .plus_inpt {
     position: absolute;
-    top: 1px;
-    left: 23px;
+    top: 4px;
+    left: 60px;
     color: #94b82f;
     cursor: pointer;
     font-size: 14px;
+    font-weight: bold;
 }
 .minus_inpt {
     position: absolute;
-    top: 2px;
-    left: 5px;
-    color: #94b82f;
+    top: 3px;
+    left: 15px;
+    color: #000;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: bold;
 }
 .templete_2_wr.col-md-6{clear:none; float:none; width:50%; display:inline-block; vertical-align:top;}
 .tovar_wr.col-md-6{clear:none; float:none; width:49%;display:inline-block; vertical-align:top;}
