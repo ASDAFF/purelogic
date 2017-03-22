@@ -42,7 +42,7 @@
 
 .back-fon-yelow.yes{background-color:#fafbf4;}
 .tovar_wr > .padding-left_0 > a > img{
-    max-width: 230px;
+    max-width: 165px;
     margin-top: 30px;
 }
 .box-product-gr{
@@ -58,16 +58,15 @@
 }
 .box-product-price{
     position: absolute;
-    right: 140px;
+    right: 180px;
     top: 10px;
     font-size: 22px;
 }
 .box-product-gr:last-child{
     border-bottom: 0px;
 }
-.box-products-group{
-    padding-top: 40px;
-}
+
+
 
 .open_product {
     top: 0px;
@@ -182,7 +181,9 @@ h5 a:hover{
     text-align: left;
 }
 
-
+.col-md-2 > img{
+    max-width: 165px;
+}
 
 
 .btn-product-docs .other-block-product-docs{
@@ -229,4 +230,8 @@ h5 a:hover{
 
 .col-md-6 > .price-element-product{
     margin-bottom: 20px;
+}
+
+.col-md-2 > a > img{
+    max-width: 165px;
 }

@@ -5,7 +5,7 @@ $compositeStub = (isset($arResult['COMPOSITE_STUB']) && $arResult['COMPOSITE_STU
 <a href="<?= $arParams['PATH_TO_BASKET'] ?>" class="korzina_btn">
 							<span  class="icon_korzina"></span>
 							<p class="hidden-xs hidden-sm cnea"><?echo ($arResult['NUM_PRODUCTS']).' '.$arResult['PRODUCT(S)'];?></p>
-							<p class="korzina_price hidden-xs hidden-sm"><?= $arResult['TOTAL_PRICE'] ?></p>
+							<p class="korzina_price hidden-xs hidden-sm"><?= str_replace('RUB','₽',$arResult['TOTAL_PRICE']) ?></p>
 						</a>
 		<? if ($APPLICATION->GetCurPage(false) !== '/'){?>				
 	<?$tta=str_replace(array("RUB"," "),array("",""),$arResult['TOTAL_PRICE']);?>

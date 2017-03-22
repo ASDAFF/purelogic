@@ -62,10 +62,10 @@
 
 .button-user-prop{
     border: 1px solid #c7c7c7;
-    width: 150px;
+    width: 147px;
     margin: 2px;
     text-align: center;
-    padding: 5px 0px;
+    padding: 2px 0px;
 }
 
 .open_descr {
@@ -124,5 +124,5 @@
     margin-bottom: 10px;
 }
 .add_in_card input[type="submit"]{
-    width: 45px!important;
+    width: 47px!important;
 }

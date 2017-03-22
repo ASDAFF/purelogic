@@ -53,7 +53,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 			</a>
 			<?endforeach;?>
 		</div>
-		<div class="col-md-10 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;padding-bottom: 25px;">
+		<div class="col-md-10 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;padding-bottom: 15px;">
 			<div class="head-product-box">
 				<h4><a href="#"><?=$arSection['UF_PAPKA_ZAGOLOVOK']?></a></h4>
 			</div>
@@ -78,8 +78,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 		</div>
 
 		<div class="col-md-12 col-sm-6 col-xs-12 product-block-all" style="padding-right: 0px;">
-			<div class="open_product">развернуть </div>
-			<div class="box-products-group no">
+			<div class="box-products-group">
 				<? foreach($arSection['ELEMENT'] as $element){
 					$db_res_p = CPrice::GetList(array(), array("PRODUCT_ID" => $element['ID']));
 					$price = $db_res_p->Fetch();
@@ -197,7 +196,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 					</div>
 
 					<div class="col-md-12">
-						<div class="preview-text"><?= $arItem['PREVIEW_TEXT'] ?></div>
+						<div class="preview-text"><?= $arItem['DETAIL_TEXT'] ?></div>
 					</div>
 
 				</div>

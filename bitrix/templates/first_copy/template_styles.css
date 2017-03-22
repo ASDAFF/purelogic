@@ -103,6 +103,9 @@ p.korzina_price.hidden-xs.hidden-sm {
     max-width: 122px;
     white-space: nowrap;
     font-weight: 400;
+    position: absolute;
+    top: 22px;
+    left: 15px;
 }
 .shkala {
     width: 32px;
@@ -1098,7 +1101,7 @@ button.for_image {
 .plus_inpt {
     position: absolute;
     top: 4px;
-    left: 60px;
+    left: 70px;
     color: #94b82f;
     cursor: pointer;
     font-size: 14px;
@@ -1107,7 +1110,7 @@ button.for_image {
 .minus_inpt {
     position: absolute;
     top: 3px;
-    left: 15px;
+    left: 20px;
     color: #000;
     cursor: pointer;
     font-size: 15px;

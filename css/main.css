@@ -1859,8 +1859,8 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
 
 }
 .add_in_card input[type="text"]{
-	width: 85px;
-	height: 20px;
+	width: 100px;
+	height: 26px;
 	color: #333;
 	border: 1px solid #94b82f;
 	position: relative;
@@ -1869,8 +1869,8 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
 	font-size: 12px;
 }
 .add_in_card input[type="submit"]{
-	width: 35px;
-	height: 25px;
+	width: 47px;
+	height: 26px;
 	background-image: url(../img/icon/korzina.png);
 	background-repeat: no-repeat;
 	background-position: center;
@@ -1916,8 +1916,8 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
     background-color: transparent;
 }
 .add_in_card input[type="text"]{
-	width: 85px;
-	height: 20px;
+	width: 100px;
+	height: 26px;
 	color: #333;
 	border: 1px solid #94b82f;
 	position: relative;
@@ -2052,7 +2052,7 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
 .tovar_wr{
 	width: 100%;
 	height: 250px;
-	margin-bottom: 100px;
+	margin-bottom: 50px;
 }
 
 
@@ -2064,22 +2064,19 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
 	font-weight: 500;
 }
 .tovar_wr .btn-product-docs > a{
-	width: 99%;
+	width: 147px;
 	font-size: 15px;
-	padding: 5px 0;
+	padding: 2px 0;
 	border: 1px solid #c7c7c7;
 	text-align: center;
-	color: #7d7d7d;
-	font-weight: 500;
+	color: #000;
 }
 .tovar_wr .btn-product-docs > a:hover{
 	background-color: #94b82f;
 	border: transparent;
 	border-bottom: 1px solid #4a5d13;
 	color: #fff;
-	width: 99%;
 	font-size: 15px;
-	padding: 5px 0;
 }
 .tovar_wr .btn-product-docs > a.other-btn-product-docs:hover{
 	background-color: #fff;
@@ -2129,8 +2126,8 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
     background-color: transparent;
 }
 .add_in_card input[type="text"]{
-	width: 85px;
-	height: 25px;
+	width: 100px;
+	height: 26px;
 	color: #333;
 	border: 1px solid #94b82f;
 	position: relative;

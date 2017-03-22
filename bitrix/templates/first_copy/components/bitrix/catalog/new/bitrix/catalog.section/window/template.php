@@ -20,7 +20,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 	$db_res_p = CPrice::GetList(array(), array("PRODUCT_ID" => $arItem['ID']));
 	$price = $db_res_p->Fetch();
 	?>
-	<div class="tovar_wr list_tov col-md-6" id="bx_328740560_37864">
+	<div class="tovar_wr list_tov col-md-6" id="bx_328740560_37864" style="padding-left: 10px;padding-right: 10px">
 		<div class="col-md-4  col-sm-6 col-xs-12 element padding-left_0" style="padding-right: 0px;">
 			<div class="icons-product-box">
 				<? if($arItem["PROPERTIES"]["NOVINKA"]["VALUE"] == 'Y'): ?>
@@ -39,7 +39,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 
 			<?
 			if(empty($arItem['PREVIEW_PICTURE']['SRC'])){$arItem['PREVIEW_PICTURE']['SRC'] = SITE_TEMPLATE_PATH.'/img/no_photo.png';} ?>
-			<img style="max-width: 230px;" src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>">
+			<img style="max-width: 165px;" src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>">
 
 		</div>
 		<div class="col-md-8 col-sm-12" style="padding-right: 0px;">
@@ -90,9 +90,9 @@ foreach ($arResult['ITEMS'] as $arItem) {
 			<div class="clear"></div>
 
 		</div>
-		<div class="col-md-12 col-sm-6 col-xs-12 back-fon-yelow">
+		<div class="col-md-12 col-sm-6 col-xs-12 back-fon-yelow" style="padding-left: 0px">
 
-			<div class="preview-text"><?= $arItem['PREVIEW_TEXT'] ?></div>
+			<div class="preview-text"><?= $arItem['DETAIL_TEXT'] ?></div>
 		</div>
 
 		<div class="clear"></div>
