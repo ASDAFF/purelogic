@@ -246,7 +246,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 						}
 					}
 				});
-				
+
 			});
 		</script>
 
