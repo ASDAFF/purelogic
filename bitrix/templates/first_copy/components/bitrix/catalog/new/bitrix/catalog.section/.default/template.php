@@ -164,8 +164,18 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 						<img src="<?=SITE_TEMPLATE_PATH?>/img/icon4.png">
 						<? endif; ?>
 					</div>
-					<img src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>">
 
+					<a href="<?=$arItem['PREVIEW_PICTURE']['SRC']?>" class="image fancybox-one" data-fancybox-group="thumb<?=$arItem['ID']?>">
+						<img src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>">
+					</a>
+
+					<?
+					foreach($arItem["PROPERTIES"]["MORE_PHOTO"]["VALUE"] as $img) {
+						?>
+						<a href="<?=CFile::GetPath($img)?>" class="image fancybox-thumbs" data-fancybox-group="thumb<?=$arItem['ID']?>" style="display: none">
+							<img src="<?=CFile::GetPath($img);?>">
+						</a>
+					<?}?>
 
 				</div>
 				<div class="col-md-10 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;">
@@ -214,6 +224,29 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 					moreLink: '<a href="#" style="color:#7BB3E8">[Показать полностью]</a>',
 					lessLink: '<a href="#" style="color:#7BB3E8">[Скрыть текст]</a>'
 				});
+
+				$(".fancybox-one").on("click", function () {
+					$(".fancybox-thumbs",$(this).parent()).eq(0).trigger("click");
+					return false;
+				});
+				//	$("a.image").fancybox();
+
+				$('.fancybox-thumbs').fancybox({
+					prevEffect : 'none',
+					nextEffect : 'none',
+
+					closeBtn  : true,
+					arrows    : true,
+					nextClick : true,
+
+					helpers : {
+						thumbs : {
+							width  : 50,
+							height : 50
+						}
+					}
+				});
+				
 			});
 		</script>
 

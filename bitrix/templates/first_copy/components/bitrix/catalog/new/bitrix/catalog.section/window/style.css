@@ -100,6 +100,7 @@
 }
 
 .icons-product-box{
+    text-align: left;
     position: absolute;
     top: 0px;
     width: 250px;

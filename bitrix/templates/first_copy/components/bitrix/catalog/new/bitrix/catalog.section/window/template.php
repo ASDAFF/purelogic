@@ -39,8 +39,17 @@ foreach ($arResult['ITEMS'] as $arItem) {
 
 			<?
 			if(empty($arItem['PREVIEW_PICTURE']['SRC'])){$arItem['PREVIEW_PICTURE']['SRC'] = SITE_TEMPLATE_PATH.'/img/no_photo.png';} ?>
-			<img style="max-width: 165px;margin-top:10px;" src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>">
+			<a href="<?=$arItem['PREVIEW_PICTURE']['SRC']?>" class="image fancybox-one" data-fancybox-group="thumb<?=$arItem['ID']?>">
+				<img style="max-width: 165px;margin-top:10px;" src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>">
+			</a>
 
+			<?
+			foreach($arItem["PROPERTIES"]["MORE_PHOTO"]["VALUE"] as $img) {
+				?>
+				<a href="<?=CFile::GetPath($img)?>" class="image fancybox-thumbs" data-fancybox-group="thumb<?=$arItem['ID']?>" style="display: none">
+					<img src="<?=CFile::GetPath($img);?>">
+				</a>
+			<?}?>
 		</div>
 		<div class="col-md-8 col-sm-12" style="padding-right: 0px;">
 
@@ -109,6 +118,27 @@ foreach ($arResult['ITEMS'] as $arItem) {
 				maxHeight: 70,
 				moreLink: '<a href="#" style="color:#7BB3E8">[Показать полностью]</a>',
 				lessLink: '<a href="#" style="color:#7BB3E8">[Скрыть текст]</a>'
+			});
+
+			$(".fancybox-one").on("click", function () {
+				$(".fancybox-thumbs",$(this).parent()).eq(0).trigger("click");
+				return false;
+			});
+
+			$('.fancybox-thumbs').fancybox({
+				prevEffect : 'none',
+				nextEffect : 'none',
+
+				closeBtn  : true,
+				arrows    : true,
+				nextClick : true,
+
+				helpers : {
+					thumbs : {
+						width  : 50,
+						height : 50
+					}
+				}
 			});
 		});
 	</script>
