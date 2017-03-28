@@ -90,14 +90,18 @@ foreach ($arResult['ITEMS'] as $arItem) {
 					<table>
 						<tr>
 							<td>
+								<? if(isset($oneProp[0])):?>
 								<div class="button-user-prop">
 									<a href="<?=$oneProp[0] ?>"><?=$oneProp[1]?></a>
 								</div>
+								<? endif; ?>
 							</td>
 							<td>
+								<? if(isset($arPropBtnEnd[0])):?>
 								<div class="button-user-prop toggle">
 									<a href="#">Еще</a>
 								</div>
+								<? endif; ?>
 							</td>
 						</tr>
 					</table>
@@ -113,17 +117,21 @@ foreach ($arResult['ITEMS'] as $arItem) {
 						<table>
 							<tr>
 								<td>
+									<? if(isset($arPropBtnEnd[0][0])):?>
 									<div class="button-user-prop">
 										<a href="<?=$arPropBtnEnd[0][0]?>"><?=$arPropBtnEnd[0][1]?></a>
 									</div>
+									<? endif; ?>
 								</td>
 								<td></td>
 							</tr>
 							<tr>
 								<td>
+									<? if(isset($arPropBtnEnd[1][0])):?>
 									<div class="button-user-prop">
 										<a href="<?=$arPropBtnEnd[1][0]?>"><?=$arPropBtnEnd[1][1]?></a>
 									</div>
+									<? endif; ?>
 								</td>
 								<td></td>
 							</tr>
@@ -139,26 +147,34 @@ foreach ($arResult['ITEMS'] as $arItem) {
 				<table>
 					<tr>
 					<td>
+						<? if(isset($output[0][0])):?>
 						<div class="button-user-prop">
 						<a href="<?=$output[0][0]?>"><?=$output[0][1]?></a>
 						</div>
+						<? endif; ?>
 					</td>
 					<td>
+						<? if(isset($output[1][0])):?>
 						<div class="button-user-prop">
 						<a href="<?=$output[1][0]?>"><?=$output[1][1]?></a>
 						</div>
+						<? endif; ?>
 					</td>
 					</tr>
 					<tr>
 					<td>
+						<? if(isset($output[2][0])):?>
 						<div class="button-user-prop">
 						<a href="<?=$output[2][0]?>"><?=$output[2][1]?></a>
 						</div>
+						<? endif; ?>
 					</td>
 					<td>
+						<? if(isset($arPropBtnEnd[3])):?>
 						<div class="button-user-prop toggle">
 						<a href="#">Еще</a>
 						</div>
+						<? endif; ?>
 					</td>
 					</tr>
 				</table>

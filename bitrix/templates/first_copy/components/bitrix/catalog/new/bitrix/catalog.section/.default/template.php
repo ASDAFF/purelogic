@@ -84,11 +84,22 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 					}
 				}
 				$output = array_slice($arPropBtnEnd, 0, 2);
+				unset($arPropBtnEnd[0]);
+				unset($arPropBtnEnd[1]);
 
 				?>
+
+				<? if(isset($output[0][0])):?>
 				<a href="<?=$output[0][0]?>"><?=$output[0][1]?></a>
+				<? endif; ?>
+
+				<? if(isset($output[1][0])):?>
 				<a href="<?=$output[1][0]?>"><?=$output[1][1]?></a>
+				<? endif; ?>
+
+				<? if(isset($arPropBtnEnd[2])):?>
 				<a href="#" class="toggle">Еще</a>
+				<? endif; ?>
 
 					<ul>
 						<? foreach($arPropBtnEnd as $p){ ?>
@@ -259,10 +270,17 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 							unset($arPropBtnEnd[0]);
 							unset($arPropBtnEnd[1]);
 							?>
+							<? if(isset($output[0][0])):?>
 							<a href="<?=$output[0][0]?>"><?=$output[0][1]?></a>
-							<a href="<?=$output[1][0]?>"><?=$output[1][1]?></a>
-							<a href="#" class="toggle">Еще</a>
+							<? endif; ?>
 
+							<? if(isset($output[1][0])):?>
+							<a href="<?=$output[1][0]?>"><?=$output[1][1]?></a>
+							<? endif; ?>
+
+							<? if(isset($arPropBtnEnd[2])):?>
+							<a href="#" class="toggle">Еще</a>
+							<? endif; ?>
 							<ul>
 								<? foreach($arPropBtnEnd as $p){ ?>
 									<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
