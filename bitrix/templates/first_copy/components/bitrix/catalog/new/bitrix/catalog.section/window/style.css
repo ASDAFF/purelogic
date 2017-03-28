@@ -105,23 +105,28 @@
     top: 0px;
     width: 250px;
 }
-.btn-product-docs-element .other-block-product-docs{
-    position: absolute;
-    bottom: -70px;
-    right: 2px;
-    z-index: 10;
-    background: #fff;
-    min-width: 233px;
-    border: 1px solid #DADADA;
-    padding: 5px;
+
+.btn-product-docs-element{
+    position: relative;
+}
+
+.btn-product-docs-element > ul{
     display: none;
+    width: 298px;
+    background-color: #8FBA40;
+    color: #fff;
+    padding: 5px;
+    margin-left: 2px;
+    border-bottom: 1px solid #4a5d13;
+}
+.btn-product-docs-element > ul > li > a{
+    color: #fff;
+}
+.btn-product-docs-element > ul > li > a:hover{
+    color: #000;
 }
 
 
-
-.tovar_wr .btn-product-docs-element > a:last-child:hover{
-    background-color: #fff!important;
-}
 
 .add_in_card{
     position: relative;

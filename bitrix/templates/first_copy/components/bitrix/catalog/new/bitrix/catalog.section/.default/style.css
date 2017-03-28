@@ -235,3 +235,27 @@ h5 a:hover{
 .col-md-2 > a > img{
     max-width: 165px;
 }
+
+.btn-product-docs > ul{
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 29px;
+    background-color: #8FBA40;
+    width: 278px;
+    border-bottom: 1px solid #4a5d13;
+    padding: 5px;
+    z-index: 10;
+}
+
+.btn-product-docs.default > ul{
+    left: 183px;
+    right: 0px;
+}
+
+.btn-product-docs > ul > li > a{
+    color: #fff;
+}
+.btn-product-docs > ul > li > a:hover{
+    color: #000;
+}

@@ -54,37 +54,121 @@ foreach ($arResult['ITEMS'] as $arItem) {
 		<div class="col-md-8 col-sm-12" style="padding-right: 0px;">
 
 			<div class="head-product-box">
-				<h4><a href="<?=$arItem['DETAIL_PAGE_URL'] ?>"><?=$arItem['NAME'] ?></a></h4>
+				<h4><a href="<?=$arItem['DETAIL_PAGE_URL'] ?>"><?=$arItem['NAME'] ?> </a></h4>
 			</div>
 
 			<div class="btn-product-docs-element">
+				<?
+					$arPropBtn = array();
+					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_CHERTEZH"]["VALUE"],'Чертёж');
+					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_VIDEO"]["VALUE"],'Видео');
+					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_INSTRUKTSIYA"]["VALUE"],'Инструкция');
+					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_DRAYVER"]["VALUE"],'Драйвер');
+					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_DLINYREZA"]["VALUE"],'Длины реза');
+					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_PO"]["VALUE"],'ПО');
+					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_3DMODEL"]["VALUE"],'3D-модель');
+					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_ARKHIVPO"]["VALUE"],'Архив ПО');
+					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_DEMOVERSIYA"]["VALUE"],'Демо-версия');
+					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOUSTANOVKE"]["VALUE"],'Руководство по установке');
+					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPONASTROYKE"]["VALUE"],'Руководство по настройке');
+					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOEKSPL"]["VALUE"],'Руководство по эксплуатации');
+					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_POLEZAYAINFORMATSIYA"]["VALUE"],'Полезная информация');
+					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_USERMANUAL"]["VALUE"],'User Manual');
+					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_INSTALLATIONGUIDE"]["VALUE"],'Installation Guide');
+					$arPropBtnEnd = array();
+					foreach($arPropBtn as $v){
+						if(strlen($v[0]) >= 1){
+							$arPropBtnEnd[] = array($v[0],$v[1]);
+						}
+					}
 
+
+				?>
+				<? if(strlen($arItem['NAME']) >= 35){
+					$oneProp = array_shift($arPropBtnEnd);
+					?>
+					<table>
+						<tr>
+							<td>
+								<div class="button-user-prop">
+									<a href="<?=$oneProp[0] ?>"><?=$oneProp[1]?></a>
+								</div>
+							</td>
+							<td>
+								<div class="button-user-prop toggle">
+									<a href="#">Еще</a>
+								</div>
+							</td>
+						</tr>
+					</table>
+					<ul>
+						<? foreach($arPropBtnEnd as $p){ ?>
+						<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
+						<?}?>
+					</ul>
+				<?}else{?>
+
+					<? if(count($arPropBtnEnd) == 2){ ?>
+
+						<table>
+							<tr>
+								<td>
+									<div class="button-user-prop">
+										<a href="<?=$arPropBtnEnd[0][0]?>"><?=$arPropBtnEnd[0][1]?></a>
+									</div>
+								</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>
+									<div class="button-user-prop">
+										<a href="<?=$arPropBtnEnd[1][0]?>"><?=$arPropBtnEnd[1][1]?></a>
+									</div>
+								</td>
+								<td></td>
+							</tr>
+						</table>
+
+					<?}else{
+
+						$output = array_slice($arPropBtnEnd, 0, 3);
+						unset($arPropBtnEnd[0]);
+						unset($arPropBtnEnd[1]);
+						unset($arPropBtnEnd[2]);
+						?>
 				<table>
 					<tr>
 					<td>
 						<div class="button-user-prop">
-						<a href="<?// $arItem['UF_SAYT_CHERTEG'] ?>">Чертеж</a>
+						<a href="<?=$output[0][0]?>"><?=$output[0][1]?></a>
 						</div>
 					</td>
 					<td>
 						<div class="button-user-prop">
-						<a href="<?// $arItem['UF_SAYT_POLEZNAYINF'] ?>">Документация</a>
+						<a href="<?=$output[1][0]?>"><?=$output[1][1]?></a>
 						</div>
 					</td>
 					</tr>
 					<tr>
 					<td>
 						<div class="button-user-prop">
-						<a href="<?// $arItem['UF_RUK_PO_EKSPUATACI'] ?>">Руководство</a>
+						<a href="<?=$output[2][0]?>"><?=$output[2][1]?></a>
 						</div>
 					</td>
 					<td>
-						<div class="button-user-prop">
-						<a href="<?// $arItem['UF_SAYT_POLEZNAYINF'] ?>">Документация2222</a>
+						<div class="button-user-prop toggle">
+						<a href="#">Еще</a>
 						</div>
 					</td>
 					</tr>
 				</table>
+				<ul>
+					<? foreach($arPropBtnEnd as $p){ ?>
+						<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
+					<?}?>
+				</ul>
+					<?}?>
+				<?}?>
 
 			</div>
 			<div class="price-element-product"><?=$price['PRICE']?> <?if($price['CURRENCY'] == 'RUB'){?><span class="green">₽</span><?}else{ print $price['CURRENCY'];}?></div>
@@ -113,6 +197,12 @@ foreach ($arResult['ITEMS'] as $arItem) {
 </div>
 	<script>
 		$(function(){
+			$('.btn-product-docs-element .toggle').click(function(){
+				var rod = $(this).parent().parent().parent().parent().parent();
+				$('ul',rod).slideToggle();
+				return false;
+			});
+
 			$('.preview-text').readmore({
 				speed: 75,
 				maxHeight: 70,
