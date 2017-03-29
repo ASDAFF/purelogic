@@ -2073,10 +2073,22 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
 }
 .tovar_wr .btn-product-docs > a:hover{
 	background-color: #94b82f;
-	border: transparent;
-	border-bottom: 1px solid #4a5d13;
 	color: #fff;
-	font-size: 15px;
+}
+.tovar_wr .btn-product-docs > a.open{
+	background-color: #94b82f;
+	color: #fff;
+}
+.tovar_wr .btn-product-docs > a.toggle{
+	position: relative;
+	padding-right: 20px;
+}
+.tovar_wr .btn-product-docs > a.toggle > span{
+	position: absolute;
+	right: 0px;
+	border-left: 1px solid #DADADA;
+	top: 0;
+	padding: 2px 7px;
 }
 .tovar_wr .btn-product-docs > a.other-btn-product-docs:hover{
 	background-color: #fff;

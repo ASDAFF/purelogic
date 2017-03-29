@@ -99,7 +99,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 							<td>
 								<? if(isset($arPropBtnEnd[0])):?>
 								<div class="button-user-prop toggle">
-									<a href="#">Еще</a>
+									<a href="#">Еще <span class="">▼</span></a>
 								</div>
 								<? endif; ?>
 							</td>
@@ -172,7 +172,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 					<td>
 						<? if(isset($arPropBtnEnd[3])):?>
 						<div class="button-user-prop toggle">
-						<a href="#">Еще</a>
+						<a href="#">Еще <span class="">▼</span></a>
 						</div>
 						<? endif; ?>
 					</td>
@@ -187,7 +187,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 				<?}?>
 
 			</div>
-			<div class="price-element-product"><?=$price['PRICE']?> <?if($price['CURRENCY'] == 'RUB'){?><span class="green">₽</span><?}else{ print $price['CURRENCY'];}?></div>
+			<div class="price-element-product"><?=number_format($price['PRICE'],0,'',' ')?> <?if($price['CURRENCY'] == 'RUB'){?><span class="green">₽</span><?}else{ print $price['CURRENCY'];}?></div>
 
 			<form action="" method="get" class="add_in_card">
 				<input type="text" name="quantity" value="1">
@@ -214,8 +214,18 @@ foreach ($arResult['ITEMS'] as $arItem) {
 	<script>
 		$(function(){
 			$('.btn-product-docs-element .toggle').click(function(){
+				var link = $('a',this);
+				var div = $(this);
 				var rod = $(this).parent().parent().parent().parent().parent();
-				$('ul',rod).slideToggle();
+				$('ul',rod).slideToggle(function(){
+					if($(this).css('display') == 'block'){
+						div.addClass('open');
+						$('span',link).text('▲');
+					}else{
+						div.removeClass('open');
+						$('span',link).text('▼');
+					}
+				});
 				return false;
 			});
 

@@ -194,11 +194,15 @@ while ($arSect = $rsSect->GetNext())
 		$type_two = $arSect['UF_SAYT_PAPKA_TIP'];
 		$_SESSION["template"]="";
 		break;
+	}else{
+		if(empty($_GET["template"])) {
+			$_SESSION["template"] = "window";
+		}
 	}
 }
 ?>
 
-<div class="plitka"><div class="pltk <?if($_SESSION["template"]=="list"){?>current<?}?>">
+<div class="plitka"><div class="pltk <?if($_SESSION["template"]=="window"){?>current<?}?>">
 <? if($type_two != 2){ ?>
 	<form method="get" action="">
 		<input name="template" type="hidden" value="window">

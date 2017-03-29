@@ -52,9 +52,6 @@
 
 .button-user-prop:hover{
     background-color: #94b82f;
-    border: transparent;
-    border-bottom: 1px solid #4a5d13;
-    font-size: 15px;
 }
 .button-user-prop:hover a{
     color: #fff!important;
@@ -135,4 +132,22 @@
 }
 .add_in_card input[type="submit"]{
     width: 47px!important;
+}
+.button-user-prop.toggle{
+    position: relative;
+    padding-right: 20px;
+}
+.button-user-prop.toggle.open{
+    background-color: #94b82f;
+}
+.button-user-prop.toggle.open a{
+    color: #fff;
+}
+.button-user-prop.toggle span{
+    position: absolute;
+    top: 0px;
+    padding: 2px 7px;
+    border-left: 1px solid #DADADA;
+    right: 0px;
+    height: 23px;
 }

@@ -98,7 +98,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 				<? endif; ?>
 
 				<? if(isset($arPropBtnEnd[2])):?>
-				<a href="#" class="toggle">Еще</a>
+				<a href="#" class="toggle">Еще <span class="">▼</span></a>
 				<? endif; ?>
 
 					<ul>
@@ -122,7 +122,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 					<div class="box-product-gr">
 						<h5><a href="<?=$element['DETAIL_PAGE_URL']?>"><?=$element['NAME']?></a></h5>
 						<p><?=$element['DETAIL_TEXT']?></p>
-						<div class="box-product-price"><?=$price['PRICE']?> <?if($price['CURRENCY'] == 'RUB'){?><span class="green">₽</span><?}else{ print $price['CURRENCY'];}?></div>
+						<div class="box-product-price"><?=number_format($price['PRICE'],0,'',' ')?> <?if($price['CURRENCY'] == 'RUB'){?><span class="green">₽</span><?}else{ print $price['CURRENCY'];}?></div>
 						<form action="" method="get" class="add_in_card">
 							<input type="text" name="quantity" value="1">
 							<input type="submit" value="">
@@ -144,8 +144,17 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 		$(function(){
 
 			$('.btn-product-docs .toggle').click(function(){
+				var link = $(this);
 				var rod = $(this).parent();
-				$('ul',rod).slideToggle();
+				$('ul',rod).slideToggle(function(){
+					if($(this).css('display') == 'block'){
+						link.addClass('open');
+						$('span',link).text('▲');
+					}else{
+						link.removeClass('open');
+						$('span',link).text('▼');
+					}
+				});
 				return false;
 			});
 
@@ -227,7 +236,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 							<h4><a href="<?=$arItem['DETAIL_PAGE_URL'] ?>"><?=$arItem['NAME'] ?></a></h4>
 						</div>
 						<div class="col-md-6 padding_0">
-							<div class="price-element-product"><?=$price['PRICE']?> <?if($price['CURRENCY'] == 'RUB'){?><span class="green">₽</span><?}else{ print $price['CURRENCY'];}?></div>
+							<div class="price-element-product"><?=number_format($price['PRICE'],0,'',' ')?> <?if($price['CURRENCY'] == 'RUB'){?><span class="green">₽</span><?}else{ print $price['CURRENCY'];}?></div>
 						</div>
 						<div class="col-md-6 padding_0">
 							<form action="" method="get" class="add_in_card">
@@ -279,7 +288,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 							<? endif; ?>
 
 							<? if(isset($arPropBtnEnd[2])):?>
-							<a href="#" class="toggle">Еще</a>
+							<a href="#" class="toggle">Еще <span class="">▼</span></a>
 							<? endif; ?>
 							<ul>
 								<? foreach($arPropBtnEnd as $p){ ?>
@@ -304,8 +313,17 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 			$(function(){
 
 				$('.btn-product-docs .toggle').click(function(){
+					var link = $(this);
 					var rod = $(this).parent();
-					$('ul',rod).slideToggle();
+					$('ul',rod).slideToggle(function(){
+						if($(this).css('display') == 'block'){
+							link.addClass('open');
+							$('span',link).text('▲');
+						}else{
+							link.removeClass('open');
+							$('span',link).text('▼');
+						}
+					});
 					return false;
 				});
 
