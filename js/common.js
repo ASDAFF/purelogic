@@ -37,13 +37,14 @@ $(window).scroll(function () {
      $(".fixed_dlv").removeClass("fix");
   }
 });
+
+var offset = $("#breadcrumbs-two").offset();
 var fxx=false;
 if($(".for_left_b").length>0)
 fxx=true;
-
 $(window).scroll(function () {
 if(fxx){
-  if ($(this).scrollTop() > 700 && $(this).scrollTop()< ($(".main_katalog").height())) {
+  if ($(this).scrollTop() > offset.top && $(this).scrollTop()< ($(".main_katalog").height())) {
   $("#breadcrumbs-two").parent().height($("#breadcrumbs-two").height());
    $(".for_left_b .bx_sitemap, #breadcrumbs-two").addClass("fix");
    $("#breadcrumbs-two").width($("#breadcrumbs-two").parent().width());

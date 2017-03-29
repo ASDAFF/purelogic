@@ -78,8 +78,9 @@ footer {
     white-space: nowrap;
 }
 
-#breadcrumbs-two.fix{position: fixed;
-padding-top:7px;
+#breadcrumbs-two.fix{
+    position: fixed;
+    padding-top:3px;
     top: 0px;
     z-index: 10;
     background-color: #fff;}
@@ -96,7 +97,7 @@ padding-top:7px;
     width: 181px;
     position: fixed;
     z-index: 22;
-	padding-top:7px;
+	padding-top:3px;
     top: 0px;
 }
 p.korzina_price.hidden-xs.hidden-sm {
