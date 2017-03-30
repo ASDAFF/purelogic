@@ -65,6 +65,7 @@ $APPLICATION->SetAdditionalCSS("/css/fancybox/jquery.fancybox-thumbs.css");
 	<script src="/js/fancybox/jquery.fancybox-buttons.js"></script>
 	<script src="/js/fancybox/jquery.fancybox-thumbs.js"></script>
 	<script src="/js/readmore.js"></script>
+	<script src="/js/StickyBlock/jquery.airStickyBlock.js"></script>
 
 
 
@@ -612,18 +613,21 @@ $dir = $APPLICATION->GetCurDir();
 	false
 ); */
 					?>
-					</div>
-					<div class="col-md-10 "> 
-					<div class="col-md-12 padding_0"><?$APPLICATION->IncludeComponent(
-	"bitrix:breadcrumb",
-	"new",
-	Array(
-		"PATH" => "",
-		"SITE_ID" => "s1",
-		"START_FROM" => "0"
-	)
-);?>
 </div>
+
+<div class="col-md-10 ">
+
+		<div class="col-md-12 padding_0 breadcrumb-height">
+				<?$APPLICATION->IncludeComponent(
+					"bitrix:breadcrumb",
+					"new",
+					Array(
+						"PATH" => "",
+						"SITE_ID" => "s1",
+						"START_FROM" => "0"
+						)
+				);?>
+		</div>
 <?}?>
 <?}?>
 <? endif; ?> 

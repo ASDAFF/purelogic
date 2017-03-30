@@ -321,7 +321,7 @@
 <?}?>
 
 
-<footer>
+<footer class="footer-end">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-3 col-lg-2 padding_right_0 col-sm-5 hidden-xs">
@@ -439,14 +439,23 @@ return $newData;
 	<script src="libs/html5shiv/html5shiv-printshiv.min.js"></script>
 	<script src="libs/respond/respond.min.js"></script>
 	<![endif]-->
-<!-- ПРЕЛОАД ДЛЯ СТРАНИЦ -->
+<!-- Фиксированный блок -->
 <script>
-	$(window).load(function() {
+	$(function(){
 
-	//	$(".loader_inner").fadeOut();
-	//	$(".loader").delay(400).fadeOut("slow");
+		$('#breadcrumbs-two').airStickyBlock({
+			offsetTop: 0,
+			stopBlock: '.footer-end'
+		});
+
+		$('.bx_sitemap > .new_left_menu').airStickyBlock({
+			offsetTop: 3,
+			stopBlock: '.footer-end'
+		});
+
 
 	});
+
 </script>
 
 <div class="hidden"></div>
