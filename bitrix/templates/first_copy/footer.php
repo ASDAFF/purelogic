@@ -448,7 +448,7 @@ return $newData;
 			stopBlock: '.footer-end'
 		});
 
-		$('.bx_sitemap > .new_left_menu').airStickyBlock({
+		$('.for_left_b > .bx_sitemap > .new_left_menu').airStickyBlock({
 			offsetTop: 3,
 			stopBlock: '.footer-end'
 		});
