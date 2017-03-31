@@ -1,0 +1,65 @@
+
+.section-block{
+    border-left: 1px solid #DBE9C0;
+    border-bottom: 1px solid #DBE9C0;
+    border-right: 1px solid #DBE9C0;
+    border-top: 0px solid #DBE9C0;
+    margin-bottom: 10px;
+}
+
+.section-block .section-name{
+    background-color: #DBE9C0;
+    padding: 3px 5px;
+}
+
+.section-block ul{
+    margin: 5px;
+}
+
+.catalog-title h1:before{
+    background: black;
+}
+.catalog-title h1:after{
+    background: black;
+}
+.catalog-title{
+    position: relative;
+}
+.catalog-title .lines{
+    position: absolute;
+    width: 35%;
+    bottom: 5px;
+}
+.catalog-title .lines:last-child{
+    right: 0px;
+}
+.catalog-title .lines span:first-child{
+    border-bottom: 1px dashed #94B830;
+    width: 100%;
+    display: block;
+    margin-bottom: 5px;
+}
+.catalog-title .lines span:last-child{
+    width: 100%;
+    display: block;
+    border-bottom: 2px solid #94B830;
+}
+
+.catalog-title h1{
+    text-align: center;
+}
+
+.catalog-title a{
+    font-size: 34px;
+    font-weight: 400;
+    color: black;
+}
+
+.section-block a{
+    color: black;
+
+}
+
+.section-block ul a{
+    font-size: 14px;
+}
