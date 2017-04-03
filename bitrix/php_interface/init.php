@@ -22,4 +22,28 @@ function _Check404Error(){
         include $_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/footer.php';
     }
 }
+
+
+
+////////////////////////
+
+
+AddEventHandler("iblock", "OnBeforeIBlockSectionUpdate", Array("SectionUpdate", "OnBeforeIBlockSectionUpdateHandler"));
+
+class SectionUpdate
+{
+    function OnBeforeIBlockSectionUpdateHandler(&$arFields)
+    {
+        $bs = new CIBlockSection;
+        $arPICTURE["MODULE_ID"] = "iblock";
+        $arFields = Array("SORT" => $arFields['UF_SORTIROVKA']);
+
+        if($arFields['ID'] > 0)
+        {
+            $bs->Update($arFields['ID'], $arFields);
+        }
+
+    }
+}
+
 ?>
