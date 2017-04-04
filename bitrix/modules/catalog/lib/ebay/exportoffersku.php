@@ -300,6 +300,7 @@ class ExportOfferSKU extends ExportOffer
 		$arItem["DETAIL_PICTURE_URL"] = $this->getPictureUrl((int)$arItem["DETAIL_PICTURE"]);
 		$arItem["PREVIEW_PICTURE_URL"] = $this->getPictureUrl((int)$arItem["PREVIEW_PICTURE"]);
 		$arItem['OFFERS'] = array();
+		$arItem['SELECT_OFFER_PROPS'] = $this->arSelectOfferProps;
 
 		$strOfferTemplateURL = $this->getOfferTemplateUrl();
 		$rsOfferItems = $this->getOffersItemsDb($arItem["ID"]);

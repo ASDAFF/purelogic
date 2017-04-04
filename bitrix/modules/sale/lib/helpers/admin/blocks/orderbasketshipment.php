@@ -257,7 +257,7 @@ class OrderBasketShipment extends OrderBasket
 		}
 
 		if(!empty($catalogProductsIds))
-			$catalogProductsFields = self::getProductsData($catalogProductsIds, $this->order->getSiteId(), $this->visibleColumns);
+			$catalogProductsFields = self::getProductsData($catalogProductsIds, $this->order->getSiteId(), $this->visibleColumns, $this->order->getUserId());
 
 		/** @var \Bitrix\Sale\ShipmentItem $item */
 		foreach($shipmentItemCollection as $item)

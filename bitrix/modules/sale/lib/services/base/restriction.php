@@ -3,6 +3,7 @@ namespace Bitrix\Sale\Services\Base;
 
 use Bitrix\Main\NotImplementedException;
 use Bitrix\Sale\Internals\CollectableEntity;
+use Bitrix\Sale\Internals\Entity;
 use Bitrix\Sale\Internals\ServiceRestrictionTable;
 
 /**
@@ -44,20 +45,20 @@ abstract class Restriction {
 	 * @return bool
 	 * @throws NotImplementedException
 	 */
-	protected static function check($params, array $restrictionParams, $serviceId = 0)
+	public static function check($params, array $restrictionParams, $serviceId = 0)
 	{
 		throw new NotImplementedException;
 	}
 
 	/**
-	 * @param CollectableEntity $entity
+	 * @param Entity $entity
 	 * @param array $restrictionParams
 	 * @param int $mode
 	 * @param int $serviceId
 	 * @return int
 	 * @throws NotImplementedException
 	 */
-	public static function checkByEntity(CollectableEntity $entity, array $restrictionParams, $mode, $serviceId = 0)
+	public static function checkByEntity(Entity $entity, array $restrictionParams, $mode, $serviceId = 0)
 	{
 		$severity = static::getSeverity($mode);
 
@@ -70,11 +71,11 @@ abstract class Restriction {
 	}
 
 	/**
-	 * @param CollectableEntity $entity
+	 * @param Entity $entity
 	 * @return mixed
 	 * @throws NotImplementedException
 	 */
-	protected static function extractParams(CollectableEntity $entity)
+	protected static function extractParams(Entity $entity)
 	{
 		throw new NotImplementedException;
 	}

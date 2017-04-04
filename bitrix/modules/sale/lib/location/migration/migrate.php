@@ -956,6 +956,7 @@ class CUpdaterLocationPro extends \CUpdater implements \Serializable
 
 	private function convertEntityLocationLinks($entityName)
 	{
+		/** @var  \Bitrix\Sale\Location\Connector $class */
 		$class = 				$entityName.'Table';
 		$typeField = 			$class::getTypeField();
 		$locationLinkField = 	$class::getLocationLinkField();
@@ -975,7 +976,15 @@ class CUpdaterLocationPro extends \CUpdater implements \Serializable
 
 		foreach($links as $entityId => $rels)
 		{
-			$rels[$class::DB_LOCATION_FLAG] = $class::normalizeLocationList($rels[$class::DB_LOCATION_FLAG]);
+			if(is_array($rels[$class::DB_LOCATION_FLAG]))
+				$rels[$class::DB_LOCATION_FLAG] = $class::normalizeLocationList($rels[$class::DB_LOCATION_FLAG]);
+
+			if(isset($rels[$class::DB_LOCATION_FLAG]) && (!is_array($rels[$class::DB_LOCATION_FLAG]) || empty($rels[$class::DB_LOCATION_FLAG])))
+				unset($rels[$class::DB_LOCATION_FLAG]);
+
+			if(isset($rels[$class::DB_GROUP_FLAG]) && (!is_array($rels[$class::DB_GROUP_FLAG]) || empty($rels[$class::DB_GROUP_FLAG])))
+				unset($rels[$class::DB_GROUP_FLAG]);
+
 			$class::resetMultipleForOwner($entityId, $rels);
 		}
 	}

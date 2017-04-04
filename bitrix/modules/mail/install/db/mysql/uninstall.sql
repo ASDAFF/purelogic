@@ -8,3 +8,5 @@ drop table if exists b_mail_filter_cond;
 drop table if exists b_mail_filter;
 drop table if exists b_mail_mailbox;
 drop table if exists b_mail_user_relations;
+drop table if exists b_mail_blacklist;
+drop table if exists b_mail_domain_email;

@@ -70,6 +70,8 @@ class CBPWorkflowTemplateLoader
 				$arFilter["AUTO_EXECUTE"] = array(2, 3, 6, 7);
 			elseif ($arFilter["AUTO_EXECUTE"] == CBPDocumentEventType::Delete)
 				$arFilter["AUTO_EXECUTE"] = array(4, 5, 6, 7);
+			elseif ($arFilter["AUTO_EXECUTE"] == CBPDocumentEventType::Automation)
+				$arFilter["AUTO_EXECUTE"] = 8;
 			else
 				$arFilter["AUTO_EXECUTE"] = array(-1);
 		}

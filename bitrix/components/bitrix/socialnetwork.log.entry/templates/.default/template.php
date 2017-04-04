@@ -139,8 +139,8 @@ else
 		}
 
 		if (
-			array_key_exists("EVENT_FORMATTED", $arEvent) 
-			&& array_key_exists("STYLE", $arEvent["EVENT_FORMATTED"]) 
+			array_key_exists("EVENT_FORMATTED", $arEvent)
+			&& array_key_exists("STYLE", $arEvent["EVENT_FORMATTED"])
 			&& strlen($arEvent["EVENT_FORMATTED"]["STYLE"]) > 0
 		)
 		{
@@ -200,7 +200,7 @@ else
 			}
 
 			?>"><?
-			
+
 				if ($_REQUEST["action"] == "get_entry")
 				{
 					$APPLICATION->RestartBuffer();
@@ -208,9 +208,18 @@ else
 					ob_start();
 				}
 
-				?><div class="feed-user-avatar<?=(isset($arEvent["AVATAR_SRC"]) && strlen($arEvent["AVATAR_SRC"]) > 0 ? " feed-user-avatar-white" : "")?>"><?
-					?><img src="<?=(isset($arEvent["AVATAR_SRC"]) && strlen($arEvent["AVATAR_SRC"]) > 0 ? $arEvent["AVATAR_SRC"] : "/bitrix/images/1.gif")?>" width="<?=$arParams["AVATAR_SIZE"]?>" height="<?=$arParams["AVATAR_SIZE"]?>"><?
-				?></div>
+				$avatar = false;
+				if (isset($arEvent["AVATAR_SRC"]) && strlen($arEvent["AVATAR_SRC"]) > 0)
+				{
+					$avatar = $arEvent["AVATAR_SRC"];
+				}
+
+				?>
+				<div class="feed-user-avatar"
+					<? if ($avatar):?>
+						style="background: url('<?=$avatar?>'); background-size: cover;"
+					<? endif ?>
+				></div>
 				<div class="feed-post-title-block"><?
 					$strDestination = "";
 
@@ -513,7 +522,7 @@ else
 							{
 								var arMoreButtonID = [];
 							}
-							arMoreButtonID[arMoreButtonID.length] = { 
+							arMoreButtonID[arMoreButtonID.length] = {
 								'bodyBlockID' : 'log_entry_body_<?=$arEvent["EVENT"]["ID"]?>',
 								'moreButtonBlockID' : 'log_entry_more_<?=$arEvent["EVENT"]["ID"]?>'
 							};
@@ -605,7 +614,7 @@ else
 							{
 								$photo_detail_url = $arEventParams["DETAIL_URL"];
 								if (
-									$photo_detail_url 
+									$photo_detail_url
 									&& $arEvent["EVENT"]["ENTITY_TYPE"] == SONET_ENTITY_GROUP
 									&& (
 										IsModuleInstalled("extranet")
@@ -782,7 +791,7 @@ else
 							{
 								var arMoreButtonID = [];
 							}
-							arMoreButtonID[arMoreButtonID.length] = { 
+							arMoreButtonID[arMoreButtonID.length] = {
 								'bodyBlockID' : 'log_entry_body_<?=$arEvent["EVENT"]["ID"]?>',
 								'moreButtonBlockID' : 'log_entry_more_<?=$arEvent["EVENT"]["ID"]?>'
 							};
@@ -814,7 +823,7 @@ else
 						}
 					}
 					if (
-						$eventHandlerID !== false 
+						$eventHandlerID !== false
 						&& intval($eventHandlerID) > 0
 					)
 					{
@@ -1025,7 +1034,6 @@ else
 								array($arEvent["EVENT"]["ID"], $arComment["EVENT"]["ID"]);
 
 						$event_date_log_ts = (isset($arComment["EVENT"]["LOG_DATE_TS"]) ? $arComment["EVENT"]["LOG_DATE_TS"] : (MakeTimeStamp($arComment["EVENT"]["LOG_DATE"]) - intval($arResult["TZ_OFFSET"])));
-
 						$arRecords[$commentId] = array(
 							"ID" => $commentId,
 							"NEW" => ($GLOBALS["USER"]->IsAuthorized()
@@ -1047,7 +1055,9 @@ else
 								"LAST_NAME" => $arComment["CREATED_BY"]["TOOLTIP_FIELDS"]["LAST_NAME"],
 								"SECOND_NAME" => $arComment["CREATED_BY"]["TOOLTIP_FIELDS"]["SECOND_NAME"],
 								"LOGIN" => $arComment["CREATED_BY"]["TOOLTIP_FIELDS"]["LOGIN"],
-								"AVATAR" => $arComment["AVATAR_SRC"]
+								"AVATAR" => $arComment["AVATAR_SRC"],
+								"EXTERNAL_AUTH_ID" => (isset($arComment["CREATED_BY"]["TOOLTIP_FIELDS"]["EXTERNAL_AUTH_ID"]) ? $arComment["CREATED_BY"]["TOOLTIP_FIELDS"]["EXTERNAL_AUTH_ID"] : false),
+								"UF_USER_CRM_ENTITY" => (isset($arComment["CREATED_BY"]["TOOLTIP_FIELDS"]["UF_USER_CRM_ENTITY"]) ? $arComment["CREATED_BY"]["TOOLTIP_FIELDS"]["UF_USER_CRM_ENTITY"] : false)
 							),
 							"APPROVED" => "Y",
 							"POST_TIMESTAMP" => $arComment["LOG_DATE_TS"],
@@ -1108,7 +1118,7 @@ else
 								}
 							}
 							if (
-								$eventHandlerID !== false 
+								$eventHandlerID !== false
 								&& intval($eventHandlerID) > 0
 							)
 							{
@@ -1213,7 +1223,11 @@ else
 						),
 
 					"IMAGE_SIZE" => $arParams["IMAGE_SIZE"],
-					"mfi" => $arParams["mfi"]
+					"mfi" => $arParams["mfi"],
+					"AUTHOR_URL_PARAMS" => array(
+						"entityType" => 'LOG_ENTRY',
+						"entityId" => $arEvent["EVENT"]["ID"]
+					),
 					),
 					$this->__component
 				);

@@ -5,14 +5,19 @@ namespace Bitrix\Sale\PaySystem;
 use Bitrix\Mail;
 use Bitrix\Main\Application;
 use Bitrix\Main\Config\Option;
+use Bitrix\Main\Event;
+use Bitrix\Main\EventResult;
 use Bitrix\Main\IO\Directory;
 use Bitrix\Main\IO\File;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Request;
+use Bitrix\Sale\Basket;
 use Bitrix\Sale\BusinessValue;
+use Bitrix\Sale\Internals\EntityCollection;
 use Bitrix\Sale\Internals\PaymentTable;
 use Bitrix\Sale\Internals\PaySystemActionTable;
 use Bitrix\Sale\Internals\ServiceRestrictionTable;
+use Bitrix\Sale\Order;
 use Bitrix\Sale\Payment;
 use Bitrix\Sale\PriceMaths;
 use Bitrix\Sale\Services\PaySystem\Restrictions;
@@ -25,6 +30,7 @@ Loc::loadMessages(__FILE__);
  */
 final class Manager
 {
+	const EVENT_ON_GET_HANDLER_DESC = 'OnSaleGetHandlerDescription';
 	const CACHE_ID = "BITRIX_SALE_INNER_PS_ID";
 	const TTL = 31536000;
 	/**
@@ -120,9 +126,10 @@ final class Manager
 			{
 				if (File::isFileExists($documentRoot.$path.$name.'/handler.php'))
 				{
-					require_once($documentRoot.$path.$name.'/handler.php');
-
 					$className = static::getClassNameFromPath($item['ACTION_FILE']);
+					if (!class_exists($className))
+						require_once($documentRoot.$path.$name.'/handler.php');
+
 					if (class_exists($className) && is_callable(array($className, 'isMyResponse')))
 					{
 						if ($className::isMyResponse($request, $item['ID']))
@@ -168,6 +175,9 @@ final class Manager
 	 */
 	public static function getIdsByPayment($paymentId)
 	{
+		if (empty($paymentId))
+			return array(0, 0);
+
 		$params = array(
 			'select' => array('ID', 'ORDER_ID'),
 		);
@@ -245,7 +255,8 @@ final class Manager
 				if (array_key_exists('DESCR', $property))
 					$arPSCorrespondence[$i]['DESCRIPTION'] = $property['DESCR'];
 
-				$arPSCorrespondence[$i]['GROUP'] = 'PS_OTHER';
+				if (!isset($arPSCorrespondence[$i]['GROUP']))
+					$arPSCorrespondence[$i]['GROUP'] = (isset($property['GROUP'])) ? $property['GROUP'] : 'PS_OTHER';
 			}
 
 			return $arPSCorrespondence;
@@ -363,9 +374,21 @@ final class Manager
 							$group = (strpos($type, 'SYSTEM') !== false) ? 'SYSTEM' : 'USER';
 
 							if (!isset($result[$group][$handlerName]))
+							{
+								if (array_key_exists('DOMAIN', $data))
+								{
+									if ((IsModuleInstalled('bitrix24') && $data['DOMAIN'] === 'BOX') ||
+										(!IsModuleInstalled('bitrix24') && $data['DOMAIN'] === 'CLOUD')
+									)
+									{
+										continue(2);
+									}
+								}
+
 								$result[$group][$handlerName] = $psTitle;
+							}
 							$isDescriptionExist = true;
-							continue(2);
+							continue;
 						}
 					}
 				}
@@ -426,11 +449,7 @@ final class Manager
 					$codes = self::convertCodesToNewFormat($arPSCorrespondence);
 
 					if ($codes)
-						return array('NAME' => $psTitle, 'SORT' => 100, 'CODES' => $codes);
-				}
-				elseif ($data)
-				{
-					return $data;
+						$data = array('NAME' => $psTitle, 'SORT' => 100, 'CODES' => $codes);
 				}
 			}
 		}
@@ -441,13 +460,21 @@ final class Manager
 			{
 				$path = $documentRoot.$path.'/.description.php';
 				if (File::isFileExists($path))
-				{
 					require $path;
-
-					return $data;
-				}
 			}
 		}
+
+		$eventParams = array('handler' => $handler);
+		$event = new Event('sale', self::EVENT_ON_GET_HANDLER_DESC, $eventParams);
+		$event->send();
+		foreach ($event->getResults() as $eventResult)
+		{
+			if($eventResult->getType() !== EventResult::ERROR)
+				$data['CODES'] = array_merge($data['CODES'], $eventResult->getParameters());
+		}
+
+		if (isset($data['CODES']) && is_array($data['CODES']))
+			uasort($data['CODES'], function ($a, $b) { return ($a['SORT'] < $b['SORT']) ? -1 : 1;});
 
 		return $data;
 	}
@@ -624,10 +651,8 @@ final class Manager
 			'CONNECT_SETTINGS_BILLUA' => array('NAME' => Loc::getMessage('SALE_PS_MANAGER_GROUP_CONNECT_SETTINGS_BILLUA'), 'SORT' => 100),
 			'CONNECT_SETTINGS_BILLLA' => array('NAME' => Loc::getMessage('SALE_PS_MANAGER_GROUP_CONNECT_SETTINGS_BILLLA'), 'SORT' => 100),
 			'GENERAL_SETTINGS' => array('NAME' => Loc::getMessage('SALE_PS_MANAGER_GROUP_GENERAL_SETTINGS'), 'SORT' => 100),
-			'COLUMN_SETTINGS' => array('NAME' => Loc::getMessage('SALE_PS_MANAGER_GROUP_COLUMN_SETTINGS'), 'SORT' => 100),
-			'VISUAL_SETTINGS' => array('NAME' => Loc::getMessage('SALE_PS_MANAGER_GROUP_VISUAL_SETTINGS'), 'SORT' => 100),
-			'HEADER_SETTINGS' => array('NAME' => Loc::getMessage('SALE_PS_MANAGER_GROUP_HEADER_SETTINGS'), 'SORT' => 100),
-			'FOOTER_SETTINGS' => array('NAME' => Loc::getMessage('SALE_PS_MANAGER_GROUP_FOOTER_SETTINGS'), 'SORT' => 100),
+			'COLUMN_SETTINGS' => array('NAME' => Loc::getMessage('SALE_PS_MANAGER_GROUP_COLUMN'), 'SORT' => 100),
+			'VISUAL_SETTINGS' => array('NAME' => Loc::getMessage('SALE_PS_MANAGER_GROUP_VISUAL'), 'SORT' => 100),
 			'PAYMENT' => array('NAME' => Loc::getMessage('SALE_PS_MANAGER_GROUP_PAYMENT'), 'SORT' => 200),
 			'PAYSYSTEM' => array('NAME' => Loc::getMessage('SALE_PS_MANAGER_GROUP_PAYSYSTEM'), 'SORT' => 500),
 			'PS_OTHER' => array('NAME' => Loc::getMessage('SALE_PS_MANAGER_GROUP_PS_OTHER'), 'SORT' => 10000)
@@ -687,26 +712,24 @@ final class Manager
 	}
 
 	/**
-	 * @param int $paySystemId
-	 * @param null $requestId
-	 * @return string
+	 * @param array $data
+	 * @return null|EntityCollection|Payment
 	 */
-	public static function checkMovementListStatus($paySystemId, $requestId = null)
+	public static function getPaymentObjectByData(array $data)
 	{
-		$service = self::getObjectById($paySystemId);
+		$context = Application::getInstance()->getContext();
 
-		if ($service && $service->isRequested())
-		{
-			$status = $service->checkMovementListStatus($requestId);
-			if ($status == true)
-			{
-				$movementList = $service->getMovementList($requestId);
-				$service->applyAccountMovementList($movementList);
+		/** @var Order $order */
+		$order = Order::create($context->getSite());
+		$order->setPersonTypeId($data['PERSON_TYPE_ID']);
 
-				return '';
-			}
-		}
+		$basket = Basket::create($context->getSite());
+		$order->setBasket($basket);
 
-		return '\Bitrix\Sale\PaySystem\Manager::getMovementListStatus('.$paySystemId.',\''.$requestId.'\');';
+		$collection = $order->getPaymentCollection();
+		if ($collection)
+			return $collection->createItem();
+
+		return null;
 	}
 }

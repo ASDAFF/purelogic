@@ -5,8 +5,5 @@
 .im-desktop-content .bx-notifier-hide { display: inline-block}
 .im-desktop-content .bx-desktop-content-overflow { overflow:auto; height: 450px; background-color: #fff; }
 .im-desktop-content .placeholder-lf { padding-top: 20px;}
-
 .im-desktop-content #header {  min-width: 660px;  overflow: hidden;  }
-.bx-desktop-appearance-menu {display: none;}
-.bx-desktop-appearance-content { margin-left: 0; }
 table.bx-layout-inner-inner-table td.bx-layout-inner-inner-cont { padding-right: 20px!important; }

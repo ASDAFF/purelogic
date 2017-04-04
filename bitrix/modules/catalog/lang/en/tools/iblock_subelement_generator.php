@@ -32,4 +32,6 @@ $MESS["IB_SEG_SKU_PROPERTIES"] = "SKU properties";
 $MESS["IB_SEG_PARENT_PROPERTIES"] = "Parent properties";
 $MESS["IB_SEG_QUANTITY"] = "Quantity in stock";
 $MESS["IB_SEG_MEASURE"] = "Unit of measurement";
+$MESS["IB_SEG_PURCHASING_PRICE"] = "Purchase price:";
+$MESS["IB_SEG_EMPTY_VALUE"] = "not selected";
 ?>

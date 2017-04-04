@@ -57,6 +57,7 @@ class Tools
 		{
 			if ($APPLICATION->RestartWorkarea())
 			{
+				\Bitrix\Main\Page\Frame::setEnable(false);
 				if ($pageFile)
 					require(\Bitrix\Main\Application::getDocumentRoot().rel2abs("/", "/".$pageFile));
 				else
@@ -102,7 +103,8 @@ class Tools
 				else
 				{
 					$imageData['UNSAFE_SRC'] = $imageData['SRC'];
-					$imageData['SRC'] = \CHTTP::urnEncode($imageData['SRC'], 'UTF-8');
+					$imageData['SAFE_SRC'] = \CHTTP::urnEncode($imageData['SRC'], 'UTF-8');
+					$imageData['SRC'] = $imageData['SAFE_SRC'];
 				}
 				$imageData['ALT'] = '';
 				$imageData['TITLE'] = '';
@@ -111,8 +113,8 @@ class Tools
 					$entityPrefix = $entity.'_'.$fieldName;
 					if (isset($item[$ipropertyKey][$entityPrefix.'_FILE_ALT']))
 						$imageData['ALT'] = $item[$ipropertyKey][$entityPrefix.'_FILE_ALT'];
-					if (isset($item[$ipropertyKey][$entityPrefix.'_FILE_ALT']))
-						$imageData['ALT'] = $item[$ipropertyKey][$entityPrefix.'_FILE_TITLE'];
+					if (isset($item[$ipropertyKey][$entityPrefix.'_FILE_TITLE']))
+						$imageData['TITLE'] = $item[$ipropertyKey][$entityPrefix.'_FILE_TITLE'];
 					unset($entityPrefix);
 				}
 				if ($imageData['ALT'] == '' && isset($item['NAME']))

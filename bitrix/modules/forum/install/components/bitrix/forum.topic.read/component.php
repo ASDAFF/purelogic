@@ -329,7 +329,7 @@ elseif (!empty($arNote["link"]) && !($arParams['AJAX_POST'] == 'Y' && $action ==
 /************** Topic **********************************************/
 foreach ($arResult["TOPIC"] as $key => $val):
 	$arResult["TOPIC"]["~".$key] = $val;
-	$arResult["TOPIC"][$key] = htmlspecialcharsEx($val);
+	$arResult["TOPIC"][$key] = htmlspecialcharsbx($val);
 	if (!is_array($val))
 		$arResult["TOPIC"][$key] = $parser->wrap_long_words($arResult["TOPIC"][$key]);
 endforeach;
@@ -337,7 +337,7 @@ $arResult["TOPIC"]["iLAST_TOPIC_MESSAGE"] = "";
 /************** Forum **********************************************/
 foreach ($arResult["FORUM"] as $key => $val):
 	$arResult["FORUM"]["~".$key] = $val;
-	$arResult["FORUM"][$key] = htmlspecialcharsEx($val);
+	$arResult["FORUM"][$key] = htmlspecialcharsbx($val);
 endforeach;
 if ($arParams["SHOW_FIRST_POST"] == "N"):
 	$arParams["SHOW_FIRST_POST"] = ($arResult["FORUM"]["ALLOW_TOPIC_TITLED"] == "Y" ? "Y" : "N");
@@ -772,7 +772,7 @@ if ($arParams["VERSION"] < 1)
 $this->IncludeComponentTemplate();
 
 if ($arParams["SET_TITLE"] != "N")
-	$APPLICATION->SetTitle(htmlspecialcharsEx($arResult["TOPIC"]["~TITLE"]));
+	$APPLICATION->SetTitle(htmlspecialcharsbx($arResult["TOPIC"]["~TITLE"]));
 
 if ($arParams["SET_DESCRIPTION"] != "N")
 {

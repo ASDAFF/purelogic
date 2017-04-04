@@ -475,7 +475,9 @@ function __blogPostSetFollow(log_id)
 					'iNumPage' : this.node.getAttribute("inumpage"),
 					'PATH_TO_USER' : this.pathToUser,
 					'NAME_TEMPLATE' : this.nameTemplate,
-					'sessid': BX.bitrix_sessid()
+					'sessid': BX.bitrix_sessid(),
+					'lang': BX.message('LANGUAGE_ID'),
+					'site': BX.message('SITE_ID')
 				},
 				onsuccess: BX.proxy(function(data){
 					if (!!data && !!data.items)
@@ -592,7 +594,7 @@ function __blogPostSetFollow(log_id)
 									id : ("u" + data[i]['ID'])
 								},
 								props: {
-									href:data[i]['URL'],
+									href: (data[i]['URL'].length > 0 ? data[i]['URL'] : '#'),
 									target: "_blank",
 									className: "bx-ilike-popup-img" + (!!data[i]['TYPE'] ? " bx-ilike-popup-img-" + data[i]['TYPE'] : "")
 								},
@@ -613,7 +615,14 @@ function __blogPostSetFollow(log_id)
 											html : data[i]['FULL_NAME']
 										}
 									)
-								]
+								],
+								events: {
+									click: (
+										data[i]['URL'].length > 0
+											? function(e) { return true; }
+											: function(e) { BX.PreventDefault(e); }
+									)
+								}
 							})
 						);
 					}
@@ -835,6 +844,45 @@ window.sharingPost = function()
 			)
 			{
 				hideRenderedSharingNodes(newNodes);
+				if (
+					typeof data.status != 'undefined'
+					&& data.status == 'error'
+					&& typeof data.errorMessage != 'undefined'
+				)
+				{
+					var errorPopup = new BX.PopupWindow('error_popup', BX('blg-post-inform-' + postId), {
+						lightShadow : true,
+						offsetTop: -10,
+						offsetLeft: 100,
+						autoHide: true,
+						closeByEsc: true,
+						closeIcon: {
+							right : "5px",
+							top : "5px"
+						},
+						draggable: {
+							restrict:true
+						},
+						contentColor : 'white',
+						contentNoPaddings: true,
+						bindOptions: {position: "bottom"},
+						content : BX.create('DIV', {
+							props: {
+								className: 'feed-create-task-popup-content'
+							},
+							children: [
+								BX.create('DIV', {
+									props: {
+										className: 'feed-create-task-popup-description'
+									},
+									text: data.errorMessage
+								})
+							]
+						})
+					});
+
+					errorPopup.show();
+				}
 			}
 			else
 			{

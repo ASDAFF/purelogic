@@ -109,9 +109,10 @@ font-family: consolas, monospace!important;font-size:12px!important;line-height:
 	font-size: 13px!important;
 	white-space: pre;
 	word-wrap: normal;
-	line-height: inherit;
+	line-height: 15px!important;
 	color: inherit;
 	text-align: left;
+	overflow: hidden;
 }
 .bxce-inner-hl textarea {outline: none !important;}
 .bxce-inner-hl pre.bxce-cursor {z-index: 10;position: absolute !important; visibility: hidden;border-left: 2px solid #e40015; border-right: none;width: 0;overflow: hidden !important;}

@@ -40,12 +40,12 @@ foreach ($arResult["BRAND_BLOCKS"] as $blockId => $arBB)
 	switch ($arBB['TYPE'])
 	{
 		case 'ONLY_PIC':
-			?><div id="<?=$brandID;?>" class="bx_item_detail_inc_one_container"<? echo ($usePopup ? ' data-popup="'.$popupID.'"' : ''); ?>><div class="wrapper">
+			?><div id="<?=$brandID;?>" class="brandblock-container"<? echo ($usePopup ? ' data-popup="'.$popupID.'"' : ''); ?>><div class="brandblock-wrap">
 			<?
 			if ($useLink)
-				echo '<a href="'.$arBB['LINK'].'">';
+				echo '<a href="'.$arBB['LINK'].'" target="_blank">';
 			?>
-			<span class="bx_item_vidget"  style="background-image: url(<?=$arBB['PICT']['SRC'];?>)">
+			<span class="brandblock-block"  style="background-image: url(<?=$arBB['PICT']['SRC'];?>)">
 			<?
 			if ($useLink)
 				echo '</a>';
@@ -57,18 +57,18 @@ foreach ($arResult["BRAND_BLOCKS"] as $blockId => $arBB)
 			break;
 		default:
 			?>
-			<div id="<?=$brandID;?>" class="bx_item_detail_inc_one_container"<? echo ($usePopup ? ' data-popup="'.$popupID.'"' : ''); ?>>
-				<div class="wrapper">
+			<div id="<?=$brandID;?>" class="brandblock-container"<? echo ($usePopup ? ' data-popup="'.$popupID.'"' : ''); ?>>
+				<div class="brandblock-wrap">
 					<? $tagAttrs = 'id="'.$brandID.'_vidget"'.(
 						empty($arBB['PICT'])
-						? ' class="bx_item_vidget"'
-						: ' class="bx_item_vidget icon" style="background-image:url('.$arBB['PICT']['SRC'].');"'
+						? ' class="brandblock-block"'
+						: ' class="brandblock-block icon" style="background-image:url('.$arBB['PICT']['SRC'].');"'
 					);
 					if ($usePopup)
 						$tagAttrs .= ' data-popup="'.$popupID.'"';
 
 					if ($useLink)
-						echo '<a '.$tagAttrs.'href="'.$arBB['LINK'].'">';
+						echo '<a '.$tagAttrs.'href="'.$arBB['LINK'].'" target="_blank">';
 					else
 						echo '<span '.$tagAttrs.' >';
 
@@ -76,13 +76,13 @@ foreach ($arResult["BRAND_BLOCKS"] as $blockId => $arBB)
 					?>
 						<span class="bx_popup" id="<?=$popupID;?>">
 							<span class="arrow"></span>
-							<span class="text"><?=$arBB['FULL_DESCRIPTION'];?></span>
+							<span class="text"><?=htmlspecialcharsbx($arBB['FULL_DESCRIPTION']);?></span>
 						</span>
 					<?
 					endif;
 
 					if ($arBB['DESCRIPTION'] !== false)
-						echo htmlspecialcharsex($arBB['DESCRIPTION']);
+						echo '<span class="brandblock-text">'.htmlspecialcharsbx($arBB['DESCRIPTION']).'</span>';
 
 					if ($useLink)
 						echo '</a>';

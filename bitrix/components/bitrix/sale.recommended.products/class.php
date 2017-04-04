@@ -109,26 +109,6 @@ class CSaleRecommendedProductsComponent extends CCatalogViewedProductsComponent
 
 	/**
 	 * @override
-	 * @param $productIds
-	 */
-	protected function resortItemsByIds($productIds)
-	{
-		parent::resortItemsByIds($productIds);
-
-		$newItems = array();
-		foreach ($this->items as $item)
-		{
-			if(!isset($newItems[$item['ID']]))
-			{
-				$newItems[$item['ID']] = $item;
-				unset($newItems[$item['ID']]['IS_CONVERTED']);
-			}
-		}
-		$this->items = $newItems;
-	}
-
-	/**
-	 * @override
 	 * @return integer[]
 	 */
 	protected function getProductIds()

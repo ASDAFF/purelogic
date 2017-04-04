@@ -42,20 +42,28 @@ else if ($arParams["CONTEXT"] == "FULLSCREEN" || $arParams['FULLSCREEN'] == 'Y')
 else if ($arParams["CONTEXT"] == "PAGE")
 {
 	$arResult["CONTEXT"] = "PAGE";
+	$arParams["DESIGN"] = "DESKTOP";
+}
+else if ($arParams["CONTEXT"] == "POPUP-FULLSCREEN")
+{
+	$arResult["CONTEXT"] = "POPUP-FULLSCREEN";
+	$arParams["DESIGN"] = "DESKTOP";
 }
 else if ($arParams["CONTEXT"] == "DIALOG")
 {
 	$arResult["CONTEXT"] = "DIALOG";
+	$arParams["DESIGN"] = "DESKTOP";
 }
 else if ($arParams["CONTEXT"] == "LINES")
 {
 	$arResult["CONTEXT"] = "LINES";
+	$arParams["DESIGN"] = "DESKTOP";
 }
 else
 {
 	$arResult["CONTEXT"] = "MESSENGER";
+	$arResult["DESIGN"] = "POPUP";
 }
-
 
 // Counters
 $arResult["COUNTERS"] = CUserCounter::GetValues($USER->GetID(), SITE_ID);
@@ -65,8 +73,10 @@ CIMContactList::SetOnline(null, $arResult["CONTEXT"] != "DESKTOP");
 $arSettings = CIMSettings::Get();
 $arResult['SETTINGS'] = $arSettings['settings'];
 
-
-$arResult["DESIGN"] = isset($arParams['DESIGN']) && $arParams['DESIGN'] == 'DESKTOP'? 'DESKTOP': 'POPUP';
+if (isset($arParams['DESIGN']))
+{
+	$arResult["DESIGN"] = $arParams['DESIGN'];
+}
 
 if ($arResult['SETTINGS']['bxdNotify'] && CIMMessenger::CheckInstallDesktop())
 {
@@ -349,9 +359,11 @@ $arResult['COMMAND'] = \Bitrix\Im\Command::getListForJs();
 $arResult['INIT'] = $arParams['INIT'];
 $arResult['DESKTOP'] = $arResult["CONTEXT"] == "DESKTOP"? 'true': 'false';
 $arResult['PHONE_ENABLED'] = CIMMessenger::CheckPhoneStatus();
+$arResult['OL_OPERATOR'] = CModule::IncludeModule('imopenlines') && count(\Bitrix\ImOpenLines\Config::getQueueList($USER->GetID())) > 0;
 $arResult['DESKTOP_LINK_OPEN'] = $arParams['DESKTOP_LINK_OPEN'] == 'Y'? 'true': 'false';
 $arResult['PATH_TO_USER_PROFILE_TEMPLATE'] = CIMContactList::GetUserPath();
 $arResult['PATH_TO_USER_PROFILE'] = CIMContactList::GetUserPath($USER->GetId());
+$arResult['PATH_TO_LF'] = IsModuleInstalled('intranet') && \Bitrix\Main\IO\File::isFileExists(\Bitrix\Main\Application::getDocumentRoot().'/stream/index.php')? '/stream/': '/';
 
 $arResult['TURN_SERVER'] = COption::GetOptionString('im', 'turn_server');
 $arResult['TURN_SERVER_FIREFOX'] = COption::GetOptionString('im', 'turn_server_firefox');
@@ -360,12 +372,13 @@ $arResult['TURN_SERVER_PASSWORD'] = COption::GetOptionString('im', 'turn_server_
 
 CIMMessenger::InitCounters($USER->GetID());
 
-$jsInit = array('im');
-if (defined('LANGUAGE_ID') && LANGUAGE_ID == 'ru')
-{
-	$jsInit[] = 'translit';
-}
-CJSCore::Init($jsInit);
+$initJs = 'im_web';
+if ($arResult["CONTEXT"] == 'DESKTOP')
+	$initJs = 'im_desktop';
+else if ($arResult["DESIGN"] == 'DESKTOP')
+	$initJs = 'im_page';
+
+CJSCore::Init($initJs);
 
 if (!(isset($arParams['TEMPLATE_HIDE']) && $arParams['TEMPLATE_HIDE'] == 'Y'))
 	$this->IncludeComponentTemplate();

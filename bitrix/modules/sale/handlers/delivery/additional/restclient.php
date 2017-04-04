@@ -5,7 +5,12 @@ namespace Sale\Handlers\Delivery\Additional;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Context;
 use Bitrix\Main\Error;
+use Bitrix\Sale\Delivery\ExtraServices\Manager;
+use Bitrix\Sale\Delivery\Services\Table;
+use Bitrix\Sale\Location\Admin\LocationHelper;
+use Bitrix\Sale\Location\Name\LocationTable;
 use Bitrix\Sale\Result;
+use Bitrix\Sale\ResultSerializable;
 use Bitrix\Sale\Shipment;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Sale\Delivery\CalculationResult;
@@ -92,7 +97,7 @@ class RestClient extends \Bitrix\Sale\Services\Base\RestClient
 			'profileType' => $profileType,
 			'serviceParams' => $serviceParams,
 			'profileParams' => $profileParams,
-			'shipmentParams' => self::getShipmentParams($shipment)
+			'shipmentParams' => self::getShipmentParams($shipment, $serviceType)
 		);
 
 		$hash = md5(serialize($params));
@@ -138,10 +143,46 @@ class RestClient extends \Bitrix\Sale\Services\Base\RestClient
 	}
 
 	/**
+	 * @param $locationCode
+	 * @return array
+	 * @throws \Bitrix\Main\ArgumentException
+	 */
+	protected static function getLocationForRequest($locationCode)
+	{
+		if(strlen($locationCode) <= 0)
+			return array();
+
+		static $result = array();
+
+		if(!isset($result[$locationCode]))
+		{
+			$name = '';
+
+			$dbRes = LocationTable::getList(array(
+				'filter' => array(
+					'LOCATION.CODE' => $locationCode,
+					'LANGUAGE_ID' => 'ru'
+				),
+				'select' => array('NAME')
+			));
+
+			if($rec = $dbRes->fetch())
+				$name = $rec['NAME'];
+
+			$result[$locationCode] = array(
+				'EXTERNAL_ID' => Location::getExternalId($locationCode),
+				'NAME' => $name
+			);
+		}
+
+		return $result[$locationCode];
+	}
+
+	/**
 	 * @param Shipment $shipment
 	 * @return array
 	 */
-	protected static function getShipmentParams(Shipment $shipment)
+	protected static function getShipmentParams(Shipment $shipment, $serviceType)
 	{
 		/** @var \Bitrix\Sale\ShipmentCollection $shipmentCollection */
 		$shipmentCollection = $shipment->getCollection();
@@ -149,23 +190,44 @@ class RestClient extends \Bitrix\Sale\Services\Base\RestClient
 		$order = $shipmentCollection->getOrder();
 		$props = $order->getPropertyCollection();
 		$loc = $props->getDeliveryLocation();
-		$locationTo = !!$loc ? $loc->getValue() : "";
+		$locToInternalCode = !!$loc ? $loc->getValue() : "";
+		$locFromRequest = array();
+		$locToRequest = array();
 
-		if(intval($locationTo) > 0)
-			$locationTo = Location::getExternalId($locationTo);
+		if(!empty($locToInternalCode))
+			$locToRequest = self::getLocationForRequest($locToInternalCode);
 
 		$shopLocation = \CSaleHelper::getShopLocation();
 
-		$locationFrom = "";
-
-		if(!empty($shopLocation['ID']))
-			$locationFrom = Location::getExternalId($shopLocation['ID']);
+		if(!empty($shopLocation['CODE']))
+			$locFromRequest = self::getLocationForRequest($shopLocation['CODE']);
 
 		$result = array(
 			"ITEMS" => array(),
-			"LOCATION_FROM" => $locationFrom,
-			"LOCATION_TO" => $locationTo
+			"LOCATION_FROM" => $locFromRequest['EXTERNAL_ID'],
+			"LOCATION_FROM_NAME" => $locFromRequest['NAME'],
+			"LOCATION_TO" => $locToRequest['EXTERNAL_ID'],
+			"LOCATION_TO_NAME" => $locToRequest['NAME']
 		);
+
+		if($serviceType == "RUSPOST" )
+		{
+			if(!empty($shopLocation['CODE']))
+			{
+				$extLoc = LocationHelper::getZipByLocation($shopLocation['CODE'])->fetch();
+
+				if(!empty($extLoc['XML_ID']))
+					$result["ZIP_FROM"] = $extLoc['XML_ID'];
+			}
+
+			if(!empty($locToInternalCode))
+			{
+				$extLoc = LocationHelper::getZipByLocation($locToInternalCode)->fetch();
+
+				if(!empty($extLoc['XML_ID']))
+					$result["ZIP_TO"] = $extLoc['XML_ID'];
+			}
+		}
 
 		/** @var \Bitrix\Sale\ShipmentItem $shipmentItem */
 		foreach($shipment->getShipmentItemCollection() as $shipmentItem)
@@ -175,13 +237,35 @@ class RestClient extends \Bitrix\Sale\Services\Base\RestClient
 			if(!$basketItem)
 				continue;
 
-			$itemFieldValues = $basketItem->getFieldValues();
-			$itemFieldValues["QUANTITY"] = $shipmentItem->getField("QUANTITY");
+			//$itemFieldValues = $basketItem->getFieldValues();
+			$itemFieldValues = array(
+				"PRICE" => $basketItem->getPrice(),
+				"WEIGHT" => $basketItem->getWeight(),
+				"CURRENCY" => $basketItem->getCurrency(),
+				"QUANTITY" => $basketItem->getQuantity(),
+				"DIMENSIONS" => $basketItem->getField("DIMENSIONS")
+			);
 
 			if(!empty($itemFieldValues["DIMENSIONS"]) && is_string($itemFieldValues["DIMENSIONS"]))
 				$itemFieldValues["DIMENSIONS"] = unserialize($itemFieldValues["DIMENSIONS"]);
 
 			$result["ITEMS"][] = $itemFieldValues;
+		}
+
+		//Extra services
+		$esList = Manager::getExtraServicesList($shipment->getDeliveryId(), false);
+
+		if(!empty($esList))
+		{
+			$result['EXTRA_SERVICES'] = array();
+
+			foreach($shipment->getExtraServices() as $esId => $esVal)
+			{
+				if(empty($esList[$esId]['CODE']))
+					continue;
+
+				$result['EXTRA_SERVICES'][$esList[$esId]['CODE']] = $esVal;
+			}
 		}
 
 		return $result;
@@ -207,14 +291,29 @@ class RestClient extends \Bitrix\Sale\Services\Base\RestClient
 		);
 	}
 
-	public function getProfileExtraServices($serviceType, $profileType)
+	public function getProfileExtraServices($serviceType, $profileType, array $profileParams)
 	{
 		return $this->getItem(
 			'delivery.profile.extraservices',
 			CacheManager::TYPE_EXTRA_SERVICES,
-			array('serviceType' => $serviceType, 'profileType' => $profileType),
-			array($serviceType, $profileType)
+			array('serviceType' => $serviceType, 'profileType' => $profileType, 'profileParams' => $profileParams),
+			array($serviceType, $profileType, $profileParams)
 		);
+	}
+
+	public function getTrackingStatuses($serviceType, array $serviceParams, array $trackingNumbers = array())
+	{
+		return $this->getItem(
+			'delivery.tracking.statuses',
+			CacheManager::TYPE_NONE,
+			array('serviceType' => $serviceType, 'serviceParams' => $serviceParams, 'trackingNumbers' => $trackingNumbers)
+		);
+	}
+
+	protected function setCacheItem($result, $cacheType, array $cacheIds)
+	{
+		$cache = CacheManager::getItem($cacheType);
+		$cache->set(serialize($result), $cacheIds);
 	}
 
 	protected function getItem($callMethod, $cacheType, array $callParams = array(), array $cacheIds = array())
@@ -222,21 +321,33 @@ class RestClient extends \Bitrix\Sale\Services\Base\RestClient
 		$cache = CacheManager::getItem($cacheType);
 		$isLicenseWrong = Option::get('sale', self::WRONG_LICENSE_OPTION, 'N') == 'Y';
 		$skipCache = defined('SALE_HANDLERS_DLV_ADD_SKIP_CACHE');
+		$result = false;
 
 		if(!$skipCache && !$isLicenseWrong && $cache && $result = $cache->get($cacheIds))
 		{
 			$result = unserialize($result);
 		}
-		else
+
+		if(!($result instanceof ResultSerializable))
 		{
-			if($isLicenseWrong)
-				$cache->clean($cacheIds);
+			if($isLicenseWrong && $cache)
+				$cache->clean();
 
 			$result = $this->call(static::SCOPE.'.'.$callMethod, $callParams);
 
 			if($result->isSuccess())
 			{
-				$cache->set(serialize($result), $cacheIds);
+				$data = $result->getData();
+
+				if(!empty($data['ACTIONS']) && is_array($data['ACTIONS']))
+				{
+					$this->processActions($data['ACTIONS']);
+					unset($data['ACTIONS']);
+					$result->setData($data);
+				}
+
+				if($cache)
+					$cache->set(serialize($result), $cacheIds);
 			}
 			else
 			{
@@ -267,5 +378,25 @@ class RestClient extends \Bitrix\Sale\Services\Base\RestClient
 			Option::delete('sale', array('name' => self::WRONG_LICENSE_OPTION));
 
 		return $result;
+	}
+
+	private function processActions(array $actions)
+	{
+		foreach($actions as $actType => $actParams)
+		{
+			$res = Action::execute($actParams);
+
+			if(!$res->isSuccess() && defined('SALE_HANDLERS_DLV_ADD_LOG_ACTIONS_ERRORS'))
+			{
+				$eventLog = new \CEventLog();
+				$eventLog->Add(array(
+					"SEVERITY" => $eventLog::SEVERITY_ERROR,
+					"AUDIT_TYPE_ID" => "SALE_HANDLERS_DLV_ADD_LOG_ACTIONS_ERRORS",
+					"MODULE_ID" => "sale",
+					"ITEM_ID" => $actType,
+					"DESCRIPTION" => implode(', ', $res->getErrorMessages()),
+				));
+			}
+		}
 	}
 }

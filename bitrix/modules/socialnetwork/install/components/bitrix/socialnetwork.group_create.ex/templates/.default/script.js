@@ -46,9 +46,13 @@ function BXSwitchExtranet(isChecked)
 	if (BX("GROUP_INITIATE_PERMS") && BX("GROUP_INITIATE_PERMS_OPTION_E") && BX("GROUP_INITIATE_PERMS_OPTION_K"))
 	{
 		if (isChecked)
+		{
 			BX("GROUP_INITIATE_PERMS_OPTION_E").selected = true;
+		}
 		else
+		{
 			BX("GROUP_INITIATE_PERMS_OPTION_K").selected = true;
+		}
 	}
 	
 	if (BX("USERS_employee_section_extranet"))
@@ -56,6 +60,10 @@ function BXSwitchExtranet(isChecked)
 		BX("USERS_employee_section_extranet").style.display = (isChecked ? "inline-block" : "none");
 	}
 
+	if (BX("UF_SG_DEPT_block"))
+	{
+		BX("UF_SG_DEPT_block").style.display = (isChecked ? "none" : "block");
+	}
 }
 
 function BXSwitchNotVisible(isChecked)
@@ -100,8 +108,9 @@ function BXGCESwitchTabs()
 		var target = event.target || event.srcElement;
 		var blockOld = null;
 		var blockNew = null;
+		var i = 0;
 
-		for(var i=0; i<blockList.length; i++)
+		for(i=0; i<blockList.length; i++)
 		{
 			if (blockList[i].style.display != 'none')
 			{
@@ -119,7 +128,7 @@ function BXGCESwitchTabs()
 			|| BX.hasClass(BX(target.parentNode), 'popup-window-tab')
 		)
 		{
-			for(var i=0; i<tabs.length; i++)
+			for(i=0; i<tabs.length; i++)
 			{
 				BX.removeClass(tabs[i], "popup-window-tab-selected");
 				blockList[i].style.display = "none";
@@ -169,7 +178,6 @@ function BXGCESwitchTabs()
 			}
 		}
 	})
-
 }
 
 function BXGCESwitchFeatures(){
@@ -192,10 +200,8 @@ function BXGCESwitchFeatures(){
 					break;
 				}
 			}
-
 		});
 	}
-
 }
 
 function BXGCESubmitForm(e)
@@ -244,8 +250,9 @@ function BXGCESubmitForm(e)
 							var selectedUsersOld = false;
 							var selectedUsers = [];
 							var strUserCodeTmp = false;
+							var j = 0;
 
-							for (var j = 0; j < obResponsedata["USERS_ID"].length; j++)
+							for (j = 0; j < obResponsedata["USERS_ID"].length; j++)
 							{
 								selectedUsers['U' + obResponsedata['USERS_ID'][j]] = 'users';
 							}
@@ -257,7 +264,7 @@ function BXGCESubmitForm(e)
 									selectedUsersOld = BX.findChildren(BX('sonet_group_create_popup_users_item_post_' + BX.BXGCE.arUserSelector[i]), { className: "feed-add-post-destination-users" }, true);
 									if (selectedUsersOld)
 									{
-										for (var j = 0; j < selectedUsersOld.length; j++)
+										for (j = 0; j < selectedUsersOld.length; j++)
 										{
 											strUserCodeTmp = selectedUsersOld[j].getAttribute('data-id');
 											if (
@@ -400,7 +407,7 @@ function __deleteExtranetEmail(item)
 					BX('EMAILS').value += ', ';
 
 				BX('EMAILS').value += top.BXExtranetMailList[i];
-				var flag = true;
+				flag = true;
 			}
 		}
 	}
@@ -412,7 +419,7 @@ function BXGCEEmailKeyDown(event)
 	BX.removeClass(this, 'sonet-group-create-popup-form-email-error');
 	if(event.keyCode == 13)
 		__addExtranetEmail();
-};
+}
 
 (function(){
 
@@ -426,12 +433,12 @@ BX.BXGCE =
 	userSelector: '',
 	lastAction: 'invite',
 	arUserSelector: []
-}
+};
 
 BX.BXGCE.setSelector = function(selectorName)
 {
 	BX.BXGCE.userSelector = selectorName;
-}
+};
 
 BX.BXGCE.disableBackspace = function(event)
 {
@@ -454,7 +461,7 @@ BX.BXGCE.disableBackspace = function(event)
 		BX.unbind(window, 'keydown', BX.SocNetLogDestination.backspaceDisable);
 		BX.SocNetLogDestination.backspaceDisable = null;
 	}, 5000);
-}
+};
 
 BX.BXGCE.selectCallback = function(item, type, search, bUndeleted, name)
 {
@@ -466,7 +473,7 @@ BX.BXGCE.selectCallback = function(item, type, search, bUndeleted, name)
 					'data-id' : item.id 
 				}, 
 				props : { 
-					className : "feed-add-post-destination feed-add-post-destination-users" 
+					className : "feed-add-post-destination feed-add-post-destination-" + type
 				}, 
 				children: [
 					BX.create("input", { 
@@ -488,7 +495,7 @@ BX.BXGCE.selectCallback = function(item, type, search, bUndeleted, name)
 						}, 
 						events : {
 							'click' : function(e){
-								BX.SocNetLogDestination.deleteItem(item.id, 'users', name);
+								BX.SocNetLogDestination.deleteItem(item.id, type, name);
 								BX.PreventDefault(e);
 							}, 
 							'mouseover' : function(){
@@ -512,7 +519,7 @@ BX.BXGCE.selectCallback = function(item, type, search, bUndeleted, name)
 		tagLink1: BX.message('SONET_GCE_T_DEST_LINK_1'),
 		tagLink2: BX.message('SONET_GCE_T_DEST_LINK_2')
 	});
-}
+};
 
 BX.BXGCE.openDialogCallback = function()
 {
@@ -520,7 +527,7 @@ BX.BXGCE.openDialogCallback = function()
 		'popupZindex': 2100
 	});
 	BX.SocNetLogDestination.BXfpOpenDialogCallback.apply(this, arguments);
-}
+};
 
 BX.BXGCE.bindActionLink = function(oBlock)
 {
@@ -566,7 +573,7 @@ BX.BXGCE.bindActionLink = function(oBlock)
 		};
 		BX.PopupMenu.show('sonet_group_create_popup_action_popup', oBlock, arItems, arParams);
 	});
-}
+};
 
 BX.BXGCE.onActionSelect = function(action)
 {
@@ -595,7 +602,7 @@ BX.BXGCE.onActionSelect = function(action)
 	BX('sonet_group_create_popup_action_block_' + (action == 'invite' ? 'add' : 'invite')).style.display = 'none';
 
 	BX.PopupMenu.destroy('sonet_group_create_popup_action_popup');
-}
+};
 
 BX.BXGCE.showError = function(errorText)
 {
@@ -608,11 +615,11 @@ BX.BXGCE.showError = function(errorText)
 			BX('sonet_group_create_error_block').style.display = "block";
 		}
 	}
-}
+};
 
 BX.BXGCE.showMessage = function()
 {
-}
+};
 
 BX.BXGCE.disableSubmitButton = function(bDisable)
 {
@@ -624,12 +631,14 @@ BX.BXGCE.disableSubmitButton = function(bDisable)
 		if (bDisable)
 		{
 			BX.addClass(oButton, "popup-window-button-disabled");
+			BX.addClass(oButton, "popup-window-button-wait");
 			oButton.style.cursor = 'auto';
 			BX.unbind(oButton, "click", BXGCESubmitForm);
 		}
 		else
 		{
 			BX.removeClass(oButton, "popup-window-button-disabled");
+			BX.removeClass(oButton, "popup-window-button-wait");
 			oButton.style.cursor = 'pointer';
 			BX.bind(oButton, "click", BXGCESubmitForm);
 		}

@@ -24,6 +24,7 @@ class CAllSearch extends CDBResult
 	var $limit = false;
 	var $bUseRatingSort = false;
 	var $flagsUseRatingSort = 0;
+	/** @var CSearchFormatter */
 	var $formatter = null;
 
 	function __construct($strQuery = false, $SITE_ID = false, $MODULE_ID = false, $ITEM_ID = false, $PARAM1 = false, $PARAM2 = false, $aSort = array(), $aParamsEx = array(), $bTagsCloud = false)
@@ -100,9 +101,17 @@ class CAllSearch extends CDBResult
 			$bTagsSearch = false;
 		}
 
+		if (!array_key_exists("STEMMING", $aParamsEx))
+			$aParamsEx["STEMMING"] = COption::GetOptionString("search", "use_stemming") == "Y";
+		$this->Query = new CSearchQuery("and", "yes", 0, $arParams["SITE_ID"]);
+		if ($this->_opt_NO_WORD_LOGIC)
+			$this->Query->no_bool_lang = true;
+		$query = $this->Query->GetQueryString((BX_SEARCH_VERSION > 1? "sct": "sc").".SEARCHABLE_CONTENT", $strQuery, $bTagsSearch, $aParamsEx["STEMMING"], $this->_opt_ERROR_ON_EMPTY_STEM);
+
 		$fullTextParams = $aParamsEx;
 		$fullTextParams["LIMIT"] = $this->limit;
 		$fullTextParams["OFFSET"] = $this->offset;
+		$fullTextParams["QUERY_OBJECT"] = $this->Query;
 		$result = CSearchFullText::getInstance()->search($arParams, $aSort, $fullTextParams, $bTagsCloud);
 		if (is_array($result))
 		{
@@ -114,14 +123,6 @@ class CAllSearch extends CDBResult
 		}
 		else
 		{
-			if (!array_key_exists("STEMMING", $aParamsEx))
-				$aParamsEx["STEMMING"] = COption::GetOptionString("search", "use_stemming") == "Y";
-
-			$this->Query = new CSearchQuery("and", "yes", 0, $arParams["SITE_ID"]);
-			if ($this->_opt_NO_WORD_LOGIC)
-				$this->Query->no_bool_lang = true;
-
-			$query = $this->Query->GetQueryString((BX_SEARCH_VERSION > 1? "sct": "sc").".SEARCHABLE_CONTENT", $strQuery, $bTagsSearch, $aParamsEx["STEMMING"], $this->_opt_ERROR_ON_EMPTY_STEM);
 			if (!$query || strlen(trim($query)) <= 0)
 			{
 				if ($bTagsCloud)
@@ -1098,6 +1099,40 @@ class CAllSearch extends CDBResult
 		{
 			CSearch::DeleteOld($NS["SESS_ID"], $MODULE_ID, $NS["SITE_ID"]);
 		}
+	}
+
+	public static function GetIndex($MODULE_ID, $ITEM_ID)
+	{
+		$DB = CDatabase::GetModuleConnection('search');
+		$rs = $DB->Query("select * from b_search_content where MODULE_ID = '".$DB->ForSql($MODULE_ID)."' and ITEM_ID = '".$DB->ForSql($ITEM_ID)."'");
+		$arFields = $rs->Fetch();
+		if (!$arFields)
+		{
+			return false;
+		}
+
+		$arFields["SITE_ID"] = array();
+		$rs = $DB->Query("select * from b_search_content_site where SEARCH_CONTENT_ID = ".$DB->ForSql($arFields["ID"]));
+		while ($ar = $rs->Fetch())
+		{
+			$arFields["SITE_ID"][$ar["SITE_ID"]] = $ar["URL"];
+		}
+
+		$arFields["PERMISSIONS"] = array();
+		$rs = $DB->Query("select * from b_search_content_right where SEARCH_CONTENT_ID = ".$DB->ForSql($arFields["ID"]));
+		while ($ar = $rs->Fetch())
+		{
+			$arFields["PERMISSIONS"][] = $ar["GROUP_CODE"];
+		}
+
+		$arFields["PARAMS"] = array();
+		$rs = $DB->Query("select * from b_search_content_param where SEARCH_CONTENT_ID = ".$DB->ForSql($arFields["ID"]));
+		while ($ar = $rs->Fetch())
+		{
+			$arFields["PARAMS"][$ar["PARAM_NAME"]][] = $ar["PARAM_VALUE"];
+		}
+
+		return $arFields;
 	}
 
 	//index one item (forum message, news, etc.)
@@ -2106,10 +2141,10 @@ class CAllSearch extends CDBResult
 			$arFields["DATE_CHANGE"] = $DB->FormatDate($arFields["DATE_CHANGE"], "DD.MM.YYYY HH:MI:SS", CLang::GetDateFormat());
 		}
 
-		if (BX_SEARCH_VERSION > 1)
-			return $DB->Add("b_search_content", $arFields, array("BODY", "TAGS"), true);
-		else
-			return $DB->Add("b_search_content", $arFields, array("BODY", "TAGS", "SEARCHABLE_CONTENT"), true);
+		$arInsert = $DB->PrepareInsert("b_search_content", $arFields);
+		$strSql = "REPLACE INTO b_search_content (".$arInsert[0].") VALUES (".$arInsert[1].")";
+		$DB->Query($strSql);
+		return $DB->LastID();
 	}
 
 	public static function OnChangeFilePermissions($path, $permission = array(), $old_permission = array(), $arGroups = false)
@@ -2855,6 +2890,7 @@ class CSearchSQLHelper
 class CAllSearchQuery
 {
 	var $m_query;
+	var $m_parsed_query;
 	var $m_words;
 	var $m_stemmed_words;
 	var $m_stemmed_words_id;
@@ -2912,7 +2948,7 @@ class CAllSearchQuery
 			if ($this->bStemming === true || $bErrorOnEmptyStem)
 				$query = $stem_query;
 		}
-		$query = $this->ParseQ($query);
+		$this->m_parsed_query = $query = $this->ParseQ($query);
 
 		if ($query == "( )" || strlen($query) <= 0)
 		{
@@ -3088,7 +3124,7 @@ class CAllSearchQuery
 		else
 		{
 			$this->bStemming = true;
-			return $arrStem[0];
+			return implode('|', $arrStem);
 		}
 	}
 

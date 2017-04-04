@@ -646,6 +646,8 @@ else
 					if (!array_key_exists($key, $arResult["User"]))
 						$arResult["User"][$key] = $value;
 
+				$userFields = CSocNetUser::GetFields();
+
 				foreach ($arResult["User"] as $userFieldName => $userFieldValue)
 				{
 					if (in_array($userFieldName, $arParams["USER_FIELDS_MAIN"])
@@ -745,8 +747,6 @@ else
 									$strSearch = $arParams["PATH_TO_SEARCH_INNER"].(StrPos($arParams["PATH_TO_SEARCH_INNER"], "?") !== false ? "&" : "?")."flt_".StrToLower($userFieldName)."=".UrlEncode($val);
 								break;
 						}
-
-						$userFields = CSocNetUser::GetFields();
 
 						if (in_array($userFieldName, $arParams["USER_FIELDS_MAIN"]))
 							$arResult["UserFieldsMain"]["DATA"][$userFieldName] = array("NAME" => $userFields[$userFieldName], "VALUE" => $val, "SEARCH" => $strSearch);
@@ -1065,6 +1065,7 @@ else
 		}
 	}
 }
+
 $this->IncludeComponentTemplate();
 
 return array(

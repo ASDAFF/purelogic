@@ -33,7 +33,7 @@ $arComponentParameters = Array(
 			"PARENT" => "ADDITIONAL_SETTINGS",
 		),
 		"PATH_TO_PAYMENT" => Array(
-			"NAME" => GetMessage("SPOD_PATH_TO_PAYMENT"),
+			"NAME" => GetMessage("SPOL_PATH_TO_PAYMENT"),
 			"TYPE" => "STRING",
 			"MULTIPLE" => "N",
 			"DEFAULT" => "payment.php",
@@ -45,6 +45,14 @@ $arComponentParameters = Array(
 			"TYPE" => "STRING",
 			"MULTIPLE" => "N",
 			"DEFAULT" => "",
+			"COLS" => 25,
+			"PARENT" => "ADDITIONAL_SETTINGS",
+		),
+		"PATH_TO_CATALOG" => array(
+			"NAME" => GetMessage("SPOL_PATH_TO_CATALOG"),
+			"TYPE" => "STRING",
+			"MULTIPLE" => "N",
+			"DEFAULT" => "/catalog/",
 			"COLS" => 25,
 			"PARENT" => "ADDITIONAL_SETTINGS",
 		),
@@ -75,7 +83,7 @@ $arComponentParameters = Array(
 			"NAME" => GetMessage("SPOL_NAV_TEMPLATE"),
 			"TYPE" => "STRING",
 			"DEFAULT" => "",
-		),
+		),	
 
 		"CACHE_TIME"  =>  Array("DEFAULT"=>3600),
 		"CACHE_GROUPS" => array(
@@ -104,6 +112,40 @@ if(CModule::IncludeModule("sale"))
 		"PARENT" => "ADDITIONAL_SETTINGS",
 	);
 
+	$orderSortList = array(
+		'STATUS' => GetMessage("SPOL_ORDER_LIST_SORT_STATUS"),
+		'ID' => GetMessage("SPOL_ORDER_LIST_SORT_ID"),
+		'ACCOUNT_NUMBER'=> GetMessage("SPOL_ORDER_LIST_SORT_ACCOUNT_NUMBER"),
+		'DATE_INSERT'=> GetMessage("SPOL_ORDER_LIST_SORT_DATE_CREATE"),
+		'PRICE'=> GetMessage("SPOL_ORDER_LIST_SORT_PRICE")
+	);
+
+	$arComponentParameters['PARAMETERS']['DEFAULT_SORT'] = array(
+		"NAME" => GetMessage("SPOL_ORDER_LIST_DEFAULT_SORT"),
+		"TYPE" => "LIST",
+		"VALUES" => $orderSortList,
+		"MULTIPLE" => "N",
+		"DEFAULT" => "STATUS",
+		"PARENT" => "ORDER",
+	);
+	
+	if (CBXFeatures::IsFeatureEnabled('SaleAccounts'))
+	{
+		$arComponentParameters['PARAMETERS']['ALLOW_INNER'] = array(
+			"NAME" => GetMessage("SPOL_ALLOW_INNER"),
+			"TYPE" => "CHECKBOX",
+			"DEFAULT" => "N",
+			"PARENT" => "ORDER",
+		);
+
+		$arComponentParameters['PARAMETERS']['ONLY_INNER_FULL'] = array(
+			"NAME" => GetMessage("SPOL_ONLY_INNER_FULL"),
+			"TYPE" => "CHECKBOX",
+			"DEFAULT" => "N",
+			"PARENT" => "ORDER",
+		);
+	}
+	
 }
 
 if(CModule::IncludeModule("iblock"))

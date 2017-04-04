@@ -116,7 +116,10 @@ $arResult["DocumentService"] = $runtime->GetService("DocumentService");
 ********************************************************************/
 $dbWorkflowTemplate = CBPWorkflowTemplateLoader::GetList(
 	array(),
-	array("DOCUMENT_TYPE" => $arParams["DOCUMENT_TYPE"], "ACTIVE" => "Y"),
+	array(
+		"DOCUMENT_TYPE" => $arParams["DOCUMENT_TYPE"], "ACTIVE" => "Y",
+		'!AUTO_EXECUTE' => CBPDocumentEventType::Automation
+	),
 	false,
 	false,
 	array("ID", "NAME", "DESCRIPTION", "MODIFIED", "USER_ID", "PARAMETERS")

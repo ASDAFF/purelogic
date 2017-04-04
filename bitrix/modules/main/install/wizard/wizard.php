@@ -402,6 +402,15 @@ class DBTypeStep extends CWizardStep
 					<br>
 					<small>'.InstallGetMessage("INS_LICENSE_NOTE_SOURCE").'<br></small>
 				</td>
+				</tr>
+				<tr>
+				<td nowrap align="right" width="40%" valign="top">
+					'.InstallGetMessage("INSTALL_DEVSRV").'
+				</td>
+				<td width="60%" valign="top">'.$this->ShowCheckboxField("devsrv", "Y", Array("id" => "devsrv_inst")).'
+					<br>
+					<small>'.InstallGetMessage("INSTALL_DEVSRV_NOTE").'<br></small>
+				</td>
 				</tr>';
 		}
 		else
@@ -3000,6 +3009,10 @@ class CreateAdminStep extends CWizardStep
 			}
 		}
 
+		$devsrv = $wizard->GetVar("devsrv");
+		if ($devsrv == "Y")
+			COption::SetOptionString("main", "update_devsrv", $devsrv);
+		
 		return true;
 	}
 
@@ -3395,16 +3408,8 @@ class LoadModuleStep extends CWizardStep
 
 		require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/classes/general/update_client_partner.php");
 
-		/*
-		if (defined("WIZARD_DEFAULT_TONLY") && WIZARD_DEFAULT_TONLY === true)
-			$tTmp = 3;
-		else
-			$tTmp = array(3, 6);
-		*/
-
 		$arModules = CUpdateClientPartner::SearchModulesEx(
 			array("SORT" => "DESC", "NAME" => "ASC"),
-			//array("TYPE" => $tTmp),
 			array("CATEGORY" => Array(7, 14)),
 			1,
 			LANGUAGE_ID,
@@ -4256,6 +4261,15 @@ class CheckLicenseKey extends CWizardStep
 					<small>'.InstallGetMessage("INS_LICENSE_NOTE_SOURCE").'<br></small>
 				</td>
 				</tr>
+				<tr>
+				<td nowrap align="right" width="40%" valign="top">
+					'.InstallGetMessage("INSTALL_DEVSRV").'
+				</td>
+				<td width="60%" valign="top">'.$this->ShowCheckboxField("devsrv", "Y", Array("id" => "devsrv_inst")).'
+					<br>
+					<small>'.InstallGetMessage("INSTALL_DEVSRV_NOTE").'<br></small>
+				</td>
+				</tr>
 				</table>
 				';
 		}
@@ -4314,7 +4328,15 @@ $wizard = new CWizardBase(str_replace("#VERS#", SM_VERSION, InstallGetMessage("I
 
 if (defined("WIZARD_DEFAULT_TONLY") && WIZARD_DEFAULT_TONLY === true)
 {
-	$arSteps = Array("SelectWizardStep", "LoadModuleStep", "LoadModuleActionStep", "SelectWizard1Step");
+	require_once($_SERVER['DOCUMENT_ROOT']."/bitrix/modules/main/include.php");
+	if($USER->CanDoOperation('edit_other_settings'))
+	{
+		$arSteps = Array("SelectWizardStep", "LoadModuleStep", "LoadModuleActionStep", "SelectWizard1Step");
+	}
+	else
+	{
+		die();
+	}
 }
 //Short installation
 elseif (BXInstallServices::IsShortInstall() && BXInstallServices::CheckShortInstall())

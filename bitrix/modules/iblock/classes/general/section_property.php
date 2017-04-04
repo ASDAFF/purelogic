@@ -265,7 +265,8 @@ class CIBlockSectionPropertyLink
 				0 LEFT_MARGIN,
 				B.NAME LINK_TITLE,
 				BP.PROPERTY_TYPE,
-				BP.USER_TYPE
+				BP.USER_TYPE,
+				BP.ACTIVE
 			FROM
 				b_iblock B
 				INNER JOIN b_iblock_property BP ON BP.IBLOCK_ID = B.ID
@@ -300,6 +301,7 @@ class CIBlockSectionPropertyLink
 						"LINK_TITLE" => $ar["LINK_TITLE"],
 						"PROPERTY_TYPE" => $ar["PROPERTY_TYPE"],
 						"USER_TYPE" => $ar["USER_TYPE"],
+						"ACTIVE" => $ar["ACTIVE"],
 					);
 				}
 			}
@@ -317,6 +319,7 @@ class CIBlockSectionPropertyLink
 					"LINK_TITLE" => $ar["LINK_TITLE"],
 					"PROPERTY_TYPE" => $ar["PROPERTY_TYPE"],
 					"USER_TYPE" => $ar["USER_TYPE"],
+					"ACTIVE" => $ar["ACTIVE"],
 				);
 			}
 		}
@@ -336,7 +339,8 @@ class CIBlockSectionPropertyLink
 					BS.LEFT_MARGIN,
 					BS.NAME LINK_TITLE,
 					BP.PROPERTY_TYPE,
-					BP.USER_TYPE
+					BP.USER_TYPE,
+					BP.ACTIVE
 				FROM
 					b_iblock B
 					INNER JOIN b_iblock_property BP ON BP.IBLOCK_ID = B.ID
@@ -370,6 +374,8 @@ class CIBlockSectionPropertyLink
 					"LEFT_MARGIN" => $ar["LEFT_MARGIN"],
 					"LINK_TITLE" => $ar["LINK_TITLE"],
 					"PROPERTY_TYPE" => $ar["PROPERTY_TYPE"],
+					"USER_TYPE" => $ar["USER_TYPE"],
+					"ACTIVE" => $ar["ACTIVE"],
 				);
 			}
 		}

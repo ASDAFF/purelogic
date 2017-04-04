@@ -52,6 +52,7 @@ abstract class CBPActivity
 		$rootActivity = $this->GetRootActivity();
 		if (!is_array($rootActivity->documentType) || count($rootActivity->documentType) <= 0)
 		{
+			/** @var CBPDocumentService $documentService */
 			$documentService = $this->workflow->GetService("DocumentService");
 			$rootActivity->documentType = $documentService->GetDocumentType($rootActivity->documentId);
 		}
@@ -820,6 +821,10 @@ abstract class CBPActivity
 	{
 	}
 
+	public function Finalize()
+	{
+	}
+
 	public function Execute()
 	{
 		return CBPActivityExecutionStatus::Closed;
@@ -1055,9 +1060,9 @@ abstract class CBPActivity
 					}
 				}
 
+				/** @var CBPTrackingService $trackingService */
 				$trackingService = $this->workflow->GetService("TrackingService");
 				$trackingService->Write($this->GetWorkflowInstanceId(), CBPTrackingType::CloseActivity, $this->name, $this->executionStatus, $this->executionResult, ($this->IsPropertyExists("Title") ? $this->Title : ""));
-
 				$this->SetStatus(CBPActivityExecutionStatus::Closed, $arEventParameters);
 
 				//if ($this->parent)

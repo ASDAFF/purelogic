@@ -97,7 +97,7 @@ class CBitrixSocialnetworkBlogPostCommentMailComponent extends CBitrixComponent
 			isset($arParams["AVATAR_SIZE_COMMENT"])
 			&& intval($arParams["AVATAR_SIZE_COMMENT"]) > 0
 				? intval($arParams["AVATAR_SIZE_COMMENT"])
-				: 42
+				: 100
 		);
 		$arParams["COMMENTS_COUNT"] = (
 			isset($arParams["COMMENTS_COUNT"])

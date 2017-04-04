@@ -31,7 +31,6 @@ $MESS["F_USER_SETTINGS"] = "User Control";
 $MESS["F_PM_SETTINGS"] = "Private Messages";
 $MESS["UsePMVersion"] = "Version";
 $MESS["FORUM_PRIVATE_MESSAGE"] = "Maximum PM box capacity (messages)";
-$MESS["FORUM_USER_EDIT_OWN_POST"] = "Allow authors to edit their posts";
 $MESS["FORUM_USE_COOKIE"] = "Use cookies";
 $MESS["FORUM_USER_SHOW_NAME"] = "Show user name (default value for new users)";
 $MESS["FORUM_LOGS_TITLE"] = "Log user actions";

@@ -47,6 +47,8 @@ class Importer
 	const DIRECTION_EXPORT = 0;
 	const DIRECTION_IMPORT = 1;
 
+	private static $listRuLanguage = array('ua', 'by', 'kz');
+
  	/**
 	 * @param int $iblockId This variable is the id iblock.
 	 * @return string
@@ -400,7 +402,13 @@ class Importer
 		if (!$res)
 			static::createIBlockType();
 
+		if(in_array($lang, self::$listRuLanguage))
+			$lang = 'ru';
+
 		$dir = new Main\IO\Directory(Main\Loader::getDocumentRoot() . static::PATH . $lang . "/");
+		if(!$dir->isExists())
+			$dir = new Main\IO\Directory(Main\Loader::getDocumentRoot() . static::PATH . "en/");
+
 		if ($dir->isExists())
 		{
 			$children = $dir->getChildren();
@@ -456,6 +464,9 @@ class Importer
 	{
 		if (empty($lang))
 			throw new Main\ArgumentNullException("lang");
+
+		if(in_array($lang, self::$listRuLanguage))
+			$lang = 'ru';
 
 		if(!empty($path))
 		{

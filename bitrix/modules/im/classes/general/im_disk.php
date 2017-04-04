@@ -58,7 +58,7 @@ class CIMDisk
 		return $storageModel;
 	}
 
-	public static function UploadFileRegister($chatId, $files, $text = '')
+	public static function UploadFileRegister($chatId, $files, $text = '', $linesSilentMode = false)
 	{
 		if (intval($chatId) <= 0)
 			return false;
@@ -114,6 +114,7 @@ class CIMDisk
 			"TO_CHAT_ID" => $chatId,
 			"FROM_USER_ID" => self::GetUserId(),
 			"MESSAGE_TYPE" => $arChat['chat'][$chatId]['messageType'],
+			"SILENT_CONNECTOR" => $linesSilentMode?'Y':'N',
 			"PARAMS" => Array(
 				'FILE_ID' => $messageFileId
 			)
@@ -142,6 +143,7 @@ class CIMDisk
 	{
 		$post = \Bitrix\Main\Context::getCurrent()->getRequest()->getPostList()->toArray();
 		$post['PARAMS'] = CUtil::JsObjectToPhp($post['REG_PARAMS']);
+		$post['MESSAGE_HIDDEN'] = $post['REG_MESSAGE_HIDDEN'] == 'Y'? 'Y': 'N';
 
 		$chatId = intval($post['REG_CHAT_ID']);
 		if (intval($chatId) <= 0)
@@ -202,10 +204,12 @@ class CIMDisk
 		}
 
 		$messageId = intval($post['REG_MESSAGE_ID']);
+		$messageHidden = $post['MESSAGE_HIDDEN'];
 
 		$file['fileId'] = $fileId;
 		$file['fileTmpId'] = $file["id"];
 		$file['fileMessageId'] = $messageId;
+		$file['fileMessageHidden'] = $messageHidden;
 		$file['fileChatId'] = $chatId;
 		$file['fileParams'] = self::GetFileParams($chatId, $fileModel);
 
@@ -233,6 +237,7 @@ class CIMDisk
 					'fileId' => $file['fileId'],
 					'fileTmpId' => $file["id"],
 					'fileMessageId' => $file["fileMessageId"],
+					'fileMessageHidden' => $file['fileMessageHidden'],
 					'fileParams' => $file['fileParams'],
 				)
 			);
@@ -256,16 +261,17 @@ class CIMDisk
 				'FILE_ID' => $file['fileId'],
 				'MESSAGE_ID' => $file['fileMessageId'],
 				'MESSAGE_OUT' => $file['fileMessageOut'],
+				'MESSAGE_HIDDEN' => $file['fileMessageHidden'],
 				'FILE' => $file['fileParams'],
 			)));
 		}
-
-		if ($chat['ENTITY_TYPE'] == 'LINES')
+		
+		if ($chat['ENTITY_TYPE'] == 'LINES' && $file['fileMessageHidden'] == 'N')
 		{
 			list($connectorId, $lineId, $connectorChatId) = explode("|", $chat['ENTITY_ID']);
 			if ($connectorId == 'livechat')
 			{
-				$uploadResult = self::UploadFileFromDisk($connectorChatId, Array('disk'.$file['fileId']), '', true);
+				$uploadResult = self::UploadFileFromDisk($connectorChatId, Array('disk'.$file['fileId']), '', false, true);
 				\Bitrix\Im\Model\MessageParamTable::add(array(
 					"MESSAGE_ID" => $messageId,
 					"PARAM_NAME" => 'CONNECTOR_MID',
@@ -278,7 +284,7 @@ class CIMDisk
 				));
 			}
 		}
-		else if ($chat['ENTITY_TYPE'] == 'LIVECHAT')
+		else if ($chat['ENTITY_TYPE'] == 'LIVECHAT' && $file['fileMessageHidden'] == 'N')
 		{
 			list($lineId, $userId) = explode("|", $chat['ENTITY_ID']);
 
@@ -291,7 +297,7 @@ class CIMDisk
 			));
 			if ($row = $orm->fetch())
 			{
-				$uploadResult = self::UploadFileFromDisk($row['ID'], Array('disk'.$file['fileId']), '', true);
+				$uploadResult = self::UploadFileFromDisk($row['ID'], Array('disk'.$file['fileId']), '', false, true);
 				\Bitrix\Im\Model\MessageParamTable::add(array(
 					"MESSAGE_ID" => $messageId,
 					"PARAM_NAME" => 'CONNECTOR_MID',
@@ -442,7 +448,7 @@ class CIMDisk
 		return true;
 	}
 
-	public static function UploadFileFromDisk($chatId, $files, $text = '', $robot = false)
+	public static function UploadFileFromDisk($chatId, $files, $text = '', $linesSilentMode = false, $robot = false)
 	{
 		if (intval($chatId) <= 0)
 			return false;
@@ -502,6 +508,7 @@ class CIMDisk
 			"PARAMS" => Array(
 				'FILE_ID' => $messageFileId
 			),
+			"SILENT_CONNECTOR" => $linesSilentMode?'Y':'N',
 			"SKIP_USER_CHECK" => $chat['ENTITY_TYPE'] == 'LIVECHAT',
 		);
 		if ($text)
@@ -514,12 +521,12 @@ class CIMDisk
 			$result['MESSAGE_ID'] = $messageId;
 		}
 
-		if (!$robot && $chat['ENTITY_TYPE'] == 'LINES')
+		if (!$linesSilentMode && !$robot && $chat['ENTITY_TYPE'] == 'LINES')
 		{
 			list($connectorId, $lineId, $connectorChatId) = explode("|", $chat['ENTITY_ID']);
 			if ($connectorId == 'livechat')
 			{
-				$uploadResult = self::UploadFileFromDisk($connectorChatId, $files, '', true);
+				$uploadResult = self::UploadFileFromDisk($connectorChatId, $files, '', false, true);
 				\Bitrix\Im\Model\MessageParamTable::add(array(
 					"MESSAGE_ID" => $messageId,
 					"PARAM_NAME" => 'CONNECTOR_MID',
@@ -1123,7 +1130,7 @@ class CIMDisk
 				}
 			}
 
-			$folderModel = $storageModel->addFolder(array('NAME' => 'chat'.$chatId, 'CREATED_BY' => self::GetUserId()), $accessCodes);
+			$folderModel = $storageModel->addFolder(array('NAME' => 'chat'.$chatId, 'CREATED_BY' => self::GetUserId()), $accessCodes, true);
 			if ($folderModel)
 				IM\Model\ChatTable::update($chatId, Array('DISK_FOLDER_ID' => $folderModel->getId()));
 		}
@@ -1377,7 +1384,7 @@ class CIMDisk
 	public static function GetUserId()
 	{
 		global $USER;
-		return $USER->GetId();
+		return is_object($USER)? intval($USER->GetID()): 0;
 	}
 
 	public static function GetTopDepartmentCode()

@@ -412,7 +412,7 @@ class CPushManager
 
 		if ($imInclude)
 		{
-			$query->registerRuntimeField('', new \Bitrix\Main\Entity\ReferenceField('im', 'Bitrix\Im\StatusTable', array('=this.ID' => 'ref.USER_ID')));
+			$query->registerRuntimeField('', new \Bitrix\Main\Entity\ReferenceField('im', 'Bitrix\Im\Model\StatusTable', array('=this.ID' => 'ref.USER_ID')));
 			$query->addSelect('im.IDLE', 'IDLE')->addSelect('im.MOBILE_LAST_DATE', 'MOBILE_LAST_DATE');
 		}
 
@@ -697,7 +697,14 @@ class CPushManager
 				unset($arRes['BADGE']);
 			}
 
-			$arRes['PARAMS'] = $arRes['PARAMS'] ? Bitrix\Main\Web\Json::decode($arRes['PARAMS']) : "";
+			try
+			{
+				$arRes['PARAMS'] = $arRes['PARAMS'] ? Bitrix\Main\Web\Json::decode($arRes['PARAMS']) : "";
+			} 
+			catch (Exception $e)
+			{
+				$arRes['PARAMS'] = "";
+			}
 			if (is_array($arRes['PARAMS']))
 			{
 				if (isset($arRes['PARAMS']['CATEGORY']))
@@ -707,8 +714,15 @@ class CPushManager
 				}
 				$arRes['PARAMS'] = Bitrix\Main\Web\Json::encode($arRes['PARAMS']);
 			}
-			$arRes['ADVANCED_PARAMS'] = strlen($arRes['ADVANCED_PARAMS']) > 0 ? Bitrix\Main\Web\Json::decode($arRes['ADVANCED_PARAMS']) : Array();
-
+			try
+			{
+				$arRes['ADVANCED_PARAMS'] = strlen($arRes['ADVANCED_PARAMS']) > 0 ? Bitrix\Main\Web\Json::decode($arRes['ADVANCED_PARAMS']) : Array();
+			} 
+			catch (Exception $e)
+			{
+				$arRes['ADVANCED_PARAMS'] = Array();
+			}
+			
 			$arPush[$count][] = $arRes;
 			if ($pushLimit <= count($arPush[$count]))
 			{
@@ -755,6 +769,11 @@ class CPushManager
 
 	static function _MakeJson($arData, $bWS, $bSkipTilda)
 	{
+		if ((version_compare(PHP_VERSION, '5.4', ">=")))
+		{
+			return json_encode($arData,JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE);
+		}
+
 		static $aSearch = array("\r", "\n");
 
 		if (is_array($arData))

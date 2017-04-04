@@ -25,9 +25,15 @@ $EC = new CCalendar;
 $EC->Init($Params); // Init with $Params array
 
 if (isset($_REQUEST['action']))
-	$EC->Request($_REQUEST['action']); // Die inside
+{
+	CCalendarRequest::Process($_REQUEST['action'], $EC);
+	//$EC->Request($_REQUEST['action']); // Die inside
+}
 else
+{
+
 	$EC->Show();
+}
 
 if($ex = $APPLICATION->GetException())
 	return ShowError($ex->GetString());

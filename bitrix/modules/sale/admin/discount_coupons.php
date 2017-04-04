@@ -26,6 +26,8 @@ $canViewUserList = (
 	|| $USER->CanDoOperation('edit_subordinate_users')
 );
 
+$couponTypeList = Internals\DiscountCouponTable::getCouponTypes(true);
+
 $request = Main\Context::getCurrent()->getRequest();
 
 $adminListTableID = 'tbl_sale_discount_coupons';
@@ -34,9 +36,29 @@ $adminSort = new CAdminSorting($adminListTableID, 'ID', 'ASC');
 $adminList = new CAdminList($adminListTableID, $adminSort);
 
 $filter = array();
-$filterFields = array();
-
+$filterFields = array(
+	'filter_coupon',
+	'filter_discount_id',
+	'filter_active',
+	'filter_type'
+);
 $adminList->InitFilter($filterFields);
+$filterValues = array(
+	'filter_coupon' => (isset($filter_coupon) ? $filter_coupon : ''),
+	'filter_discount_id' => (isset($filter_discount_id) ? $filter_discount_id : ''),
+	'filter_active' => (isset($filter_active) ? $filter_active : ''),
+	'filter_type' => (isset($filter_type) ? $filter_type : '')
+);
+
+if ($filterValues['filter_coupon'] != '')
+	$filter['=COUPON'] = $filterValues['filter_coupon'];
+if (!empty($filterValues['filter_discount_id']))
+	$filter['=DISCOUNT_ID'] = $filterValues['filter_discount_id'];
+if ($filterValues['filter_active'] == 'Y' || $filterValues['filter_active'] == 'N')
+	$filter['=ACTIVE'] = $filterValues['filter_active'];
+if ($filterValues['filter_type'] != '' && isset($couponTypeList[$filterValues['filter_type']]))
+	$filter['=TYPE'] = $filterValues['filter_type'];
+
 
 if (!$readOnly && $adminList->EditAction())
 {
@@ -275,8 +297,6 @@ $userIDs = array();
 $nameFormat = CSite::GetNameFormat(true);
 
 $rowList = array();
-
-$couponTypeList = Internals\DiscountCouponTable::getCouponTypes(true);
 
 $usePageNavigation = true;
 $navyParams = array();
@@ -581,6 +601,77 @@ $adminList->CheckListMode();
 
 $APPLICATION->SetTitle(Loc::getMessage('BT_SALE_DISCOUNT_COUPON_LIST_TITLE'));
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admin_after.php');
+?>
+<form name="find_form" method="GET" action="<?=$APPLICATION->GetCurPage();?>">
+	<?
+	$filterForm = new CAdminFilter(
+		$adminListTableID.'_filter',
+		array(
+			Loc::getMessage('SALE_DISCOUNT_COUPON_LIST_FILTER_COUPON_SHORT'),
+			Loc::getMessage('SALE_DISCOUNT_COUPON_LIST_FILTER_DISCOUNT_ID_SHORT'),
+			Loc::getMessage('SALE_DISCOUNT_COUPON_LIST_FILTER_ACTIVE_SHORT'),
+			Loc::getMessage('SALE_DISCOUNT_COUPON_LIST_FILTER_TYPE_SHORT')
+		)
+	);
+	$filterForm->Begin();
+	?>
+	<tr>
+		<td><?=Loc::getMessage('SALE_DISCOUNT_COUPON_LIST_FILTER_COUPON'); ?></td>
+		<td><input type="text" name="filter_coupon" value="<?=htmlspecialcharsbx($filterValues['filter_coupon']); ?>"></td>
+	</tr>
+	<tr>
+		<td><?=Loc::getMessage('SALE_DISCOUNT_COUPON_LIST_FILTER_DISCOUNT_ID'); ?></td>
+		<td><select name="filter_discount_id">
+			<option value=""<?=($filterValues['filter_discount_id'] == '' ? ' selected' : ''); ?>><?=htmlspecialcharsbx(Loc::getMessage('PRICE_ROUND_LIST_FILTER_PRICE_TYPE_ANY')); ?></option><?
+			$discountIterator = Internals\DiscountTable::getList(array(
+				'select' => array('ID', 'NAME'),
+				'filter' => array('=USE_COUPONS' => 'Y'),
+				'order' => array('SORT' => 'ASC', 'NAME' => 'ASC')
+			));
+			while ($discount = $discountIterator->fetch())
+			{
+				$discount['NAME'] = (string)$discount['NAME'];
+				$title = '['.$discount['ID'].']'.($discount['NAME'] !== '' ? ' '.htmlspecialcharsbx($discount['NAME']) : '');
+				?><option value="<?=$discount['ID']; ?>"<?=($filterValues['filter_discount_id'] == $discount['ID'] ? ' selected' : ''); ?>><?=$title; ?></option><?
+				unset($title);
+			}
+			unset($discount, $discountIterator);
+			?></select>
+		</td>
+	</tr>
+	<tr>
+		<td><?=Loc::getMessage('SALE_DISCOUNT_COUPON_LIST_FILTER_ACTIVE'); ?></td>
+		<td><select name="filter_active">
+			<option value=""<?=(empty($filterValues['filter_active']) ? ' selected' : ''); ?>><?=htmlspecialcharsbx(Loc::getMessage('SALE_DISCOUNT_COUPON_LIST_FILTER_ACTIVE_EMPTY')); ?></option>
+			<option value="Y"<?=($filterValues['filter_active'] === 'Y' ? ' selected' : ''); ?>><?=htmlspecialcharsbx(Loc::getMessage('SALE_DISCOUNT_COUPON_LIST_FILTER_ACTIVE_YES')); ?></option>
+			<option value="N"<?=($filterValues['filter_active'] === 'N' ? ' selected' : ''); ?>><?=htmlspecialcharsbx(Loc::getMessage('SALE_DISCOUNT_COUPON_LIST_FILTER_ACTIVE_NO')); ?></option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td><?=Loc::getMessage('SALE_DISCOUNT_COUPON_LIST_FILTER_TYPE'); ?></td>
+		<td><select name="filter_type">
+			<option value=""<?=(empty($filterValues['filter_type']) || !isset($couponTypeList[$filterValues['filter_type']]) ? ' selected' : ''); ?>><?=htmlspecialcharsbx(Loc::getMessage('SALE_DISCOUNT_COUPON_LIST_FILTER_TYPE_EMPTY')); ?></option><?
+			foreach ($couponTypeList as $id =>$title)
+			{
+				?><option value="<?=$id; ?>"<?=($filterValues['filter_type'] == $id ? ' selected' : ''); ?>><?=htmlspecialcharsbx($title); ?></option><?
+			}
+			unset($id, $title);
+			?></select>
+		</td>
+	</tr>
+	<?
+	$filterForm->Buttons(
+		array(
+			'table_id' => $adminListTableID,
+			'url' => $APPLICATION->GetCurPage(),
+			'form' => 'find_form'
+		)
+	);
+	$filterForm->End();
+	?>
+</form>
+<?
 
 $adminList->DisplayList();
 

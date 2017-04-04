@@ -17,10 +17,11 @@ $bUseAccountNumber = (COption::GetOptionString("sale", "account_number_template"
 
 $ORDER_ID = urldecode(urldecode($_REQUEST["ORDER_ID"]));
 $paymentId = isset($_REQUEST["PAYMENT_ID"]) ? $_REQUEST["PAYMENT_ID"] : '';
+$hash = isset($_REQUEST["HASH"]) ? $_REQUEST["HASH"] : null;
 
 $arOrder = false;
 $checkedBySession = false;
-if (!$USER->IsAuthorized() && is_array($_SESSION['SALE_ORDER_ID']))
+if (!$USER->IsAuthorized() && is_array($_SESSION['SALE_ORDER_ID']) && empty($hash))
 {
 	$realOrderId = 0;
 
@@ -49,9 +50,13 @@ if ($bUseAccountNumber && !$arOrder)
 {
 	$arFilter = array(
 		"LID" => SITE_ID,
-		"USER_ID" => intval($USER->GetID()),
 		"ACCOUNT_NUMBER" => $ORDER_ID
 	);
+
+	if (empty($hash))
+	{
+		$arFilter["USER_ID"] = intval($USER->GetID());
+	}
 
 	$dbOrder = CSaleOrder::GetList(
 		array("DATE_UPDATE" => "DESC"),
@@ -66,7 +71,7 @@ if (!$arOrder)
 		"LID" => SITE_ID,
 		"ID" => $ORDER_ID
 	);
-	if (!$checkedBySession)
+	if (!$checkedBySession && empty($hash))
 		$arFilter["USER_ID"] = intval($USER->GetID());
 
 	$dbOrder = CSaleOrder::GetList(
@@ -78,6 +83,7 @@ if (!$arOrder)
 
 if ($arOrder)
 {
+	/** @var \Bitrix\Sale\Payment|null $paymentItem */
 	$paymentItem = null;
 
 	/** @var \Bitrix\Sale\Order $order */
@@ -85,6 +91,15 @@ if ($arOrder)
 
 	if ($order)
 	{
+		$guestStatuses = \Bitrix\Main\Config\Option::get("sale", "allow_guest_order_view_status", "");
+		$guestStatuses = (strlen($guestStatuses) > 0) ?  unserialize($guestStatuses) : array();
+
+		if (!empty($hash) && ($order->getHash() !== $hash || !\Bitrix\Sale\Helpers\Order::isAllowGuestView($order)))
+		{
+			LocalRedirect('/');
+			return;
+		}
+
 		/** @var \Bitrix\Sale\PaymentCollection $paymentCollection */
 		$paymentCollection = $order->getPaymentCollection();
 
@@ -92,22 +107,10 @@ if ($arOrder)
 		{
 			if ($paymentId)
 			{
-				$params = array(
-					'select' => array('ID'),
-					'filter' => array(
-						'LOGIC' => 'OR',
-						'ID' => $paymentId,
-						'ACCOUNT_NUMBER' => $paymentId,
-					)
-				);
+				$data = \Bitrix\Sale\PaySystem\Manager::getIdsByPayment($paymentId);
 
-				$data = \Bitrix\Sale\Internals\PaymentTable::getRow($params);
-
-				if ($data !== null && $data['ID'] > 0)
-				{
-					/** @var \Bitrix\Sale\Payment $paymentItem */
-					$paymentItem = $paymentCollection->getItemById($data['ID']);
-				}
+				if ($data[1] > 0)
+					$paymentItem = $paymentCollection->getItemById($data[1]);
 			}
 
 			if ($paymentItem === null)

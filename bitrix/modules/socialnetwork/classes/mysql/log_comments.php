@@ -10,15 +10,7 @@ class CSocNetLogComments extends CAllSocNetLogComments
 	{
 		global $DB;
 
-		$arFields1 = array();
-		foreach ($arFields as $key => $value)
-		{
-			if (substr($key, 0, 1) == "=")
-			{
-				$arFields1[substr($key, 1)] = $value;
-				unset($arFields[$key]);
-			}
-		}
+		$arFields1 = \Bitrix\Socialnetwork\Util::getEqualityFields($arFields);
 
 		if (
 			$bSetSource 
@@ -143,16 +135,7 @@ class CSocNetLogComments extends CAllSocNetLogComments
 		)
 		{
 			$arInsert = $DB->PrepareInsert("b_sonet_log_comment", $arFields);
-
-			foreach ($arFields1 as $key => $value)
-			{
-				if (strlen($arInsert[0]) > 0)
-					$arInsert[0] .= ", ";
-				$arInsert[0] .= $key;
-				if (strlen($arInsert[1]) > 0)
-					$arInsert[1] .= ", ";
-				$arInsert[1] .= $value;
-			}
+			\Bitrix\Socialnetwork\Util::processEqualityFieldsToInsert($arFields1, $arInsert);
 
 			$ID = false;
 			if (strlen($arInsert[0]) > 0)
@@ -170,10 +153,12 @@ class CSocNetLogComments extends CAllSocNetLogComments
 						!array_key_exists("RATING_TYPE_ID", $arFields)
 						|| empty($arFields["RATING_TYPE_ID"])
 					)
+					{
 						CSocNetLogComments::Update($ID, array(
 							"RATING_TYPE_ID" => "LOG_COMMENT",
 							"RATING_ENTITY_ID" => $ID
 						));
+					}
 
 					CSocNetLogFollow::Set(
 						$arFields["USER_ID"], 
@@ -304,15 +289,7 @@ class CSocNetLogComments extends CAllSocNetLogComments
 			}
 		}
 
-		$arFields1 = array();
-		foreach ($arFields as $key => $value)
-		{
-			if (substr($key, 0, 1) == "=")
-			{
-				$arFields1[substr($key, 1)] = $value;
-				unset($arFields[$key]);
-			}
-		}
+		$arFields1 = \Bitrix\Socialnetwork\Util::getEqualityFields($arFields);
 
 		if ($bSetSource)
 		{
@@ -401,13 +378,7 @@ class CSocNetLogComments extends CAllSocNetLogComments
 		)
 		{
 			$strUpdate = $DB->PrepareUpdate("b_sonet_log_comment", $arFields);
-
-			foreach ($arFields1 as $key => $value)
-			{
-				if (strlen($strUpdate) > 0)
-					$strUpdate .= ", ";
-				$strUpdate .= $key."=".$value." ";
-			}
+			\Bitrix\Socialnetwork\Util::processEqualityFieldsToUpdate($arFields1, $strUpdate);
 
 			if (strlen($strUpdate) > 0)
 			{
@@ -497,6 +468,7 @@ class CSocNetLogComments extends CAllSocNetLogComments
 			"CREATED_BY_LOGIN" => Array("FIELD" => "U1.LOGIN", "TYPE" => "string", "FROM" => "LEFT JOIN b_user U1 ON LC.USER_ID = U1.ID"),
 			"CREATED_BY_PERSONAL_PHOTO" => Array("FIELD" => "U1.PERSONAL_PHOTO", "TYPE" => "int", "FROM" => "LEFT JOIN b_user U1 ON LC.USER_ID = U1.ID"),
 			"CREATED_BY_PERSONAL_GENDER" => Array("FIELD" => "U1.PERSONAL_GENDER", "TYPE" => "string", "FROM" => "LEFT JOIN b_user U1 ON LC.USER_ID = U1.ID"),
+			"CREATED_BY_EXTERNAL_AUTH_ID" => Array("FIELD" => "U1.EXTERNAL_AUTH_ID", "TYPE" => "string", "FROM" => "LEFT JOIN b_user U1 ON LC.USER_ID = U1.ID"),
 		);
 
 		if (array_key_exists("LOG_SITE_ID", $arFilter))

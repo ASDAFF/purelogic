@@ -183,7 +183,9 @@ class Encoding
 	protected function convertByMbstring($data, $charsetFrom, $charsetTo)
 	{
 		$res = '';
-		if (extension_loaded("mbstring") && mb_encoding_aliases($charsetFrom) !== false && mb_encoding_aliases($charsetTo) !== false)
+
+		// mb_encoding_aliases emits an E_WARNING level error if encoding is unknown
+		if (extension_loaded("mbstring") && @mb_encoding_aliases($charsetFrom) !== false && @mb_encoding_aliases($charsetTo) !== false)
 		{
 			//For UTF-16 we have to detect the order of bytes
 			//Default for mbstring extension is Big endian

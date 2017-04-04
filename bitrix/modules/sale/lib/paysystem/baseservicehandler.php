@@ -38,6 +38,7 @@ abstract class BaseServiceHandler
 	abstract public function initiatePay(Payment $payment, Request $request = null);
 
 	/**
+	 * BaseServiceHandler constructor.
 	 * @param $type
 	 * @param Service $service
 	 */
@@ -83,7 +84,7 @@ abstract class BaseServiceHandler
 		}
 		else
 		{
-			$result->addError(new Error('SALE_PS_BASE_SERVICE_TEMPLATE_ERROR'));
+			$result->addError(new Error(Loc::getMessage('SALE_PS_BASE_SERVICE_TEMPLATE_ERROR')));
 		}
 
 		if ($this->service->getField('ENCODING') != '')
@@ -204,7 +205,7 @@ abstract class BaseServiceHandler
 	/**
 	 * @return array
 	 */
-	private function getExtraParams()
+	protected function getExtraParams()
 	{
 		return $this->extraParams;
 	}
@@ -366,5 +367,21 @@ abstract class BaseServiceHandler
 		header("Content-Type: text/html; charset=".BX_SALE_ENCODING);
 		$content = $APPLICATION->ConvertCharset($content, SITE_CHARSET, BX_SALE_ENCODING);
 		$content = str_replace("charset=".SITE_CHARSET, "charset=".BX_SALE_ENCODING, $content);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getDemoParams()
+	{
+		return array();
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isTuned()
+	{
+		return true;
 	}
 }

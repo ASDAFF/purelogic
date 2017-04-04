@@ -132,6 +132,11 @@ class ChatTable extends Entity\DataManager
 				'data_type' => 'integer',
 				'default_value' => 0
 			),
+			'DATE_CREATE' => array(
+				'data_type' => 'datetime',
+				'required' => false,
+				'default_value' => array(__CLASS__, 'getCurrentDate'),
+			),
 		);
 	}
 	public static function validateTitle()
@@ -176,6 +181,10 @@ class ChatTable extends Entity\DataManager
 			new Entity\Validator\Length(null, 255),
 		);
 	}
+	public static function getCurrentDate()
+	{
+		return new \Bitrix\Main\Type\DateTime();
+	}	
 }
 
 class_alias("Bitrix\\Im\\Model\\ChatTable", "Bitrix\\Im\\ChatTable", false);

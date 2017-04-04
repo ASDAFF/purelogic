@@ -340,13 +340,6 @@ class BizprocDocumentLists extends \BizprocDocument
 			}
 		}
 
-		$keys = array_keys($result);
-		foreach ($keys as $k)
-		{
-			$result[$k]["BaseType"] = $documentFieldTypes[$result[$k]["Type"]]["BaseType"];
-			$result[$k]["Complex"] = $documentFieldTypes[$result[$k]["Type"]]["Complex"];
-		}
-
 		$list = new \CList($iblockId);
 		$fields = $list->getFields();
 		foreach($fields as $fieldId => $field)
@@ -388,6 +381,13 @@ class BizprocDocumentLists extends \BizprocDocument
 					$result[$fieldId]["col_count"] = $field["COL_COUNT"];
 				}
 			}
+		}
+
+		$keys = array_keys($result);
+		foreach ($keys as $k)
+		{
+			$result[$k]["BaseType"] = $documentFieldTypes[$result[$k]["Type"]]["BaseType"];
+			$result[$k]["Complex"] = $documentFieldTypes[$result[$k]["Type"]]["Complex"];
 		}
 
 		return $result;

@@ -68,6 +68,7 @@ create table b_blog_post
 ,  ENABLE_COMMENTS char(1) not null default 'Y'
 ,  ATTACH_IMG int null
 ,  NUM_COMMENTS int not null default '0'
+,  NUM_COMMENTS_ALL int not null default '0'
 ,  NUM_TRACKBACKS int not null default '0'
 ,  VIEWS int null
 ,  FAVORITE_SORT int null

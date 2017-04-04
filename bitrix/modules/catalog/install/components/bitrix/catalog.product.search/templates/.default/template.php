@@ -424,50 +424,41 @@ else
 	endif ?>
 	<div class="adm-s-search-sidebar-container-left " style="width: 20%;padding-bottom: 28px">
 		<table class="adm-main-wrap" style="min-width:10px;">
-			<tr>
-				<td class="adm-left-side-wrap" style="background: none;" id="<?= $tableId ?>_resizable">
-					<div class="adm-left-side" style="width:300px;">
-						<div class="adm-submenu" id="adm-submenu">
-							<div class="adm-submenu-items-wrap" id="adm-submenu-favorites">
-								<div class="adm-submenu-items-stretch-wrap">
-									<table class="adm-submenu-items-stretch">
-										<tr>
-											<td class="adm-submenu-items-stretch-cell">
-												<div class="adm-submenu-items-block" id="<?= $tableId ?>_catalog_tree_wrap">
-
-													<div
-														class="adm-sub-submenu-block adm-sub-submenu-open root-submenu <?= empty($arResult["SECTION_ID"]) ? 'adm-submenu-item-active' : '' ?>">
-														<div class="adm-submenu-item-name"
-															id="<?= $tableId ?>_section_0">
-															<a
-																href="#" class="adm-submenu-item-name-link"
-																onclick="return <?= $tableId ?>_helper.onSectionClick('0')"><span
-																	class="adm-submenu-item-link-icon icon-default fileman_menu_icon"></span>
-																	<span class="adm-submenu-item-name-link-text" title="<?= $arResult['IBLOCKS'][$arResult['IBLOCK_ID']]['NAME'] ?>">
-																		<?= $arResult['IBLOCKS'][$arResult['IBLOCK_ID']]['NAME'] ?>
-																	</span>
-																<?if (sizeof($arResult['IBLOCKS']) > 1):?>
-																<span class="adm-s-arrow-cont" title="<?=GetMessage('SPS_CHOOSE_CATALOG')?>" id="<?= $tableId ?>_iblock_menu_opener"></span>
-																<?endif?>
-															</a>
-														</div>
-														<div
-															class="adm-sub-submenu-block-children"><?= renderTree($arResult['SECTIONS'], 1, $arResult['TABLE_ID']) ?></div>
-													</div>
-
+			<tr><td class="adm-left-side-wrap" style="background: none;" id="<?= $tableId ?>_resizable">
+				<div class="adm-left-side" style="width:300px;">
+					<div class="adm-submenu" id="adm-submenu">
+						<div class="adm-submenu-items-wrap" id="adm-submenu-favorites">
+							<div class="adm-submenu-items-stretch-wrap">
+								<table class="adm-submenu-items-stretch">
+									<tr><td class="adm-submenu-items-stretch-cell">
+										<div class="adm-submenu-items-block" id="<?= $tableId ?>_catalog_tree_wrap">
+											<div class="adm-sub-submenu-block adm-sub-submenu-open root-submenu <?= empty($arResult["SECTION_ID"]) ? 'adm-submenu-item-active' : '' ?>">
+												<div class="adm-submenu-item-name" id="<?= $tableId ?>_section_0">
+													<a
+														href="#" class="adm-submenu-item-name-link product-search-top-item"
+														onclick="return <?= $tableId ?>_helper.onSectionClick('0')"><?
+														if (count($arResult['IBLOCKS']) > 1)
+														{
+															?><span class="adm-s-arrow-cont" title="<?= GetMessage('SPS_CHOOSE_CATALOG') ?>" id="<?= $tableId ?>_iblock_menu_opener"></span><?
+														}
+														?><span class="adm-submenu-item-link-icon icon-default fileman_menu_icon"></span>
+														<span class="adm-submenu-item-name-link-text" title="<?= $arResult['IBLOCKS'][$arResult['IBLOCK_ID']]['NAME'] ?>">
+															<?= $arResult['IBLOCKS'][$arResult['IBLOCK_ID']]['NAME'] ?>
+														</span>
+													</a>
 												</div>
-											</td>
-										</tr>
-									</table>
-								</div>
+												<div class="adm-sub-submenu-block-children"><?= renderTree($arResult['SECTIONS'], 1, $arResult['TABLE_ID']) ?></div>
+											</div>
+										</div>
+									</td></tr>
+								</table>
 							</div>
 						</div>
 					</div>
-				</td>
-				<td class="adm-workarea-wrap"></td>
-			</tr>
+				</div>
+			</td>
+			<td class="adm-workarea-wrap"></td></tr>
 		</table>
-<!--		<div class="adm-submenu-separator"></div>-->
 	</div>
 	<div class="adm-s-search-content-container-right" style="width: 80%;">
 		<div class="adm-s-content">
@@ -521,17 +512,17 @@ else
 				</tr>
 				<tr>
 					<td nowrap><?= GetMessage("SPS_TIMESTAMP") ?>:</td>
-					<td nowrap><? echo CalendarPeriod("filter_timestamp_from", htmlspecialcharsex($_REQUEST['filter_timestamp_from']), "filter_timestamp_to", htmlspecialcharsex($_REQUEST['filter_timestamp_to']), "form1") ?></td>
+					<td nowrap><? echo CalendarPeriod("filter_timestamp_from", htmlspecialcharsbx($_REQUEST['filter_timestamp_from']), "filter_timestamp_to", htmlspecialcharsbx($_REQUEST['filter_timestamp_to']), "form1") ?></td>
 				</tr>
 				<tr>
 					<td nowrap><?= GetMessage("SPS_ACTIVE") ?>:</td>
 					<td nowrap>
 						<select name="filter_active">
-							<option value="*"><?= htmlspecialcharsex("(" . GetMessage("SPS_ANY") . ")") ?></option>
+							<option value="*"><?= htmlspecialcharsbx("(" . GetMessage("SPS_ANY") . ")") ?></option>
 							<option
-								value="Y"<? if ($_REQUEST['filter_active'] == "Y" || empty($_REQUEST['filter_active'])) echo " selected" ?>><?= htmlspecialcharsex(GetMessage("SPS_YES")) ?></option>
+								value="Y"<? if ($_REQUEST['filter_active'] == "Y" || empty($_REQUEST['filter_active'])) echo " selected" ?>><?= htmlspecialcharsbx(GetMessage("SPS_YES")) ?></option>
 							<option
-								value="N"<? if ($_REQUEST['filter_active'] == "N") echo " selected" ?>><?= htmlspecialcharsex(GetMessage("SPS_NO")) ?></option>
+								value="N"<? if ($_REQUEST['filter_active'] == "N") echo " selected" ?>><?= htmlspecialcharsbx(GetMessage("SPS_NO")) ?></option>
 						</select>
 					</td>
 				</tr>
@@ -539,15 +530,15 @@ else
 				<tr>
 					<td>ID (<?= GetMessage("SPS_ID_FROM_TO") ?>):</td>
 					<td>
-						<input type="text" name="filter_id_start" size="10" value="<?echo htmlspecialcharsex($_REQUEST['filter_id_start'])?>">
+						<input type="text" name="filter_id_start" size="10" value="<?echo htmlspecialcharsbx($_REQUEST['filter_id_start'])?>">
 						...
-						<input type="text" name="filter_id_end" size="10" value="<?echo htmlspecialcharsex($_REQUEST['filter_id_end'])?>">
+						<input type="text" name="filter_id_end" size="10" value="<?echo htmlspecialcharsbx($_REQUEST['filter_id_end'])?>">
 					</td>
 				</tr>
 				<tr>
 					<td nowrap><?= GetMessage("SPS_XML_ID") ?>:</td>
 					<td nowrap>
-						<input type="text" name="filter_xml_id" size="50" value="<?echo htmlspecialcharsex($_REQUEST['filter_xml_id'])?>">
+						<input type="text" name="filter_xml_id" size="50" value="<?echo htmlspecialcharsbx($_REQUEST['filter_xml_id'])?>">
 					</td>
 				</tr>
 
@@ -565,10 +556,10 @@ else
 										array("VALUE" => 'filter_el_property_'.$arProp["ID"]),
 									));
 								elseif ($arProp["PROPERTY_TYPE"] == 'S'):?>
-									<input type="text" name="filter_el_property_<?= $arProp["ID"] ?>" value="<? echo htmlspecialcharsex($_REQUEST["filter_el_property_" . $arProp["ID"]]) ?>" size="30">&nbsp;<?= ShowFilterLogicHelp() ?>
+									<input type="text" name="filter_el_property_<?= $arProp["ID"] ?>" value="<? echo htmlspecialcharsbx($_REQUEST["filter_el_property_" . $arProp["ID"]]) ?>" size="30">&nbsp;<?= ShowFilterLogicHelp() ?>
 								<?
 								elseif ($arProp["PROPERTY_TYPE"] == 'N' || $arProp["PROPERTY_TYPE"] == 'E'): ?>
-									<input type="text" name="filter_el_property_<?= $arProp["ID"] ?>" value="<? echo htmlspecialcharsex($_REQUEST["filter_el_property_" . $arProp["ID"]]) ?>" size="30">
+									<input type="text" name="filter_el_property_<?= $arProp["ID"] ?>" value="<? echo htmlspecialcharsbx($_REQUEST["filter_el_property_" . $arProp["ID"]]) ?>" size="30">
 								<?
 								elseif ($arProp["PROPERTY_TYPE"] == 'L'): ?>
 									<select name="filter_el_property_<?= $arProp["ID"] ?>">
@@ -608,10 +599,10 @@ else
 										array("VALUE" => "_REQUEST[find_sub_el_property_" . $arProp["ID"] . ']'),
 									));
 								elseif ($arProp["PROPERTY_TYPE"] == 'S'):?>
-									<input type="text" name="filter_sub_el_property_<?= $arProp["ID"] ?>" value="<? echo htmlspecialcharsex($_REQUEST["filter_sub_el_property_" . $arProp["ID"]]) ?>" size="30">&nbsp;<?= ShowFilterLogicHelp() ?>
+									<input type="text" name="filter_sub_el_property_<?= $arProp["ID"] ?>" value="<? echo htmlspecialcharsbx($_REQUEST["filter_sub_el_property_" . $arProp["ID"]]) ?>" size="30">&nbsp;<?= ShowFilterLogicHelp() ?>
 								<?
 								elseif ($arProp["PROPERTY_TYPE"] == 'N' || $arProp["PROPERTY_TYPE"] == 'E'): ?>
-									<input type="text" name="filter_sub_el_property_<?= $arProp["ID"] ?>" value="<? echo htmlspecialcharsex($_REQUEST["filter_sub_el_property_" . $arProp["ID"]]) ?>" size="30">
+									<input type="text" name="filter_sub_el_property_<?= $arProp["ID"] ?>" value="<? echo htmlspecialcharsbx($_REQUEST["filter_sub_el_property_" . $arProp["ID"]]) ?>" size="30">
 								<?
 								elseif ($arProp["PROPERTY_TYPE"] == 'L'): ?>
 									<select name="filter_sub_el_property_<?= $arProp["ID"] ?>">

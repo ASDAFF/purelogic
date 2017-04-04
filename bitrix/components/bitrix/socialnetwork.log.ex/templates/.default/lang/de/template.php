@@ -31,4 +31,7 @@ $MESS["SONET_C30_T_CREATE_TASK_SUCCESS_TITLE"] = "Aufgabe wurde erstellt";
 $MESS["SONET_C30_T_CREATE_TASK_FAILURE_TITLE"] = "Fehler";
 $MESS["SONET_C30_T_CREATE_TASK_SUCCESS_DESCRIPTION"] = "Sie können jetzt die Aufgabe anzeigen und bearbeiten.";
 $MESS["SONET_C30_T_CREATE_TASK_ERROR_GET_DATA"] = "Daten können nicht erhalten werden, um eine Aufgabe zu erstellen.";
+$MESS["SONET_C30_T_CREATE_TASK_LINK"] = "Aufgabe wurde erstellt aus #ENTITY#";
+$MESS["SONET_C30_T_CREATE_TASK_LINK_BLOG_POST"] = "einer Nachricht im Activity Stream";
+$MESS["SONET_C30_T_CREATE_TASK_LINK_BLOG_COMMENT"] = "einem Kommentar zur Nachricht im Activity Stream";
 ?>

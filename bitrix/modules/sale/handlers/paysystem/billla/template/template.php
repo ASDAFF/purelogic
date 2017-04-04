@@ -176,29 +176,36 @@ $width = $pageWidth - $margin['left'] - $margin['right'];
 	<br>
 <?endif;?>
 <?
-
-$basketItems = array();
-
-/** @var \Bitrix\Sale\PaymentCollection $paymentCollection */
-$paymentCollection = $payment->getCollection();
-
-/** @var \Bitrix\Sale\Order $order */
-$order = $paymentCollection->getOrder();
-
-/** @var \Bitrix\Sale\Basket $basket */
-$basket = $order->getBasket();
-
 $columnList = array('NUMBER', 'NAME', 'QUANTITY', 'MEASURE', 'PRICE', 'VAT_RATE', 'SUM');
-$arColsCaption = array();
+$arCols = array();
 foreach ($columnList as $column)
 {
 	if ($params['BILLLA_COLUMN_'.$column.'_SHOW'] == 'Y')
-		$arColsCaption[$column] = $params['BILLLA_COLUMN_'.$column.'_TITLE'];
+	{
+		$arCols[$column] = array(
+			'NAME' => $params['BILLLA_COLUMN_'.$column.'_TITLE'],
+			'SORT' => $params['BILLLA_COLUMN_'.$column.'_SORT']
+		);
+	}
 }
-$arColumnKeys = array_keys($arColsCaption);
+if ($params['USER_COLUMNS'])
+{
+	$columnList = array_merge($columnList, array_keys($params['USER_COLUMNS']));
+	foreach ($params['USER_COLUMNS'] as $id => $val)
+	{
+		$arCols[$id] = array(
+			'NAME' => $val['NAME'],
+			'SORT' => $val['SORT']
+		);
+	}
+}
+
+uasort($arCols, function ($a, $b) {return ($a['SORT'] < $b['SORT']) ? -1 : 1;});
+
+$arColumnKeys = array_keys($arCols);
 $columnCount = count($arColumnKeys);
 
-if (count($basket->getBasketItems()) > 0)
+if ($params['BASKET_ITEMS'])
 {
 	$arCells = array();
 	$arProps = array();
@@ -208,23 +215,22 @@ if (count($basket->getBasketItems()) > 0)
 	$vat = 0;
 	$vats = array();
 
-	/** @var \Bitrix\Sale\BasketItem $basketItem */
-	foreach ($basket->getBasketItems() as $basketItem)
+	foreach ($params['BASKET_ITEMS'] as $basketItem)
 	{
 		// @TODO: replace with real vatless price
-		if ($basketItem->isVatInPrice())
-			$vatLessPrice = roundEx($basketItem->getPrice() / (1 + $basketItem->getVatRate()), SALE_VALUE_PRECISION);
+		if ($basketItem['IS_VAT_IN_PRICE'])
+			$vatLessPrice = roundEx($basketItem['PRICE'] / (1 + $basketItem['VAT_RATE']), SALE_VALUE_PRECISION);
 		else
-			$vatLessPrice = $basketItem->getPrice();
+			$vatLessPrice = $basketItem['PRICE'];
 
-		$productName = $basketItem->getField("NAME");
+		$productName = $basketItem["NAME"];
 		if ($productName == "OrderDelivery")
 			$productName = Loc::getMessage('SALE_HPS_BILLLA_DELIVERY');
 		else if ($productName == "OrderDiscount")
 			$productName = Loc::getMessage('SALE_HPS_BILLLA_DISCOUNT');
 
 		$arCells[++$n] = array();
-		foreach ($arColsCaption as $columnId => $caption)
+		foreach ($arCols as $columnId => $col)
 		{
 			$data = null;
 
@@ -237,80 +243,69 @@ if (count($basket->getBasketItems()) > 0)
 					$data = htmlspecialcharsbx($productName);
 					break;
 				case 'QUANTITY':
-					$data = roundEx($basketItem->getQuantity(), SALE_VALUE_PRECISION);
+					$data = roundEx($basketItem['QUANTITY'], SALE_VALUE_PRECISION);
 					break;
 				case 'MEASURE':
-					$data = $basketItem->getField("MEASURE_NAME") ? htmlspecialcharsbx($basketItem->getField("MEASURE_NAME")) : Loc::getMessage('SALE_HPS_BILLLA_MEASURE');
+					$data = $basketItem["MEASURE_NAME"] ? htmlspecialcharsbx($basketItem["MEASURE_NAME"]) : Loc::getMessage('SALE_HPS_BILLLA_MEASURE');
 					break;
 				case 'PRICE':
-					$data = SaleFormatCurrency($vatLessPrice, $basketItem->getCurrency(), false);
+					$data = SaleFormatCurrency($vatLessPrice, $basketItem['CURRENCY'], false);
 					break;
 				case 'VAT_RATE':
-					$data = roundEx($basketItem->getVatRate()*100, SALE_VALUE_PRECISION) . "%";
+					$data = roundEx($basketItem['VAT_RATE']*100, SALE_VALUE_PRECISION) . "%";
 					break;
 				case 'SUM':
-					$data = SaleFormatCurrency($vatLessPrice * $basketItem->getQuantity(), $basketItem->getCurrency(), false);
+					$data = SaleFormatCurrency($vatLessPrice * $basketItem['QUANTITY'], $basketItem['CURRENCY'], false);
 					break;
+				default :
+					$data = ($basketItem[$columnId]) ?: '';
 			}
 			if ($data !== null)
 				$arCells[$n][$columnId] = $data;
 		}
 
-		$arProps[$n] = array();
-
-		/** @var \Bitrix\Sale\BasketPropertyItem $basketPropertyItem */
-		foreach ($basketItem->getPropertyCollection() as $basketPropertyItem)
+		if ($basketItem['PROPS'])
 		{
-			if ($basketPropertyItem->getField('CODE') == 'CATALOG.XML_ID' || $basketPropertyItem->getField('CODE') == 'PRODUCT.XML_ID')
-				continue;
-			$arProps[$n][] = htmlspecialcharsbx(sprintf("%s: %s", $basketPropertyItem->getField("NAME"), $basketPropertyItem->getField("VALUE")));
+			$arProps[$n] = array();
+
+			foreach ($basketItem['PROPS'] as $basketPropertyItem)
+			{
+				if ($basketPropertyItem['CODE'] == 'CATALOG.XML_ID' || $basketPropertyItem['CODE'] == 'PRODUCT.XML_ID')
+					continue;
+				$arProps[$n][] = htmlspecialcharsbx(sprintf("%s: %s", $basketPropertyItem["NAME"], $basketPropertyItem["VALUE"]));
+			}
 		}
-
-		$sum += doubleval($vatLessPrice * $basketItem->getQuantity());
-		$vat = max($vat, $basketItem->getVatRate());
-		if ($basketItem->getVatRate() > 0)
+		$sum += doubleval($vatLessPrice * $basketItem['QUANTITY']);
+		$vat = max($vat, $basketItem['VAT_RATE']);
+		if ($basketItem['VAT_RATE'] > 0)
 		{
-			if (!isset($vats[$basketItem->getVatRate()]))
-				$vats[$basketItem->getVatRate()] = 0;
+			$vatRate = (string)$basketItem['VAT_RATE'];
+			if (!isset($vats[$vatRate]))
+				$vats[$vatRate] = 0;
 
-			if ($basketItem->isVatInPrice())
-				$vats[$basketItem->getVatRate()] += ($basketItem->getPrice() - $vatLessPrice) * $basketItem->getQuantity();
+			if ($basketItem['IS_VAT_IN_PRICE'])
+				$vats[$vatRate] += ($basketItem['PRICE'] - $vatLessPrice) * $basketItem['QUANTITY'];
 			else
-				$vats[$basketItem->getVatRate()] += ($basketItem->getPrice()*(1 + $basketItem->getVatRate()) - $vatLessPrice) * $basketItem->getQuantity();
+				$vats[$vatRate] += ($basketItem['PRICE']*(1 + $basketItem['VAT_RATE']) - $vatLessPrice) * $basketItem['QUANTITY'];
 		}
 	}
 
 	if ($vat <= 0)
 	{
-		unset($arColsCaption['VAT_RATE']);
-		$columnCount = count($arColsCaption);
-		$arColumnKeys = array_keys($arColsCaption);
+		unset($arCols['VAT_RATE']);
+		$columnCount = count($arCols);
+		$arColumnKeys = array_keys($arCols);
 		foreach ($arCells as $i => $cell)
 			unset($arCells[$i]['VAT_RATE']);
 	}
 
-	/** @var \Bitrix\Sale\ShipmentCollection $shipmentCollection */
-	$shipmentCollection = $order->getShipmentCollection();
-
-	$shipment = null;
-
-	/** @var \Bitrix\Sale\Shipment $shipmentItem */
-	foreach ($shipmentCollection as $shipmentItem)
-	{
-		if (!$shipmentItem->isSystem())
-		{
-			$shipment = $shipmentItem;
-			break;
-		}
-	}
-
-	if ($shipment && (float)$shipment->getPrice() > 0)
+	if ($params['DELIVERY_PRICE'])
 	{
 		$sDeliveryItem = Loc::getMessage('SALE_HPS_BILLLA_DELIVERY');
-		if ($shipment->getDeliveryName())
-			$sDeliveryItem .= sprintf(" (%s)", $shipment->getDeliveryName());
+		if ($params['DELIVERY_NAME'])
+			$sDeliveryItem .= sprintf(" (%s)", $params['DELIVERY_NAME']);
 		$arCells[++$n] = array();
-		foreach ($arColsCaption as $columnId => $caption)
+		foreach ($arCols as $columnId => $col)
 		{
 			$data = null;
 
@@ -329,27 +324,29 @@ if (count($basket->getBasketItems()) > 0)
 					$data = '';
 					break;
 				case 'PRICE':
-					$data = SaleFormatCurrency($shipment->getPrice() / (1 + $vat), $shipment->getCurrency(), false);
+					$data = SaleFormatCurrency($params['DELIVERY_PRICE'] / (1 + $vat), $params['CURRENCY'], false);
 					break;
 				case 'VAT_RATE':
 					$data = roundEx($vat*100, SALE_VALUE_PRECISION) . "%";
 					break;
 				case 'SUM':
-					$data = SaleFormatCurrency($shipment->getPrice() / (1 + $vat), $shipment->getCurrency(), false);
+					$data = SaleFormatCurrency($params['DELIVERY_PRICE'] / (1 + $vat), $params['CURRENCY'], false);
 					break;
+				default:
+					$data = '';
 			}
 			if ($data !== null)
 				$arCells[$n][$columnId] = $data;
 		}
 
 		$sum += roundEx(
-			$shipment->getPrice() / (1 + $vat),
+			$params['DELIVERY_PRICE'] / (1 + $vat),
 			SALE_VALUE_PRECISION
 		);
 
 		if ($vat > 0)
-			$vats[$vat] += roundEx(
-				$shipment->getPrice() * $vat / (1 + $vat),
+			$vats[(string)$vat] += roundEx(
+				$params['DELIVERY_PRICE'] * $vat / (1 + $vat),
 				SALE_VALUE_PRECISION
 			);
 	}
@@ -357,21 +354,21 @@ if (count($basket->getBasketItems()) > 0)
 	$items = $n;
 	if ($params['BILLLA_TOTAL_SHOW'] == 'Y')
 	{
-		if ($sum < $payment->getSum())
+		if ($sum < $params['SUM'])
 		{
 			$arCells[++$n] = array();
 			for ($i = 0; $i < $columnCount; $i++)
 				$arCells[$n][$arColumnKeys[$i]] = null;
 
 			$arCells[$n][$arColumnKeys[$columnCount-2]] = Loc::getMessage('SALE_HPS_BILLLA_SUB_TOTAL').":";
-			$arCells[$n][$arColumnKeys[$columnCount-1]] = SaleFormatCurrency($sum, $order->getCurrency(), false);
+			$arCells[$n][$arColumnKeys[$columnCount-1]] = SaleFormatCurrency($sum, $params['CURRENCY'], false);
 		}
 
 		if (!empty($vats))
 		{
 			// @TODO: remove on real vatless price implemented
 			$delta = intval(roundEx(
-				$payment->getSum() - $sum - array_sum($vats),
+				$params['SUM'] - $sum - array_sum($vats),
 				SALE_VALUE_PRECISION
 			) * pow(10, SALE_VALUE_PRECISION));
 
@@ -399,17 +396,14 @@ if (count($basket->getBasketItems()) > 0)
 					$arCells[$n][$i] = null;
 
 				$arCells[$n][$arColumnKeys[$columnCount-2]] = sprintf(Loc::getMessage('SALE_HPS_BILLLA_TAX')." (%s%%):", roundEx($vatRate * 100, SALE_VALUE_PRECISION));
-				$arCells[$n][$arColumnKeys[$columnCount-1]] = SaleFormatCurrency($vatSum, $payment->getField('CURRENCY'), false);
+				$arCells[$n][$arColumnKeys[$columnCount-1]] = SaleFormatCurrency($vatSum, $params['CURRENCY'], false);
 			}
 		}
 		else
 		{
-			$taxes = $order->getTax();
-
-			$taxesList = $taxes->getTaxList();
-			if ($taxesList)
+			if ($params['TAXES'])
 			{
-				foreach ($taxesList as $tax)
+				foreach ($params['TAXES'] as $tax)
 				{
 					$arCells[++$n] = array();
 					for ($i = 0; $i < $columnCount; $i++)
@@ -421,30 +415,29 @@ if (count($basket->getBasketItems()) > 0)
 						$tax["TAX_NAME"],
 						sprintf(' (%s%%)', roundEx($tax["VALUE"], SALE_VALUE_PRECISION))
 					));
-					$arCells[$n][$arColumnKeys[$columnCount-1]] = SaleFormatCurrency($tax["VALUE_MONEY"], $payment->getField('CURRENCY'), false);
+					$arCells[$n][$arColumnKeys[$columnCount-1]] = SaleFormatCurrency($tax["VALUE_MONEY"], $params['CURRENCY'], false);
 				}
 			}
 		}
 
-		$sumPaid = $paymentCollection->getPaidSum();
-		if (DoubleVal($sumPaid) > 0)
+		if ($params['SUM_PAID'])
 		{
 			$arCells[++$n] = array();
 			for ($i = 0; $i < $columnCount; $i++)
 				$arCells[$n][$arColumnKeys[$i]] = null;
 
 			$arCells[$n][$arColumnKeys[$columnCount-2]] = Loc::getMessage('SALE_HPS_BILLLA_SUM_PAID').":";
-			$arCells[$n][$arColumnKeys[$columnCount-1]] = SaleFormatCurrency($sumPaid, $order->getCurrency(), false);
+			$arCells[$n][$arColumnKeys[$columnCount-1]] = SaleFormatCurrency($params['SUM_PAID'], $params['CURRENCY'], false);
 		}
 
-		if (DoubleVal($order->getDiscountPrice()) > 0)
+		if ($params['DISCOUNT_PRICE'])
 		{
 			$arCells[++$n] = array();
 			for ($i = 0; $i < $columnCount; $i++)
 				$arCells[$n][$arColumnKeys[$i]] = null;
 
 			$arCells[$n][$arColumnKeys[$columnCount-2]] = Loc::getMessage('SALE_HPS_BILLLA_DISCOUNT').":";
-			$arCells[$n][$arColumnKeys[$columnCount-1]] = SaleFormatCurrency($order->getDiscountPrice(), $order->getCurrency(), false);
+			$arCells[$n][$arColumnKeys[$columnCount-1]] = SaleFormatCurrency($params['DISCOUNT_PRICE'], $params['CURRENCY'], false);
 		}
 
 		$arCells[++$n] = array();
@@ -452,15 +445,15 @@ if (count($basket->getBasketItems()) > 0)
 			$arCells[$n][$arColumnKeys[$i]] = null;
 
 		$arCells[$n][$arColumnKeys[$columnCount-2]] = Loc::getMessage('SALE_HPS_BILLLA_TOTAL').":";
-		$arCells[$n][$arColumnKeys[$columnCount-1]] = SaleFormatCurrency($payment->getSum(), $order->getCurrency(), false);
+		$arCells[$n][$arColumnKeys[$columnCount-1]] = SaleFormatCurrency($params['SUM'], $params['CURRENCY'], false);
 	}
 }
 
 ?>
 <table class="it" width="100%">
 	<tr>
-		<?foreach ($arColsCaption as $columnId => $caption):?>
-			<td><nobr><?=$caption;?></nobr></td>
+		<?foreach ($arCols as $columnId => $col):?>
+			<td><?=$col['NAME'];?></td>
 		<?endforeach;?>
 	</tr>
 <?
@@ -472,7 +465,7 @@ for ($n = 1; $n <= $rowsCnt; $n++)
 
 ?>
 	<tr valign="top">
-		<?foreach ($arColsCaption as $columnId => $caption):?>
+		<?foreach ($arCols as $columnId => $col):?>
 			<?
 				if (!is_null($arCells[$n][$columnId]))
 				{
@@ -506,7 +499,11 @@ for ($n = 1; $n <= $rowsCnt; $n++)
 									style="border-width: 0pt 1pt 0pt 0pt"
 									colspan="<?=(($columnId == 'VAT_RATE' && $vat <= 0) ? $accumulated : $accumulated+1); ?>"
 									<? $accumulated = 0; } ?>>
-									<nobr><?=$arCells[$n][$columnId]; ?></nobr>
+									<?if ($columnId == 'SUM' || $columnId == 'PRICE'):?>
+										<nobr><?=$arCells[$n][$columnId];?></nobr>
+									<?else:?>
+										<?=$arCells[$n][$columnId]; ?>
+									<?endif;?>
 								</td>
 							<? }
 						}

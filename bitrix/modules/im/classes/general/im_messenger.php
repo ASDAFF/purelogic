@@ -6,6 +6,7 @@ use Bitrix\Im as IM;
 class CIMMessenger
 {
 	private $user_id = 0;
+	private static $enableMessageCheck = 1;
 
 	function __construct($user_id = false)
 	{
@@ -123,6 +124,11 @@ class CIMMessenger
 		$arFields['SKIP_COMMAND'] = isset($arFields['SKIP_COMMAND']) && $arFields['SKIP_COMMAND'] == 'Y'? 'Y': 'N';
 		$arFields['SKIP_CONNECTOR'] = isset($arFields['SKIP_CONNECTOR']) && $arFields['SKIP_CONNECTOR'] == 'Y'? 'Y': 'N';
 		$arFields['IMPORTANT_CONNECTOR'] = isset($arFields['IMPORTANT_CONNECTOR']) && $arFields['IMPORTANT_CONNECTOR'] == 'Y'? 'Y': 'N';
+		$arFields['SILENT_CONNECTOR'] = isset($arFields['SILENT_CONNECTOR']) && $arFields['SILENT_CONNECTOR'] == 'Y'? 'Y': 'N';
+		if ($arFields['SILENT_CONNECTOR'] == 'Y')
+		{
+			$arFields['PARAMS']['CLASS'] = "bx-messenger-content-item-system";
+		}
 
 		$arFields['URL_ATTACH'] = Array();
 		if ($arFields['MESSAGE_TYPE'] == IM_MESSAGE_SYSTEM)
@@ -183,41 +189,16 @@ class CIMMessenger
 			$result = ExecuteModuleEventEx($arEvent, array(&$arFields));
 			if($result===false || isset($result['result']) && $result['result'] === false)
 			{
-				if (isset($result['reason']))
-				{
-					$CBXSanitizer = new CBXSanitizer;
-					$CBXSanitizer->AddTags(array(
-						'a' => array('href','style', 'target'),
-						'b' => array(), 'u' => array(),
-						'i' => array(), 'br' => array(),
-						'span' => array('style'),
-					));
-					$reason = $CBXSanitizer->SanitizeHtml($result['reason']);
-				}
-				else
-				{
-					if ($arFields['MESSAGE_TYPE'] == IM_MESSAGE_PRIVATE)
-					{
-						$reason = GetMessage("IM_ERROR_MESSAGE_CANCELED");
-					}
-					else if ($arFields['MESSAGE_TYPE'] == IM_MESSAGE_SYSTEM)
-					{
-						$reason = GetMessage("IM_ERROR_NOTIFY_CANCELED");
-					}
-					else
-					{
-						$reason = GetMessage("IM_ERROR_GROUP_CANCELED");
-					}
-				}
-
+				$reason = self::GetReasonForMessageSendError($arFields['MESSAGE_TYPE'], $result['reason']);
 				$GLOBALS["APPLICATION"]->ThrowException($reason, "ERROR_FROM_OTHER_MODULE");
-
 				return false;
 			}
 		}
 		if (!self::CheckFields($arFields))
+		{
 			return false;
-
+		}
+		
 		if ($arFields['MESSAGE_TYPE'] == IM_MESSAGE_PRIVATE)
 		{
 			if (isset($arFields['TO_CHAT_ID']))
@@ -269,6 +250,9 @@ class CIMMessenger
 
 			if ($chatId > 0)
 			{
+				$arFields['CHAT_ID'] = $chatId;
+				$arFields = self::UploadFileFromText($arFields);
+				
 				$arParams = Array();
 				$arParams['CHAT_ID'] = $chatId;
 				$arParams['AUTHOR_ID'] = intval($arFields['AUTHOR_ID']);
@@ -332,7 +316,7 @@ class CIMMessenger
 					'USER_ID' => $arFields['FROM_USER_ID']
 				));
 
-				if (!IM\User::getInstance($arFields['TO_USER_ID'])->isBot())
+				if (!IM\User::getInstance($arFields['TO_USER_ID'])->isBot() && $arFields['FROM_USER_ID'] != $arFields['TO_USER_ID'])
 				{
 					CIMContactList::SetRecent(Array(
 						'ENTITY_ID' => $arFields['FROM_USER_ID'],
@@ -395,7 +379,7 @@ class CIMMessenger
 						);
 
 						$pullMessageTo = $pullMessage;
-						if (CPullOptions::GetPushStatus() && (!isset($arFields['PUSH']) || $arFields['PUSH'] == 'Y'))
+						if (CPullOptions::GetPushStatus() && (!isset($arFields['PUSH']) || $arFields['PUSH'] == 'Y') && $arFields['FROM_USER_ID'] != $arFields['TO_USER_ID'])
 						{
 							if (CIMSettings::GetNotifyAccess($arParams["TO_USER_ID"], 'im', 'message', CIMSettings::CLIENT_PUSH))
 							{
@@ -413,7 +397,10 @@ class CIMMessenger
 							}
 						}
 
-						CPullStack::AddByUser($arParams['TO_USER_ID'], $pullMessageTo);
+						if ($arFields['FROM_USER_ID'] != $arFields['TO_USER_ID'])
+						{
+							CPullStack::AddByUser($arParams['TO_USER_ID'], $pullMessageTo);
+						}
 						CPullStack::AddByUser($arParams['FROM_USER_ID'], $pullMessage);
 
 						CPushManager::DeleteFromQueueBySubTag($arParams['FROM_USER_ID'], 'IM_MESS');
@@ -531,6 +518,21 @@ class CIMMessenger
 
 			if ($chatId > 0)
 			{
+				foreach(GetModuleEvents("im", "OnBeforeChatMessageAdd", true) as $arEvent)
+				{
+					$result = ExecuteModuleEventEx($arEvent, array($arFields, $arRes));
+					if($result===false || isset($result['result']) && $result['result'] === false)
+					{
+						$reason = self::GetReasonForMessageSendError($arFields['MESSAGE_TYPE'], $result['reason']);
+						$GLOBALS["APPLICATION"]->ThrowException($reason, "ERROR_FROM_OTHER_MODULE");
+						return false;
+					}
+				}
+				
+				$chatId = intval($arRes['CHAT_ID']);
+				$arFields['CHAT_ID'] = $chatId;
+				$arFields = self::UploadFileFromText($arFields);
+				
 				$arParams = Array();
 				$arParams['CHAT_ID'] = $chatId;
 				$arParams['AUTHOR_ID'] = $systemMessage? 0: intval($arFields['AUTHOR_ID']);
@@ -702,15 +704,18 @@ class CIMMessenger
 						CPullWatch::AddToStack('IM_PUBLIC_'.$chatId, $pullMessageToWatch);
 					}
 
-					self::SendMention(Array(
-						'CHAT_ID' => $chatId,
-						'CHAT_TITLE' => $chatTitle,
-						'CHAT_RELATION' => $arRel,
-						'CHAT_TYPE' => $arFields['MESSAGE_TYPE'],
-						'MESSAGE' => $arParams['MESSAGE'],
-						'FILES' => $arFields['FILES'],
-						'FROM_USER_ID' => $arParams['FROM_USER_ID'],
-					));
+					if ($arFields['SYSTEM'] != 'Y')
+					{
+						self::SendMention(Array(
+							'CHAT_ID' => $chatId,
+							'CHAT_TITLE' => $chatTitle,
+							'CHAT_RELATION' => $arRel,
+							'CHAT_TYPE' => $arFields['MESSAGE_TYPE'],
+							'MESSAGE' => $arParams['MESSAGE'],
+							'FILES' => $arFields['FILES'],
+							'FROM_USER_ID' => $arParams['FROM_USER_ID'],
+						));
+					}
 					//self::SendBadges($usersForBadges);
 				}
 
@@ -753,7 +758,6 @@ class CIMMessenger
 				return false;
 			}
 
-			$chatId = 0;
 			$strSql = "
 				SELECT ID CHAT_ID
 				FROM b_im_chat
@@ -953,44 +957,92 @@ class CIMMessenger
 		}
 	}
 
-	public static function CheckPossibilityUpdateMessage($id, $userId = null)
+	public static function CheckPossibilityUpdateMessage($type, $id, $userId = null)
 	{
-		global $USER;
-		$userId = is_null($userId)? $USER->GetId(): intval($userId);
-		if ($userId <= 0)
+		$id = intval($id);
+		if ($id <= 0)
 			return false;
+		
+		$enableCheck = self::IsEnabledMessageCheck();
+		if ($enableCheck)
+		{
+			global $USER;
+			$userId = is_null($userId)? $USER->GetId(): intval($userId);
+			if ($userId <= 0)
+				return false;
+		}
 
 		$result = false;
-		if (
-			CModule::IncludeModule('pull') && CPullOptions::GetNginxStatus() &&
-			intval($id) > 0 && $userId > 0
-		)
+		if (CModule::IncludeModule('pull') && CPullOptions::GetNginxStatus())
 		{
 			$message = self::GetById($id);
-			if (
-				$message !== false &&
-				$message['AUTHOR_ID'] == $userId &&
-				$message['DATE_CREATE']+259200 > time() &&
-				$message['MESSAGE_TYPE'] != IM_MESSAGE_SYSTEM &&
-				$message['PARAMS']['IS_DELETED'] == 'N'
-			)
+			$skipUserCheck = false;
+			if ($message !== false)
 			{
-				$result = $message;
+				if ($type == IM_CHECK_DELETE && $message['CHAT_ID'] == CIMChat::GetGeneralChatId() && self::IsAdmin())
+				{
+					$skipUserCheck = true;
+				}
+				else if ($message['PARAMS']['IS_DELETED'] == 'Y' || $message['DATE_CREATE']+259200 < time() || $message['MESSAGE_TYPE'] == IM_MESSAGE_SYSTEM)
+				{
+					return false;
+				}
 			}
+			else
+			{
+				return false;
+			}
+			
+			if ($enableCheck)
+			{
+				if ($message['CHAT_ENTITY_TYPE'] == 'LINES' && CModule::IncludeModule('imopenlines'))
+				{
+					list($connectorType) = explode("|", $message['CHAT_ENTITY_ID']);
+					if ($message['AUTHOR_ID'] == $userId)
+					{
+						if (!in_array($connectorType, \Bitrix\ImOpenlines\Connector::getListCanUpdateOwnMessage()))
+						{
+							return false;
+						}
+					}
+					else
+					{
+						if ($type == IM_CHECK_UPDATE || !in_array($connectorType, \Bitrix\ImOpenlines\Connector::getListCanDeleteMessage()))
+						{
+							return false;
+						}
+					}
+				}
+				else if (!$skipUserCheck && $message['AUTHOR_ID'] != $userId)
+				{
+					return false;	
+				}
+			}
+			
+			$result = $message;
 		}
 
 		return $result;
 	}
 
-	public static function Update($id, $text, $urlPreview = true, $editFlag = true, $userId = null, $robot = false)
+	public static function Update($id, $text, $urlPreview = true, $editFlag = true, $userId = null, $byEvent = false)
 	{
+		$updateFlags = Array(
+			'ID' => $id,
+			'TEXT' => $text,
+			'URL_PREVIEW' => $urlPreview,
+			'EDIT_FLAG' => $editFlag,
+			'USER_ID' => $userId,
+			'BY_EVENT' => $byEvent,
+		);
+		
 		$text = trim(str_replace(Array('[BR]', '[br]'), "\n", $text));
 		if (strlen($text) <= 0)
 		{
-			return self::Delete($id, $userId, $robot);
+			return self::Delete($id, $userId, false, $byEvent);
 		}
 
-		$message = self::CheckPossibilityUpdateMessage($id, $userId);
+		$message = self::CheckPossibilityUpdateMessage(IM_CHECK_UPDATE, $id, $userId);
 		if (!$message)
 			return false;
 
@@ -1064,8 +1116,6 @@ class CIMMessenger
 		foreach ($params as $messageId => $param)
 		{
 			$arMessages[$messageId]['params'] = $param;
-			if (isset($arMessages[$messageId]['params']['URL_ID']))
-				unset($arMessages[$messageId]['params']['URL_ID']);
 		}
 		$arMessages = CIMMessageLink::prepareShow($arMessages, $params);
 
@@ -1090,48 +1140,25 @@ class CIMMessenger
 				'params' => $arPullMessage,
 			));
 		}
-
-		if (!$robot && $message['CHAT_ENTITY_TYPE'] == 'LINES')
-		{
-			list($connectorType, $lineId, $chatId) = explode("|", $message['CHAT_ENTITY_ID']);
-			if ($connectorType == "livechat")
-			{
-				foreach($params[$message['ID']]['CONNECTOR_MID'] as $mid)
-				{
-					self::Update($mid, $text, $urlPreview, $editFlag, $userId, true);
-				}
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else if (!$robot && $message['CHAT_ENTITY_TYPE'] == 'LIVECHAT')
-		{
-			foreach($params[$message['ID']]['CONNECTOR_MID'] as $mid)
-			{
-				self::Update($mid, $text, $urlPreview, $editFlag, $userId, true);
-			}
-		}
-
+		
 		foreach(GetModuleEvents("im", "OnAfterMessagesUpdate", true) as $arEvent)
-			ExecuteModuleEventEx($arEvent, array(intval($id), $arFields));
+			ExecuteModuleEventEx($arEvent, array(intval($id), $arFields, $updateFlags));
 
 		return true;
 	}
 
-	public static function Delete($id, $userId = null, $robot = false)
+	public static function Delete($id, $userId = null, $completeDelete = false, $byEvent = false)
 	{
-		$message = self::CheckPossibilityUpdateMessage($id, $userId);
+		$deleteFlags = Array(
+			'ID' => $id,
+			'USER_ID' => $userId,
+			'COMPLETE_DELETE' => $completeDelete,
+			'BY_EVENT' => $byEvent
+		);
+		
+		$message = self::CheckPossibilityUpdateMessage(IM_CHECK_DELETE, $id, $userId);
 		if (!$message)
 			return false;
-
-		$date = FormatDate("FULL", $message['DATE_CREATE']+CTimeZone::GetOffset());
-
-		IM\Model\MessageTable::update($message['ID'], array(
-			"MESSAGE" => GetMessage('IM_MESSAGE_DELETED'),
-			"MESSAGE_OUT" => GetMessage('IM_MESSAGE_DELETED_OUT', Array('#DATE#' => $date)),
-		));
 
 		$params = CIMMessageParam::Get($message['ID']);
 		if (!empty($params['FILE_ID']))
@@ -1142,7 +1169,15 @@ class CIMMessenger
 			}
 		}
 
-		CIMMessageParam::Set($message['ID'], Array('IS_DELETED' => 'Y', 'URL_ID' => Array(), 'FILE_ID' => Array(), 'KEYBOARD' => 'N', 'ATTACH' => Array()));
+		$date = FormatDate("FULL", $message['DATE_CREATE']+CTimeZone::GetOffset());
+		if (!$completeDelete)
+		{
+			IM\Model\MessageTable::update($message['ID'], array(
+				"MESSAGE" => GetMessage('IM_MESSAGE_DELETED'),
+				"MESSAGE_OUT" => GetMessage('IM_MESSAGE_DELETED_OUT', Array('#DATE#' => $date)),
+			));
+			CIMMessageParam::Set($message['ID'], Array('IS_DELETED' => 'Y', 'URL_ID' => Array(), 'FILE_ID' => Array(), 'KEYBOARD' => 'N', 'ATTACH' => Array()));
+		}
 
 		$arFields = $message;
 		$arFields['MESSAGE'] = GetMessage('IM_MESSAGE_DELETED_OUT', Array('#DATE#' => $date));
@@ -1183,10 +1218,10 @@ class CIMMessenger
 				}
 			}
 		}
-
+		
 		CPullStack::AddByUsers(array_keys($relations), Array(
 			'module_id' => 'im',
-			'command' => 'messageDelete',
+			'command' => ($completeDelete? 'messageDeleteComplete': 'messageDelete'),
 			'params' => $arPullMessage
 		));
 		foreach ($relations as $rel)
@@ -1194,45 +1229,58 @@ class CIMMessenger
 			$obCache = new CPHPCache();
 			$obCache->CleanDir('/bx/imc/recent'.self::GetCachePath($rel['USER_ID']));
 		}
+		
 		if ($message['MESSAGE_TYPE'] == IM_MESSAGE_OPEN)
 		{
 			CPullWatch::AddToStack('IM_PUBLIC_'.$message['CHAT_ID'], Array(
 				'module_id' => 'im',
-				'command' => 'messageUpdate',
+				'command' => ($completeDelete? 'messageDeleteComplete': 'messageDelete'),
 				'params' => $arPullMessage,
 			));
 		}
-
-		if (!$robot && $message['CHAT_ENTITY_TYPE'] == 'LINES')
+		
+		foreach(GetModuleEvents("im", "OnAfterMessagesDelete", true) as $arEvent)
+			ExecuteModuleEventEx($arEvent, array(intval($id), $arFields, $deleteFlags));
+		
+		if ($completeDelete || $message['CHAT_ID'] == CIMChat::GetGeneralChatId() && self::IsAdmin())
 		{
-			list($connectorType, $lineId, $chatId) = explode("|", $message['CHAT_ENTITY_ID']);
-			if ($connectorType == "livechat")
+			\Bitrix\Im\Model\MessageTable::delete($message['ID']);
+			CIMMessageParam::DeleteAll($message['ID']);
+			
+			$result = \Bitrix\Im\Model\RecentTable::getList(Array('filter' => Array('=ITEM_MID' => $message['ID'])))->fetchAll();
+			if (!empty($result))
 			{
-				foreach($params['CONNECTOR_MID'] as $mid)
+				$message = \Bitrix\Im\Model\MessageTable::getList(Array(
+					'filter' => Array('=CHAT_ID' => $message['CHAT_ID']),
+					'limit' => 1,
+					'order' => Array('ID' => 'DESC')
+				))->fetch();
+				if ($message)
 				{
-					self::Delete($mid, $userId, true);
+					foreach ($result as $recent)
+					{
+						\Bitrix\Im\Model\RecentTable::update(Array(
+							'USER_ID' => $recent['USER_ID'], 
+							'ITEM_TYPE' => $recent['ITEM_TYPE'], 
+							'ITEM_ID' => $recent['ITEM_ID'], 
+						), Array('ITEM_MID' => $message['ID']));
+						
+						$obCache = new CPHPCache();
+						$obCache->CleanDir('/bx/imc/recent'.CIMMessenger::GetCachePath($recent['USER_ID']));
+				
+						if ($recent['ITEM_TYPE'] == 'P')
+							CIMMessenger::SpeedFileDelete($recent['USER_ID'], IM_SPEED_GROUP);
+						else
+							CIMMessenger::SpeedFileDelete($recent['USER_ID'], IM_SPEED_MESSAGE);
+					}
 				}
 			}
-			else
-			{
-				return false;
-			}
 		}
-		else if (!$robot && $message['CHAT_ENTITY_TYPE'] == 'LIVECHAT')
-		{
-			foreach($params['CONNECTOR_MID'] as $mid)
-			{
-				self::Delete($mid, $userId, true);
-			}
-		}
-
-		foreach(GetModuleEvents("im", "OnAfterMessagesDelete", true) as $arEvent)
-			ExecuteModuleEventEx($arEvent, array(intval($id), $arFields));
 
 		return true;
 	}
 
-	public static function Like($id, $action = 'auto', $userId = null, $robot = false)
+	public static function Like($id, $action = 'auto', $userId = null, $byEvent = false)
 	{
 		if (!CModule::IncludeModule('pull'))
 			return false;
@@ -1262,7 +1310,7 @@ class CIMMessenger
 				return false;
 		}
 
-		if (!$robot && $chat['ENTITY_TYPE'] == 'LINES')
+		if (!$byEvent && $chat['ENTITY_TYPE'] == 'LINES')
 		{
 			list($connectorType, $lineId, $chatId) = explode("|", $chat['ENTITY_ID']);
 			if ($connectorType == "livechat")
@@ -1272,12 +1320,8 @@ class CIMMessenger
 					self::Like($mid, $action, $userId, true);
 				}
 			}
-			else
-			{
-				return false;
-			}
 		}
-		else if (!$robot && $chat['ENTITY_TYPE'] == 'LIVECHAT')
+		else if (!$byEvent && $chat['ENTITY_TYPE'] == 'LIVECHAT')
 		{
 			foreach($message['PARAMS']['CONNECTOR_MID'] as $mid)
 			{
@@ -1391,8 +1435,69 @@ class CIMMessenger
 				'params' => $arPullMessage
 			));
 		}
+		
+		if ($chat['TYPE'] == IM_MESSAGE_PRIVATE)
+		{
+			$dialogId = $userId;
+			foreach ($relations as $rel)
+			{
+				if ($rel['USER_ID'] != $userId)
+				{
+					$dialogId = $rel['USER_ID'];
+				}
+			}
+		}
+		else
+		{
+			$dialogId = 'chat'.$chat['ID'];
+		}
+		
+		foreach(GetModuleEvents("im", "OnAfterMessagesLike", true) as $arEvent)
+		{
+			ExecuteModuleEventEx($arEvent, array(array(
+				'DIALOG_ID' => $dialogId,
+				'CHAT' => $chat,
+				'MESSAGE' => $message,
+				'ACTION' => $action,
+				'USER_ID' => $userId,
+				'BY_EVENT' => $byEvent
+			)));
+		}
 
 		return $like;
+	}
+	
+	public static function UrlAttachDelete($id, $attachId = false, $userId = null)
+	{
+		if (!CModule::IncludeModule('pull'))
+			return false;
+
+		global $USER;
+		$userId = is_null($userId)? $USER->GetId(): intval($userId);
+		if ($userId <= 0)
+			return false;
+		
+		$relations = CIMMessenger::GetRelationById($id);
+		if (!isset($relations[$userId]))
+			return false;
+		
+		$newUrlId = Array();
+		if ($attachId)
+		{
+			$urlId = CIMMessageParam::Get($id, 'URL_ID');
+			foreach ($urlId as $value)
+			{
+				if ($value != $attachId)
+				{
+					$newUrlId[] = $value;
+				}
+			}
+		}
+
+		CIMMessageParam::Set($id, Array('URL_ID' => $newUrlId));
+		CIMMessageParam::SendPull($id);
+
+		return true;
 	}
 
 	private static function CheckFields($arFields)
@@ -1427,7 +1532,7 @@ class CIMMessenger
 
 			if ($arFields["MESSAGE_TYPE"] == IM_MESSAGE_SYSTEM)
 			{
-				if(!$arFields['MESSAGE'] || strlen(trim($arFields["MESSAGE"])) <= 0)
+				if(!isset($arFields['ATTACH']) && (!$arFields['MESSAGE'] || strlen(trim($arFields["MESSAGE"])) <= 0))
 					$aMsg[] = array("id"=>"MESSAGE", "text"=> GetMessage("IM_ERROR_MESSAGE_TEXT"));
 
 				if(is_set($arFields, "NOTIFY_MODULE") && strlen(trim($arFields["NOTIFY_MODULE"])) <= 0)
@@ -1636,6 +1741,16 @@ class CIMMessenger
 			\Bitrix\Voximplant\Security\Permissions::PERMISSION_ANY
 		);
 	}
+	
+	public static function IsMakeCallsViaRestApp($userId)
+	{
+		if(!\Bitrix\Main\Loader::includeModule('voximplant'))
+			return false;
+
+		$restAppId = \Bitrix\Voximplant\Rest\Helper::getExternalCallHandler($userId);
+
+		return ($restAppId !== false);
+	}
 
 	public static function CheckDesktopStatusOnline($userId = null)
 	{
@@ -1677,6 +1792,7 @@ class CIMMessenger
 		{
 			CPullStack::AddByUser($userId, Array(
 				'module_id' => 'im',
+				'expiry' => 3600,
 				'command' => 'desktopOnline',
 				'params' => Array(),
 			));
@@ -1702,6 +1818,7 @@ class CIMMessenger
 		{
 			CPullStack::AddByUser($userId, Array(
 				'module_id' => 'im',
+				'expiry' => 3600,
 				'command' => 'desktopOffline',
 				'params' => Array(),
 			));
@@ -1816,6 +1933,38 @@ class CIMMessenger
 
 		return intval($count);
 	}
+	
+	private static function GetReasonForMessageSendError($type = IM_MESSAGE_PRIVATE, $reason = '')
+	{
+		if (!empty($reason))
+		{
+			$CBXSanitizer = new CBXSanitizer;
+			$CBXSanitizer->AddTags(array(
+				'a' => array('href','style', 'target'),
+				'b' => array(), 'u' => array(),
+				'i' => array(), 'br' => array(),
+				'span' => array('style'),
+			));
+			$reason = $CBXSanitizer->SanitizeHtml($reason);
+		}
+		else
+		{
+			if ($type == IM_MESSAGE_PRIVATE)
+			{
+				$reason = GetMessage("IM_ERROR_MESSAGE_CANCELED");
+			}
+			else if ($type == IM_MESSAGE_SYSTEM)
+			{
+				$reason = GetMessage("IM_ERROR_NOTIFY_CANCELED");
+			}
+			else
+			{
+				$reason = GetMessage("IM_ERROR_GROUP_CANCELED");
+			}
+		}
+		
+		return $reason;
+	}
 
 	public static function SpeedFileCreate($userID, $value, $type = IM_SPEED_MESSAGE)
 	{
@@ -1825,9 +1974,9 @@ class CIMMessenger
 		if ($userID <= 0 || !in_array($type, Array(IM_SPEED_NOTIFY, IM_SPEED_MESSAGE, IM_SPEED_GROUP)))
 			return false;
 
-		$CACHE_MANAGER->Clean("im_csf_".$type.'_'.$userID);
-		$CACHE_MANAGER->Read(86400*30, "im_csf_".$type.'_'.$userID);
-		$CACHE_MANAGER->Set("im_csf_".$type.'_'.$userID, $value);
+		$CACHE_MANAGER->Clean("im_csf_v2_".$type.'_'.$userID);
+		$CACHE_MANAGER->Read(86400*30, "im_csf_v2_".$type.'_'.$userID);
+		$CACHE_MANAGER->Set("im_csf_v2_".$type.'_'.$userID, $value);
 	}
 
 	public static function SpeedFileDelete($userID, $type = IM_SPEED_MESSAGE)
@@ -1838,7 +1987,7 @@ class CIMMessenger
 		if ($userID <= 0 || !in_array($type, Array(IM_SPEED_NOTIFY, IM_SPEED_MESSAGE, IM_SPEED_GROUP)))
 			return false;
 
-		$CACHE_MANAGER->Clean("im_csf_".$type.'_'.$userID);
+		$CACHE_MANAGER->Clean("im_csf_v2_".$type.'_'.$userID);
 	}
 
 	public static function SpeedFileExists($userID, $type = IM_SPEED_MESSAGE)
@@ -1849,9 +1998,9 @@ class CIMMessenger
 		if ($userID <= 0 || !in_array($type, Array(IM_SPEED_NOTIFY, IM_SPEED_MESSAGE, IM_SPEED_GROUP)))
 			return false;
 
-		$result = $CACHE_MANAGER->Read(86400*30, "im_csf_".$type.'_'.$userID);
+		$result = $CACHE_MANAGER->Read(86400*30, "im_csf_v2_".$type.'_'.$userID);
 		if ($result)
-			$result = $CACHE_MANAGER->Get("im_csf_".$type.'_'.$userID) === false? false: true;
+			$result = $CACHE_MANAGER->Get("im_csf_v2_".$type.'_'.$userID) === false? false: true;
 
 		return $result;
 	}
@@ -1864,8 +2013,8 @@ class CIMMessenger
 		if ($userID <= 0 || !in_array($type, Array(IM_SPEED_NOTIFY, IM_SPEED_MESSAGE, IM_SPEED_GROUP)))
 			return false;
 
-		$CACHE_MANAGER->Read(86400*30, "im_csf_".$type.'_'.$userID);
-		return $CACHE_MANAGER->Get("im_csf_".$type.'_'.$userID);
+		$CACHE_MANAGER->Read(86400*30, "im_csf_v2_".$type.'_'.$userID);
+		return $CACHE_MANAGER->Get("im_csf_v2_".$type.'_'.$userID);
 	}
 
 	public static function GetTemplateJS($arParams, $arTemplate)
@@ -1897,7 +2046,10 @@ class CIMMessenger
 		$phoneSipAvailable = false;
 		$phoneDeviceActive = false;
 		$phoneCanCallUserNumber = false;
+		$makeCallViaRestApp = false;
 		$phoneEnabled = false;
+		$chatExtendShowHistory = \COption::GetOptionInt('im', 'chat_extend_show_history');
+		$callServerEnabled = \COption::GetOptionString('im', 'call_server');
 
 		if ($arTemplate['INIT'] == 'Y')
 		{
@@ -1907,10 +2059,12 @@ class CIMMessenger
 				$phoneSipAvailable = CVoxImplantConfig::GetModeStatus(CVoxImplantConfig::MODE_SIP);
 				$phoneDeviceActive = CVoxImplantUser::GetPhoneActive($USER->GetId());
 				$phoneCanCallUserNumber = self::CanUserCallUserNumber();
+				$makeCallViaRestApp = self::IsMakeCallsViaRestApp($USER->GetId());
 			}
 		}
 
 		$crmPath = Array();
+		$olConfig = Array();
 		$businessUsers = false;
 		if (CModule::IncludeModule('imopenlines'))
 		{
@@ -1936,12 +2090,17 @@ class CIMMessenger
 					array('deal_id' => '#ID#')
 				);
 			}
-			$businessUsers = \Bitrix\ImOpenLines\Common::getLicenseUsersLimit();
+			$businessUsers = \Bitrix\Imopenlines\Limit::getLicenseUsersLimit();
+			
+			$olConfig['canDeleteMessage'] = \Bitrix\Imopenlines\Connector::getListCanDeleteMessage();
+			$olConfig['canUpdateOwnMessage'] = \Bitrix\Imopenlines\Connector::getListCanUpdateOwnMessage();
+			$olConfig['queue'] = \Bitrix\ImOpenLines\Config::getQueueList($USER->GetID());
 		}
 
 		$pathToIm = isset($arTemplate['PATH_TO_IM']) ? $arTemplate['PATH_TO_IM'] : '';
 		$pathToCall = isset($arTemplate['PATH_TO_CALL']) ? $arTemplate['PATH_TO_CALL'] : '';
 		$pathToFile = isset($arTemplate['PATH_TO_FILE']) ? $arTemplate['PATH_TO_FILE'] : '';
+		$pathToLf = isset($arTemplate['PATH_TO_LF']) ? $arTemplate['PATH_TO_LF'] : '/';
 
 		$userColor = isset($arTemplate['CONTACT_LIST']['users'][$USER->GetID()]['color']) ? $arTemplate['CONTACT_LIST']['users'][$USER->GetID()]['color']: '';
 
@@ -1953,6 +2112,7 @@ class CIMMessenger
 					'context': '".$arTemplate["CONTEXT"]."',
 					'design': '".$arTemplate["DESIGN"]."',
 					'colors': ".(IM\Color::isEnabled()? CUtil::PhpToJSObject(IM\Color::getSafeColorNames()): 'false').",
+					'colorsHex': ".CUtil::PhpToJSObject(IM\Color::getSafeColors()).",
 					'mailCount': ".$arTemplate["MAIL_COUNTER"].",
 					'notifyCount': ".$arTemplate["NOTIFY_COUNTER"].",
 					'messageCount': ".$arTemplate["MESSAGE_COUNTER"].",
@@ -1962,10 +2122,10 @@ class CIMMessenger
 					'updateStateInterval': '".$updateStateInterval."',
 					'openChatEnable': ".(CIMMessenger::CheckEnableOpenChat()? 'true': 'false').",
 					'xmppStatus': ".(CIMMessenger::CheckXmppStatusOnline()? 'true': 'false').",
+					'isAdmin': ".(self::IsAdmin()? 'true': 'false').",
 					'bitrixNetwork': ".(CIMMessenger::CheckNetwork()? 'true': 'false').",
 					'bitrixNetwork2': ".(CIMMessenger::CheckNetwork2()? 'true': 'false').",
 					'bitrix24': ".(IsModuleInstalled('bitrix24')? 'true': 'false').",
-					'bitrix24Admin': ".(CModule::IncludeModule('bitrix24') && CBitrix24::IsPortalAdmin($USER->GetId())? 'true': 'false').",
 					'bitrix24net': ".(IsModuleInstalled('b24network')? 'true': 'false').",
 					'bitrixIntranet': ".(IsModuleInstalled('intranet')? 'true': 'false').",
 					'bitrixXmpp': ".(IsModuleInstalled('xmpp')? 'true': 'false').",
@@ -1976,6 +2136,7 @@ class CIMMessenger
 					'desktopVersion': ".CIMMessenger::GetDesktopVersion().",
 					'desktopLinkOpen': ".$arTemplate["DESKTOP_LINK_OPEN"].",
 					'language': '".LANGUAGE_ID."',
+					'tooltipShowed': ".CUtil::PhpToJSObject(CUserOptions::GetOption('im', 'tooltipShowed', array())).",
 
 					'bot': ".(empty($arTemplate['BOT'])? '{}': CUtil::PhpToJSObject($arTemplate["BOT"])).",
 					'command': ".(empty($arTemplate['COMMAND'])? '[]': CUtil::PhpToJSObject($arTemplate["COMMAND"])).",
@@ -2021,9 +2182,11 @@ class CIMMessenger
 					'userColor': '".IM\Color::getCode($userColor)."',
 					'userGender': '".IM\User::getInstance()->getGender()."',
 					'userExtranet': ".(IM\User::getInstance()->isExtranet()? 'true': 'false').",
-					'webrtc': {'turnServer' : '".CUtil::JSEscape($arTemplate['TURN_SERVER'])."', 'turnServerFirefox' : '".CUtil::JSEscape($arTemplate['TURN_SERVER_FIREFOX'])."', 'turnServerLogin' : '".CUtil::JSEscape($arTemplate['TURN_SERVER_LOGIN'])."', 'turnServerPassword' : '".CUtil::JSEscape($arTemplate['TURN_SERVER_PASSWORD'])."', 'mobileSupport': false, 'phoneEnabled': ".($phoneEnabled? 'true': 'false').", 'phoneSipAvailable': ".($phoneSipAvailable? 'true': 'false').", 'phoneDeviceActive': '".($phoneDeviceActive? 'Y': 'N')."', 'phoneCanCallUserNumber': '".($phoneCanCallUserNumber? 'Y': 'N')."'},
+					'webrtc': {'turnServer' : '".CUtil::JSEscape($arTemplate['TURN_SERVER'])."', 'turnServerFirefox' : '".CUtil::JSEscape($arTemplate['TURN_SERVER_FIREFOX'])."', 'turnServerLogin' : '".CUtil::JSEscape($arTemplate['TURN_SERVER_LOGIN'])."', 'turnServerPassword' : '".CUtil::JSEscape($arTemplate['TURN_SERVER_PASSWORD'])."', 'mobileSupport': false, 'phoneEnabled': ".($phoneEnabled? 'true': 'false').", 'phoneSipAvailable': ".($phoneSipAvailable? 'true': 'false').", 'phoneDeviceActive': '".($phoneDeviceActive? 'Y': 'N')."', 'phoneCanCallUserNumber': '".($phoneCanCallUserNumber? 'Y': 'N')."', 'callServerEnabled': '".($callServerEnabled)."', 'phoneInitiateCallViaRestApp': '".($makeCallViaRestApp ? 'Y' : 'N')."'},
+					'openlines': ".CUtil::PhpToJSObject($olConfig).",
+					'options': {'chatExtendShowHistory' : ".($chatExtendShowHistory? 'true': 'false')."},
 					'disk': {'enable' : ".($diskStatus? 'true': 'false')."},
-					'path' : {'profile' : '".CUtil::JSEscape($arTemplate['PATH_TO_USER_PROFILE'])."', 'profileTemplate' : '".CUtil::JSEscape($arTemplate['PATH_TO_USER_PROFILE_TEMPLATE'])."', 'mail' : '".CUtil::JSEscape($arTemplate['PATH_TO_USER_MAIL'])."', 'im': '".CUtil::JSEscape($pathToIm)."', 'call': '".CUtil::JSEscape($pathToCall)."', 'file': '".CUtil::JSEscape($pathToFile)."', 'crm' : ".CUtil::PhpToJSObject($crmPath)."}
+					'path' : {'lf' : '".CUtil::JSEscape($pathToLf)."', 'profile' : '".CUtil::JSEscape($arTemplate['PATH_TO_USER_PROFILE'])."', 'profileTemplate' : '".CUtil::JSEscape($arTemplate['PATH_TO_USER_PROFILE_TEMPLATE'])."', 'mail' : '".CUtil::JSEscape($arTemplate['PATH_TO_USER_MAIL'])."', 'im': '".CUtil::JSEscape($pathToIm)."', 'call': '".CUtil::JSEscape($pathToCall)."', 'file': '".CUtil::JSEscape($pathToFile)."', 'crm' : ".CUtil::PhpToJSObject($crmPath)."}
 				});
 			});
 		";
@@ -2057,6 +2220,8 @@ class CIMMessenger
 		$phoneSipAvailable = false;
 		$phoneDeviceActive = false;
 
+		$chatExtendShowHistory = \COption::GetOptionInt('im', 'chat_extend_show_history');
+		
 		$phoneEnabled = self::CheckPhoneStatus() && CModule::IncludeModule('mobileapp') && \Bitrix\MobileApp\Mobile::getInstance()->isWebRtcSupported();
 		if ($phoneEnabled && CModule::IncludeModule('voximplant'))
 		{
@@ -2064,6 +2229,7 @@ class CIMMessenger
 			$phoneDeviceActive = CVoxImplantUser::GetPhoneActive($USER->GetId());
 		}
 
+		$olConfig = Array();
 		$crmPath = Array();
 		$businessUsers = false;
 		if (CModule::IncludeModule('imopenlines'))
@@ -2090,7 +2256,11 @@ class CIMMessenger
 					array('deal_id' => '#ID#')
 				);
 			}
-			$businessUsers = \Bitrix\ImOpenLines\Common::getLicenseUsersLimit();
+			$businessUsers = \Bitrix\Imopenlines\Limit::getLicenseUsersLimit();
+			
+			$olConfig['canDeleteMessage'] = \Bitrix\Imopenlines\Connector::getListCanDeleteMessage();
+			$olConfig['canUpdateOwnMessage'] = \Bitrix\Imopenlines\Connector::getListCanUpdateOwnMessage();
+			$olConfig['queue'] = \Bitrix\ImOpenLines\Config::getQueueList($USER->GetID());
 		}
 
 		$mobileAction = isset($arTemplate["ACTION"])? $arTemplate["ACTION"]: 'none';
@@ -2114,10 +2284,10 @@ class CIMMessenger
 					'updateStateInterval': '".$updateStateInterval."',
 					'openChatEnable': ".(CIMMessenger::CheckEnableOpenChat()? 'true': 'false').",
 					'xmppStatus': ".(CIMMessenger::CheckXmppStatusOnline()? 'true': 'false').",
+					'isAdmin': ".(self::IsAdmin()? 'true': 'false').",
 					'bitrixNetwork': ".(CIMMessenger::CheckNetwork()? 'true': 'false').",
 					'bitrixNetwork2': ".(CIMMessenger::CheckNetwork2()? 'true': 'false').",
 					'bitrix24': ".(IsModuleInstalled('bitrix24')? 'true': 'false').",
-					'bitrix24Admin': ".(CModule::IncludeModule('bitrix24') && CBitrix24::IsPortalAdmin($USER->GetId())? 'true': 'false').",
 					'bitrix24net': ".(IsModuleInstalled('b24network')? 'true': 'false').",
 					'bitrixIntranet': ".(IsModuleInstalled('intranet')? 'true': 'false').",
 					'bitrixXmpp': ".(IsModuleInstalled('xmpp')? 'true': 'false').",
@@ -2169,8 +2339,10 @@ class CIMMessenger
 					'userGender': '".IM\User::getInstance()->getGender()."',
 					'userExtranet': ".(IM\User::getInstance()->isExtranet()? 'true': 'false').",
 					'webrtc': {'turnServer' : '".(empty($arTemplate['TURN_SERVER'])? '': CUtil::JSEscape($arTemplate['TURN_SERVER']))."', 'turnServerLogin' : '".(empty($arTemplate['TURN_SERVER_LOGIN'])? '': CUtil::JSEscape($arTemplate['TURN_SERVER_LOGIN']))."', 'turnServerPassword' : '".(empty($arTemplate['TURN_SERVER_PASSWORD'])? '': CUtil::JSEscape($arTemplate['TURN_SERVER_PASSWORD']))."', 'mobileSupport': ".($arTemplate['WEBRTC_MOBILE_SUPPORT']? 'true': 'false').", 'phoneEnabled': ".($phoneEnabled? 'true': 'false').", 'phoneSipAvailable': ".($phoneSipAvailable? 'true': 'false')."},
+					'openlines': ".CUtil::PhpToJSObject($olConfig).",
+					'options': {'chatExtendShowHistory' : ".($chatExtendShowHistory? 'true': 'false')."},
 					'disk': {'enable' : ".($diskStatus? 'true': 'false')."},
-					'path' : {'profile' : '".(empty($arTemplate['PATH_TO_USER_PROFILE'])? '': CUtil::JSEscape($arTemplate['PATH_TO_USER_PROFILE']))."', 'profileTemplate' : '".(empty($arTemplate['PATH_TO_USER_PROFILE_TEMPLATE'])? '': CUtil::JSEscape($arTemplate['PATH_TO_USER_PROFILE_TEMPLATE']))."', 'mail' : '".(empty($arTemplate['PATH_TO_USER_MAIL'])? '': CUtil::JSEscape($arTemplate['PATH_TO_USER_MAIL']))."', 'crm' : ".CUtil::PhpToJSObject($crmPath)."}
+					'path' : {'lf' : '".(empty($arTemplate['PATH_TO_LF'])? '/': CUtil::JSEscape($arTemplate['PATH_TO_LF']))."', 'profile' : '".(empty($arTemplate['PATH_TO_USER_PROFILE'])? '': CUtil::JSEscape($arTemplate['PATH_TO_USER_PROFILE']))."', 'profileTemplate' : '".(empty($arTemplate['PATH_TO_USER_PROFILE_TEMPLATE'])? '': CUtil::JSEscape($arTemplate['PATH_TO_USER_PROFILE_TEMPLATE']))."', 'mail' : '".(empty($arTemplate['PATH_TO_USER_MAIL'])? '': CUtil::JSEscape($arTemplate['PATH_TO_USER_MAIL']))."', 'crm' : ".CUtil::PhpToJSObject($crmPath)."}
 				});
 			});
 		";
@@ -2178,7 +2350,7 @@ class CIMMessenger
 		return $sJS;
 	}
 
-	public static function StartWriting($dialogId, $userId = false)
+	public static function StartWriting($dialogId, $userId = false, $userName = "", $byEvent = false, $linesSilentMode = false)
 	{
 		$userId = intval($userId);
 		if ($userId <= 0)
@@ -2189,22 +2361,18 @@ class CIMMessenger
 
 		if (substr($dialogId, 0, 4) == 'chat')
 		{
-			$arRelation = CIMChat::GetRelationById(substr($dialogId, 4));
-			if (!isset($arRelation[$userId]))
-			{
-				return false;
-			}
 		}
-		
-		foreach(\Bitrix\Main\EventManager::getInstance()->findEventHandlers("im", "OnStartWriting") as $event)
+		else if ($dialogId == $userId)
 		{
-			$result = ExecuteModuleEventEx($event, array($userId, $dialogId));
+			return false;
 		}
 
 		if ($userId > 0 && strlen($dialogId) > 0 && CModule::IncludeModule("pull"))
 		{
 			CPushManager::DeleteFromQueueBySubTag($userId, 'IM_MESS');
 
+			$chat = Array();
+			$relation = Array();
 			if (intval($dialogId) > 0)
 			{
 				CPullStack::AddByUser($dialogId, Array(
@@ -2213,12 +2381,24 @@ class CIMMessenger
 					'expiry' => 60,
 					'params' => Array(
 						'senderId' => $userId,
-						'dialogId' => $dialogId
+						'dialogId' => $dialogId,
+						'userName' => $userName
 					),
 				));
 			}
 			elseif (substr($dialogId, 0, 4) == 'chat')
 			{
+				$orm = \Bitrix\Im\Model\ChatTable::getById(substr($dialogId, 4));
+				$chat = $orm->fetch();
+				
+				$arRelation = CIMChat::GetRelationById(substr($dialogId, 4));
+				$relation = $arRelation;
+				
+				if ($chat['ENTITY_TYPE'] != 'LIVECHAT' && !isset($arRelation[$userId]))
+				{
+					return false;
+				}
+				
 				unset($arRelation[$userId]);
 
 				$pullMessage = Array(
@@ -2227,13 +2407,14 @@ class CIMMessenger
 					'expiry' => 60,
 					'params' => Array(
 						'senderId' => $userId,
-						'dialogId' => $dialogId
+						'dialogId' => $dialogId,
+						'userName' => $userName
 					),
 				);
 
-				$orm = \Bitrix\Im\Model\ChatTable::getById(substr($dialogId, 4));
-				$chat = $orm->fetch();
-
+				$chatId = $chat['ID'];
+				$entityType = $chat['ENTITY_TYPE'];
+				$entityId = $chat['ENTITY_ID'];
 				if ($chat['ENTITY_TYPE'] == 'LINES')
 				{
 					foreach ($arRelation as $rel)
@@ -2248,9 +2429,22 @@ class CIMMessenger
 
 				if ($chat['TYPE'] == IM_MESSAGE_OPEN)
 				{
-					CPullWatch::AddToStack('IM_PUBLIC_'.$chat['ID'], $pullMessage);
+					CPullWatch::AddToStack('IM_PUBLIC_'.$chatId, $pullMessage);
 				}
 			}
+			foreach(GetModuleEvents("im", "OnStartWriting", true) as $arEvent)
+			{
+				ExecuteModuleEventEx($arEvent, array(array(
+					'DIALOG_ID' => $dialogId,
+					'CHAT' => $chat,
+					'RELATION' => $relation,
+					'USER_ID' => $userId,
+					'USER_NAME' => $userName,
+					'BY_EVENT' => $byEvent,
+					'LINES_SILENT_MODE' => $linesSilentMode
+				)));
+			}
+			
 			return true;
 		}
 		return false;
@@ -2261,6 +2455,30 @@ class CIMMessenger
 		return CSmileGallery::getSmilesWithSets();
 	}
 
+	private static function UploadFileFromText($params)
+	{
+		$params['CHAT_ID'] = intval($params['CHAT_ID']);
+		if (empty($params['MESSAGE']) || $params['CHAT_ID'] <= 0)
+		{
+			return $params;
+		}
+		
+		if (preg_match_all("/\[DISK=([0-9]+)\]/i", $params['MESSAGE'], $matches))
+		{
+			foreach ($matches[1] as $fileId)
+			{
+				$newFile = CIMDisk::SaveFromLocalDisk($params['CHAT_ID'], $fileId);
+				if ($newFile)
+				{
+					$params['PARAMS']['FILE_ID'][] = $newFile->getId();
+				}
+			}
+			$params['MESSAGE'] = preg_replace("/\[DISK\=([0-9]+)\]/i", "", $params['MESSAGE']);
+		}
+		
+		return $params;
+	}
+	
 	public static function SendMention($params)
 	{
 		$params['CHAT_ID'] = intval($params['CHAT_ID']);
@@ -2340,6 +2558,9 @@ class CIMMessenger
 		{
 			foreach ($forUsers as $userId)
 			{
+				if ($params['FROM_USER_ID'] == $userId)
+					continue;
+				
 				$arMessageFields = array(
 					"TO_USER_ID" => $userId,
 					"FROM_USER_ID" => $params['FROM_USER_ID'],
@@ -2474,6 +2695,8 @@ class CIMMessenger
 
 	public static function PreparePushForPrivate($params)
 	{
+
+		$advancedParams = array();
 		if ($params['SYSTEM'] == 'Y')
 		{
 			$pushText = $params['MESSAGE'];
@@ -2485,6 +2708,29 @@ class CIMMessenger
 				return false;
 
 			$pushText = $userName.': '.$params['MESSAGE'];
+
+			$advancedParams = array(
+				"avatarUrl"=>\Bitrix\Im\User::getInstance($params['FROM_USER_ID'])->getAvatar(),
+				"senderName" => $userName
+			);
+
+			if($params['MESSAGE'])
+			{
+				$advancedParams["senderMessage"] = $params['MESSAGE'];
+			}
+			else
+			{
+				$senderMessage = self::PrepareMessageForPush(Array(
+					'MESSAGE' => "",
+					'FILES' => $params['FILES'],
+					'ATTACH' => empty($params['MESSAGE']) && $params['ATTACH'],
+				));
+
+				if($senderMessage)
+				{
+					$advancedParams["senderMessage"] = $senderMessage;
+				}
+			}
 		}
 
 		$pushText = self::PrepareMessageForPush(Array(
@@ -2509,6 +2755,7 @@ class CIMMessenger
 		$result['push']['sub_tag'] = 'IM_MESS';
 		$result['push']['app_id'] = 'Bitrix24';
 		$result['push']['message'] = $pushText;
+		$result['push']['advanced_params'] = $advancedParams;
 
 		return $result;
 	}
@@ -2542,6 +2789,7 @@ class CIMMessenger
 		$params['MESSAGE'] = preg_replace("/\[CALL(?:=(.+?))?\](.+?)?\[\/CALL\]/i", "$2", $params['MESSAGE']);
 		$params['MESSAGE'] = preg_replace("/\[PCH=([0-9]{1,})\](.*?)\[\/PCH\]/i", "$2", $params['MESSAGE']);
 		$params['MESSAGE'] = preg_replace("/\[ATTACH=([0-9]{1,})\]/i", " [".GetMessage('IM_MESSAGE_ATTACH')."] ", $params['MESSAGE']);
+		$params['MESSAGE'] = preg_replace_callback("/\[ICON\=([^\]]*)\]/i", Array("CIMmessenger", "PrepareMessageForPushIconCallBack"), $params['MESSAGE']);
 		$params['MESSAGE'] = preg_replace('#\-{54}.+?\-{54}#s', " [".GetMessage('IM_QUOTE')."] ", str_replace(array("#BR#"), Array(" "), $params['MESSAGE']));
 
 		if (!$pushFiles && $params['ATTACH'])
@@ -2550,6 +2798,34 @@ class CIMMessenger
 		}
 
 		return $params['MESSAGE'];
+	}
+	
+	private static function PrepareMessageForPushIconCallBack($params)
+	{
+		$text = $params[1];
+		
+		$title = GetMessage('IM_MESSAGE_ICON');
+		
+		preg_match('/title\=(.*[^\s\]])/i', $text, $match);
+		if ($match)
+		{
+			$title = $match[1];
+			if (strpos($title, 'width=') !== false)
+			{
+				$title = substr($title, 0, strpos($title, 'width='));
+			}
+			if (strpos($title, 'height=') !== false)
+			{
+				$title = substr($title, 0, strpos($title, 'height='));
+			}
+			if (strpos($title, 'size=') !== false)
+			{
+				$title = substr($title, 0, strpos($title, 'size='));
+			}
+			$title = trim($title);
+		}
+		
+		return '('.$title.')';
 	}
 
 	public static function GetBadge($userId)
@@ -2682,5 +2958,33 @@ class CIMMessenger
 		}
 
 		return $result;
+	}
+	
+	public static function EnableMessageCheck()
+	{
+		self::$enableMessageCheck++;
+		return true;
+	}
+	public static function DisableMessageCheck()
+	{
+		self::$enableMessageCheck--;
+		return true;
+	}
+	
+	public static function IsEnabledMessageCheck()
+	{
+		return self::$enableMessageCheck > 0;
+	}
+	
+	public static function IsMysqlDb()
+	{
+		global $DB;
+		return strtolower($DB->type) == 'mysql';
+	}
+	
+	public static function IsAdmin()
+	{
+		global $USER;
+		return $USER->IsAdmin() || CModule::IncludeModule('bitrix24') && CBitrix24::IsPortalAdmin($USER->GetId());
 	}
 }

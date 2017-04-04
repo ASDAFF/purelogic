@@ -63,7 +63,11 @@ final class Configuration
 		$path = static::getPath(self::CONFIGURATION_FILE_PATH);
 		if (file_exists($path))
 		{
-			$this->data = include($path);
+			$dataTmp = include($path);
+			if(is_array($dataTmp))
+			{
+				$this->data = $dataTmp;
+			}
 		}
 
 		$pathExtra = static::getPath(self::CONFIGURATION_FILE_PATH_EXTRA);

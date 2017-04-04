@@ -13,4 +13,7 @@ $MESS["COMMAND_DEF_CATEGORY_CHAT"] = "Chats";
 $MESS["COMMAND_DEF_CATEGORY_DEBUG"] = "Debug";
 $MESS["COMMAND_BOT_ANSWER"] = "#BOT_NAME# Chat Bot";
 $MESS["COMMAND_SYSTEM_ANSWER"] = "Reply to command #COMMAND#";
+$MESS["COMMAND_DEF_STTS_TITLE"] = "Enable \"online\" status tracking";
+$MESS["COMMAND_DEF_SPTS_TITLE"] = "Disable \"online\" status tracking";
+$MESS["COMMAND_DEF_CATEGORY_DIALOG"] = "Conversation";
 ?>

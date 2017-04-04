@@ -185,7 +185,7 @@ class CAllSocNetSubscription
 			"NOTIFY_TYPE" => IM_NOTIFY_FROM,
 			"NOTIFY_MODULE" => "socialnetwork",
 			"NOTIFY_EVENT" => "sonet_group_event",
-			"NOTIFY_TAG" => "SONET|EVENT|".(intval($arFields["LOG_ID"]) > 0 ? $arFields["LOG_ID"] : rand())
+			"NOTIFY_TAG" => (intval($arFields["LOG_ID"]) > 0 ? "SONET|EVENT|".intval($arFields["LOG_ID"]) : '')
 		);
 
 		if (intval($arFields["FROM_USER_ID"]) > 0)
@@ -303,7 +303,7 @@ class CAllSocNetSubscription
 		return $arUserIDSent;
 	}
 
-	function IsUserSubscribed($userID, $code)
+	public static function IsUserSubscribed($userID, $code)
 	{
 		global $CACHE_MANAGER;
 

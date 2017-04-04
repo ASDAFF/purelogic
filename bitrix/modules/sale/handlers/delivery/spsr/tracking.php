@@ -2,13 +2,14 @@
 
 namespace Sale\Handlers\Delivery;
 
+use Bitrix\Sale\Order;
 use Bitrix\Main\Error;
-use Bitrix\Main\Loader;
-use Bitrix\Main\Localization\Loc;
-use Bitrix\Main\Text\Encoding;
-use Bitrix\Sale\Delivery\Tracking\Statuses;
 use Bitrix\Sale\Result;
+use Bitrix\Main\Loader;
+use Bitrix\Main\Text\Encoding;
+use Bitrix\Main\Localization\Loc;
 use Sale\Handlers\Delivery\Spsr\Request;
+use Bitrix\Sale\Delivery\Tracking\Statuses;
 use Bitrix\Sale\Delivery\Tracking\StatusResult;
 
 Loc::loadMessages(__FILE__);
@@ -21,7 +22,7 @@ Loader::registerAutoLoadClasses(
 	)
 );
 /**
- * Class RusPost
+ * Class SpsrTracking
  * @package \Sale\Handlers\Delivery;
  */
 class SpsrTracking extends \Bitrix\Sale\Delivery\Tracking\Base
@@ -52,18 +53,18 @@ class SpsrTracking extends \Bitrix\Sale\Delivery\Tracking\Base
 	}
 
 	/**
-	 * @param $trackingNumber
+	 * @param array $shipmentData
 	 * @return StatusResult.
 	 */
-	public function getStatus($trackingNumber)
+	public function getStatusShipment($shipmentData)
 	{
-		$results = $this->getStatuses(array($trackingNumber));
+		$results = $this->getStatusesShipment(array($shipmentData));
 		$result = new StatusResult();
 
 		if($results->isSuccess())
 		{
 			foreach($results->getData() as $statusResult)
-				if($statusResult->trackingNumber == $trackingNumber)
+				if($statusResult->trackingNumber == $shipmentData['TRACKING_NUMBER'])
 					return $statusResult;
 		}
 		else
@@ -75,36 +76,92 @@ class SpsrTracking extends \Bitrix\Sale\Delivery\Tracking\Base
 	}
 
 	/**
-	 * @param array $trackingNumbers
+	 * @param int $orderId
+	 * @param int $shipmentId
+	 * @return \Bitrix\Sale\Internals\CollectableEntity|bool|null
+	 * @throws \Bitrix\Main\ArgumentNullException
+	 */
+	private function getShipment($orderId, $shipmentId)
+	{
+		if($orderId <= 0)
+			return null;
+
+		$order = Order::load($orderId);
+
+		if(!$order)
+			return null;
+
+		$sCollect = $order->getShipmentCollection();
+
+		if(!$sCollect)
+			return null;
+
+		return $sCollect->getItemById($shipmentId);
+	}
+
+	/**
+	 * @param array $shipmentsData
 	 * @return Result
 	 */
-	public function getStatuses(array $trackingNumbers)
+	public function getStatusesShipment(array $shipmentsData)
 	{
 		$result = new Result();
-		$resultData = array();
-		$request = new Request();
+
+		if(empty($shipmentsData))
+			return $result;
+
 		/** @var SpsrHandler $parentService */
 		$parentService = $this->deliveryService->getParentService();
 
 		if(!$parentService)
 			return $result;
 
-		/** @var \Bitrix\Sale\Result $res */
-		$res = $parentService->getSidResult();
+		$reqParams = array();
 
-		if($res->isSuccess())
+		foreach($shipmentsData as $trackNumber => $data)
 		{
-			$data = $res->getData();
-			$sid = $data[0];
-		}
-		else
-		{
-			$sid = "";
+			$shipment = $this->getShipment($data['ORDER_ID'], $data['ID']);
+
+			/** @var \Bitrix\Sale\Result $res */
+			$res = $parentService->getSidResult($shipment);
+
+			if($res->isSuccess())
+			{
+				$data = $res->getData();
+				$sid = $data[0];
+			}
+			else
+			{
+				$sid = "";
+			}
+
+			$icn = $parentService->getICN($shipment);
+
+			if(!is_array($reqParams[$sid.'_'.$icn]))
+				$reqParams[$sid.'_'.$icn] = array( 'SID' => $sid, 'ICN' => $icn, 'TRACK_NUMBERS' => array());
+
+			$reqParams[$sid.'_'.$icn]['TRACK_NUMBERS'][] = $trackNumber;
 		}
 
+		foreach($reqParams as $params)
+		{
+			$res = $this->requestStatuses($params['SID'], $params['ICN'], $params['TRACK_NUMBERS']);
+
+			if(!$res->isSuccess())
+				$result->addErrors($res->getErrors());
+		}
+
+		return $result;
+	}
+
+	public function requestStatuses($sid, $icn, $trackingNumbers)
+	{
+		$result = new Result();
+		$request = new Request();
+		$resultData = array();
 		$reqRes = $request->getInvoicesInfo(
 			$sid,
-			$parentService->getICN(),
+			$icn,
 			LANGUAGE_ID,
 			$trackingNumbers
 		);

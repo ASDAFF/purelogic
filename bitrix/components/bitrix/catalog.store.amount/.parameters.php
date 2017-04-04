@@ -24,7 +24,7 @@ unset($row, $iterator, $iblockFilter);
 $arStore = array();
 $storeIterator = CCatalogStore::GetList(
 	array(),
-	array('SHIPPING_CENTER' => 'Y'),
+	array('ISSUING_CENTER' => 'Y'),
 	false,
 	false,
 	array('ID', 'TITLE')
@@ -51,7 +51,8 @@ $arComponentParameters = array(
 			'NAME' => GetMessage('CP_CSA_PARAM_STORES'),
 			'TYPE' => 'LIST',
 			'MULTIPLE' => 'Y',
-			'VALUES' => $arStore
+			'VALUES' => $arStore,
+			'ADDITIONAL_VALUES' => 'Y'
 		),
 		'IBLOCK_TYPE' => array(
 			"PARENT" => "BASE",

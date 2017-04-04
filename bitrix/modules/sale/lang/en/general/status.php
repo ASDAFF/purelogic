@@ -39,4 +39,18 @@ $MESS["SIM_FINISHED"] = "Completed";
 $MESS["SIM_FINISHED_DESCR"] = "Order has been delivered and paid";
 $MESS["SKGS_SALE_EMAIL"] = "Sales department e-mail";
 $MESS["SKGS_SALE_STATUS_ALREADY_EXISTS"] = "This status ID already exists.";
+$MESS["SKGS_ERROR_ARCHIVED_DELETE"] = "Cannot delete status because there are archived orders in this status.";
+$MESS["SKGS_ORDER_ALLOW_PAY_STATUS"] = "Order cleared for payment";
+$MESS["SKGS_ORDER_ALLOW_PAY_STATUS_MAIL_SUBJ"] = "#SERVER_NAME#: Order ##ORDER_ID# cleared for payment";
+$MESS["SKGS_ORDER_ALLOW_PAY_STATUS_MAIL_BODY1"] = "This message was sent from #SITE_NAME#
+";
+$MESS["SKGS_ORDER_ALLOW_PAY_STATUS_MAIL_BODY2"] = "Order ##ORDER_ID# can now be paid.
+
+";
+$MESS["SKGS_ORDER_ALLOW_PAY_STATUS_MAIL_BODY3"] = "Follow this link to pay: #SERVER_NAME#/personal/orders/#ORDER_ID#
+";
+$MESS["SKGS_ORDER_ALLOW_PAY_STATUS_MAIL_BODY4"] = "To view order details, please follow this link: #SERVER_NAME#/personal/orders/#ORDER_ID#
+
+Thank you!
+";
 ?>

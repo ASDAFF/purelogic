@@ -150,6 +150,7 @@ final class Loc
 	 *
 	 * @param string $file
 	 * @param string $language
+	 * @param bool $normalize
 	 * @return array
 	 */
 	public static function loadLanguageFile($file, $language = null, $normalize = true)
@@ -335,7 +336,7 @@ final class Loc
 	 */
 	public static function getDefaultLang($lang)
 	{
-		static $subst = array('ua'=>'ru', 'kz'=>'ru', 'ru'=>'ru');
+		static $subst = array('ua'=>'ru', 'kz'=>'ru', 'by'=>'ru', 'ru'=>'ru');
 		if(isset($subst[$lang]))
 			return $subst[$lang];
 		return 'en';

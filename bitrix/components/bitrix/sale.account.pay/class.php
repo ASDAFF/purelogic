@@ -602,6 +602,7 @@ class SaleAccountPay extends \CBitrixComponent
 
 		/** @var \Bitrix\Sale\Payment $payment */
 		$payment = $paymentCollection->createItem();
+
 		$paymentResult = $payment->setFields(array(
 			'SUM' => $order->getPrice(),
 			'CURRENCY'=> $this->arParams['SELL_CURRENCY'],
@@ -625,29 +626,31 @@ class SaleAccountPay extends \CBitrixComponent
 				$statistic->Set_Event("sale2basket", "sale", $valuePayment);
 			}
 
-			$paySystemBufferedOutput = $paySystemObject->initiatePay($payment, null, PaySystem\BaseServiceHandler::STRING);
+			$values = $paySystemObject->getFieldsValues();
 
-			if ($paySystemBufferedOutput->isSuccess())
+			$this->arResult = array(
+				"ORDER_ID"=>$order->getId(),
+				"ORDER_DATE"=>$order->getDateInsert()->toString(),
+				"PAYMENT_ID"=>$payment->getId(),
+				"IS_CASH" => $paySystemObject->isCash(),
+				"NAME_CONFIRM_TEMPLATE"=>$this->arParams['NAME_CONFIRM_TEMPLATE']
+			);
+
+			if ($values['NEW_WINDOW'] === 'Y')
 			{
-				$values = $paySystemObject->getFieldsValues();
-
-				$this->arResult = array(
-					"ORDER_ID"=>$order->getId(),
-					"ORDER_DATE"=>$order->getDateInsert()->toString(),
-					"PAYMENT_ID"=>$payment->getId(),
-					"TEMPLATE"=>$paySystemBufferedOutput->getTemplate(),
-					"IS_CASH" => $paySystemObject->isCash(),
-					"NAME_CONFIRM_TEMPLATE"=>$this->arParams['NAME_CONFIRM_TEMPLATE']
-				);
-
-				if ($values['NEW_WINDOW'] === 'Y')
-				{
-					$this->arResult["PAYMENT_LINK"] = $this->arParams['PATH_TO_PAYMENT']."/?ORDER_ID=".$order->getField("ACCOUNT_NUMBER")."&PAYMENT_ID=".$payment->getId();
-				}
+				$this->arResult["PAYMENT_LINK"] = $this->arParams['PATH_TO_PAYMENT']."/?ORDER_ID=".$order->getField("ACCOUNT_NUMBER")."&PAYMENT_ID=".$payment->getId();
 			}
 			else
 			{
-				$this->errorCollection->add($paySystemBufferedOutput->getErrors());
+				$paySystemBufferedOutput = $paySystemObject->initiatePay($payment, null, PaySystem\BaseServiceHandler::STRING);
+				if ($paySystemBufferedOutput->isSuccess())
+				{
+					$this->arResult["TEMPLATE"] = $paySystemBufferedOutput->getTemplate();
+				}
+				else
+				{
+					$this->errorCollection->add($paySystemBufferedOutput->getErrors());
+				}
 			}
 		}
 		else

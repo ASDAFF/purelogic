@@ -146,6 +146,7 @@ BitrixLFFilter.prototype.initDestination = function(params)
 		items : params.items,
 		itemsLast : params.itemsLast,
 		itemsSelected : params.itemsSelected,
+		itemsSelectedUndeleted: (typeof params.itemsSelectedUndeleted != 'undefined' ? params.itemsSelectedUndeleted : {}),
 		isCrmFeed : false,
 		useClientDatabase: true,
 		destSort: params.destSort,

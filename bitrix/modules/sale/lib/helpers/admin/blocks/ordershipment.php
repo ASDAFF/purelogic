@@ -6,10 +6,13 @@ use Bitrix\Main\SystemException;
 use Bitrix\Main\Type\DateTime;
 use Bitrix\Main\Type\Date;
 use Bitrix\Sale\Delivery\CalculationResult;
+use Bitrix\Sale\Delivery\Tracking\Base;
+use Bitrix\Sale\EntityMarker;
 use Bitrix\Sale\Helpers\Admin\OrderEdit;
 use Bitrix\Sale\Delivery\Services;
 use Bitrix\Sale\Delivery\Restrictions;
 use Bitrix\Sale\DeliveryStatus;
+use Bitrix\Sale\Internals\CompanyTable;
 use Bitrix\Sale\Order;
 use Bitrix\Main\Page\Asset;
 use Bitrix\Main\Localization\Loc;
@@ -31,7 +34,9 @@ class OrderShipment
 
 	public static function getEditTemplate($data, $index, $formType, $post)
 	{
-		global $USER;
+		global $USER, $APPLICATION;
+
+		$saleModulePermissions = $APPLICATION->GetGroupRight("sale");
 
 		$index++;
 
@@ -162,23 +167,69 @@ class OrderShipment
 
 		if (!empty($data['COMPANIES']))
 		{
-			$companies = OrderEdit::makeSelectHtmlWithRestricted(
-				'SHIPMENT['.$index.'][COMPANY_ID]',
-				$data['COMPANIES'],
-				isset($post["COMPANY_ID"]) ? $post["COMPANY_ID"] : $data["COMPANY_ID"],
-				true,
-				array(
-					"class" => "adm-bus-select",
-					"id" => "SHIPMENT_COMPANY_ID_".$index
-				)
-			);
+			if ($saleModulePermissions == "P")
+			{
+				$userCompanyId = null;
+
+				$userCompanyList = Manager::getUserCompanyList($USER->GetID());
+				if (is_array($userCompanyList) && count($userCompanyList) == 1)
+				{
+					$userCompanyId = reset($userCompanyList);
+					$companyName = $data['COMPANIES'][$userCompanyId]["NAME"]." [".$data['COMPANIES'][$userCompanyId]["ID"]."]";
+					$companies = htmlspecialcharsbx($companyName);
+				}
+				else
+				{
+					foreach ($data['COMPANIES'] as $companyId => $companyData)
+					{
+						$foundCompany = false;
+
+						if (!empty($userCompanyList) && is_array($userCompanyList))
+						{
+							foreach ($userCompanyList as $userCompanyId)
+							{
+								if ($userCompanyId == $companyId)
+								{
+									$foundCompany = true;
+									break;
+								}
+							}
+						}
+
+						if (!$foundCompany)
+						{
+							unset($data['COMPANIES'][$companyId]);
+						}
+					}
+
+					if (count($data['COMPANIES']) == 1)
+					{
+						$company = reset($data['COMPANIES']);
+						$companies = htmlspecialcharsbx($company["NAME"]." [".$company["ID"]."]");
+					}
+				}
+			}
+
+			if (empty($companies))
+			{
+				$companies = OrderEdit::makeSelectHtmlWithRestricted(
+					'SHIPMENT['.$index.'][COMPANY_ID]',
+					$data['COMPANIES'],
+					isset($post["COMPANY_ID"]) ? $post["COMPANY_ID"] : $data["COMPANY_ID"],
+					true,
+					array(
+						"class" => "adm-bus-select",
+						"id" => "SHIPMENT_COMPANY_ID_".$index
+					)
+				);
+			}
 		}
 		else
 		{
-			global $APPLICATION;
-			$saleModulePermissions = $APPLICATION->GetGroupRight("sale");
 			if ($saleModulePermissions >= "W")
+			{
 				$companies = str_replace("#URL#", "/bitrix/admin/sale_company_edit.php?lang=".$lang, Loc::getMessage('SALE_ORDER_SHIPMENT_ADD_COMPANY'));
+			}
 		}
 
 		if (isset($items[$data['DELIVERY_ID']]['LOGOTIP']['MAIN']))
@@ -311,7 +362,11 @@ class OrderShipment
 				<tr>
 					<td class="adm-detail-content-cell-l" width="40%">'.Loc::getMessage('SALE_ORDER_SHIPMENT_TRACKING_LAST_CHANGE').':</td>
 					<td class="adm-detail-content-cell-r tal" id="sale-order-shipment-tracking-last-change-'.$index.'">'.(strlen($data['TRACKING_LAST_CHANGE']) > 0 ? $data['TRACKING_LAST_CHANGE'] : '-').'<br></td>
-				</tr>'
+				</tr>'.(!empty($data['TRACKING_URL']) ?
+						'<tr>
+							<td class="adm-detail-content-cell-l" width="40%">'.Loc::getMessage('SALE_ORDER_SHIPMENT_TRACKING_URL').':</td>
+							<td class="adm-detail-content-cell-r tal" id="sale-order-shipment-tracking-url-'.$index.'"><a href="'.$data['TRACKING_URL'].'">'.$data['TRACKING_URL'].'</a><br></td>
+						<tr>' : '')
 				:
 				''
 				).'<tr>
@@ -562,9 +617,34 @@ class OrderShipment
 	 */
 	public static function getEdit($shipment, $index = 0, $formType = '', $dataForRecovery = array())
 	{
+		global $USER, $APPLICATION;
+
 		self::$shipment = $shipment;
 		$data = self::prepareData(!empty($dataForRecovery));
 		$data['COMPANIES'] = Manager::getListWithRestrictions($shipment, \Bitrix\Sale\Services\Company\Restrictions\Manager::MODE_MANAGER);
+
+		$saleModulePermissions = $APPLICATION->GetGroupRight("sale");
+
+		$userCompanyId = null;
+
+		if($saleModulePermissions == "P")
+		{
+			$userCompanyList = Manager::getUserCompanyList($USER->GetID());
+			if (!empty($userCompanyList) && is_array($userCompanyList) && count($userCompanyList) == 1)
+			{
+				$userCompanyId = reset($userCompanyList);
+			}
+
+			if (self::$shipment->getId() == 0)
+			{
+				if (intval($userCompanyId) > 0)
+				{
+					self::$shipment->setField('COMPANY_ID', $userCompanyId);
+				}
+
+				self::$shipment->setField('RESPONSIBLE_ID', $USER->GetID());
+			}
+		}
 		$result = self::getEditTemplate($data, $index, $formType, $dataForRecovery);
 
 		return $result;
@@ -615,7 +695,7 @@ class OrderShipment
 		return $result;
 	}
 
-	public static function getMap($deliveryId, $index, $storeId = 0)
+	public static function getMap($deliveryId, $index, $storeId = 0, $formType = "")
 	{
 		global $APPLICATION;
 		$map = '';
@@ -637,6 +717,12 @@ class OrderShipment
 					'CONTROLS' => array('SMALLZOOM')
 				)
 			);
+
+			if ($formType === 'archive')
+			{
+				$params['FORM'] = 'view';
+			}
+
 			if (intval($storeId) > 0)
 				$params["SELECTED_STORE"] = $storeId;
 			ob_start();
@@ -797,7 +883,7 @@ class OrderShipment
 				{
 					$subServiceCode = '';
 					if ($subService['ID'] > 0)
-						$subServiceCode = '['.$service['ID'].'] ';
+						$subServiceCode = '['.$subService['ID'].'] ';
 
 					if (isset($subService['RESTRICTED']) && $subService['RESTRICTED'])
 					{
@@ -868,6 +954,19 @@ class OrderShipment
 		global $USER;
 		$index++;
 
+		$isUserResponsible = null;
+		$isAllowCompany = null;
+
+		if (array_key_exists('IS_USER_RESPONSIBLE', $data))
+		{
+			$isUserResponsible = $data['IS_USER_RESPONSIBLE'];
+		}
+
+		if (array_key_exists('IS_ALLOW_COMPANY', $data))
+		{
+			$isAllowCompany = $data['IS_ALLOW_COMPANY'];
+		}
+
 		if (self::$backUrl !== '')
 			$backUrl = self::$backUrl;
 		else
@@ -877,9 +976,10 @@ class OrderShipment
 		$deductedString = ($data['DEDUCTED'] == 'Y') ? 'YES' : 'NO';
 
 		$allowedStatusesDelivery = DeliveryStatus::getStatusesUserCanDoOperations($USER->GetID(), array('delivery'));
-		$isAllowDelivery = in_array($data["STATUS_ID"], $allowedStatusesDelivery);
+		$isAllowDelivery = in_array($data["STATUS_ID"], $allowedStatusesDelivery) && $formType != 'archive';
 
-		$isActive = ($formType != 'edit') && !Order::isLocked($data['ORDER_ID']);
+		$isActive = ($formType != 'edit' && $formType != 'archive') && !Order::isLocked($data['ORDER_ID']);
+
 		$triangle = ($isActive && $isAllowDelivery) ? '<span class="triangle"> &#9662;</span>' : '';
 
 		if ($data['ALLOW_DELIVERY'] == 'Y')
@@ -890,7 +990,7 @@ class OrderShipment
 		$allowDelivery = '<span><span id="BUTTON_ALLOW_DELIVERY_'.$index.'" '.$class.'>'.Loc::getMessage('SALE_ORDER_SHIPMENT_ALLOW_DELIVERY_'.$allowDeliveryString).'</span>'.$triangle.'</span>';
 
 		$allowedStatusesDeduction = DeliveryStatus::getStatusesUserCanDoOperations($USER->GetID(), array('deduction'));
-		$isAllowDeduction = in_array($data["STATUS_ID"], $allowedStatusesDeduction);
+		$isAllowDeduction = in_array($data["STATUS_ID"], $allowedStatusesDeduction) && $formType != 'archive';
 
 		$triangle = ($isActive && $isAllowDeduction) ? '<span class="triangle"> &#9662;</span>' : '';
 
@@ -900,7 +1000,7 @@ class OrderShipment
 			$class = ($isActive && $isAllowDeduction) ? 'class="notdeducted"' : 'class="notdeducted not_active"';
 		$deducted = '<span><span id="BUTTON_DEDUCTED_'.$index.'" '.$class.'>'.Loc::getMessage('SALE_ORDER_SHIPMENT_DEDUCTED_'.$deductedString).'</span>'.$triangle.'</span>';
 
-		$map = ($data['DELIVERY_ID'] > 0) ? self::getMap($data['DELIVERY_ID'], $index, $data['DELIVERY_STORE_ID']) : '';
+		$map = ($data['DELIVERY_ID'] > 0) ? self::getMap($data['DELIVERY_ID'], $index, $data['DELIVERY_STORE_ID'], $formType) : '';
 
 		$lang = Main\Application::getInstance()->getContext()->getLanguage();
 		$service = null;
@@ -908,7 +1008,7 @@ class OrderShipment
 		$mainLogoPath =  '/bitrix/images/sale/logo-default-d.gif';
 		$shortLogoPath =  '/bitrix/images/sale/logo-default-d.gif';
 
-		if ($data['DELIVERY_ID'] > 0)
+		if (($isAllowCompany !== false || $isUserResponsible !== false) && $data['DELIVERY_ID'] > 0)
 		{
 			$service = Services\Manager::getObjectById($data['DELIVERY_ID']);
 			$extraServiceManager = new \Bitrix\Sale\Delivery\ExtraServices\Manager($data['DELIVERY_ID']);
@@ -941,14 +1041,14 @@ class OrderShipment
 		}
 
 		$allowedStatusesFrom = DeliveryStatus::getStatusesUserCanDoOperations($USER->GetID(), array('from'));
-		$canChangeStatus = in_array($data["STATUS_ID"], $allowedStatusesFrom);
+		$canChangeStatus = in_array($data["STATUS_ID"], $allowedStatusesFrom) && $formType != 'archive';
 		$triangle = ($isActive && $canChangeStatus) ? '<span class="triangle"> &#9662;</span>' : '';
 
 		$class = ($isActive && $canChangeStatus) ? '' : 'class="not_active"';
 		$shipmentStatus = '<span><span id="BUTTON_SHIPMENT_' . $index . '" '.$class.'>' . htmlspecialcharsbx($shipmentStatusList[$data['STATUS_ID']]) . '</span>'.$triangle.'</span>';
 
 		$shippingBlockId = '';
-		if($isActive || strlen($data['TRACKING_NUMBER']) > 0)
+		if(($isAllowCompany !== false || $isUserResponsible !== false) && ($isActive || strlen($data['TRACKING_NUMBER']) > 0))
 		{
 			$shippingBlockId = '<tr>
 									<td class="adm-detail-content-cell-l" width="40%">'.Loc::getMessage('SALE_ORDER_SHIPMENT_TRACKING_NUMBER').':</td>
@@ -975,11 +1075,19 @@ class OrderShipment
 												<td class="adm-detail-content-cell-l" width="40%">'.Loc::getMessage('SALE_ORDER_SHIPMENT_TRACKING_LAST_CHANGE').':</td>
 												<td class="adm-detail-content-cell-r tal" id="sale-order-shipment-tracking-last-change-'.$index.'">'.(strlen($data['TRACKING_LAST_CHANGE']) > 0 ? $data['TRACKING_LAST_CHANGE'] : '-').'<br></td>
 											<tr>';
+
+				if(!empty($data['TRACKING_URL']))
+				{
+					$shippingBlockId .= '<tr>
+						<td class="adm-detail-content-cell-l" width="40%">'.Loc::getMessage('SALE_ORDER_SHIPMENT_TRACKING_URL').':</td>
+						<td class="adm-detail-content-cell-r tal" id="sale-order-shipment-tracking-url-'.$index.'"><a href="'.$data['TRACKING_URL'].'">'.$data['TRACKING_URL'].'</a><br></td>
+					<tr>';
+				}
 			}
 		}
 
 		$shippingBlockDocNum = '';
-		if (strlen($data['DELIVERY_DOC_NUM']) > 0)
+		if (($isAllowCompany !== false || $isUserResponsible !== false) && strlen($data['DELIVERY_DOC_NUM']) > 0)
 		{
 			$shippingBlockDocNum = '<tr>
 								<td class="adm-detail-content-cell-l" width="40%">'.Loc::getMessage('SALE_ORDER_SHIPMENT_DELIVERY_DOC_NUM').':</td>
@@ -990,7 +1098,7 @@ class OrderShipment
 		}
 
 		$shippingBlockDocDate = '';
-		if (strlen($data['DELIVERY_DOC_DATE']) > 0)
+		if (($isAllowCompany !== false || $isUserResponsible !== false) && strlen($data['DELIVERY_DOC_DATE']) > 0)
 		{
 			$shippingBlockDocDate = '<tr>
 								<td class="adm-detail-content-cell-l" width="40%">'.Loc::getMessage('SALE_ORDER_SHIPMENT_DELIVERY_DOC_DATE').':</td>
@@ -1004,12 +1112,12 @@ class OrderShipment
 
 		$sectionDelete = '';
 		$allowedDeliveryStatusesDelete = DeliveryStatus::getStatusesUserCanDoOperations($USER->GetID(), array('delete'));
-		if (in_array($data["STATUS_ID"], $allowedDeliveryStatusesDelete) && !$data['ORDER_LOCKED'])
+		if (in_array($data["STATUS_ID"], $allowedDeliveryStatusesDelete) && !$data['ORDER_LOCKED'] && $formType != 'archive')
 			$sectionDelete = '<div class="adm-bus-pay-section-action" id="SHIPMENT_SECTION_'.$index.'_DELETE">'.Loc::getMessage('SALE_ORDER_SHIPMENT_BLOCK_SHIPMENT_DELETE').'</div>';
 
 		$sectionEdit = '';
 		$allowedOrderStatusesUpdate = DeliveryStatus::getStatusesUserCanDoOperations($USER->GetID(), array('update'));
-		if (in_array($data["STATUS_ID"], $allowedOrderStatusesUpdate) && !$data['ORDER_LOCKED'])
+		if (in_array($data["STATUS_ID"], $allowedOrderStatusesUpdate) && !$data['ORDER_LOCKED'] && $formType != 'archive')
 			$sectionEdit = '<div class="adm-bus-pay-section-action" id="SHIPMENT_SECTION_'.$index.'_EDIT"><a href="/bitrix/admin/sale_order_shipment_edit.php?order_id='.$data['ORDER_ID'].'&shipment_id='.$data['ID'].'&backurl='.urlencode($backUrl).'">'.Loc::getMessage('SALE_ORDER_SHIPMENT_BLOCK_SHIPMENT_EDIT').'</a></div>';
 
 		$result = '
@@ -1039,7 +1147,7 @@ class OrderShipment
 										<tr>
 											<td class="adm-detail-content-cell-l" width="40%">'.Loc::getMessage('SALE_ORDER_SHIPMENT_DELIVERY_SERVICE').':</td>
 											<td class="adm-detail-content-cell-r">
-												'.htmlspecialcharsbx($data['DELIVERY_NAME']).' ['.$data['DELIVERY_ID'].'] 
+												'.(($isAllowCompany === false && $isUserResponsible === false) ? Loc::getMessage('SALE_ORDER_SHIPMENT_HIDDEN') : htmlspecialcharsbx($data['DELIVERY_NAME']).' ['.$data['DELIVERY_ID'].']'). ' 
 											</td>
 										</tr>
 									</tbody>
@@ -1073,7 +1181,7 @@ class OrderShipment
 										<tr>
 											<td class="adm-detail-content-cell-l" width="40%">'.Loc::getMessage('SALE_ORDER_SHIPMENT_OFFICE').':</td>
 											<td class="adm-detail-content-cell-r">
-												'.(isset($companyList[$data['COMPANY_ID']]) ? htmlspecialcharsbx($companyList[$data['COMPANY_ID']]) : Loc::getMessage('SALE_ORDER_SHIPMENT_NO_COMPANY')).'
+												'.(($isAllowCompany === false && $isUserResponsible === false) ? Loc::getMessage('SALE_ORDER_SHIPMENT_HIDDEN') : (isset($companyList[$data['COMPANY_ID']]) ? htmlspecialcharsbx($companyList[$data['COMPANY_ID']]) : Loc::getMessage('SALE_ORDER_SHIPMENT_NO_COMPANY'))).'
 											</td>
 										</tr>
 									</tbody>
@@ -1194,13 +1302,27 @@ class OrderShipment
 	private static function getShortViewTemplate($data, $index, $logo, $formType)
 	{
 		global $USER;
+
+		$isUserResponsible = null;
+		$isAllowCompany = null;
+
+		if (array_key_exists('IS_USER_RESPONSIBLE', $data))
+		{
+			$isUserResponsible = $data['IS_USER_RESPONSIBLE'];
+		}
+
+		if (array_key_exists('IS_ALLOW_COMPANY', $data))
+		{
+			$isAllowCompany = $data['IS_ALLOW_COMPANY'];
+		}
+
 		$allowDeliveryString = ($data['ALLOW_DELIVERY'] == 'Y') ? 'YES' : 'NO';
 		$deductedString = ($data['DEDUCTED'] == 'Y') ? 'YES' : 'NO';
 
 		$allowedStatusesDelivery = DeliveryStatus::getStatusesUserCanDoOperations($USER->GetID(), array('delivery'));
-		$isAllowDelivery = in_array($data["STATUS_ID"], $allowedStatusesDelivery);
+		$isAllowDelivery = in_array($data["STATUS_ID"], $allowedStatusesDelivery) && $formType != 'archive';
 
-		$isActive = ($formType != 'edit') && !Order::isLocked($data['ORDER_ID']);
+		$isActive = ($formType != 'edit' && $formType != 'archive') && !Order::isLocked($data['ORDER_ID']);
 		$triangle = ($isActive && $isAllowDelivery) ? '<span class="triangle"> &#9662;</span>' : '';
 
 		if ($data['ALLOW_DELIVERY'] == 'Y')
@@ -1211,7 +1333,7 @@ class OrderShipment
 		$allowDelivery = '<span><span id="BUTTON_ALLOW_DELIVERY_SHORT_'.$index.'" '.$class.'>'.Loc::getMessage('SALE_ORDER_SHIPMENT_ALLOW_DELIVERY_'.$allowDeliveryString).'</span>'.$triangle.'</span>';
 
 		$allowedStatusesDeduction = DeliveryStatus::getStatusesUserCanDoOperations($USER->GetID(), array('deduction'));
-		$isAllowDeduction = in_array($data["STATUS_ID"], $allowedStatusesDeduction);
+		$isAllowDeduction = in_array($data["STATUS_ID"], $allowedStatusesDeduction) && $formType != 'archive';
 
 		$triangle = ($isActive && $isAllowDeduction) ? '<span class="triangle"> &#9662;</span>' : '';
 
@@ -1224,7 +1346,7 @@ class OrderShipment
 		$shipmentStatusList = OrderShipmentStatus::getShipmentStatusList($data['STATUS_ID']);
 
 		$allowedStatusesFrom = DeliveryStatus::getStatusesUserCanDoOperations($USER->GetID(), array('from'));
-		$canChangeStatus = in_array($data["STATUS_ID"], $allowedStatusesFrom);
+		$canChangeStatus = in_array($data["STATUS_ID"], $allowedStatusesFrom) && $formType != 'archive';
 		$triangle = ($isActive && $canChangeStatus) ? '<span class="triangle"> &#9662;</span>' : '';
 
 		$class = ($isActive && $canChangeStatus) ? '' : 'class="not_active"';
@@ -1237,7 +1359,7 @@ class OrderShipment
 									<td class="adm-detail-content-cell-l vat">
 										<div style="background: url(\''.$logo.'\')" id="delivery_service_short_logo_'.$index.'" class="adm-shipment-block-short-logo"></div>
 									</td>
-									<td class="adm-detail-content-cell-l vat">'.Loc::getMessage('SALE_ORDER_SHIPMENT_DELIVERY_SERVICE').': '.htmlspecialcharsbx($data['DELIVERY_NAME']).'</td>
+									<td class="adm-detail-content-cell-l vat">'.Loc::getMessage('SALE_ORDER_SHIPMENT_DELIVERY_SERVICE').': '.(($isAllowCompany === false && $isUserResponsible === false) ? Loc::getMessage('SALE_ORDER_SHIPMENT_HIDDEN') : htmlspecialcharsbx($data['DELIVERY_NAME'])).'</td>
 									<td class="adm-detail-content-cell-l vat"><div class="delivery-status">'.Loc::getMessage('SALE_ORDER_SHIPMENT_ALLOW_DELIVERY').': '.$allowDelivery.'</div></td>
 									<td class="adm-detail-content-cell-l vat"><div class="deducted-status">'.Loc::getMessage('SALE_ORDER_SHIPMENT_DEDUCTED').': '.$deducted.'</div></td>
 									<td class="adm-detail-content-cell-l vat"><div class="shipment-status">'.Loc::getMessage('SALE_ORDER_SHIPMENT_DELIVERY_STATUS').': '.$shipmentStatus.'</div></td>
@@ -1263,8 +1385,10 @@ class OrderShipment
 	 */
 	protected static function prepareData($error = false, $needRecalculate = true)
 	{
-		global $USER;
+		global $USER, $APPLICATION;
 		static $users = array();
+		static $userCompanyList = array();
+
 		$result = array();
 		if ($error)
 		{
@@ -1276,6 +1400,42 @@ class OrderShipment
 			$fields['DELIVERY_STORE_ID'] = self::$shipment->getStoreId();
 			$fields["EXTRA_SERVICES"] = self::$shipment->getExtraServices();
 			$fields["STORE"] = self::$shipment->getStoreId();
+		}
+
+		/** @var \Bitrix\Sale\Order $order */
+		$order = self::$shipment->getCollection()->getOrder();
+
+		$saleModulePermissions = $APPLICATION->GetGroupRight("sale");
+
+		if($saleModulePermissions == "P")
+		{
+			if (empty($userCompanyList))
+			{
+				$userCompanyList = Manager::getUserCompanyList($USER->GetID());
+			}
+
+			$isUserResponsible = false;
+			if ($order->getField('RESPONSIBLE_ID') == $USER->GetID()
+				|| ($fields['RESPONSIBLE_ID'] == $USER->GetID()))
+			{
+				$isUserResponsible = true;
+			}
+
+			$isAllowCompany = in_array(self::$shipment->getField('COMPANY_ID'), $userCompanyList) || in_array($order->getField('COMPANY_ID'), $userCompanyList);
+
+			$fields['IS_USER_RESPONSIBLE'] = $isUserResponsible;
+			$fields['IS_ALLOW_COMPANY'] = $isAllowCompany;
+
+			if (!$isUserResponsible && !$isAllowCompany)
+			{
+				foreach ($fields as $fieldName => $fieldValue)
+				{
+					if (in_array($fieldName, static::getDisallowFields()))
+					{
+						unset($fields[$fieldName]);
+					}
+				}
+			}
 		}
 
 		if ($fields['DELIVERY_DOC_DATE'])
@@ -1319,19 +1479,28 @@ class OrderShipment
 			$fields['EMP_MARKED_ID_NAME'] = $users[$empMarkedId]['NAME'];
 			$fields['EMP_MARKED_ID_LAST_NAME'] = $users[$empMarkedId]['LAST_NAME'];
 		}
-		/** @var \Bitrix\Sale\Order $order */
-		$order = self::$shipment->getCollection()->getOrder();
 		$fields['CURRENCY'] = $order->getCurrency();
 
-		$calcResult = self::calculateDeliveryPrice(self::$shipment);
-		if ($calcResult->isSuccess())
-			$fields['CALCULATED_PRICE'] = $calcResult->getPrice();
+		if ($needRecalculate)
+		{
+			$calcResult = self::calculateDeliveryPrice(self::$shipment);
+			if ($calcResult->isSuccess())
+				$fields['CALCULATED_PRICE'] = $calcResult->getPrice();
+		}
 
 		if ($fields['CUSTOM_PRICE_DELIVERY'] == 'Y' && $fields['ID'] <= 0)
 			$fields['BASE_PRICE_DELIVERY'] = self::$shipment->getField('BASE_PRICE_DELIVERY');
 
 		$discounts = OrderEdit::getDiscountsApplyResult($order, $needRecalculate);
-		$shipmentIds = $order->getDiscount()->getShipmentsIds();
+
+		if ($order instanceof \Bitrix\Sale\Archive\Order)
+		{
+			$shipmentIds = $discounts['SHIPMENTS_ID'];
+		}
+		else
+		{
+			$shipmentIds = $order->getDiscount()->getShipmentsIds();
+		}
 
 		foreach ($shipmentIds as $shipmentId)
 		{
@@ -1345,6 +1514,13 @@ class OrderShipment
 		if(!is_null($delivery))
 		{
 			$fields['HAS_TRACKING'] = strlen($delivery->getTrackingClass()) > 0 ? true : false;
+
+			if($fields['HAS_TRACKING'] && intval($fields['DELIVERY_ID']) > 0)
+			{
+				$trackingManager = \Bitrix\Sale\Delivery\Tracking\Manager::getInstance();
+				$fields['TRACKING_URL'] = $trackingManager->getTrackingUrl($fields['DELIVERY_ID'], $fields['TRACKING_NUMBER']);
+			}
+
 			$fields['DELIVERY_ADDITIONAL_INFO_EDIT'] = $delivery->getAdditionalInfoShipmentEdit(self::$shipment);
 			$fields['DELIVERY_ADDITIONAL_INFO_VIEW'] = $delivery->getAdditionalInfoShipmentView(self::$shipment);
 		}
@@ -1353,6 +1529,24 @@ class OrderShipment
 		return $fields;
 	}
 
+
+	private static function getDisallowFields()
+	{
+		return array(
+			'STORE',
+			'DELIVERY_STORE_ID',
+			'EXTRA_SERVICES',
+			'EMP_DEDUCTED_ID',
+			'DELIVERY_DOC_DATE',
+			'EMP_DEDUCTED_ID',
+			'EMP_ALLOW_DELIVERY_ID',
+			'EMP_CANCELED_ID',
+			'EMP_MARKED_ID',
+			'TRACKING_NUMBER',
+			'DELIVERY_NAME',
+			'DELIVERY_ID',
+		);
+	}
 	/**
 	 * @param Order $order
 	 * @param array $shipments
@@ -1361,7 +1555,9 @@ class OrderShipment
 	 */
 	public static function updateData(Order &$order, array $shipments)
 	{
-		global $USER;
+		global $USER, $APPLICATION;
+
+		$saleModulePermissions = $APPLICATION->GetGroupRight("sale");
 		
 		$result = new Result();
 		$data = array();
@@ -1451,7 +1647,7 @@ class OrderShipment
 			$extraServices = ($item['EXTRA_SERVICES']) ? $item['EXTRA_SERVICES'] : array();
 
 			$shipmentFields = array(
-				'COMPANY_ID' => (isset($item['COMPANY_ID']) && $item['COMPANY_ID'] > 0) ? $item['COMPANY_ID'] : 0,
+				'COMPANY_ID' => (isset($item['COMPANY_ID']) && intval($item['COMPANY_ID']) > 0) ? intval($item['COMPANY_ID']) : 0,
 				'DEDUCTED' => $item['DEDUCTED'],
 				'DELIVERY_DOC_NUM' => $item['DELIVERY_DOC_NUM'],
 				'TRACKING_NUMBER' => $item['TRACKING_NUMBER'],
@@ -1459,6 +1655,20 @@ class OrderShipment
 				'COMMENTS' => $item['COMMENTS'],
 				'STATUS_ID' =>($isNew) ? DeliveryStatus::getInitialStatus() : $item['STATUS_ID']
 			);
+
+			if ($isNew && $saleModulePermissions == "P")
+			{
+				if (empty($item['COMPANY_ID']))
+				{
+					$shipmentFields['COMPANY_ID'] = $order->getField('COMPANY_ID');
+				}
+				if (empty($item['RESPONSIBLE_ID']))
+				{
+					$shipmentFields['RESPONSIBLE_ID'] = $order->getField('RESPONSIBLE_ID');
+					$shipmentFields['EMP_RESPONSIBLE_ID'] = $USER->GetID();
+					$shipmentFields['DATE_RESPONSIBLE_ID'] = new DateTime();
+				}
+			}
 
 			if ($item['DELIVERY_DOC_DATE'])
 			{

@@ -1131,10 +1131,10 @@ elseif($Step == 3)
 			{
 				if (is_array($ar['connections']['value']['default']))
 				{
-					$ar['connections']['value']['default']['host'] = str_replace('$','\$',addslashes($_REQUEST['DBHost']));
-					$ar['connections']['value']['default']['database'] = str_replace('$','\$',addslashes($_REQUEST['DBName']));
-					$ar['connections']['value']['default']['login'] = str_replace('$','\$',addslashes($_REQUEST['DBLogin']));
-					$ar['connections']['value']['default']['password'] = str_replace('$','\$',addslashes($_REQUEST['DBPassword']));
+					$ar['connections']['value']['default']['host'] = $_REQUEST['DBHost'];
+					$ar['connections']['value']['default']['database'] = $_REQUEST['DBName'];
+					$ar['connections']['value']['default']['login'] = $_REQUEST['DBLogin'];
+					$ar['connections']['value']['default']['password'] = $_REQUEST['DBPassword'];
 					$data = var_export($ar, true);
 					file_put_contents($config, "<"."?php\nreturn ".$data.";\n");
 				}

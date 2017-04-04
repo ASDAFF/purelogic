@@ -262,4 +262,14 @@ $MESS["SEF_URL_TEMPLATES_section_TIP"] = "Pfad zur Seite mit Bereichselementen. 
 $MESS["SEF_URL_TEMPLATES_element_TIP"] = "Pfad zur detaillierten Seite. Der Standardwert ist  #SECTION_ID#/#ELEMENT_ID#/.";
 $MESS["CP_BC_HIDE_NOT_AVAILABLE_EXT2"] = "Produkte, die zum Kauf nicht verfügbar sind";
 $MESS["HIDE_NOT_AVAILABLE_TIP"] = "Ein Produkt, dessen Menge gleich oder mehr als Null ist, wird zum Kauf nicht verfügbar sein, wenn: 1) die Option der Lagerverwaltung für das Produkt aktiviert ist, und 2) nicht auf Lager verfügbare Elemente können nicht gekauft werden. Ein Produkt, welches Produktvariante(n) hat, ist dann verfügbar, wenn zumindest eine Produktvariante verfügbar ist.";
+$MESS["CP_BC_DETAIL_STRICT_SECTION_CHECK"] = "Übergeordneten Bereich prüfen, wenn Details der Elemente angezeigt werden";
+$MESS["USE_MAIN_ELEMENT_SECTION_TIP"] = "Ist diese Option aktiviert, werden die Produktlinks auf der Basis des Hauptbereichs erstellt. Dadurch kann die Erstellung von doppelten Produktseiten vermieden werden.";
+$MESS["DETAIL_STRICT_SECTION_CHECK_TIP"] = "Ist diese Option aktiviert, wird die Seite der Produktdetails nicht angezeigt, wenn der Link einen Bereich angibt, der nicht ein übergeordneter Bereich für dieses Produkt ist.";
+$MESS["ANALYTICS_SETTINGS"] = "Statistikeinstellungen";
+$MESS["CP_BC_HIDE_NOT_AVAILABLE_OFFERS"] = "Nicht verfügbare Produktvarianten";
+$MESS["CP_BC_HIDE_NOT_AVAILABLE_OFFERS_HIDE"] = "nicht anzeigen";
+$MESS["CP_BC_HIDE_NOT_AVAILABLE_OFFERS_SUBSCRIBE"] = "mit einer Abonnement-Option anzeigen";
+$MESS["CP_BC_HIDE_NOT_AVAILABLE_OFFERS_SHOW"] = "alle anzeigen";
+$MESS["CP_BC_COMPATIBLE_MODE"] = "Kompatibilitätsmodus aktivieren";
+$MESS["COMPATIBLE_MODE_TIP"] = "Diese Option ist erforderlich für Anpassung der Vorlagen, die erstellt wurden zur Nutzung mit dem Modul Informationsblöcke vor der Version 17.0.0. Es wird empfohlen, die Vorlage aufs neue Format zu übertragen. Nähere Informationen finden Sie in der Dokumentation.";
 ?>

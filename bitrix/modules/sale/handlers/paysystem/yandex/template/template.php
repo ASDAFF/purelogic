@@ -1,10 +1,9 @@
 <?
 	use Bitrix\Main\Localization\Loc;
-	use Bitrix\Sale\PriceMaths;
 \Bitrix\Main\Page\Asset::getInstance()->addCss("/bitrix/themes/.default/sale.css");
 	Loc::loadMessages(__FILE__);
 
-	$sum = PriceMaths::roundByFormatCurrency($params['PAYMENT_SHOULD_PAY'], $payment->getField('CURRENCY'));
+	$sum = roundEx($params['PAYMENT_SHOULD_PAY'], 2);
 ?>
 
 <div class="sale-paysystem-wrapper">

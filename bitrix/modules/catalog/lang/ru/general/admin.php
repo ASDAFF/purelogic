@@ -33,4 +33,5 @@ $MESS["SETUP_UNLOAD_DATA"] = "Экспорт данных";
 $MESS["SETUP_UNLOAD_DATA_ALT"] = "Настройка экспорта данных из каталога";
 $MESS["SETUP_LOAD_DATA"] = "Импорт данных";
 $MESS["SETUP_LOAD_DATA_ALT"] = "Настройка импорта данных в каталог";
+$MESS["CM_SUBSCRIPTION_PRODUCT"] = "Подписка на товары";
 ?>

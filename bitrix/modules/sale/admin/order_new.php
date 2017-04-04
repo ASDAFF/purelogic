@@ -4160,7 +4160,7 @@ $tabControl->BeginCustomField("BASKET_CONTAINER", GetMessage("NEWO_BASKET_CONTAI
 		$settingsTemplate = CUtil::JSEscape($settingsTemplate);
 	?>
 	<br>
-	<input type="hidden" id="userColumns" name="userColumns" value="<?=CUtil::JSEscape($strUserColumns)?>" />
+	<input type="hidden" id="userColumns" name="userColumns" value="<?=htmlspecialcharsbx($strUserColumns)?>" />
 	<input type="hidden" id="ids" name="ids" value="<?=$IDs?>" />
 
 

@@ -1,9 +1,17 @@
 <?
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_before.php");
+/** @global CMain $APPLICATION */
+/** @global CDatabase $DB */
+
+use Bitrix\Main\Loader;
+
+Loader::includeModule('socialnetwork');
 
 $socialnetworkModulePermissions = $APPLICATION->GetGroupRight("socialnetwork");
 if ($socialnetworkModulePermissions < "R")
+{
 	$APPLICATION->AuthForm(GetMessage("ACCESS_DENIED"));
+}
 
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/socialnetwork/include.php");
 IncludeModuleLangFile(__FILE__);
@@ -86,11 +94,13 @@ if ($ID > 0)
 	else
 	{
 		$str_NAME = $arSubject["NAME"];
-		$str_SORT = $arSubject["SORT"];		
+		$str_SORT = $arSubject["SORT"];
 		
 		$rsSubjectSite = CSocNetGroupSubject::GetSite($ID);
-			while($arSubjectSite = $rsSubjectSite->Fetch())
-				$arSubjectSites[] = $arSubjectSite["LID"];
+		while($arSubjectSite = $rsSubjectSite->Fetch())
+		{
+			$arSubjectSites[] = $arSubjectSite["LID"];
+		}
 	}
 }
 

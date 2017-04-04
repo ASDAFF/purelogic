@@ -135,7 +135,10 @@ class CBitrixCatalogSmartFilter extends CBitrixComponent
 
 		foreach(CIBlockSectionPropertyLink::GetArray($IBLOCK_ID, $this->SECTION_ID) as $PID => $arLink)
 		{
-			if($arLink["SMART_FILTER"] !== "Y")
+			if ($arLink["SMART_FILTER"] !== "Y")
+				continue;
+
+			if ($arLink["ACTIVE"] === "N")
 				continue;
 
 			if ($arLink['FILTER_HINT'] <> '')
@@ -151,7 +154,8 @@ class CBitrixCatalogSmartFilter extends CBitrixComponent
 					"ID" => $arProperty["ID"],
 					"IBLOCK_ID" => $arProperty["IBLOCK_ID"],
 					"CODE" => $arProperty["CODE"],
-					"NAME" => $arProperty["NAME"],
+					"~NAME" => $arProperty["NAME"],
+					"NAME" => htmlspecialcharsbx($arProperty["NAME"]),
 					"PROPERTY_TYPE" => $arProperty["PROPERTY_TYPE"],
 					"USER_TYPE" => $arProperty["USER_TYPE"],
 					"USER_TYPE_SETTINGS" => $arProperty["USER_TYPE_SETTINGS"],
@@ -646,7 +650,7 @@ class CBitrixCatalogSmartFilter extends CBitrixComponent
 
 		if (strlen($url_id))
 		{
-			$resultItem["VALUES"][$htmlKey]['URL_ID'] = urlencode($url_id);
+			$resultItem["VALUES"][$htmlKey]['URL_ID'] = urlencode(str_replace("/", "-", $url_id));
 		}
 
 		return $htmlKey;
@@ -740,38 +744,35 @@ class CBitrixCatalogSmartFilter extends CBitrixComponent
 	{
 		if($arTuple)
 		{
-			reset($arTuple);
-			list($key, $head) = each($arTuple);
-			unset($arTuple[$key]);
-			$arTemp[$key] = false;
-			if(is_array($head))
+			foreach ($arTuple as $key => $head)
 			{
-				if(empty($head))
+				unset($arTuple[$key]);
+				$arTemp[$key] = false;
+				if(is_array($head))
 				{
-					if(empty($arTuple))
-						$arResult[] = $arTemp;
-					else
-						$this->ArrayMultiply($arResult, $arTuple, $arTemp);
-				}
-				else
-				{
-					foreach($head as $value)
+					if(empty($head))
 					{
-						$arTemp[$key] = $value;
 						if(empty($arTuple))
 							$arResult[] = $arTemp;
-						else
-							$this->ArrayMultiply($arResult, $arTuple, $arTemp);
+					}
+					else
+					{
+						foreach($head as $value)
+						{
+							$arTemp[$key] = $value;
+							if(empty($arTuple))
+								$arResult[] = $arTemp;
+							else
+								break;
+						}
 					}
 				}
-			}
-			else
-			{
-				$arTemp[$key] = $head;
-				if(empty($arTuple))
-					$arResult[] = $arTemp;
 				else
-					$this->ArrayMultiply($arResult, $arTuple, $arTemp);
+				{
+					$arTemp[$key] = $head;
+					if(empty($arTuple))
+						$arResult[] = $arTemp;
+				}
 			}
 		}
 		else
@@ -907,7 +908,7 @@ class CBitrixCatalogSmartFilter extends CBitrixComponent
 	{
 		foreach($item as $itemId => $arValue)
 		{
-			if ($lookupValue === $arValue["URL_ID"])
+			if (urlencode($lookupValue) === $arValue["URL_ID"])
 				return $itemId;
 		}
 		return false;
@@ -1043,13 +1044,13 @@ class CBitrixCatalogSmartFilter extends CBitrixComponent
 			foreach ($smartPart as $i => $smartElement)
 			{
 				if (!$urlPart)
-					$urlPart .= urlencode($smartElement);
+					$urlPart .= $smartElement;
 				elseif ($i == 'from' || $i == 'to')
-					$urlPart .= urlencode('-'.$i.'-'.$smartElement);
+					$urlPart .= '-'.$i.'-'.$smartElement;
 				elseif ($i == 1)
-					$urlPart .= urlencode('-is-'.$smartElement);
+					$urlPart .= '-is-'.$smartElement;
 				else
-					$urlPart .= urlencode('-or-'.$smartElement);
+					$urlPart .= '-or-'.$smartElement;
 			}
 			$smartPart = $urlPart;
 		}

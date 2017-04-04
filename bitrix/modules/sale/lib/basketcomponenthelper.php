@@ -11,10 +11,10 @@ class BasketComponentHelper
 {
 
 	/**
-	 * @param $fuserId
-	 * @param $siteId
+	 * @param int $fuserId
+	 * @param string|null $siteId
 	 *
-	 * @return int
+	 * @return int|float
 	 */
 	public static function getFUserBasketQuantity($fuserId, $siteId = null)
 	{
@@ -41,9 +41,9 @@ class BasketComponentHelper
 
 	/**
 	 * @param int $fuserId
-	 * @param string $siteId
+	 * @param string|null $siteId
 	 *
-	 * @return int
+	 * @return int|float
 	 */
 	public static function getFUserBasketPrice($fuserId, $siteId = null)
 	{
@@ -70,8 +70,10 @@ class BasketComponentHelper
 
 	/**
 	 * @param int $fuserId
-	 * @param int $quantity
-	 * @param string $siteId
+	 * @param int|float $quantity
+	 * @param string|null $siteId
+	 *
+	 * @return void
 	 */
 	protected static function setFUserBasketQuantity($fuserId, $quantity, $siteId = null)
 	{
@@ -85,8 +87,10 @@ class BasketComponentHelper
 
 	/**
 	 * @param int $fuserId
-	 * @param float $price
-	 * @param string $siteId
+	 * @param int|float $price
+	 * @param string|null $siteId
+	 *
+	 * @return void
 	 */
 	protected static function setFUserBasketPrice($fuserId, $price, $siteId = null)
 	{
@@ -99,8 +103,10 @@ class BasketComponentHelper
 
 	/**
 	 * @param int $fuserId
-	 * @param string $siteId
+	 * @param string|null $siteId
 	 * @param array|null $basketList
+	 *
+	 * @return void
 	 */
 	public static function updateFUserBasketPrice($fuserId, $siteId = null, $basketList = null)
 	{
@@ -127,10 +133,10 @@ class BasketComponentHelper
 
 	/**
 	 * @param int $fuserId
-	 * @param string $siteId
+	 * @param string|null $siteId
 	 * @param array|null $basketList
 	 *
-	 * @return float
+	 * @return void
 	 */
 	public static function updateFUserBasketQuantity($fuserId, $siteId = null, $basketList = null)
 	{
@@ -155,8 +161,10 @@ class BasketComponentHelper
 	}
 
 	/**
-	 * @param $fuserId
-	 * @param null $siteId
+	 * @param int $fuserId
+	 * @param string|null $siteId
+	 *
+	 * @return void
 	 */
 	public static function updateFUserBasket($fuserId, $siteId = null)
 	{
@@ -173,7 +181,7 @@ class BasketComponentHelper
 
 	/**
 	 * @param int $fuserId
-	 * @param string $siteId
+	 * @param string|null $siteId
 	 *
 	 * @return array
 	 */
@@ -238,10 +246,12 @@ class BasketComponentHelper
 		if (intval($userId) > 0)
 		{
 			$orderData['USER_ID'] = $userId;
-			$errors = array();
-			\CSaleDiscount::DoProcessOrder($orderData, array(), $errors);
-			Compatible\DiscountCompatibility::stopUsageCompatible();
 		}
+		DiscountCouponsManager::freezeCouponStorage();
+		$errors = array();
+		\CSaleDiscount::DoProcessOrder($orderData, array(), $errors);
+		Compatible\DiscountCompatibility::stopUsageCompatible();
+		DiscountCouponsManager::unFreezeCouponStorage();
 
 		return $orderData;
 	}
@@ -488,7 +498,7 @@ class BasketComponentHelper
 						}
 						elseif ($quantity <= 0)
 						{
-							$result->addError(new ResultWarning(Main\Localization\Loc::getMessage('SALE_BASKET_COMPONENT_HELPER_PRODUCT_NOT_ENOUGH_QUANTITY', array(
+							$result->addWarning(new ResultWarning(Main\Localization\Loc::getMessage('SALE_BASKET_COMPONENT_HELPER_PRODUCT_NOT_ENOUGH_QUANTITY', array(
 								'#PRODUCT_NAME#' => $basketItem->getField('NAME')
 							)), 'SALE_BASKET_COMPONENT_HELPER_PRODUCT_NOT_ENOUGH_QUANTITY'));
 						}

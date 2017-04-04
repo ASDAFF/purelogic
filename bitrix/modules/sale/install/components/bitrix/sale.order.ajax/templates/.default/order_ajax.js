@@ -143,6 +143,11 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			this.orderBlockNode.removeAttribute('style');
 			this.basketBlockScrollCheck();
+
+			if (this.params.USE_ENHANCED_ECOMMERCE === 'Y')
+			{
+				this.setAnalyticsDataLayer('checkout');
+			}
 		},
 
 		/**
@@ -223,9 +228,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				sessid: BX.bitrix_sessid(),
 				via_ajax: 'Y',
 				SITE_ID: this.siteId,
-				action: action,
 				signedParamsString: this.signedParamsString
 			};
+
+			data[this.params.ACTION_VARIABLE] = action;
 
 			if (action === 'enterCoupon' || action === 'removeCoupon')
 				data.coupon = actionData;
@@ -309,6 +315,11 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				{
 					if (result.REDIRECT_URL && result.REDIRECT_URL.length)
 					{
+						if (this.params.USE_ENHANCED_ECOMMERCE === 'Y')
+						{
+							this.setAnalyticsDataLayer('purchase', result.ID);
+						}
+
 						redirected = true;
 						document.location.href = result.REDIRECT_URL;
 					}
@@ -1598,10 +1609,11 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 		 */
 		clickOrderSaveAction: function(event)
 		{
-			this.reachGoal('order');
-
 			if (this.isValidForm())
+			{
+				this.reachGoal('order');
 				this.sendRequest('saveOrderAjax');
+			}
 
 			return BX.PreventDefault(event);
 		},
@@ -3148,7 +3160,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			basketItemsNode.appendChild(
 				BX.create('DIV', {
 					props: {className: 'bx-soa-item-tr bx-soa-basket-info' + (index == 0 ? ' bx-soa-item-tr-first' : '')},
-					children: cols})
+					children: cols
+				})
 			);
 
 			if (hiddenColumns.length)
@@ -3802,10 +3815,14 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				couponInput = BX('coupon'), i;
 
 			for (i = 0; i < couponListNodes.length; i++)
-				couponListNodes[i].appendChild(this.getCouponNode({text: coupon}, true, 'bx-soa-coupon-item-danger'));
+			{
+				if (couponListNodes[i].querySelector('[data-coupon="' + coupon + '"'))
+					break;
 
-			if (couponInput)
-				couponInput.value = '';
+				couponListNodes[i].appendChild(this.getCouponNode({text: coupon}, true, 'bx-soa-coupon-item-danger'));
+			}
+
+			couponInput && (couponInput.value = '');
 		},
 
 		removeCoupon: function(coupon)
@@ -5089,7 +5106,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					serviceNode = BX.create('DIV', {
 						props: {className: 'form-group bx-soa-pp-field'},
 						html: currentService.editControl
-						+ (currentService.description.length
+						+ (currentService.description && currentService.description.length
 							? '<div class="bx-soa-service-small">' + BX.util.htmlspecialchars(currentService.description) + '</div>'
 							: '')
 					});
@@ -5110,7 +5127,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 							BX.create('LABEL', {
 								html: currentService.editControl + BX.util.htmlspecialchars(currentService.name)
 								+ (currentService.price ? ' (' + currentService.priceFormatted + ')' : '')
-								+ (currentService.description.length
+								+ (currentService.description && currentService.description.length
 									? '<div class="bx-soa-service-small">' + BX.util.htmlspecialchars(currentService.description) + '</div>'
 									: '')
 							})
@@ -5221,7 +5238,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			}
 
 			itemNode = BX.create('DIV', {
-				props: {className: 'bx-soa-pp-company col-lg-3 col-sm-4 col-xs-6'},
+				props: {className: 'bx-soa-pp-company col-lg-4 col-sm-4 col-xs-6'},
 				children: [label, title],
 				events: {click: BX.proxy(this.selectDelivery, this)}
 			});
@@ -5417,30 +5434,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					this.pickUpFinalAction();
 				}
 
-				setTimeout(BX.proxy(function(){
-					var bounds, diff0, diff1;
-
-					if (this.pickUpMap && this.pickUpMap.geoObjects)
-					{
-						bounds = this.pickUpMap.geoObjects.getBounds();
-						if (bounds && bounds.length)
-						{
-							diff0 = bounds[1][0] - bounds[0][0];
-							diff1 = bounds[1][1] - bounds[0][1];
-
-							bounds[0][0] -= diff0/10;
-							bounds[0][1] -= diff1/10;
-							bounds[1][0] += diff0/10;
-							bounds[1][1] += diff1/10;
-
-							if (!this.pickUpMapInitialized)
-							{
-								this.pickUpMap.setBounds(bounds, {checkZoomRange: true});
-								this.pickUpMapInitialized = true;
-							}
-						}
-					}
-				}, this), 200);
+				setTimeout(BX.proxy(this.pickUpMapFocusWaiter, this), 200);
 			}
 			else
 			{
@@ -5524,6 +5518,41 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 						this.popupShow(e, logotype && logotype.src_orig || imgSrc);
 					}, this));
 				}
+			}
+		},
+
+		setPickUpMapFocus: function()
+		{
+			var bounds, diff0, diff1;
+
+			bounds = this.pickUpMap.geoObjects.getBounds();
+			if (bounds && bounds.length)
+			{
+				diff0 = bounds[1][0] - bounds[0][0];
+				diff1 = bounds[1][1] - bounds[0][1];
+
+				bounds[0][0] -= diff0/10;
+				bounds[0][1] -= diff1/10;
+				bounds[1][0] += diff0/10;
+				bounds[1][1] += diff1/10;
+
+				if (!this.pickUpMapInitialized)
+				{
+					this.pickUpMap.setBounds(bounds, {checkZoomRange: true});
+					this.pickUpMapInitialized = true;
+				}
+			}
+		},
+
+		pickUpMapFocusWaiter: function()
+		{
+			if (this.pickUpMap && this.pickUpMap.geoObjects)
+			{
+				this.setPickUpMapFocus();
+			}
+			else
+			{
+				setTimeout(BX.proxy(this.pickUpMapFocusWaiter, this), 100);
 			}
 		},
 
@@ -5621,7 +5650,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				currentDelivery = this.getSelectedDelivery(),
 				pickUpInput = BX('BUYER_STORE'),
 				pickUpDefaults, geoLocation, provider, maxTime,
-				i, storeInfoHtml, geoObj, propertyDefaults, activeStores;
+				i, storeInfoHtml, geoObj, propertyDefaults, activeStores, selected;
 
 			this.resizeMapContainers();
 
@@ -5630,9 +5659,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			if (activeStores && activeStores.length)
 			{
+				selected = this.getSelectedPickUp();
 				pickUpDefaults = this.options.pickUpMap.defaultMapPosition;
 				this.pickUpMap = new ymaps.Map("pickUpMap", {
-					center: [pickUpDefaults.lat, pickUpDefaults.lon],
+					center: !!selected ? [selected.GPS_N, selected.GPS_S] : [pickUpDefaults.lat, pickUpDefaults.lon],
 					zoom: pickUpDefaults.zoom
 				});
 				this.pickUpMap.behaviors.disable('scrollZoom');
@@ -6124,23 +6154,42 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 		getDeliverySortedArray: function(objDelivery)
 		{
-			var arDelivery = [], k;
+			var deliveries = [],
+				problemDeliveries = [],
+				sortFunc = function(a, b){
+					var sort = parseInt(a.SORT) - parseInt(b.SORT);
+					if (sort === 0)
+					{
+						return a.OWN_NAME.toLowerCase() > b.OWN_NAME.toLowerCase()
+							? 1
+							: (a.OWN_NAME.toLowerCase() < b.OWN_NAME.toLowerCase() ? -1 : 0);
+					}
+					else
+					{
+						return sort;
+					}
+				},
+				k;
 
 			for (k in objDelivery)
 			{
 				if (objDelivery.hasOwnProperty(k))
-					arDelivery.push(objDelivery[k]);
+				{
+					if (this.params.SHOW_NOT_CALCULATED_DELIVERIES === 'L' && objDelivery[k].CALCULATE_ERRORS)
+					{
+						problemDeliveries.push(objDelivery[k]);
+					}
+					else
+					{
+						deliveries.push(objDelivery[k]);
+					}
+				}
 			}
 
-			arDelivery.sort(function(a, b) {
-				var sort = parseInt(a.SORT) - parseInt(b.SORT);
-				if (sort === 0)
-					return a.OWN_NAME.toLowerCase() > b.OWN_NAME.toLowerCase() ? 1 : (a.OWN_NAME.toLowerCase() < b.OWN_NAME.toLowerCase() ? -1 : 0);
-				else
-					return sort;
-			});
+			deliveries.sort(sortFunc);
+			problemDeliveries.sort(sortFunc);
 
-			return arDelivery;
+			return deliveries.concat(problemDeliveries);
 		},
 
 		editPropsBlock: function(active)
@@ -7452,7 +7501,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					cols: '4',
 					className: 'form-control bx-soa-customer-textarea bx-ios-fix',
 					name: 'ORDER_DESCRIPTION'
-				}
+				},
+				text: this.result.ORDER_DESCRIPTION ? this.result.ORDER_DESCRIPTION : ''
 			});
 			div = BX.create('DIV', {
 				props: {className: 'form-group bx-soa-customer-field'},
@@ -7730,6 +7780,72 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			if (objList.length)
 				BX.FixFontSize.init({objList: objList, onAdaptiveResize: true});
+		},
+
+		setAnalyticsDataLayer: function(action, id)
+		{
+			if (!this.params.DATA_LAYER_NAME)
+				return;
+
+			var info, i;
+			var products = [],
+				dataVariant, item;
+
+			for (i in this.result.GRID.ROWS)
+			{
+				if (this.result.GRID.ROWS.hasOwnProperty(i))
+				{
+					item = this.result.GRID.ROWS[i];
+					dataVariant = [];
+
+					for (i = 0; i < item.data.PROPS.length; i++)
+					{
+						dataVariant.push(item.data.PROPS[i].VALUE);
+					}
+
+					products.push({
+						'id': item.data.ID,
+						'name': item.data.NAME,
+						'price': item.data.PRICE,
+						'brand': (item.data[this.params.BRAND_PROPERTY + '_VALUE'] || '').split(', ').join('/'),
+						'variant': dataVariant.join('/'),
+						'quantity': item.data.QUANTITY
+					});
+				}
+			}
+
+			switch (action)
+			{
+				case 'checkout':
+					info = {
+						'event': 'checkout',
+						'ecommerce': {
+							'checkout': {
+								'products': products
+							}
+						}
+					};
+					break;
+				case 'purchase':
+					info = {
+						'event': 'purchase',
+						'ecommerce': {
+							'purchase': {
+								'actionField': {
+									'id': id,
+									'revenue': this.result.TOTAL.ORDER_TOTAL_PRICE,
+									'tax': this.result.TOTAL.TAX_PRICE,
+									'shipping': this.result.TOTAL.DELIVERY_PRICE
+								},
+								'products': products
+							}
+						}
+					};
+					break;
+			}
+
+			window[this.params.DATA_LAYER_NAME] = window[this.params.DATA_LAYER_NAME] || [];
+			window[this.params.DATA_LAYER_NAME].push(info);
 		}
 	};
 })();

@@ -960,7 +960,7 @@ $tabControl->BeginNextTab();
 				<tr>
 					<td height="20">
 						<div style="border:1px solid #B9CBDF">
-							<div id="indicator" style="height:20px; width:0; background-color:#B9CBDF"></div>
+							<div id="indicator" style="height:20px; width:0; background-color:#B9CBDF;transition: width 0.5s;"></div>
 						</div>
 					</td>
 					<td width=30>&nbsp;<span id="percent" style="font-size:1.4em">0%</span></td>

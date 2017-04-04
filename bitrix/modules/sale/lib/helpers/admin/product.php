@@ -69,7 +69,7 @@ class Product
 	 * @throws \Bitrix\Main\NotSupportedException
 	 * @throws \Bitrix\Main\ObjectNotFoundException
 	 */
-	public static function getProviderData(array $productsData, $siteId, $userId)
+	public static function getProviderData(array $productsData, $siteId, $userId = null)
 	{
 		if(empty($productsData))
 			return array();
@@ -77,15 +77,19 @@ class Product
 		if(strlen($siteId) <= 0)
 			return array();
 
-		if(strlen($userId) <= 0)
-			return array();
-
 		$order = Order::create($siteId);
-		$order->setFieldNoDemand("USER_ID", $userId);
+
+		if(intval($userId) > 0)
+			$order->setFieldNoDemand("USER_ID", intval($userId));
+
 		$basket = \Bitrix\Sale\Basket::create($siteId);
 		$order->setBasket($basket);
-		$fUserId = Fuser::getIdByUserId($userId);
-		$basket->setFUserId($fUserId);
+
+		if(intval($userId) > 0)
+		{
+			$fUserId = Fuser::getIdByUserId(intval($userId));
+			$basket->setFUserId($fUserId);
+		}
 
 		foreach($productsData as $productFields)
 		{
@@ -244,6 +248,10 @@ class Product
 					if(empty($items[$productId][$childId]))
 						continue;
 
+					foreach($this->resultData[$productId]['SET_ITEMS'] as $set)
+						if($set['OFFER_ID'] == $childId)
+							continue(2);
+
 					$this->resultData[$productId]['SET_ITEMS'][] = array_merge($tmpData[$childId], $items[$productId][$childId]);
 					$this->resultData[$productId]["IS_SET_PARENT"] = empty($this->resultData[$productId]["SET_ITEMS"]) ? 'N' : 'Y';
 					$this->resultData[$productId]["OLD_PARENT_ID"] = empty($this->resultData[$productId]["SET_ITEMS"]) ? '' : $productId."_tmp".$this->tmpId;
@@ -297,6 +305,7 @@ class Product
 			}
 		}
 
+		$this->iblockData = array();
 		$ppData = getProductProps(array_merge($this->productsIds, $this->parentsIds), $select);
 
 		foreach($ppData as $id => $fields)
@@ -326,6 +335,23 @@ class Product
 			$this->resultData[$id]['EDIT_PAGE_URL'] = $this->createEditPageUrl($fields);
 		}
 
+		$notFound = array_diff($this->productsIds, array_keys($this->iblockData));
+
+		if(!empty($notFound))
+		{
+			foreach($notFound as $id)
+			{
+				unset($this->resultData[$id]);
+				unset(
+					$this->productsIds[
+						array_search(
+							$id,
+							$this->productsIds
+						)
+					]
+				);
+			}
+		}
 		return;
 	}
 
@@ -371,11 +397,14 @@ class Product
 				}
 			}
 
-			foreach($this->resultData[$productId]['PRODUCT_PROPS_VALUES'] as $fieldId => $fieldValue)
+			if(is_array($this->resultData[$productId]['PRODUCT_PROPS_VALUES']))
 			{
-				if(is_null($fieldValue))
+				foreach($this->resultData[$productId]['PRODUCT_PROPS_VALUES'] as $fieldId => $fieldValue)
 				{
-					$this->resultData[$productId]['PRODUCT_PROPS_VALUES'][$fieldId] = '&nbsp';
+					if(is_null($fieldValue))
+					{
+						$this->resultData[$productId]['PRODUCT_PROPS_VALUES'][$fieldId] = '&nbsp';
+					}
 				}
 			}
 		}

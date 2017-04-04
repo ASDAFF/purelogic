@@ -152,7 +152,7 @@ class OrderBuyer
 					<tbody>
 						<tr>
 							<td class="adm-detail-content-cell-l" width="40%">'.Loc::getMessage("SALE_ORDER_BUYER_ORDERCOMMENT").':</td>
-							<td class="adm-detail-content-cell-r">'.(strlen($data["USER_DESCRIPTION"]) > 0 ? htmlspecialcharsbx($data["USER_DESCRIPTION"]) : Loc::getMessage("SALE_ORDER_BUYER_NO")).'</td>
+							<td class="adm-detail-content-cell-r"><pre id="sale-adm-user-description-view" style="color:gray; max-width:800px; overflow:auto;">'.(strlen($data["USER_DESCRIPTION"]) > 0 ? htmlspecialcharsbx($data["USER_DESCRIPTION"]) : Loc::getMessage("SALE_ORDER_BUYER_NO")).'</pre></td>
 						</tr>
 					</tbody>
 				</table>
@@ -488,14 +488,39 @@ class OrderBuyer
 				if ($readonly && empty($propertyValue))
 					continue;
 
-				$showHtml = (($readonly) ? $property->getViewHtml() : $property->getEditHtml());
 				$p = $property->getProperty();
 
 				if($p['IS_PHONE'] == 'Y' && $readonly)
 				{
-					$showHtml = '<a href="javascript:void(0)" onclick="BX.Sale.Admin.OrderEditPage.desktopMakeCall(\''.$showHtml.'\');">'.
-						htmlspecialcharsbx($showHtml).
-					'</a>';
+					$phoneVal = $property->getValue();
+
+					if($phoneVal != '')
+					{
+						if(!is_array($phoneVal))
+							$phoneVal = array($phoneVal);
+
+						$showHtml = '';
+
+						foreach($phoneVal as $number)
+						{
+							$number = str_replace("'", "", htmlspecialcharsbx($number));
+
+							if(strlen($showHtml) > 0)
+								$showHtml .= ', ';
+
+							$showHtml .= '<a href="javascript:void(0)" onclick="BX.Sale.Admin.OrderEditPage.desktopMakeCall(\''.$number.'\');">'.
+								$number.
+								'</a>';
+						}
+					}
+					else
+					{
+						$showHtml = '';
+					}
+				}
+				else
+				{
+					$showHtml = (($readonly) ? $property->getViewHtml() : $property->getEditHtml());
 				}
 
 				$resultBody .= '

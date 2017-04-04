@@ -100,7 +100,7 @@ class LiveFeedAjaxController extends Controller
 
 		$this->getListData();
 		$this->createPreparedFields();
-		if(Loader::includeModule('bizproc'))
+		if(Loader::includeModule('bizproc') && CBPRuntime::isFeatureEnabled())
 			$this->getBizprocData();
 
 		$this->createHtml();
@@ -174,7 +174,7 @@ class LiveFeedAjaxController extends Controller
 	protected function processActionSetResponsible()
 	{
 		$this->checkRequiredPostParams(array('iblockId', 'randomString'));
-		if(!Loader::includeModule('bizproc'))
+		if(!Loader::includeModule('bizproc') || !CBPRuntime::isFeatureEnabled())
 		{
 			$this->errorCollection->add(array(new Error(Loc::getMessage('LISTS_SEAC_CONNECTION_MODULE_BIZPROC'))));
 		}
@@ -249,6 +249,8 @@ class LiveFeedAjaxController extends Controller
 			return;
 		}
 		echo $html;
+
+		$this->end();
 	}
 
 	protected function createHtmlSetConstants($templateId, $templateName)
@@ -272,7 +274,7 @@ class LiveFeedAjaxController extends Controller
 	protected function processActionIsConstantsTuned()
 	{
 		$this->checkRequiredPostParams(array('iblockId'));
-		if(!Loader::includeModule('bizproc'))
+		if(!Loader::includeModule('bizproc') || !CBPRuntime::isFeatureEnabled())
 		{
 			$this->errorCollection->add(array(new Error(Loc::getMessage('LISTS_SEAC_CONNECTION_MODULE_BIZPROC'))));
 		}
@@ -330,7 +332,7 @@ class LiveFeedAjaxController extends Controller
 	 */
 	protected function getTemplatesIdList($iblockId)
 	{
-		if(!Loader::includeModule('bizproc'))
+		if(!Loader::includeModule('bizproc') || !CBPRuntime::isFeatureEnabled())
 		{
 			return array();
 		}
@@ -495,7 +497,7 @@ class LiveFeedAjaxController extends Controller
 	protected function processActionGetBizprocTemplateId()
 	{
 		$this->checkRequiredPostParams(array('iblockId'));
-		if(!Loader::includeModule('bizproc'))
+		if(!Loader::includeModule('bizproc') || !CBPRuntime::isFeatureEnabled())
 		{
 			$this->errorCollection->add(array(new Error(Loc::getMessage('LISTS_SEAC_CONNECTION_MODULE_BIZPROC'))));
 		}
@@ -550,7 +552,7 @@ class LiveFeedAjaxController extends Controller
 	protected function processActionCheckPermissions()
 	{
 		$this->checkRequiredPostParams(array('iblockId'));
-		if(!Loader::includeModule('bizproc'))
+		if(!Loader::includeModule('bizproc') || !CBPRuntime::isFeatureEnabled())
 		{
 			$this->errorCollection->add(array(new Error(Loc::getMessage('LISTS_SEAC_CONNECTION_MODULE_BIZPROC'))));
 		}
@@ -572,7 +574,7 @@ class LiveFeedAjaxController extends Controller
 	protected function processActionCreateSettingsDropdown()
 	{
 		$this->checkRequiredPostParams(array('iblockId', 'randomString'));
-		if(!Loader::includeModule('bizproc'))
+		if(!Loader::includeModule('bizproc') || !CBPRuntime::isFeatureEnabled())
 		{
 			$this->errorCollection->add(array(new Error(Loc::getMessage('LISTS_SEAC_CONNECTION_MODULE_BIZPROC'))));
 		}
@@ -694,7 +696,7 @@ class LiveFeedAjaxController extends Controller
 		if($_POST["save"] != "Y" && $_POST["changePostFormTab"] != "lists" && !check_bitrix_sessid())
 			$this->errorCollection->add(array(new Error(Loc::getMessage('LISTS_SEAC_CONNECTION_MODULE_IBLOCK'))));
 
-		if(!Loader::IncludeModule('bizproc'))
+		if(!Loader::IncludeModule('bizproc') || !CBPRuntime::isFeatureEnabled())
 			$this->errorCollection->add(array(new Error(Loc::getMessage('LISTS_SEAC_CONNECTION_MODULE_BIZPROC'))));
 
 		if(!Loader::includeModule('iblock'))
@@ -715,7 +717,7 @@ class LiveFeedAjaxController extends Controller
 
 		if(!empty($templateData))
 		{
-			if(CModule::IncludeModule('bizproc'))
+			if(CModule::IncludeModule('bizproc') && CBPRuntime::isFeatureEnabled())
 			{
 				$isConstantsTuned = true;
 				foreach($templateData as $templateId)
@@ -736,7 +738,7 @@ class LiveFeedAjaxController extends Controller
 		}
 		else
 		{
-			if(CModule::IncludeModule("bizproc"))
+			if(CModule::IncludeModule("bizproc") && CBPRuntime::isFeatureEnabled())
 			{
 				$templateData = $this->getTemplatesIdList($this->iblockId);
 
@@ -1328,7 +1330,8 @@ class LiveFeedAjaxController extends Controller
 					'height' => '200px',
 					'iblockId' => ''
 				);
-				if($field["MULTIPLE"] == "Y"  && $field["TYPE"] != "S:DiskFile")
+				$listTypeNotMultiple = array('S:DiskFile', 'E:ECrm');
+				if($field["MULTIPLE"] == "Y" && !in_array($field["TYPE"], $listTypeNotMultiple))
 				{
 					$checkHtml = false;
 					$html = '<table id="tbl'.$fieldId.'">';
@@ -1394,7 +1397,7 @@ class LiveFeedAjaxController extends Controller
 					if($checkHtml)
 						$html .= '<span class="bx-lists-input-add-button"><input type="button" onclick="javascript:BX.Lists[\'LiveFeedClass_'.$this->randomString.'\'].createAdditionalHtmlEditor(\'tbl'.$fieldId.'\', \''.$fieldId.'\', \''.$this->formId.'\');" value="'.Loc::getMessage("LISTS_SEAC_ADD_BUTTON").'"></span>';
 					else
-						$html .= '<span class="bx-lists-input-add-button"><input type="button" onclick="javascript:BX.Lists[\'LiveFeedClass_'.$this->randomString.'\'].addNewTableRow(\'tbl'.$fieldId.'\', 1, /'.$fieldId.'\[(n)([0-9]*)\]/g, 2)" value="'.Loc::getMessage("LISTS_SEAC_ADD_BUTTON").'"></span>';
+						$html .= '<span class="bx-lists-input-add-button"><input type="button" onclick="javascript:BX.Lists.addNewTableRow(\'tbl'.$fieldId.'\', 1, /'.$fieldId.'\[(n)([0-9]*)\]/g, 2)" value="'.Loc::getMessage("LISTS_SEAC_ADD_BUTTON").'"></span>';
 
 					$this->lists['PREPARED_FIELDS'][$fieldId] = array(
 						"id"=>$fieldId,
@@ -1448,6 +1451,12 @@ class LiveFeedAjaxController extends Controller
 						}
 						else
 						{
+							if($field['TYPE'] == 'E:ECrm')
+							{
+								$this->getApplication()->showAjaxHead();
+								Bitrix\Main\Page\Asset::getInstance()->addCss('/bitrix/js/crm/css/crm.css');
+								Bitrix\Main\Page\Asset::getInstance()->addJs('/bitrix/js/crm/crm.js');
+							}
 							$html = call_user_func_array($field['PROPERTY_USER_TYPE']['GetPublicEditHTML'],
 								array(
 									$field,
@@ -1483,7 +1492,7 @@ class LiveFeedAjaxController extends Controller
 					foreach($this->lists['FORM_DATA'][$fieldId] as $key => $value)
 						$html .= '<tr><td><input type="text" name="'.$fieldId.'['.$key.'][VALUE]" value="'.$value["VALUE"].'"></td></tr>';
 					$html .= '</table>';
-					$html .= '<span class="bx-lists-input-add-button"><input type="button" onclick="javascript:BX.Lists[\'LiveFeedClass_'.$this->randomString.'\'].addNewTableRow(\'tbl'.$fieldId.'\', 1, /'.$fieldId.'\[(n)([0-9]*)\]/g, 2)" value="'.Loc::getMessage("LISTS_SEAC_ADD_BUTTON").'"></span>';
+					$html .= '<span class="bx-lists-input-add-button"><input type="button" onclick="javascript:BX.Lists.addNewTableRow(\'tbl'.$fieldId.'\', 1, /'.$fieldId.'\[(n)([0-9]*)\]/g, 2)" value="'.Loc::getMessage("LISTS_SEAC_ADD_BUTTON").'"></span>';
 				}
 				else
 				{
@@ -1520,7 +1529,7 @@ class LiveFeedAjaxController extends Controller
 						}
 					}
 					$html .= '</table>';
-					$html .= '<span class="bx-lists-input-add-button"><input type="button" onclick="javascript:BX.Lists[\'LiveFeedClass_'.$this->randomString.'\'].addNewTableRow(\'tbl'.$fieldId.'\', 1, /'.$fieldId.'\[(n)([0-9]*)\]/g, 2)" value="'.Loc::getMessage("LISTS_SEAC_ADD_BUTTON").'"></span>';
+					$html .= '<span class="bx-lists-input-add-button"><input type="button" onclick="javascript:BX.Lists.addNewTableRow(\'tbl'.$fieldId.'\', 1, /'.$fieldId.'\[(n)([0-9]*)\]/g, 2)" value="'.Loc::getMessage("LISTS_SEAC_ADD_BUTTON").'"></span>';
 				}
 				else
 				{
@@ -1723,7 +1732,7 @@ class LiveFeedAjaxController extends Controller
 				$html .= '</td></tr></table>';
 				$html .= '
 				<span class="bx-lists-input-add-button">
-					<input type="button" onclick="javascript:BX.Lists[\'LiveFeedClass_'.$this->randomString.'\'].addNewTableRow(\'tbl'.$fieldId.'\', 1, /'.$fieldId.'\[(n)([0-9]*)\]/g, 2)" value="'.Loc::getMessage("LISTS_SEAC_ADD_BUTTON").'">
+					<input type="button" onclick="javascript:BX.Lists.addNewTableRow(\'tbl'.$fieldId.'\', 1, /'.$fieldId.'\[(n)([0-9]*)\]/g, 2)" value="'.Loc::getMessage("LISTS_SEAC_ADD_BUTTON").'">
 				</span>';
 
 				$this->lists['PREPARED_FIELDS'][$fieldId] = array(
@@ -1907,6 +1916,7 @@ class LiveFeedAjaxController extends Controller
 				'autoResize' => true,
 				'autoResizeOffset' => 40,
 				'saveOnBlur' => true,
+				'actionUrl' => '/bitrix/tools/html_editor_action.php',
 				'controlsMap' => array(
 					array('id' => 'Bold', 'compact' => true, 'sort' => 80),
 					array('id' => 'Italic', 'compact' => true, 'sort' => 90),
@@ -2087,6 +2097,7 @@ class LiveFeedAjaxController extends Controller
 							<?
 							break;
 						case 'list':
+							$class = '';
 							if(!empty($params))
 							{
 								$class = 'bx-bp-select-linking';

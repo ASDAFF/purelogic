@@ -53,10 +53,15 @@ while ($row = $result->fetch())
 
 // get groups
 $saleGroupIds = array();
-$result = $APPLICATION->GetGroupRightList(array('MODULE_ID' => 'sale', 'G_ACCESS' => 'U'));
+$result = $APPLICATION->GetGroupRightList(array('MODULE_ID' => 'sale'));
 while ($row = $result->Fetch())
-	if ($row['GROUP_ID'] > 2)
+{
+	if (in_array($row['G_ACCESS'], array('P', 'U')) && $row['GROUP_ID'] > 2)
+	{
 		$saleGroupIds[] = $row['GROUP_ID'];
+	}
+}
+
 if ($saleGroupIds)
 {
 	$result = GroupTable::getList(array(
@@ -108,6 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !$readOnly && check_bitrix_sessid() 
 		'TYPE'   => $statusType,
 		'SORT'   => ($statusSort = intval($_POST['SORT'])) ? $statusSort : 100,
 		'NOTIFY' => $_POST['NOTIFY'] ? 'Y' : 'N',
+		'COLOR' => strlen($_POST['NEW_COLOR']) ? $_POST['NEW_COLOR'] : "",
 	);
 
 	$isNew = true;
@@ -117,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !$readOnly && check_bitrix_sessid() 
 	{
 		$isNew = false;
 		if ($statusData = StatusTable::getList(array(
-											'select' => array('ID', 'TYPE'),
+											'select' => array('ID', 'TYPE', 'COLOR'),
 											'filter' => array('=ID' => $statusId),
 											'limit'  => 1,
 										))->fetch())
@@ -405,6 +411,51 @@ if ($errors)
 					style="display:none"
 				<?endif?>
 			><?=Loc::getMessage('SSEN_NOTIFY_LINK')?></a>
+		</td>
+	</tr>
+	<tr>
+		<td><?=$statusFields['COLOR']->getTitle()?>:</td>
+		<td>
+			<style>
+				#new_color_label{
+					width: 23px;
+					height: 23px;
+					margin: 1px 0 0px 5px;
+					padding: 0;
+					position: relative;
+					display: inline;
+					float: left;
+					border: 1px solid;
+					border-color: #87919c #959ea9 #9ea7b1 #959ea9;
+					border-radius: 4px;
+					-webkit-box-shadow: 0 1px 0 0 rgba(255,255,255,0.3), inset 0 2px 2px -1px rgba(180,188,191,0.7);
+					box-shadow: 0 1px 0 0 rgba(255,255,255,0.3), inset 0 2px 2px -1px rgba(180,188,191,0.7);
+				}
+			</style>
+			<input type="text" name="NEW_COLOR" id="new_color" value="<?=htmlspecialcharsbx($status['COLOR'])?>" size="4" maxlength="2" style="float:left; margin-right: 5px">
+			<script>
+			function SetStatusColorInput(color)
+			{
+				if (!color)
+					color = "";
+				document.getElementById("new_color").value = color;
+				document.getElementById("new_color_label").style.background = color;
+			}
+			</script>
+			<?
+			$APPLICATION->IncludeComponent(
+				"bitrix:main.colorpicker",
+				"",
+				array(
+					"SHOW_BUTTON" => "Y",
+					"ID" => "123",
+					"NAME" => Loc::getMessage('SSEN_COLOR'),
+					"ONSELECT" => "SetStatusColorInput"
+				),
+				false
+			);
+			?>
+			<div id="new_color_label" style="background: <?=$status['COLOR']?>"></div>
 		</td>
 	</tr>
 	<?foreach ($languages as $languageId => $languageName):?>

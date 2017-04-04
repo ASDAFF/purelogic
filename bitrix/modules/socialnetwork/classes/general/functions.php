@@ -1395,7 +1395,7 @@ class CSocNetAllowed
 		unset($arSocNetAllowedSubscribeEntityTypesDesc);
 	}
 
-	function AddAllowedEntityType($entityType)
+	public static function AddAllowedEntityType($entityType)
 	{
 		if (is_array($entityType))
 		{
@@ -1435,7 +1435,7 @@ class CSocNetAllowed
 
 	/* --- entity types desc --- */
 
-	function AddAllowedEntityTypeDesc($entityTypeDescCode, $arEntityTypeDesc)
+	public static function AddAllowedEntityTypeDesc($entityTypeDescCode, $arEntityTypeDesc)
 	{
 		$entityTypeDescCode = trim($entityTypeDescCode);
 

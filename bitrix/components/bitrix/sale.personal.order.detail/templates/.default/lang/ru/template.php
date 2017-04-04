@@ -79,4 +79,10 @@ $MESS["SPOD_TPL_GOOD"] = "товар";
 $MESS["SPOD_TPL_GOODS"] = "товаров";
 $MESS["SPOD_TPL_TWO_GOODS"] = "товара";
 $MESS["SPOD_TPL_SUMOF"] = "на сумму";
+$MESS["SPOD_TPL_RESTRICTED_PAID"] = "На проверке менеджером";
+$MESS["SOPD_TPL_RESTRICTED_PAID_MESSAGE"] = "<b>Обратите внимание:</b> оплата заказа будет доступна после подтверждения менеджером";
+$MESS["SPOD_CHECK_TITLE"] = "Список чеков";
+$MESS["SPOD_CHECK_NUM"] = "Чек №#CHECK_NUMBER#";
+$MESS["SPOD_ORDER_DESC"] = "Комментарии к заказу";
+
 ?>

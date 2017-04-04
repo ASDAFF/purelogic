@@ -508,5 +508,31 @@ abstract class BasketItemBase
 		return false;
 	}
 
+	/**
+	 * @param $value
+	 * @param bool $custom
+	 *
+	 * @return Result
+	 */
+	public function setPrice($value, $custom = false)
+	{
+		$result = new Result();
+
+		$r = $this->setField('CUSTOM_PRICE', ($custom ? 'Y' : 'N'));
+		if (!$r->isSuccess())
+		{
+			$result->addErrors($r->getErrors());
+		}
+
+		$r = $this->setField('PRICE', $value);
+		if (!$r->isSuccess())
+		{
+			$result->addErrors($r->getErrors());
+		}
+
+		return $result;
+	}
+
+
 
 }

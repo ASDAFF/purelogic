@@ -10,8 +10,16 @@
 BX.ImMobile = function(params)
 {
 	BX.browser.addGlobalClass();
-	if(typeof(BX.message("USER_TZ_AUTO")) == 'undefined' || BX.message("USER_TZ_AUTO") == 'Y')
-		BX.message({"USER_TZ_OFFSET": -(new Date).getTimezoneOffset()*60-parseInt(BX.message("SERVER_TZ_OFFSET"))});
+
+	if(typeof params.user_tz_offset != "undefined")
+	{
+		BX.message({"USER_TZ_OFFSET":params.user_tz_offset})
+	}
+	else
+	{
+		if(typeof(BX.message("USER_TZ_AUTO")) == 'undefined' || BX.message("USER_TZ_AUTO") == 'Y')
+			BX.message({"USER_TZ_OFFSET": -(new Date).getTimezoneOffset()*60-parseInt(BX.message("SERVER_TZ_OFFSET"))});
+	}
 
 	if (typeof(BX.MessengerCommon) != 'undefined')
 		BX.MessengerCommon.setBxIm(this);
@@ -23,11 +31,11 @@ BX.ImMobile = function(params)
 
 	this.revision = 6; // mobile api revision - check include.php
 	this.errorMessage = '';
+	this.isAdmin = params.isAdmin || false;
 	this.bitrixNetwork = params.bitrixNetwork || false;
 	this.bitrixNetwork2 = params.bitrixNetwork2 || false;
 	this.bitrixOpenLines = params.bitrixOpenLines || false;
 	this.bitrix24 = params.bitrix24 || false;
-	this.bitrix24Admin = params.bitrix24Admin || false;
 	this.bitrixIntranet = params.bitrixIntranet || false;
 	this.bitrix24net = params.bitrix24net || false;
 	this.bitrixXmpp = params.bitrixXmpp || false;
@@ -43,6 +51,7 @@ BX.ImMobile = function(params)
 	this.userGender = params.userGender || 'M';
 	this.path = params.path || {};
 	this.language = params.language || 'en';
+	this.options = params.options || {};
 	this.init = typeof(params.init) != 'undefined'? params.init: true;
 	this.tryConnect = true;
 	this.animationSupport = true;
@@ -156,6 +165,9 @@ BX.ImMobile = function(params)
 		'turnServerPassword': params.webrtc && params.webrtc.turnServerPassword || ''
 	});
 	this.messenger.webrtc = this.webrtc;
+	
+	this.desktop = {'ready': function(){ return false;}, 'run': function(){ return false;}};
+	this.messenger.desktop = this.desktop;
 
 	if (this.init)
 	{
@@ -168,7 +180,6 @@ BX.ImMobile = function(params)
 	{
 		BXMobileApp.UI.Page.TopBar.title.setText('');
 		BXMobileApp.UI.Page.TopBar.title.setDetailText('');
-		BXMobileApp.UI.Page.LoadingScreen.show();
 	}
 
 	BX.addCustomEvent("onFrameDataRequestFail", BX.delegate(function(data){
@@ -443,7 +454,6 @@ BX.ImMobile.prototype.mobileActionReady = function()
 			BitrixMobile.fastClick.bindDelegate(this.messenger.popupContactListElementsWrap, {className: 'bx-messenger-cl-group-title'}, BX.delegate(BX.MessengerCommon.contactListToggleGroup, BX.MessengerCommon));
 
 			BitrixMobile.fastClick.bindDelegate(this.messenger.popupContactListElementsWrap, {className: 'bx-messenger-chatlist-more-wrap'}, BX.delegate(function(e){
-				console.log('in!');
 				if (BX.hasClass(BX.proxy_context.parentNode, 'bx-messenger-chatlist-show-all'))
 				{
 					this.messenger.contactListShowed[BX.proxy_context.firstChild.getAttribute('data-id')] = false;
@@ -460,16 +470,29 @@ BX.ImMobile.prototype.mobileActionReady = function()
 					BX.addClass(BX.proxy_context.parentNode, 'bx-messenger-chatlist-show-all');
 				}
 			}, this));
+			BitrixMobile.fastClick.bindDelegate(this.messenger.popupContactListElementsWrap, {className: 'bx-messenger-chatlist-search-button'}, BX.delegate(function(e){
+				this.messenger.realSearch = true;
+		
+				this.messenger.popupContactListElementsWrap.appendChild(BX.create("div", {
+					props : { className: "bx-messenger-cl-item-search"},
+					html : BX.message('IM_M_CL_SEARCH')
+				}));
+				BX.remove(BX.proxy_context.parentNode);
+				
+				BX.MessengerCommon.contactListRealSearch(this.messenger.contactListSearchText);
+			}, this));
 		}
 
-		BX.addCustomEvent("onImDialogOpen", BX.delegate(function (params)
+		BXMobileApp.addCustomEvent("onImDialogOpen", BX.delegate(function (params)
 		{
 			this.messenger.openMessenger(params.id, false, false);
 		}, this));
-		BX.addCustomEvent("onImDialogClose", BX.delegate(function (params)
+
+		BXMobileApp.addCustomEvent("onImDialogClose", BX.delegate(function (params)
 		{
 			this.messenger.closeMessenger(params.id);
 		}, this));
+
 		BX.addCustomEvent("onImDialogNetworkOpen", BX.delegate(function (params)
 		{
 			for (var i = 0; i < this.messenger.recent.length; i++)
@@ -501,11 +524,11 @@ BX.ImMobile.prototype.mobileActionReady = function()
 
 			BX.MessengerCommon.readMessage(this.messenger.currentTab);
 			this.messenger.dialogStatusRedrawDelay();
-			app.onCustomEvent('onImDialogOpen', {id: this.messenger.currentTab});
+			BXMobileApp.onCustomEvent('onImDialogOpen', {id: this.messenger.currentTab}, true);
 		}, this));
 
 		BX.addCustomEvent("onHidePageBefore", BX.delegate(function(){
-			app.onCustomEvent('onImDialogClose', {id: this.messenger.currentTab});
+			BXMobileApp.onCustomEvent('onImDialogClose', {id: this.messenger.currentTab}, true);
 		}, this));
 
 		BXMobileApp.UI.Page.TextPanel.setUseImageButton(true);
@@ -604,7 +627,7 @@ BX.ImMobile.prototype.mobileActionReady = function()
 						{
 							name: diskFileData["NAME"],
 							modifyDateInt: diskFileData["UPDATE_TIME"],
-							sizeInt: diskFileData["SIZE"]? diskFileData["SIZE"]: 0,
+							sizeInt: diskFileData["SIZE"]? diskFileData["SIZE"]: 0
 						}
 						this.disk.uploadFromDisk(fileList, text);
 					}
@@ -680,6 +703,22 @@ BX.ImMobile.prototype.mobileActionReady = function()
 				this.messenger.openMessenger(data.dialogId);
 			}, this)});
 		}
+		
+		BX.bindDelegate(this.messenger.popupMessengerBodyWrap, 'click', {className: 'bx-messenger-attach-block-spoiler'}, BX.delegate(function(e) {
+			var item = BX.findChildByClassName(BX.proxy_context, "bx-messenger-attach-block-value");
+			if (BX.hasClass(BX.proxy_context, 'bx-messenger-attach-block-spoiler-show'))
+			{
+				height = item.getAttribute('data-min-height');
+				BX.removeClass(BX.proxy_context, 'bx-messenger-attach-block-spoiler-show');
+			}
+			else 
+			{
+				BX.addClass(BX.proxy_context, 'bx-messenger-attach-block-spoiler-show');
+				height = item.getAttribute('data-max-height');
+			}
+			
+			item.style.maxHeight = height+'px';
+		}, this));
 
 		BX.bindDelegate(this.messenger.popupMessengerBodyWrap, 'click', {className: 'bx-messenger-content-item-avatar-button'}, BX.delegate(function(e)
 		{
@@ -784,6 +823,7 @@ BX.ImMobile.prototype.mobileActionReady = function()
 			this.messenger.popupMessengerFileFormRegMessageText = BX.create('input', { attrs : { type : 'hidden', name: 'REG_MESSAGE_TEXT', value: ''}}),
 			this.messenger.popupMessengerFileFormRegMessageId = BX.create('input', { attrs : { type : 'hidden', name: 'REG_MESSAGE_ID', value: 0}}),
 			this.messenger.popupMessengerFileFormRegParams = BX.create('input', { attrs : { type : 'hidden', name: 'REG_PARAMS', value: ''}}),
+			this.messenger.popupMessengerFileFormRegMessageHidden = BX.create('input', { attrs : { type : 'hidden', name: 'REG_MESSAGE_HIDDEN', value: 'N'}}),
 			BX.create('input', { attrs : { type : 'hidden', name: 'IM_AJAX_CALL', value: 'Y'}}),
 			this.messenger.popupMessengerFileFormInput = BX.create('input', { attrs : { type : 'hidden', name: 'FAKE_INPUT', value: 'Y'}})
 		]})]});
@@ -865,7 +905,7 @@ BX.ImMobile.prototype.mobileActionReady = function()
 
 BX.ImMobile.prototype.recentPageAction = function (params)
 {
-	BX.addCustomEvent("onPhoneTo", BX.delegate(function (data){
+	BXMobileApp.addCustomEvent("onPhoneTo", BX.delegate(function (data){
 		this.phoneTo(data.number, data.params);
 	}, this));
 
@@ -887,10 +927,10 @@ BX.ImMobile.prototype.recentPageAction = function (params)
 		}
 	}, this));
 
-	BX.addCustomEvent("onPull-im", BX.delegate(function (data)
+	var pullHandler = BX.delegate(function (dataObject)
 	{
-		params = data.params;
-		command = data.command;
+		params = dataObject.params;
+		command = dataObject.command;
 
 		if (command == 'readMessage')
 		{
@@ -946,6 +986,8 @@ BX.ImMobile.prototype.recentPageAction = function (params)
 			lastId = parseInt(params.id);
 			if (this.notify.notifyLastId < lastId)
 				this.notify.notifyLastId = lastId;
+			else
+				return;
 
 			this.notifyCount++;
 			this.updateCounter();
@@ -960,9 +1002,25 @@ BX.ImMobile.prototype.recentPageAction = function (params)
 				}, this), 600);
 			}
 		}
+
+	}, this);
+
+	BXMobileApp.addCustomEvent("onPull-im", BX.delegate(function(dataObject){
+
+		if(dataObject.data)
+		{
+			for (var key in dataObject.data)
+			{
+				pullHandler(dataObject.data[key]);
+			}
+		}
+		else
+		{
+			pullHandler(dataObject);
+		}
 	}, this));
 
-	BX.addCustomEvent("onNotificationsLastId", BX.delegate(function (lastId)
+	BXMobileApp.addCustomEvent("onNotificationsLastId", BX.delegate(function (lastId)
 	{
 		this.notify.notifyLoadFlag = false;
 		lastId = parseInt(lastId);
@@ -970,7 +1028,7 @@ BX.ImMobile.prototype.recentPageAction = function (params)
 			this.notify.notifyLastId = lastId;
 	}, this));
 
-	BX.addCustomEvent("onImDialogOpen", BX.delegate(function (params)
+	BXMobileApp.addCustomEvent("onImDialogOpen", BX.delegate(function (params)
 	{
 		this.messageCountArray[params.id] = 0;
 		this.updateCounter();
@@ -986,7 +1044,7 @@ BX.ImMobile.prototype.recentPageAction = function (params)
 
 BX.ImMobile.prototype.initPageAction = function (params)
 {
-	BX.addCustomEvent("onImError", BX.delegate(function (params){
+	BXMobileApp.addCustomEvent("onImError", BX.delegate(function (params){
 		if (params.error == 'AUTHORIZE_ERROR')
 		{
 			app.BasicAuth({success: BX.delegate(function ()
@@ -1041,6 +1099,8 @@ BX.ImMobile.prototype.initPageAction = function (params)
 			var arg = pushParams.ACTION.split("_");
 			var userId = parseInt(arg[1]);
 			var callTime = parseInt(arg[2]);
+			var video = ((arg.length >=4) && arg[3] == "Y");
+
 
 			var callInvite = function()
 			{
@@ -1049,7 +1109,7 @@ BX.ImMobile.prototype.initPageAction = function (params)
 					BX.ready(function ()
 						{
 							setTimeout(function(){
-								mwebrtc.callInvite(userId);
+								mwebrtc.callInvite(userId, video);
 							}, 1500);
 
 						}
@@ -1094,6 +1154,17 @@ BX.ImMobile.prototype.initPageAction = function (params)
 		}
 	}, this);
 
+	var phoneToNumberHandler = function(){
+		if(BXMobileAppContext["getLastPhoneNumber"])
+		{
+			if(BXMobileAppContext.getLastPhoneNumber().length > 0)
+			{
+				BX.MobileTools.phoneTo(BXMobileAppContext.getLastPhoneNumber(), {callMethod:"telephony"});
+				BXMobileAppContext.removeLastPhoneNumber();
+			}
+		}
+	};
+
 	if(app.enableInVersion(15))
 	{
 		BX.addCustomEvent("UIApplicationDidBecomeActiveNotification", function ()
@@ -1101,9 +1172,14 @@ BX.ImMobile.prototype.initPageAction = function (params)
 			var push = BXMobileApp.PushManager.getLastNotification();
 			if (push && push != {})
 				notificationHandler(push);
+			else
+			{
+				phoneToNumberHandler();
+			}
 		});
 
 		notificationHandler(BXMobileApp.PushManager.getLastNotification());
+		phoneToNumberHandler();
 	}
 	else
 		BX.addCustomEvent("onOpenPush", notificationHandler);
@@ -1239,7 +1315,7 @@ BX.ImMobile.prototype.updateStateLight = function ()
 				{
 					this.sendAjaxTry++;
 					BX.onCustomEvent('onImError', [{error: data.ERROR}]);
-					BXMobileApp.onCustomEvent('onImError', {error: data.ERROR});
+					BXMobileApp.onCustomEvent('onImError', {error: data.ERROR}, true);
 
 					clearTimeout(this.timeoutUpdateStateLight);
 					this.timeoutUpdateStateLight = setTimeout(BX.delegate(function ()
@@ -1385,7 +1461,8 @@ BX.ImMessengerMobile = function(BXIM, params)
 	this.readMessageTimeout = {};
 	this.readMessageTimeoutSend = null;
 
-	this.realSearch = this.BXIM.bitrixNetwork2 && !this.BXIM.userExtranet || !this.BXIM.bitrixIntranet && !this.BXIM.bitrix24net;
+	this.realSearchAvailable = !this.BXIM.userExtranet || !this.BXIM.bitrixIntranet && !this.BXIM.bitrix24net;
+	this.realSearch = false;
 	this.realSearchFound = true;
 
 	this.users = params.users;
@@ -1396,6 +1473,7 @@ BX.ImMessengerMobile = function(BXIM, params)
 	this.woUserInGroup = params.woUserInGroup;
 	this.redrawTab = {};
 	this.loadLastMessageTimeout = {};
+	this.loadLastMessageClassTimeout = {};
 	this.showMessage = params.showMessage;
 	this.unreadMessage = params.unreadMessage;
 	this.flashMessage = params.flashMessage;
@@ -1497,6 +1575,8 @@ BX.ImMessengerMobile = function(BXIM, params)
 	this.popupMessengerFileButton = null;
 	this.popupMessengerFileFormChatId = null;
 	this.popupMessengerFileFormInput = null;
+	
+	this.linesSilentMode = {};
 }
 
 BX.ImMessengerMobile.prototype.newMessage = function()
@@ -1769,9 +1849,12 @@ BX.ImMessengerMobile.prototype.dialogStatusRedrawDelay = function(params)
 	if (this.currentTab == 0)
 		return false;
 
+	window.PAGE_ID = "DIALOG"+this.currentTab;
+
 	this.openChatFlag = false;
 	this.openCallFlag = false;
 	this.openLinesFlag = false;
+
 	if (this.currentTab.toString().substr(0,4) == 'chat')
 	{
 		this.openChatFlag = true;
@@ -1814,7 +1897,7 @@ BX.ImMessengerMobile.prototype.dialogStatusRedrawDelay = function(params)
 				{
 					items.push({ icon: 'add', name: BX.message('IM_M_MENU_ADD'), action:BX.delegate(function() {  this.extendChat(this.currentTab, true, true); }, this)});
 					items.push({ name: BX.message('IM_OL_INVITE_TRANSFER'), action:BX.delegate(function() {  this.linesTransfer(chatId); }, this)});
-					items.push({ name: BX.message(this.chat[chatId].entity_data_3 == 'Y'? "IM_M_OL_SILENT_OFF": "IM_M_OL_SILENT_ON"), action:BX.delegate(function() {  this.linesToggleSilentMode(); }, this)});
+					items.push({ name: BX.message(this.linesSilentMode[chatId]? "IM_M_OL_SILENT_OFF": "IM_M_OL_SILENT_ON"), action:BX.delegate(function() {  this.linesToggleSilentMode(); }, this)});
 				}
 				if (this.chat[chatId].owner == this.BXIM.userId)
 				{
@@ -1878,18 +1961,24 @@ BX.ImMessengerMobile.prototype.dialogStatusRedrawDelay = function(params)
 				}, this)});
 			}
 
-			app.menuCreate({items:items});
+			app.menuCreate({useNavigationBarColor: true, items:items});
 		}
 		else
 		{
-			app.menuCreate({items:[
-				{ icon: 'reload', name: BX.message('IM_M_MENU_RELOAD'), action:function() {
-					BXMobileApp.UI.Page.TopBar.title.setText('');
-					BXMobileApp.UI.Page.TopBar.title.setDetailText('');
-					//BXMobileApp.UI.Page.reloadUnique()
-					location.reload();
-				}}
-			]});
+			app.menuCreate({
+				useNavigationBarColor: true,
+				items: [
+					{
+						icon: 'reload', name: BX.message('IM_M_MENU_RELOAD'), action: function ()
+						{
+							BXMobileApp.UI.Page.TopBar.title.setText('');
+							BXMobileApp.UI.Page.TopBar.title.setDetailText('');
+							//BXMobileApp.UI.Page.reloadUnique()
+							location.reload();
+						}
+					}
+				]
+			});
 		}
 		if (this.chat[chatId])
 		{
@@ -1908,7 +1997,9 @@ BX.ImMessengerMobile.prototype.dialogStatusRedrawDelay = function(params)
 	else if (this.currentTab)
 	{
 		var userId = this.currentTab;
-		app.menuCreate({items:[
+		app.menuCreate({
+			useNavigationBarColor: true,
+			items:[
 			{ icon: 'user', name: BX.message('IM_M_MENU_USER'), action:BX.delegate(function() { app.loadPageBlank({url: this.BXIM.path.profileTemplate.replace('#user_id#', this.currentTab), bx24ModernStyle: true});}, this)},
 			{ icon: 'add', name: BX.message('IM_M_MENU_ADD'), action:BX.delegate(function() {  this.extendChat(this.currentTab, false); }, this)},
 			{ icon: 'reload', name: BX.message('IM_M_MENU_RELOAD'), action:function() {
@@ -2105,7 +2196,7 @@ BX.ImMessengerMobile.prototype.dialogStatusRedrawDelay = function(params)
 					type: "call_video",
 					callback: function ()
 					{
-						app.onCustomEvent("onCallInvite", {"userId": userId});
+						BXMobileApp.onCustomEvent("onCallInvite", {"userId": userId}, true);
 					}
 				};
 			}
@@ -2117,7 +2208,7 @@ BX.ImMessengerMobile.prototype.dialogStatusRedrawDelay = function(params)
 
 				sheetButtons.push({
 					title: BX.message("IM_AUDIO_CALL"),
-					callback: BX.delegate(function () { app.onCustomEvent("onCallInvite", {"userId": userId, video: false}); }, this)
+					callback: BX.delegate(function () { BXMobileApp.onCustomEvent("onCallInvite", {"userId": userId, video: false},true); }, this)
 				});
 
 				if (this.phones[userId].PERSONAL_MOBILE)
@@ -2178,7 +2269,7 @@ BX.ImMessengerMobile.prototype.dialogStatusRedrawDelay = function(params)
 						type: "call_audio",
 						callback: function ()
 						{
-							app.onCustomEvent("onCallInvite", {"userId": userId, video: false});
+							BXMobileApp.onCustomEvent("onCallInvite", {"userId": userId, video: false}, true);
 						}
 					};
 				}
@@ -2191,7 +2282,7 @@ BX.ImMessengerMobile.prototype.dialogStatusRedrawDelay = function(params)
 					type: "call_audio",
 					callback: function ()
 					{
-						app.onCustomEvent("onCallInvite", {"userId": userId, video: false});
+						BXMobileApp.onCustomEvent("onCallInvite", {"userId": userId, video: false}, true);
 					}
 				};
 			}
@@ -2206,7 +2297,7 @@ BX.ImMessengerMobile.prototype.dialogStatusRedrawDelay = function(params)
 				type: "call_video",
 				callback: function ()
 				{
-					app.onCustomEvent("onCallInvite", {"userId": userId});
+					BXMobileApp.onCustomEvent("onCallInvite", {"userId": userId}, true);
 				}
 			};
 			panelButtons["button_2"] =
@@ -2215,7 +2306,7 @@ BX.ImMessengerMobile.prototype.dialogStatusRedrawDelay = function(params)
 				type: "call_audio",
 				callback: function ()
 				{
-					app.onCustomEvent("onCallInvite", {"userId": userId, video: false});
+					BXMobileApp.onCustomEvent("onCallInvite", {"userId": userId, video: false}, true);
 				}
 			};
 		}
@@ -2425,12 +2516,6 @@ BX.ImMessengerMobile.prototype.openMessenger = function(userId, node, openPage)
 		if (typeof(userId) == "undefined" || userId == null)
 			userId = 0;
 
-		if (userId == this.BXIM.userId)
-		{
-			this.currentTab = 0;
-			userId = 0;
-		}
-
 		if (this.currentTab == null)
 			this.currentTab = 0;
 
@@ -2571,7 +2656,15 @@ BX.ImMessengerMobile.prototype.sendMessage = function(recipientId, text)
 	var elEmpty = BX.findChildByClassName(this.popupMessengerBodyWrap, "bx-messenger-content-empty");
 	if (elEmpty)
 		BX.remove(elEmpty);
-
+	
+	if (recipientId.toString().substr(0,4) == 'chat' && this.linesSilentMode && this.linesSilentMode[recipientId.toString().substr(4)])
+	{
+		if (!this.message['temp'+messageTmpIndex].params)
+		{
+			this.message['temp'+messageTmpIndex].params = {};
+		}
+		this.message['temp'+messageTmpIndex].params.CLASS = "bx-messenger-content-item-system";
+	}
 	BX.MessengerCommon.drawMessage(recipientId, this.message['temp'+messageTmpIndex]);
 
 	this.textareaHistory[recipientId] = '';
@@ -2672,7 +2765,7 @@ BX.ImMessengerMobile.prototype.linesTransfer = function (chatId)
 				data: {'COMMAND': 'transfer', 'CHAT_ID' : chatId, 'TRANSFER_ID': user_id, 'IM_OPEN_LINES' : 'Y', 'IM_AJAX_CALL' : 'Y', 'sessid': BX.bitrix_sessid()},
 				onsuccess: BX.delegate(function(){
 					app.closeController();
-				}, this),
+				}, this)
 			});
 		}, this),
 		set_focus_to_search: true,
@@ -2736,8 +2829,8 @@ BX.ImMessengerMobile.prototype.linesToggleSilentMode = function()
 	{
 		flag = 'Y';
 	}
-
-	BX.MessengerCommon.linesActivateSilentMode(chatId, flag);
+	this.linesSilentMode[chatId] = flag == 'Y';
+	//BX.MessengerCommon.linesActivateSilentMode(chatId, flag);
 }
 
 BX.ImMessengerMobile.prototype.updateMessageCount = function(send)
@@ -2982,7 +3075,7 @@ BX.ImNotifyMobile.prototype.notifyViewed = function ()
 			{
 				this.sendAjaxTry++;
 				BX.onCustomEvent('onImError', [{error: data.ERROR}]);
-				BXMobileApp.onCustomEvent('onImError', {error: data.ERROR});
+				BXMobileApp.onCustomEvent('onImError', {error: data.ERROR},true);
 
 				setTimeout(BX.delegate(function ()
 				{
@@ -3147,6 +3240,12 @@ BX.ImDiskManagerMobile.prototype.uploadFromDisk = function(selected, text)
 	if (!recipientId)
 		return false;
 
+	var olSilentMode = 'N';
+	if (recipientId.toString().substr(0,4) == 'chat' && this.BXIM.messenger.linesSilentMode && this.BXIM.messenger.linesSilentMode[chatId])
+	{
+		olSilentMode = 'Y';
+	}
+	
 	var tmpMessageId = 'tempFile'+this.fileTmpId;
 	this.messenger.message[tmpMessageId] = {
 		'id': tmpMessageId,
@@ -3155,7 +3254,7 @@ BX.ImDiskManagerMobile.prototype.uploadFromDisk = function(selected, text)
 		'recipientId': recipientId,
 		'date': BX.MessengerCommon.getNowDate(),
 		'text': BX.MessengerCommon.prepareText(text, true),
-		'params': {'FILE_ID': paramsFileId}
+		'params': {'FILE_ID': paramsFileId, 'CLASS': olSilentMode == "Y"? "bx-messenger-content-item-system": ""}
 	};
 	if (!this.messenger.showMessage[recipientId])
 		this.messenger.showMessage[recipientId] = [];
@@ -3165,14 +3264,14 @@ BX.ImDiskManagerMobile.prototype.uploadFromDisk = function(selected, text)
 	BX.MessengerCommon.drawProgessMessage(tmpMessageId);
 
 	this.messenger.sendMessageFlag++;
-
+	
 	BX.ajax({
 		url: this.BXIM.pathToFileAjax+'?FILE_UPLOAD_FROM_DISK&V='+this.BXIM.revision,
 		method: 'POST',
 		dataType: 'json',
 		skipAuthCheck: true,
 		timeout: 30,
-		data: {'IM_FILE_UPLOAD_FROM_DISK' : 'Y', CHAT_ID: chatId, RECIPIENT_ID: recipientId, MESSAGE: text, MESSAGE_TMP_ID: tmpMessageId, FILES: JSON.stringify(paramsFileId), 'IM_AJAX_CALL' : 'Y', 'sessid': BX.bitrix_sessid()},
+		data: {'IM_FILE_UPLOAD_FROM_DISK' : 'Y', CHAT_ID: chatId, RECIPIENT_ID: recipientId, MESSAGE: text, MESSAGE_TMP_ID: tmpMessageId, 'OL_SILENT': olSilentMode, FILES: JSON.stringify(paramsFileId), 'IM_AJAX_CALL' : 'Y', 'sessid': BX.bitrix_sessid()},
 		onsuccess: BX.delegate(function(data) {
 			if (data.ERROR != '')
 			{

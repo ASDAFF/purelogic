@@ -156,7 +156,8 @@ BX.Sale.Admin.OrderBuyer =
 					"PERSON_TYPE_ID": this.getBuyerTypeId(),
 					"CURRENCY": BX.Sale.Admin.OrderEditPage.currency,
 					"ORDER_ID": BX.Sale.Admin.OrderEditPage.orderId,
-					"SITE_ID": BX.Sale.Admin.OrderEditPage.siteId
+					"SITE_ID": BX.Sale.Admin.OrderEditPage.siteId,
+					"BUYER_ID_CHANGED": "Y"
 				},
 				demandFields:[
 					"BUYER_PROFILES_LIST",

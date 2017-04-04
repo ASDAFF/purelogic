@@ -74,4 +74,5 @@ $MESS["BLOG_POST_CREATE_TASK_SUCCESS_TITLE"] = "Aufgabe wurde erstellt";
 $MESS["BLOG_POST_CREATE_TASK_FAILURE_TITLE"] = "Fehler";
 $MESS["BLOG_POST_CREATE_TASK_SUCCESS_DESCRIPTION"] = "Sie können jetzt die Aufgabe anzeigen und bearbeiten.";
 $MESS["BLOG_POST_CREATE_TASK_ERROR_GET_DATA"] = "Daten können nicht erhalten werden, um eine Aufgabe zu erstellen.";
+$MESS["BLOG_POST_VOTE_EXPORT"] = "Umfrageergebnisse exportieren";
 ?>

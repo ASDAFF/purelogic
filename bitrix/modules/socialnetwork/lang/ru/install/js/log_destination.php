@@ -28,4 +28,5 @@ $MESS["LM_INVITE_EMAIL_USER_PLACEHOLDER_NAME"] = "Имя";
 $MESS["LM_INVITE_EMAIL_USER_PLACEHOLDER_LAST_NAME"] = "Фамилия";
 $MESS["LM_INVITE_EMAIL_CRM_CREATE_CONTACT"] = "Создать контакт CRM";
 $MESS["LM_POPUP_WAITER_TEXT"] = "Идет поиск дополнительных результатов...";
+$MESS["LM_POPUP_SEARCH_NETWORK"] = "Поиск в Битрикс24.Network";
 ?>

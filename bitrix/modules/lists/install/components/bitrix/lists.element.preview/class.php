@@ -45,6 +45,11 @@ class ListsElementPreviewComponent extends \CBitrixComponent
 			$renderMethodName = 'renderFieldByUserType'.$field['PROPERTY_USER_TYPE']['USER_TYPE'];
 			$result = $this->$renderMethodName($field);
 		}
+		else if(isset($field['PROPERTY_USER_TYPE']['GetPublicViewHTMLMulty']))
+		{
+			$result = call_user_func_array(
+				$field["PROPERTY_USER_TYPE"]['GetPublicViewHTMLMulty'], array($field, $field, array()));
+		}
 		else if(isset($field['PROPERTY_USER_TYPE']['GetPublicViewHTML']))
 		{
 			if($field['MULTIPLE'] === 'Y' && is_array($field['VALUE']))
@@ -257,12 +262,6 @@ class ListsElementPreviewComponent extends \CBitrixComponent
 			$result[] = '<a href="'.htmlspecialcharsbx($elementUrl).'">'.htmlspecialcharsbx($element["NAME"]).'</a>';
 		}
 		return implode('<br>', $result);
-	}
-
-	protected function renderFieldByUserTypeDiskFile(array $field)
-	{
-		$fieldValue = array('VALUE' => explode(',', $field['VALUE'][0]));
-		return call_user_func_array($field["PROPERTY_USER_TYPE"]['GetPublicViewHTML'], array($field, $fieldValue, array()));
 	}
 
 	protected function renderFieldByFieldPreviewPicture(array $field)

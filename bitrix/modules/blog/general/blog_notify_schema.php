@@ -48,6 +48,42 @@ class CBlogNotifySchema
 			);
 		}
 
+		if (IsModuleInstalled('socialnetwork'))
+		{
+			$ar["moderate_post"] = Array(
+				"NAME" => GetMessage('BLG_NS_MODERATE_POST'),
+				"SITE" => "Y",
+				"MAIL" => "Y",
+				"XMPP" => "N",
+				"PUSH" => "N",
+				"DISABLED" => Array(IM_NOTIFY_FEATURE_XMPP, IM_NOTIFY_FEATURE_PUSH)
+			);
+			$ar["moderate_comment"] = Array(
+				"NAME" => GetMessage('BLG_NS_MODERATE_COMMENT'),
+				"SITE" => "Y",
+				"MAIL" => "Y",
+				"XMPP" => "N",
+				"PUSH" => "N",
+				"DISABLED" => Array(IM_NOTIFY_FEATURE_XMPP, IM_NOTIFY_FEATURE_PUSH)
+			);
+			$ar["published_post"] = Array(
+				"NAME" => GetMessage('BLG_NS_PUBLISHED_POST'),
+				"SITE" => "Y",
+				"MAIL" => "Y",
+				"XMPP" => "N",
+				"PUSH" => "N",
+				"DISABLED" => Array(IM_NOTIFY_FEATURE_XMPP, IM_NOTIFY_FEATURE_PUSH)
+			);
+			$ar["published_comment"] = Array(
+				"NAME" => GetMessage('BLG_NS_PUBLISHED_COMMENT'),
+				"SITE" => "Y",
+				"MAIL" => "Y",
+				"XMPP" => "N",
+				"PUSH" => "N",
+				"DISABLED" => Array(IM_NOTIFY_FEATURE_XMPP, IM_NOTIFY_FEATURE_PUSH)
+			);
+		}
+
 		return array(
 			"blog" => array(
 				"NAME" => GetMessage('BLG_NS'),
@@ -56,5 +92,3 @@ class CBlogNotifySchema
 		);
 	}
 }
-
-?>

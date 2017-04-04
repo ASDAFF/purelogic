@@ -10,9 +10,14 @@ class ListsSelectElementComponent extends CBitrixComponent
 	public function onPrepareComponentParams($arParams)
 	{
 		$arParams['ERROR'] = array();
-		if (!Loader::includeModule('lists') || !Loader::includeModule('bizproc'))
+		if (!Loader::includeModule('lists'))
 		{
 			$arParams['ERROR'][] = Loc::getMessage('CC_BLL_MODULE_NOT_INSTALLED');
+			return $arParams;
+		}
+		if(!Loader::includeModule('bizproc') || !CBPRuntime::isFeatureEnabled())
+		{
+			$arParams['ERROR'][] = Loc::getMessage('CC_BLL_BIZPROC_MODULE_NOT_INSTALLED');
 			return $arParams;
 		}
 		global $USER;
@@ -51,6 +56,9 @@ class ListsSelectElementComponent extends CBitrixComponent
 
 	public function executeComponent()
 	{
+		if($this->arParams['SET_TITLE'] == 'Y')
+			$this->getApplication()->setTitle(Loc::getMessage('CC_BLL_TITLE'));
+
 		if(!empty($this->arParams['ERROR']))
 		{
 			ShowError(array_shift($this->arParams['ERROR']));
@@ -196,9 +204,6 @@ class ListsSelectElementComponent extends CBitrixComponent
 
 		$this->arResult["ROWS_COUNT"] = $elementObject->selectedRowsCount();
 		$this->arResult["NAV_RESULT"] = $elementObject;
-
-		if($this->arParams['SET_TITLE'] == 'Y')
-			$this->getApplication()->setTitle(Loc::getMessage('CC_BLL_TITLE'));
 
 		$this->includeComponentTemplate();
 	}

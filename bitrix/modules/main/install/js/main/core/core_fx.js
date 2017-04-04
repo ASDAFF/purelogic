@@ -569,7 +569,9 @@ BX.easing.prototype.animate = function()
 			state[propName] = Math.round(this.start[propName] + (this.finish[propName] - this.start[propName]) * progress);
 
 		if (this.step)
+		{
 			this.step(state);
+		}
 	};
 
 	this.animateProgress();
@@ -579,33 +581,55 @@ BX.easing.prototype.stop = function(completed)
 {
 	if (this.timer)
 	{
-		clearInterval(this.timer);
+		cancelAnimationFrame(this.timer);
 		this.timer = null;
-
 		if (completed)
+		{
 			this.options.complete && this.options.complete();
+		}
 	}
 };
 
 BX.easing.prototype.animateProgress = function()
 {
-	var start = new Date();
+	if (!window.requestAnimationFrame)
+	{
+		//For old browsers we skip animation
+		this.options.progress(1);
+		this.options.complete && this.options.complete();
+		return;
+	}
+
+	var start = null;
 	var delta = this.options.transition || BX.easing.transitions.linear;
 	var duration = this.options.duration || 1000;
+	var animation = BX.proxy(function(time) {
 
-	this.timer = setInterval(BX.proxy(function() {
+		if (start === null)
+		{
+			start = time;
+		}
 
-		var progress = (new Date() - start) / duration;
+		var progress = (time - start) / duration;
 		if (progress > 1)
+		{
 			progress = 1;
+		}
 
 		this.options.progress(delta(progress));
 
 		if (progress == 1)
+		{
 			this.stop(true);
+		}
+		else
+		{
+			this.timer = requestAnimationFrame(animation);
+		}
 
-	}, this), this.options.delay || 13);
+	}, this);
 
+	this.timer = requestAnimationFrame(animation);
 };
 
 BX.easing.makeEaseInOut = function(delta)

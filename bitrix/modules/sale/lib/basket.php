@@ -18,7 +18,7 @@ Loc::loadMessages(__FILE__);
 class Basket
 	extends BasketBase
 {
-	/** @var null|int */
+	/** @var null|array */
 	private $bundleIndex = null;
 
 	/** @var bool */
@@ -61,14 +61,7 @@ class Basket
 		foreach($this as $originalItem)
 		{
 			$item = $basket->createItem($originalItem->getField("MODULE"), $originalItem->getProductId());
-			$item->setFields(
-				array_intersect_key(
-					$originalItem->getFields()->getValues(),
-					array_flip(
-						$item->getSettableFields()
-					)
-				)
-			);
+			$item->initFields($originalItem->getFields()->getValues());
 		}
 
 		return $basket;
@@ -76,7 +69,7 @@ class Basket
 
 	/**
 	 * @param $siteId
-	 * @return static
+	 * @return Basket
 	 */
 	public static function create($siteId)
 	{
@@ -205,7 +198,7 @@ class Basket
 
 			if (!$this->getOrder() || $this->getOrder()->getId() == 0)
 			{
-				if ($item->getField("CUSTOM_PRICE") != "Y" && !$item->isBundleChild())
+				if ($item->getField("CUSTOM_PRICE") != "Y" && !$item->isBundleChild() && $value > 0)
 				{
 					$r = static::refreshData(array("PRICE"), $item);
 					if (!$r->isSuccess())
@@ -416,6 +409,11 @@ class Basket
 
 			$isBundleParent = (bool)($item && $item->isBundleParent());
 
+			if (empty($value1))
+			{
+				$value1['CAN_BUY'] = 'N';
+			}
+
 			/** @var Result $r */
 			$r = $item->setFields($value1);
 			if (!$r->isSuccess())
@@ -501,7 +499,6 @@ class Basket
 				$result->addErrors($r->getErrors());
 			}
 		}
-
 		return $result;
 	}
 
@@ -567,12 +564,11 @@ class Basket
 		$basket = static::create($siteId);
 
 		$basket->setFUserId($fUserId);
-		$basket->setSiteId($siteId);
 
 		$basket->loadForFUserId = true;
 
 		/** @var Basket $collection */
-		return $basket->loadFromDB(array(
+		return $basket->loadFromDb(array(
 										"FUSER_ID" => $fUserId,
 										"=LID" => $siteId,
 										"ORDER_ID" => null
@@ -613,7 +609,8 @@ class Basket
 
 	/**
 	 * @param array $filter
-	 * @return Basket|static
+	 *
+	 * @return Basket
 	 */
 	protected function loadFromDb(array $filter)
 	{
@@ -888,7 +885,7 @@ class Basket
 
 		$isNew = ($order && $order->isNew()) ? true : false;
 
-		if ($order && !$isNew)
+		if ($order && !$isNew && $order->getId() > 0)
 		{
 			$filter['ORDER_ID'] = $order->getId();
 		}
@@ -1067,6 +1064,12 @@ class Basket
 							'PRODUCT_ID' => $v['PRODUCT_ID'],
 						)
 					);
+
+					EntityMarker::deleteByFilter(array(
+						 '=ORDER_ID' => $order->getId(),
+						 '=ENTITY_TYPE' => EntityMarker::ENTITY_TYPE_BASKET_ITEM,
+						 '=ENTITY_ID' => $k,
+					 ));
 				}
 
 			}
@@ -1370,7 +1373,7 @@ class Basket
 	public static function deleteOld($days)
 	{
 		$expired = new Main\Type\DateTime();
-		$expired->add('-'.$days.'days');
+		$expired->add('-'.$days.' days');
 		$expiredValue = $expired->format('Y-m-d H:i:s');
 
 		/** @var Main\DB\Connection $connection */
@@ -1486,6 +1489,7 @@ class Basket
 
 	/**
 	 * @return Result
+	 * @throws Main\ObjectNotFoundException
 	 */
 	public function verify()
 	{
@@ -1498,6 +1502,13 @@ class Basket
 			if (!$r->isSuccess())
 			{
 				$result->addErrors($r->getErrors());
+
+				/** @var Order $order */
+				if ($order = $this->getOrder())
+				{
+					EntityMarker::addMarker($order, $basketItem, $r);
+					$order->setField('MARKED', 'Y');
+				}
 			}
 		}
 		return $result;

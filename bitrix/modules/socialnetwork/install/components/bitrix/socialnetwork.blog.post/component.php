@@ -35,15 +35,7 @@ $arResult["bFromList"] = ($arParams["FROM_LOG"] == "Y" || $arParams["TYPE"] == "
 $arResult["bExtranetInstalled"] = CModule::IncludeModule("extranet");
 $arResult["bExtranetSite"] = ($arResult["bExtranetInstalled"] && CExtranet::IsExtranetSite());
 $arResult["bExtranetUser"] = ($arResult["bExtranetInstalled"] && !CExtranet::IsIntranetUser());
-
-$arResult["bTasksInstalled"] = CModule::IncludeModule("tasks");
-$arResult["bTasksAvailable"] = (
-	$arResult["bTasksInstalled"]
-	&& (
-		!CModule::IncludeModule('bitrix24')
-		|| CBitrix24BusinessTools::isToolAvailable($USER->GetID(), "tasks")
-	)
-);
+$arResult["ReadOnly"] = (isset($arParams["GROUP_READ_ONLY"]) && $arParams["GROUP_READ_ONLY"] == "Y");
 
 if ($arResult["bExtranetUser"])
 {
@@ -64,6 +56,16 @@ foreach($arParams["GROUP_ID"] as $k=>$v)
 }
 
 $arResult["bPublicPage"] = (isset($arParams["PUB"]) && $arParams["PUB"] == "Y");
+
+$arResult["bTasksInstalled"] = CModule::IncludeModule("tasks");
+$arResult["bTasksAvailable"] = (
+	!$arResult["bPublicPage"]
+	&& $arResult["bTasksInstalled"]
+	&& (
+		!CModule::IncludeModule('bitrix24')
+		|| CBitrix24BusinessTools::isToolAvailable($USER->GetID(), "tasks")
+	)
+);
 
 if (!$arResult["bPublicPage"])
 {
@@ -147,11 +149,12 @@ $arParams["ATTACHED_IMAGE_MAX_HEIGHT_SMALL"] = (IntVal($arParams["ATTACHED_IMAGE
 $arParams["ATTACHED_IMAGE_MAX_WIDTH_FULL"] = (IntVal($arParams["ATTACHED_IMAGE_MAX_WIDTH_FULL"]) > 0 ? IntVal($arParams["ATTACHED_IMAGE_MAX_WIDTH_FULL"]) : 1000);
 $arParams["ATTACHED_IMAGE_MAX_HEIGHT_FULL"] = (IntVal($arParams["ATTACHED_IMAGE_MAX_HEIGHT_FULL"]) > 0 ? IntVal($arParams["ATTACHED_IMAGE_MAX_HEIGHT_FULL"]) : 1000);
 
-$arParams["AVATAR_SIZE_COMMON"] = (isset($arParams["AVATAR_SIZE_COMMON"]) && intval($arParams["AVATAR_SIZE_COMMON"]) > 0) ? intval($arParams["AVATAR_SIZE_COMMON"]) : 58;
-$arParams["AVATAR_SIZE"] = (isset($arParams["AVATAR_SIZE"]) && intval($arParams["AVATAR_SIZE"]) > 0) ? intval($arParams["AVATAR_SIZE"]) : 50;
-$arParams["AVATAR_SIZE_COMMENT"] = (isset($arParams["AVATAR_SIZE_COMMENT"]) && intval($arParams["AVATAR_SIZE_COMMENT"]) > 0) ? intval($arParams["AVATAR_SIZE_COMMENT"]) : 39;
+$arParams["AVATAR_SIZE_COMMON"] = (isset($arParams["AVATAR_SIZE_COMMON"]) && intval($arParams["AVATAR_SIZE_COMMON"]) > 0) ? intval($arParams["AVATAR_SIZE_COMMON"]) : 100;
+$arParams["AVATAR_SIZE"] = (isset($arParams["AVATAR_SIZE"]) && intval($arParams["AVATAR_SIZE"]) > 0) ? intval($arParams["AVATAR_SIZE"]) : 100;
+$arParams["AVATAR_SIZE_COMMENT"] = (isset($arParams["AVATAR_SIZE_COMMENT"]) && intval($arParams["AVATAR_SIZE_COMMENT"]) > 0) ? intval($arParams["AVATAR_SIZE_COMMENT"]) : 100;
 
 $arParams["ALLOW_POST_CODE"] = $arParams["ALLOW_POST_CODE"] !== "N";
+$arParams["CHECK_COMMENTS_PERMS"] = (isset($arParams["CHECK_COMMENTS_PERMS"]) && $arParams["CHECK_COMMENTS_PERMS"] == "Y" ? "Y" : "N");
 
 if(empty($arParams["POST_PROPERTY"]))
 	$arParams["POST_PROPERTY"] = array();
@@ -294,21 +297,21 @@ if (
 
 $arPost = array();
 $cacheTtl = 2592000;
-$cacheId = 'blog_post_socnet_general_'.$arParams["ID"].'_'.LANGUAGE_ID.($arResult["TZ_OFFSET"] <> 0 ? "_".$arResult["TZ_OFFSET"] : "");
+$cacheId = 'blog_post_socnet_general_'.$arParams["ID"].'_'.LANGUAGE_ID.($arResult["TZ_OFFSET"] <> 0 ? "_".$arResult["TZ_OFFSET"] : "")."_".Bitrix\Main\Context::getCurrent()->getCulture()->getDateTimeFormat();
 $cacheDir = '/blog/socnet_post/gen/'.intval($arParams["ID"] / 100).'/'.$arParams["ID"];
 
 $obCache = new CPHPCache;
 if($obCache->InitCache($cacheTtl, $cacheId, $cacheDir))
 {
 	$arPost = $obCache->GetVars();
+	$postItem = new \Bitrix\Blog\Item\Post;
+	$postItem->setFields($arPost);
 }
 else
 {
 	$obCache->StartDataCache();
-
-	$dbPost = CBlogPost::GetList(array(), array("ID" => $arParams["ID"]), false, false, array("ID", "BLOG_ID", "PUBLISH_STATUS", "TITLE", "AUTHOR_ID", "ENABLE_COMMENTS", "NUM_COMMENTS", "VIEWS", "CODE", "MICRO", "DETAIL_TEXT", "DATE_PUBLISH", "CATEGORY_ID", "HAS_SOCNET_ALL", "HAS_TAGS", "HAS_IMAGES", "HAS_PROPS", "HAS_COMMENT_IMAGES"));
-	$arPost = $dbPost->Fetch();
-
+	$postItem = \Bitrix\Blog\Item\Post::getById($arParams["ID"]);
+	$arPost = $postItem->getFields();
 	$obCache->EndDataCache($arPost);
 }
 
@@ -412,18 +415,30 @@ if(
 		}
 		else
 		{
-			$arPost["perms"] = $arResult["PostPerm"] = (
-				$bNoLogEntry
-					? BLOG_PERMS_DENY
-					: CBlogPost::GetSocNetPostPerms(array(
-						"POST_ID" => $arPost["ID"],
-						"NEED_FULL" => true,
-						"USER_ID" => false,
-						"POST_AUTHOR_ID" => $arPost["AUTHOR_ID"],
-						"PUBLIC" => $arResult["bPublicPage"],
-						"LOG_ID" => (isset($arParams["LOG_ID"]) ? $arParams["LOG_ID"] : false)
-					))
-			);
+			if ($bNoLogEntry)
+			{
+				$arPost["perms"] = $arResult["PostPerm"] = \Bitrix\Blog\Item\Permissions::DENY;
+			}
+			elseif (
+				CSocNetUser::IsCurrentUserModuleAdmin(SITE_ID, (!isset($arParams["MOBILE"]) || $arParams["MOBILE"] != "Y"))
+				|| $APPLICATION->GetGroupRight("blog") >= "W"
+			)
+			{
+				$arPost["perms"] = $arResult["PostPerm"] = BLOG_PERMS_FULL;
+			}
+			else
+			{
+				$permsResult = $postItem->getSonetPerms(array(
+					"PUBLIC" => $arResult["bPublicPage"],
+					"CHECK_FULL_PERMS" => true,
+					"LOG_ID" => (isset($arParams["LOG_ID"]) ? $arParams["LOG_ID"] : false)
+				));
+				$arPost["perms"] = $arResult["PostPerm"] = $permsResult['PERM'];
+				$arResult["ReadOnly"] = (
+					$permsResult['PERM'] <= \Bitrix\Blog\Item\Permissions::READ
+					&& $permsResult['READ_BY_OSG']
+				);
+			}
 		}
 
 		$arResult["Post"] = $arPost;
@@ -472,7 +487,7 @@ if(
 							$url .= "&";
 						$url .= "del_id=".$arParams["ID"]."&success=Y";
 						BXClearCache(true, "/blog/socnet_post/".intval($arParams["ID"] / 100)."/".$arParams["ID"]."/");
-						BXClearCache(true, "/blog/socnet_post/gen/".intval($arParams["ID"] / 100)."/".$arParams["ID"]."/");
+						BXClearCache(true, "/blog/socnet_post/gen/".intval($arParams["ID"] / 100)."/".$arParams["ID"]);
 
 						LocalRedirect($url);
 					}
@@ -499,7 +514,7 @@ if(
 					{
 						BXClearCache(True, "/".SITE_ID."/blog/popular_posts/");
 						BXClearCache(true, "/blog/socnet_post/".intval($arParams["ID"] / 100)."/".$arParams["ID"]."/");
-						BXClearCache(true, "/blog/socnet_post/gen/".intval($arParams["ID"] / 100)."/".$arParams["ID"]."/");
+						BXClearCache(true, "/blog/socnet_post/gen/".intval($arParams["ID"] / 100)."/".$arParams["ID"]);
 						CBlogPost::DeleteLog($arParams["ID"]);
 						$url = CComponentEngine::MakePathFromTemplate($arParams["PATH_TO_BLOG"], array("user_id" => $arBlog["OWNER_ID"]));
 						if(strpos($url, "?") === false)
@@ -566,7 +581,7 @@ if(
 
 				$tmp = $_POST;
 				$tmp['SPERM'] = $spermNew;
-				\Bitrix\Socialnetwork\ComponentHelper::processBlogPostNewCrmContact($tmp, $arResult);
+				\Bitrix\Socialnetwork\ComponentHelper::processBlogPostNewMailUser($tmp, $arResult);
 				$spermNew = $tmp['SPERM'];
 
 				$bCurrentUserAdmin = CSocNetUser::IsCurrentUserModuleAdmin();
@@ -633,6 +648,19 @@ if(
 						),
 						$arParams
 					);
+				}
+				elseif (!$canPublish)
+				{
+					$response = array(
+						'errorMessage' => GetMessage('SBP_SHARE_PREMODERATION'),
+						'status' => "error",
+					);
+					$APPLICATION->restartBuffer();
+					while (ob_end_clean());
+					header('Content-Type:application/json; charset=UTF-8');
+					?><?=\Bitrix\Main\Web\Json::encode($response)?><?
+					CMain::finalActions();
+					die;
 				}
 
 				die();
@@ -732,7 +760,7 @@ if(
 					{
 						foreach($arResult["Assets"]["CSS"] as $cssFile)
 						{
-							\Bitrix\Main\Page\Asset::getInstance()->addCss($cssFile, true);
+							\Bitrix\Main\Page\Asset::getInstance()->addCss($cssFile);
 						}
 					}
 
@@ -740,7 +768,7 @@ if(
 					{
 						foreach($arResult["Assets"]["JS"] as $jsFile)
 						{
-							\Bitrix\Main\Page\Asset::getInstance()->addJs($jsFile, true);
+							\Bitrix\Main\Page\Asset::getInstance()->addJs($jsFile);
 						}
 					}
 				}
@@ -1272,7 +1300,7 @@ if(
 
 			$arResult["arUser"]["urlToPostImportant"] = CComponentEngine::MakePathFromTemplate($arParams["PATH_TO_POST_IMPORTANT"], array("user_id"=> $arPost["AUTHOR_ID"]));			
 
-			$arResult["CanComment"] = $USER->IsAuthorized();
+			$arResult["CanComment"] = (!$arResult["ReadOnly"] && $USER->IsAuthorized());
 			$arResult["dest_users"] = array();
 			foreach ($arResult["Post"]["SPERM"] as $key => $value) 
 			{
@@ -1343,6 +1371,20 @@ if(
 					}
 				}
 			}
+
+			$arResult["CommentPerm"] = BLOG_PERMS_WRITE;
+			if (
+				$arParams["CHECK_COMMENTS_PERMS"] == "Y"
+				&& !CSocNetUser::IsCurrentUserModuleAdmin()
+				&& is_object($USER)
+				&& $USER->GetId() != $arResult["Post"]["AUTHOR_ID"]
+				&& !empty($arResult["Post"]["SPERM"]['SG']) // if has sonet groups
+				&& count($arResult["Post"]["SPERM"]) === 1 // and only sonet groups
+			)
+			{
+				$arResult["CommentPerm"] = CBlogComment::GetSocNetUserPerms($arResult["Post"]["ID"], $arResult["Post"]["AUTHOR_ID"]);
+			}
+
 			$arResult["PostSrc"]["SPERM_NAME"] = $arResult["Post"]["SPERM"];
 
 			if($arResult["PostPerm"] > BLOG_PERMS_MODERATE || ($arResult["PostPerm"]>=BLOG_PERMS_WRITE && $arPost["AUTHOR_ID"] == $arResult["USER_ID"]))

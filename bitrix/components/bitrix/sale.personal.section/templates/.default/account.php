@@ -1,6 +1,7 @@
 <?
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
-if ($arParam['SHOW_ACCOUNT_PAGE'] === 'N')
+	
+if ($arParams['SHOW_ACCOUNT_PAGE'] !== 'Y')
 {
 	LocalRedirect($arParams['SEF_FOLDER']);
 }
@@ -11,7 +12,7 @@ $APPLICATION->SetTitle(Loc::getMessage("SPS_TITLE_ACCOUNT"));
 $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_MAIN"), $arResult['SEF_FOLDER']);
 $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_ACCOUNT"));
 
-if ($arParam['SHOW_ACCOUNT_COMPONENT'] !== 'N')
+if ($arParams['SHOW_ACCOUNT_COMPONENT'] !== 'N')
 {
 	$APPLICATION->IncludeComponent(
 		"bitrix:sale.personal.account",
@@ -22,7 +23,7 @@ if ($arParam['SHOW_ACCOUNT_COMPONENT'] !== 'N')
 		$component
 	);
 }
-if ($arParam['SHOW_ACCOUNT_PAY_COMPONENT'] !== 'N' && $USER->IsAuthorized())
+if ($arParams['SHOW_ACCOUNT_PAY_COMPONENT'] !== 'N' && $USER->IsAuthorized())
 {
 	?>
 	<h3 class="sale-personal-section-account-sub-header">

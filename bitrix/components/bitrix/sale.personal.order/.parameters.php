@@ -50,7 +50,14 @@ $arComponentParameters = array(
 			"COLS" => 25,
 			"PARENT" => "ADDITIONAL_SETTINGS",
 		),
-
+		"PATH_TO_CATALOG" => array(
+			"NAME" => GetMessage("SPO_PATH_TO_CATALOG"),
+			"TYPE" => "STRING",
+			"MULTIPLE" => "N",
+			"DEFAULT" => "/catalog/",
+			"COLS" => 25,
+			"PARENT" => "ADDITIONAL_SETTINGS",
+		),
 		"SET_TITLE" => Array(),
 		"SAVE_IN_SESSION" => array(
 			"PARENT" => "ADDITIONAL_SETTINGS",
@@ -133,5 +140,38 @@ if(CModule::IncludeModule("sale"))
 		"PARENT" => "ADDITIONAL_SETTINGS",
 	);
 
+	$orderSortList = array(
+		'STATUS' => GetMessage("SPO_ORDER_LIST_SORT_STATUS"),
+		'ID' => GetMessage("SPO_ORDER_LIST_SORT_ID"),
+		'ACCOUNT_NUMBER'=> GetMessage("SPO_ORDER_LIST_SORT_ACCOUNT_NUMBER"),
+		'DATE_INSERT'=> GetMessage("SPO_ORDER_LIST_SORT_DATE_CREATE"),
+		'PRICE'=> GetMessage("SPO_ORDER_LIST_SORT_PRICE")
+	);
+
+	$arComponentParameters['PARAMETERS']['ORDER_DEFAULT_SORT'] = array(
+		"NAME" => GetMessage("SPO_ORDER_LIST_DEFAULT_SORT"),
+		"TYPE" => "LIST",
+		"VALUES" => $orderSortList,
+		"MULTIPLE" => "N",
+		"DEFAULT" => "STATUS",
+		"PARENT" => "ORDER",
+	);
+	
+	if (CBXFeatures::IsFeatureEnabled('SaleAccounts'))
+	{
+		$arComponentParameters['PARAMETERS']['ALLOW_INNER'] = array(
+			"NAME" => GetMessage("SPO_ALLOW_INNER"),
+			"TYPE" => "CHECKBOX",
+			"DEFAULT" => "N",
+			"PARENT" => "ORDER",
+		);
+
+		$arComponentParameters['PARAMETERS']['ONLY_INNER_FULL'] = array(
+			"NAME" => GetMessage("SPO_ONLY_INNER_FULL"),
+			"TYPE" => "CHECKBOX",
+			"DEFAULT" => "N",
+			"PARENT" => "ORDER",
+		);
+	}	
 }
 ?>

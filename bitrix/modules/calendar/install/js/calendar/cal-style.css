@@ -2,7 +2,7 @@
 .bxcal-loading .bxcal-wait{display: block!important; visibility: visible!important;}
 .bxcal-loading *{display: none!important; visibility: hidden!important;}
 
-.bxcal {width:100%; overflow: hidden;}
+.bxcal {width:100%; overflow: hidden; min-width: 700px;}
 .bxcal-wait {background:url(/bitrix/js/main/core/images/wait-big.gif) no-repeat 0 0!important; height: 29px; margin-top: 4px; line-height: 29px; padding-left: 34px; display: none;}
 
 .bxcal  td{padding: 0;}
@@ -1055,6 +1055,8 @@ div.bxex-sbs {overflow: scroll; width: 60px; height: 60px; position: absolute; t
 .bxc-planner .bxec-time{margin-top: 20px; display: inline-block;}
 .bxc-planner .bxec-timezone-outer-wrap-opened{background-color: #dde5e8 !important;}
 .bxc-planner .bxec-timezone-hidden-wrap{margin:0 9px !important;}
+
+
 /* PLANNER END*/
 
 div.bxec-user-con {background-color:white !important; border:1px solid #797979!important;}
@@ -1674,6 +1676,7 @@ td.bx-cal-view-text-cell-r{
 .feed-cal-view-inv-controls-q .bx-cal-view-invite-cont{display: block!important;}
 .feed-cal-view-inv-controls .feed-event-status-popup{display: none;}
 .feed-event-status-popup .webform-small-button{margin: 0 3px 0 3px !important;}
+
 .bxec-d-cont-comments-title{text-align: center; margin: 10px 0; font-size: 14px; color: #7c878d;font-weight: bold;}
 
 .bxec-d-cont-comments{
@@ -1787,7 +1790,6 @@ td.bx-cal-view-text-cell-r{
 	font-size: 12px;
 	margin-right: 4px;
 	vertical-align: middle;
-	text-decoration: underline;
 }
 
 .bxc-popup-window .feed-con-file-changes-link:hover {
@@ -2028,6 +2030,14 @@ td.bx-cal-view-text-cell-r{
 }
 .ampm-width input{width: 72px !important;}
 
+.bx-no-doctype .bxec-popup .calendar-inp-time,
+.bx-no-doctype .bxec-popup .bxec-time input {
+	width: 82px !important;
+}
+.bx-no-doctype .bxec-popup .ampm-width input {
+	width: 102px !important;
+}
+
 .bx-ie8 .bxec-popup .calendar-inp,
 .bx-ie8 .bxec-popup .calendar-inp-time,
 .bx-ie8 .bxec-popup .bxec-time input
@@ -2256,3 +2266,7 @@ div.bxec-dav-list div.bxec-dav-item-edited div.bxec-dav-item-name,
 
 .event-grid-planner-cont .calendar-planner-general-info{margin-left: -8px!important;}
 .event-grid-planner-cont .calendar-planner-user-container-inner{left: 5px!important;}
+
+.bxc-popup-window .bxec-row-reinvite{
+	margin: 10px 0 10px 10px;
+}

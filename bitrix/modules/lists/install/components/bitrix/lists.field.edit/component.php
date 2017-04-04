@@ -130,6 +130,7 @@ $arResult["~LIST_FIELD_EDIT_URL"] = str_replace(
 	$arParams["~LIST_FIELD_EDIT_URL"]
 );
 $arResult["LIST_FIELD_EDIT_URL"] = htmlspecialcharsbx($arResult["~LIST_FIELD_EDIT_URL"]);
+$arResult["LIST_UNIQUE_ETYPE"] = array('E:ECrm');
 
 //Assume there was no error
 $bVarsFromForm = false;
@@ -204,7 +205,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && check_bitrix_sessid())
 			}
 		}
 
-		if(preg_match("/^(G|G:|E|E:)/", $arField["TYPE"]))
+		if(preg_match("/^(G|G:|E|E:)/", $arField["TYPE"]) && !in_array($arField["TYPE"], $arResult["LIST_UNIQUE_ETYPE"]))
 		{
 			$arField["LINK_IBLOCK_ID"] = intval($_POST["LINK_IBLOCK_ID"]);
 			$arIBLOCKS = CLists::GetIBlocks($arParams["~IBLOCK_TYPE_ID"], !$arParams["CAN_EDIT"], $arParams["~SOCNET_GROUP_ID"]);

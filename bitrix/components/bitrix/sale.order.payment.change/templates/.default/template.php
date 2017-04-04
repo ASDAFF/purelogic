@@ -47,6 +47,12 @@ else
 										<span class="sale-order-payment-change-status-success"><?=Loc::getMessage('SOPC_TPL_PAID')?></span>
 										<?
 									}
+									elseif ($arResult['IS_ALLOW_PAY'] == 'N')
+									{
+										?>
+										<span class="sale-order-payment-change-status-restricted"><?=Loc::getMessage('SOPC_TPL_RESTRICTED_PAID')?></span>
+										<?
+									}
 									else
 									{
 										?>
@@ -108,6 +114,8 @@ else
 		"templateFolder" => CUtil::JSEscape($templateFolder),
 		"accountNumber" => $arParams['ACCOUNT_NUMBER'],
 		"paymentNumber" => $arParams['PAYMENT_NUMBER'],
+		"inner" => $arParams['ALLOW_INNER'],
+		"onlyInnerFull" => $arParams['ONLY_INNER_FULL'],
 		"wrapperId" => $wrapperId
 	);
 	$javascriptParams = CUtil::PhpToJSObject($javascriptParams);

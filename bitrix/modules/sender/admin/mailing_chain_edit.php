@@ -48,6 +48,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && ($save!="" || $apply!="") && $POST_RI
 
 	$arFields = Array(
 		"MAILING_ID" => $MAILING_ID,
+		"TITLE" => $TITLE,
 		"SUBJECT" => $SUBJECT,
 		"EMAIL_FROM"	=> $EMAIL_FROM,
 		"MESSAGE" => $MESSAGE,
@@ -407,6 +408,12 @@ if($ID>0 && $POST_RIGHT>="W")
 		"ICON"=>"btn_new",
 	);
 	$aMenu[] = array(
+		"TEXT"=>GetMessage("sender_chain_edit_action_copy"),
+		"TITLE"=>GetMessage("sender_chain_edit_action_copy_title"),
+		"LINK"=>"/bitrix/admin/sender_mailing_chain_admin.php?MAILING_ID=".$MAILING_ID."&ID=".$ID."&action=copy&lang=".LANG."&".bitrix_sessid_get(),
+		"ICON"=>"btn_copy",
+	);
+	$aMenu[] = array(
 		"TEXT"=>GetMessage("sender_chain_edit_action_del"),
 		"TITLE"=>GetMessage("sender_chain_edit_action_del_title"),
 		"LINK"=>"javascript:if(confirm('".GetMessage("sender_chain_edit_action_del_confirm")."'))window.location='/bitrix/admin/sender_mailing_chain_admin.php?MAILING_ID=".$MAILING_ID."&ID=".$ID."&action=delete&lang=".LANGUAGE_ID."&".bitrix_sessid_get()."';",
@@ -424,6 +431,9 @@ $arMailing = \Bitrix\Sender\MailingTable::getRowById($MAILING_ID);
 <?
 if($_REQUEST["mess"] == "ok" && $ID>0)
 	CAdminMessage::ShowMessage(array("MESSAGE"=>GetMessage("sender_chain_edit_saved"), "TYPE"=>"OK"));
+
+if($_REQUEST["mess"] == "copied" && $ID>0)
+	CAdminMessage::ShowMessage(array("MESSAGE"=>GetMessage("sender_chain_edit_copied"), "TYPE"=>"OK"));
 
 if($message)
 	echo $message->Show();
@@ -482,6 +492,21 @@ $tabControl->BeginNextTab();
 	<tr>
 		<td colspan="2">
 			<div class="adm-info-message"><?=GetMessage("sender_chain_edit_maintext");?></div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<?echo GetMessage("sender_chain_edit_field_title")?>:
+		</td>
+		<td>
+			<input type="text" id="TITLE" name="TITLE" value="<?=$str_TITLE?>" style="width: 450px;">
+		</td>
+	</tr>
+	<tr>
+		<td>
+		</td>
+		<td>
+			<span class="sender-test-send-header-grey"><?echo GetMessage("sender_chain_edit_field_title_desc")?></span>
 		</td>
 	</tr>
 	<tr class="heading">

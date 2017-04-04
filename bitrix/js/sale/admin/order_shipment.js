@@ -346,6 +346,18 @@ BX.Sale.Admin.OrderShipment.prototype.updateShipmentStatus = function(field, sta
 
 				if(result.RESULT)
 					BX.Sale.Admin.OrderEditPage.callFieldsUpdaters(result.RESULT);
+
+				if (result.WARNING && result.WARNING.length > 0)
+				{
+					BX.Sale.Admin.OrderEditPage.showDialog(result.WARNING);
+				}
+
+				if(typeof result.MARKERS != 'undefined')
+				{
+					var node = BX('sale-adm-order-problem-block');
+					if(node)
+						node.innerHTML = result.MARKERS;
+				}
 			}
 		}, this)
 	};
@@ -705,6 +717,11 @@ BX.Sale.Admin.OrderShipment.prototype.updateDeliveryInfo = function()
 			{
 				BX.Sale.Admin.OrderEditPage.callFieldsUpdaters(result.SHIPMENT_DATA);
 				this.updateDeliveryLogotip();
+
+				if (result.WARNING && result.WARNING.length > 0)
+				{
+					BX.Sale.Admin.OrderEditPage.showDialog(result.WARNING);
+				}
 			}
 		}, this)
 	};
@@ -722,9 +739,17 @@ BX.Sale.Admin.OrderShipment.prototype.getDeliveryPrice = function()
 	'formData': formData,
 	'callback' : BX.proxy(function (result) {
 		if (result.ERROR && result.ERROR.length > 0)
+		{
 			BX.Sale.Admin.OrderEditPage.showDialog(result.ERROR);
+		}
 		else
+		{
 			BX.Sale.Admin.OrderEditPage.callFieldsUpdaters(result.RESULT);
+			if (result.WARNING && result.WARNING.length > 0)
+			{
+				BX.Sale.Admin.OrderEditPage.showDialog(result.WARNING);
+			}
+		}
 		}, this)
 	};
 
@@ -900,6 +925,10 @@ BX.Sale.Admin.OrderShipment.prototype.initDeleteShipment = function()
 							{
 								BX.Sale.Admin.OrderEditPage.callFieldsUpdaters(result.RESULT);
 								BX.cleanNode(BX('shipment_container_' + this.index));
+								if (result.WARNING && result.WARNING.length > 0)
+								{
+									BX.Sale.Admin.OrderEditPage.showDialog(result.WARNING);
+								}
 							}
 						}, this)
 					};
@@ -992,6 +1021,11 @@ BX.Sale.Admin.GeneralShipment =
 
 						if(lastUpdate)
 							lastUpdate.innerHTML = result.TRACKING_LAST_CHANGE;
+					}
+
+					if (result.WARNING && result.WARNING.length > 0)
+					{
+						BX.Sale.Admin.OrderEditPage.showDialog(result.WARNING);
 					}
 				}
 

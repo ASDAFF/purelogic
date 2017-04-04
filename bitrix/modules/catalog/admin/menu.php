@@ -288,6 +288,16 @@ if ($boolRead || $boolImportEdit || $boolImportExec)
 	);
 }
 
+if ($boolRead)
+{
+	$arSubItems[] = array(
+		"text" => GetMessage("SUBSCRIPTION_PRODUCT"),
+		"url" => "cat_subscription_list.php?lang=".LANGUAGE_ID,
+		"more_url" => array("cat_subscription_list.php"),
+		"title" => GetMessage("SUBSCRIPTION_PRODUCT"),
+	);
+}
+
 if (empty($arSubItems))
 	return false;
 

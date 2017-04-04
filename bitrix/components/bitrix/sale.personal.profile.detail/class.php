@@ -91,6 +91,8 @@ class PersonalProfileDetail extends CBitrixComponent
 	{
 		global $USER, $APPLICATION;
 
+		Loc::loadMessages(__FILE__);
+
 		$this->setFrameMode(false);
 
 		$this->checkRequiredModules();
@@ -101,7 +103,6 @@ class PersonalProfileDetail extends CBitrixComponent
 		}
 
 		$request = Main\Application::getInstance()->getContext()->getRequest();
-		$request->addFilter(new Main\Web\PostDecodeFilter);
 
 		if ($this->arParams["SET_TITLE"] === 'Y')
 		{
@@ -492,10 +493,13 @@ class PersonalProfileDetail extends CBitrixComponent
 				}
 			}
 
-			$saleOrderUserPropertiesValue->Update(
-				$propertyValues["ID"],
-				array("VALUE" => $fieldValues[$propertyValues["ORDER_PROPS_ID"]]['VALUE'])
-			);
+			if (isset($fieldValues[$propertyValues["ORDER_PROPS_ID"]]['VALUE']))
+			{
+				$saleOrderUserPropertiesValue->Update(
+					$propertyValues["ID"],
+					array("VALUE" => $fieldValues[$propertyValues["ORDER_PROPS_ID"]]['VALUE'])
+				);
+			}
 
 			$updatedValues[$propertyValues["ORDER_PROPS_ID"]] = $fieldValues[$propertyValues["ORDER_PROPS_ID"]];
 		}

@@ -404,4 +404,13 @@ class HttpRequest extends Request
 		);
 		return $params;
 	}
+
+	/**
+	 * Returns raw request data from php://input.
+	 * @return bool|string
+	 */
+	public static function getInput()
+	{
+		return file_get_contents("php://input");
+	}
 }

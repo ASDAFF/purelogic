@@ -79,4 +79,9 @@ $MESS["SPOD_TPL_GOOD"] = "Produkt";
 $MESS["SPOD_TPL_GOODS"] = "Produkte";
 $MESS["SPOD_TPL_TWO_GOODS"] = "Produkt";
 $MESS["SPOD_TPL_SUMOF"] = "gesamt";
+$MESS["SPOD_TPL_RESTRICTED_PAID"] = "Wird überprüft";
+$MESS["SOPD_TPL_RESTRICTED_PAID_MESSAGE"] = "<b>Wichtig:</b> die Bestellung kann bezahlt werden, nachdem sie von einem verantwortlichen Mitarbeiter überprüft wird";
+$MESS["SPOD_CHECK_TITLE"] = "Accounts";
+$MESS["SPOD_CHECK_NUM"] = "Account ##CHECK_NUMBER#";
+$MESS["SPOD_ORDER_DESC"] = "Kommentare zur Bestellung";
 ?>

@@ -93,36 +93,10 @@ $MESS["SALE_HPS_BILL_DE_LOGO_DPI_150"] = "64% (150 dpi)";
 $MESS["SALE_HPS_BILL_DE_LOGO_DPI_300"] = "32% (300 dpi)";
 $MESS["SALE_HPS_BILL_DE_LOGO_DPI_600"] = "16% (600 dpi)";
 
-$MESS["SALE_HPS_BILL_DE_COLUMN_NUMBER_SHOW"] = "Отображать колонку с номером";
-$MESS["SALE_HPS_BILL_DE_COLUMN_NUMBER_TITLE"] = "Заголовок для колонки с номером";
-$MESS["SALE_HPS_BILL_DE_COLUMN_NUMBER_VALUE"] = "Pos.";
-
-$MESS["SALE_HPS_BILL_DE_COLUMN_NAME_SHOW"] = "Отображать колонку с наименованием";
-$MESS["SALE_HPS_BILL_DE_COLUMN_NAME_TITLE"] = "Заголовок для колонки с именем";
-$MESS["SALE_HPS_BILL_DE_COLUMN_NAME_VALUE"] = "Leistung";
-
-$MESS["SALE_HPS_BILL_DE_COLUMN_QUANTITY_SHOW"] = "Отображать колонку с количеством";
-$MESS["SALE_HPS_BILL_DE_COLUMN_QUANTITY_TITLE"] = "Заголовок для колонки с количеством";
-$MESS["SALE_HPS_BILL_DE_COLUMN_QUANTITY_VALUE"] = "Anzahl";
-
-$MESS["SALE_HPS_BILL_DE_COLUMN_MEASURE_SHOW"] = "Отображать колонку с ед. измерения";
-$MESS["SALE_HPS_BILL_DE_COLUMN_MEASURE_TITLE"] = "Заголовок для колонки с ед. измерения";
-$MESS["SALE_HPS_BILL_DE_COLUMN_MEASURE_VALUE"] = "Einheit";
-
-$MESS["SALE_HPS_BILL_DE_COLUMN_PRICE_SHOW"] = "Отображать колонку с ценой";
-$MESS["SALE_HPS_BILL_DE_COLUMN_PRICE_TITLE"] = "Заголовок для колонки с ценой";
-$MESS["SALE_HPS_BILL_DE_COLUMN_PRICE_VALUE"] = "Einzelpreis";
-
-$MESS["SALE_HPS_BILL_DE_COLUMN_SUM_SHOW"] = "Отображать колонку с суммой";
-$MESS["SALE_HPS_BILL_DE_COLUMN_SUM_TITLE"] = "Заголовок для колонки с суммой";
-$MESS["SALE_HPS_BILL_DE_COLUMN_SUM_VALUE"] = "Gesamtpreis";
-
-$MESS["SALE_HPS_BILL_DE_COLUMN_VAT_RATE_SHOW"] = "Отображать колонку со ставкой НДС";
-$MESS["SALE_HPS_BILL_DE_COLUMN_VAT_RATE_TITLE"] = "Заголовок для колонки с ставкой НДС";
-$MESS["SALE_HPS_BILL_DE_COLUMN_VAT_RATE_VALUE"] = "MwSt.";
-
 $MESS["SALE_HPS_BILL_DE_HEADER"] = "Заголовок счета";
-$MESS["SALE_HPS_BILL_DE_HEADER_VALUE"] = "Rechnung";
 
+$MESS["SALE_HPS_BILL_DE_COLUMN_TITLE"] = "Заголовок для колонки ";
+$MESS["SALE_HPS_BILL_DE_COLUMN_SHOW"] = "Активность";
+$MESS["SALE_HPS_BILL_DE_COLUMN_SORT"] = "Сортировка";
 $MESS["SALE_HPS_BILL_DE_HEADER_SHOW"] = "Выводить шапку счета";
 $MESS["SALE_HPS_BILL_DE_TOTAL_SHOW"] = "Показывать итоговую информацию";

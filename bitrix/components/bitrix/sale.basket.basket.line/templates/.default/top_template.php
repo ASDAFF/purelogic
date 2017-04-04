@@ -1,4 +1,10 @@
 <?if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
+/**
+ * @global array $arParams
+ * @global CUser $USER
+ * @global CMain $APPLICATION
+ * @global string $cartId
+ */
 $compositeStub = (isset($arResult['COMPOSITE_STUB']) && $arResult['COMPOSITE_STUB'] == 'Y');
 ?><div class="bx-hdr-profile">
 <?if (!$compositeStub && $arParams['SHOW_AUTHOR'] == 'Y'):?>
@@ -30,6 +36,14 @@ $compositeStub = (isset($arResult['COMPOSITE_STUB']) && $arResult['COMPOSITE_STU
 			);
 
 			$currentUrl = urlencode($APPLICATION->GetCurPageParam("", $arParamsToDelete));
+			if ($arParams['AJAX'] == 'N')
+			{
+				?><script type="text/javascript"><?=$cartId?>.currentUrl = '<?=$currentUrl?>';</script><?
+			}
+			else
+			{
+				$currentUrl = '#CURRENT_URL#';
+			}
 			?>
 			<a href="<?=$arParams['PATH_TO_REGISTER']?>?login=yes&backurl=<?=$currentUrl; ?>"><?=GetMessage('TSB1_LOGIN')?></a>
 			&nbsp;

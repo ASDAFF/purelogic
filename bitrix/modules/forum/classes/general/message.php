@@ -507,7 +507,19 @@ class CAllForumMessage
 			$arSearchInd["URL"] = CForumNew::PreparePath2Message($arParams["DEFAULT_URL"], $urlPatterns);
 		}
 		CSearch::DeleteIndex("forum", $ID);
-		CSearch::Index("forum", $ID, $arSearchInd, true);
+		/***************** Events onMessageIsIndexed ***********************/
+		$index = true;
+		foreach(GetModuleEvents("forum", "onMessageIsIndexed", true) as $arEvent)
+		{
+			if (ExecuteModuleEventEx($arEvent, array($ID, $arMessage, &$arSearchInd)) === false)
+			{
+				$index = false;
+				break;
+			}
+		}
+		/***************** /Events *****************************************/
+		if ($index == true)
+			CSearch::Index("forum", $ID, $arSearchInd, true);
 	}
 
 	public static function Delete($ID)

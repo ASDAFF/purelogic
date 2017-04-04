@@ -262,4 +262,14 @@ $MESS["SEF_URL_TEMPLATES_section_TIP"] = "Path to the page containing section it
 $MESS["SEF_URL_TEMPLATES_element_TIP"] = "Path to the details page. Default value is  #SECTION_ID#/#ELEMENT_ID#/.";
 $MESS["CP_BC_HIDE_NOT_AVAILABLE_EXT2"] = "Products unavailable for purchase";
 $MESS["HIDE_NOT_AVAILABLE_TIP"] = "A product whose quantity is equal to or less than zero will be unavailable for purchase if: 1) stock control option is enabled for the product, and 2) out-of-stock items cannot be purchased. A product having SKU(s) is considered available if there is at least one available SKU.";
+$MESS["CP_BC_DETAIL_STRICT_SECTION_CHECK"] = "Check parent section when showing item details";
+$MESS["USE_MAIN_ELEMENT_SECTION_TIP"] = "If checked, the product links will be created based on the main parent section. This will prevent duplicating product pages.";
+$MESS["DETAIL_STRICT_SECTION_CHECK_TIP"] = "If checked, the product details page will not show if the link specifies a section that is not parent of this product.";
+$MESS["ANALYTICS_SETTINGS"] = "Analytics Preferences";
+$MESS["CP_BC_HIDE_NOT_AVAILABLE_OFFERS"] = "Unavailable SKU's";
+$MESS["CP_BC_HIDE_NOT_AVAILABLE_OFFERS_HIDE"] = "don't show";
+$MESS["CP_BC_HIDE_NOT_AVAILABLE_OFFERS_SUBSCRIBE"] = "show as subscribe-to option";
+$MESS["CP_BC_HIDE_NOT_AVAILABLE_OFFERS_SHOW"] = "show all";
+$MESS["CP_BC_COMPATIBLE_MODE"] = "Enable compatibility mode";
+$MESS["COMPATIBLE_MODE_TIP"] = "This option is required for customized templates created for use with the iblock module version older than 17.0.0. It is recommended to migrate the template to the new format. See the documentation for more information.";
 ?>

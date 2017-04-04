@@ -448,6 +448,11 @@ class BasketCompatibility
 				$result->addErrors($r->getErrors());
 				return $result;
 			}
+			else
+			{
+				if (!$order)
+					$basket->refreshData(array('PRICE', 'COUPONS', 'QUANTITY'), $item);
+			}
 		}
 
 		if ($item === null)

@@ -55,8 +55,11 @@ if(typeof BX.Sale.component.location.selector.search == 'undefined' && typeof BX
 							itemData.PATH = path;
 						}else
 							itemData.PATH = '';
+	
+						var query = '';
 
-						var query = this.vars.lastQuery.QUERY;
+						if(this.vars && this.vars.lastQuery && this.vars.lastQuery.QUERY)
+							query = this.vars.lastQuery.QUERY;
 
 						if(BX.type.isNotEmptyString(query)){
 							var chunks = [];

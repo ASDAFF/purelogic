@@ -919,14 +919,14 @@
 		apply: function(obj, input) {
 			var res = {submit : true};
 			BX.onCustomEvent(this, 'onSubmitForm', [this, BX(this.formId), input, res]);
-			window.app.onCustomEvent('onSubmitForm', [this.gridId, this.formId, (input ? input.id : null)]);
+			window.BXMobileApp.onCustomEvent('onSubmitForm', [this.gridId, this.formId, (input ? input.id : null)], true);
 			if (res.submit !== false)
 				this.submit(true);
 		},
 		save: function() {
 			var res = {submit : true};
 			BX.onCustomEvent(this, 'onSubmitForm', [this, BX(this.formId), null, res]);
-			window.app.onCustomEvent('onSubmitForm', [this.gridId, this.formId, null]);
+			window.BXMobileApp.onCustomEvent('onSubmitForm', [this.gridId, this.formId, null], true);
 			if (res.submit !== false)
 				this.submit(false);
 		},

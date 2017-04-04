@@ -1823,8 +1823,7 @@ BX.adminList.prototype.ReInit = function()
 
 BX.adminList.prototype.GetAdminList = function(url, callback)
 {
-	url = BX.util.remove_url_param(url, ['mode', 'table_id']);
-	url += (url.indexOf('?') >= 0 ? '&' : '?') + 'mode=list&table_id='+BX.util.urlencode(this.table_id);
+	url = BX.util.add_url_param(url, {'mode': 'list', 'table_id': BX.util.urlencode(this.table_id)});
 
 	BX.ajax({
 		method: 'GET',
@@ -2384,92 +2383,110 @@ BX.adminTabControl.prototype.SelectTab = function(tab_id)
 	{
 		var div = BX(tab_id);
 		if (div.style.display != 'none')
-			return;
-
-		var oldHeight = 0;
-		var newHeight = 0;
-		var contentBlockPaddings = 40;
-		for (var i = 0, cnt = this.aTabs.length; i < cnt; i++)
 		{
-			var tab = BX(this.aTabs[i]["DIV"]);
-			if(tab.style.display != 'none')
+			//already visible or expanded tab
+			if(this.bExpandTabs)
 			{
-				oldHeight = this.aTabs[i].CONTENT_BLOCK.offsetHeight - contentBlockPaddings;
-				this.ShowTab(this.aTabs[i]["DIV"], false);
-				tab.style.display = 'none';
-				break;
-			}
-		}
-
-		this.ShowTab(tab_id, true);
-		div.style.display = 'block';
-
-		BX(this.name+'_active_tab').value = tab_id;
-
-		var currentTab = null;
-		for (i = 0, cnt = this.aTabs.length; i < cnt; i++)
-		{
-			if(this.aTabs[i]["DIV"] == tab_id)
-			{
-				this.aTabs[i]["_ACTIVE"] = true;
-
-				if(this.aTabs[i]["ONSELECT"])
-				{
-					BX.evalGlobal(this.aTabs[i]["ONSELECT"]);
-				}
-
-				if (!this.bPublicMode)
-				{
-					currentTab = this.aTabs[i];
-					var currentContentBlock = this.aTabs[i].CONTENT_BLOCK;
-					newHeight = currentContentBlock.offsetHeight - contentBlockPaddings;
-					if (oldHeight > 0)
-					{
-						currentContentBlock.style.height = oldHeight + "px";
-						currentContentBlock.style.overflowY = "hidden";
-						this.aTabs[i].EDIT_TABLE.style.opacity = 0;
-					}
-				}
-
-				break;
-			}
-		}
-
-		if (!!this.TABS_BLOCK)
-		{
-			if (BX.hasClass(this.TABS_BLOCK, 'adm-detail-tabs-block-fixed'))
-			{
+				//let's scroll to the expanded tab
 				var pos = BX.pos(div), wndScroll = BX.GetWindowScrollPos();
-				window.scrollTo(wndScroll.scrollLeft, pos.top - this.TABS_BLOCK.offsetHeight - parseInt(this.TABS_BLOCK.style.top));
+				if (!!this.TABS_BLOCK && this.bFixed['top'])
+				{
+					pos.top -= this.TABS_BLOCK.offsetHeight;
+				}
+				window.scrollTo(wndScroll.scrollLeft, pos.top);
 			}
-		}
-
-		if (!this.bPublicMode && oldHeight > 0 && newHeight > 0 && currentTab)
-		{
-			var easing = new BX.easing({
-				duration : 500,
-				start : { height: oldHeight, opacity : 0 },
-				finish : { height: newHeight, opacity : 100 },
-				transition : BX.easing.makeEaseOut(BX.easing.transitions.quart),
-
-				step : BX.proxy(function(state){
-					this.CONTENT_BLOCK.style.height = state.height + 'px';
-					this.EDIT_TABLE.style.opacity = state.opacity / 100;
-					BX.onCustomEvent('onAdminTabsChange');
-				}, currentTab),
-
-				complete : BX.proxy(function(){
-					this.CONTENT_BLOCK.style.height = "auto";
-					this.CONTENT_BLOCK.style.overflowY = "visible";
-					BX.onCustomEvent('onAdminTabsChange');
-
-				}, currentTab)
-
-			});
-			easing.animate();
 		}
 		else
-			BX.onCustomEvent('onAdminTabsChange');
+		{
+			//invisible tab - need to show it
+			var oldHeight = 0;
+			var newHeight = 0;
+			var contentBlockPaddings = 40;
+			for (var i = 0, cnt = this.aTabs.length; i < cnt; i++)
+			{
+				var tab = BX(this.aTabs[i]["DIV"]);
+				if(tab.style.display != 'none')
+				{
+					oldHeight = this.aTabs[i].CONTENT_BLOCK.offsetHeight - contentBlockPaddings;
+					this.ShowTab(this.aTabs[i]["DIV"], false);
+					tab.style.display = 'none';
+					break;
+				}
+			}
+
+			this.ShowTab(tab_id, true);
+			div.style.display = 'block';
+
+			BX(this.name+'_active_tab').value = tab_id;
+
+			var currentTab = null;
+			for (i = 0, cnt = this.aTabs.length; i < cnt; i++)
+			{
+				if(this.aTabs[i]["DIV"] == tab_id)
+				{
+					this.aTabs[i]["_ACTIVE"] = true;
+
+					if(this.aTabs[i]["ONSELECT"])
+					{
+						BX.evalGlobal(this.aTabs[i]["ONSELECT"]);
+					}
+
+					if (!this.bPublicMode)
+					{
+						currentTab = this.aTabs[i];
+						var currentContentBlock = this.aTabs[i].CONTENT_BLOCK;
+						newHeight = currentContentBlock.offsetHeight - contentBlockPaddings;
+						if (oldHeight > 0)
+						{
+							currentContentBlock.style.height = oldHeight + "px";
+							currentContentBlock.style.overflowY = "hidden";
+							this.aTabs[i].EDIT_TABLE.style.opacity = 0;
+						}
+					}
+
+					break;
+				}
+			}
+
+			if (!!this.TABS_BLOCK)
+			{
+				if (BX.hasClass(this.TABS_BLOCK, 'adm-detail-tabs-block-fixed'))
+				{
+					pos = BX.pos(div);
+					wndScroll = BX.GetWindowScrollPos();
+					window.scrollTo(wndScroll.scrollLeft, pos.top - this.TABS_BLOCK.offsetHeight - parseInt(this.TABS_BLOCK.style.top));
+				}
+			}
+
+			if (!this.bPublicMode && oldHeight > 0 && newHeight > 0 && currentTab)
+			{
+				var easing = new BX.easing({
+					duration : 500,
+					start : { height: oldHeight, opacity : 0 },
+					finish : { height: newHeight, opacity : 100 },
+					transition : BX.easing.makeEaseOut(BX.easing.transitions.quart),
+
+					step : BX.proxy(function(state){
+						this.CONTENT_BLOCK.style.height = state.height + 'px';
+						this.EDIT_TABLE.style.opacity = state.opacity / 100;
+						BX.onCustomEvent('onAdminTabsChange');
+					}, currentTab),
+
+					complete : BX.proxy(function(){
+						this.CONTENT_BLOCK.style.height = "auto";
+						this.CONTENT_BLOCK.style.overflowY = "visible";
+						BX.onCustomEvent('onAdminTabsChange');
+
+					}, currentTab)
+
+				});
+				easing.animate();
+			}
+			else
+			{
+				BX.onCustomEvent('onAdminTabsChange');
+			}
+		}
 	}
 };
 
@@ -2524,22 +2541,17 @@ BX.adminTabControl.prototype.ToggleTabs = function()
 	if (this.bExpandTabs)
 	{
 		BX.addClass(a, 'adm-detail-title-setting-active');
-		this.ToggleFix('top', false);
 	}
 	else
 	{
 		BX.removeClass(a, 'adm-detail-title-setting-active');
-		this.ToggleFix('top', true);
 	}
 
 	for(var i=0; i < this.aTabs.length; i++)
 	{
 		var tab_id = this.aTabs[i]["DIV"];
-		this.ShowTab(tab_id, false);
-
-		this.ShowDisabledTab(tab_id, (this.bExpandTabs || this.aTabsDisabled[tab_id]));
-
 		var div = BX(tab_id);
+		this.ShowTab(tab_id, false);
 		div.style.display = (this.bExpandTabs && !this.aTabsDisabled[tab_id]? 'block':'none');
 	}
 
@@ -5321,7 +5333,10 @@ BX.admFltWrap = {
 		switch (el.type)
 		{
 			case "select-one":
-				wrap = BX.admFltWrap.Element(el,"adm-select","span","adm-select-wrap");
+				if(el.size && el.size > 1)
+					wrap = BX.admFltWrap.Element(el,"adm-select-multiple","span","adm-select-wrap-multiple");
+				else
+					wrap = BX.admFltWrap.Element(el,"adm-select","span","adm-select-wrap");
 				break;
 
 			case "select-multiple":

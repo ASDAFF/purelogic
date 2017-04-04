@@ -31,7 +31,11 @@ if ($_POST['action'] != 'login')
 
 IncludeModuleLangFile($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/im/install/public/desktop_app/login/index.php");
 
-$result = $USER->Login($_POST['login'], $_POST['password'].$_POST['otp']);
+$result = $USER->Login($_POST['login'], $_POST['password']);
+if ($_POST['otp'])
+{
+	$result = $USER->LoginByOtp($_POST['otp']);
+}
 
 if ($result !== true || !$USER->IsAuthorized())
 {

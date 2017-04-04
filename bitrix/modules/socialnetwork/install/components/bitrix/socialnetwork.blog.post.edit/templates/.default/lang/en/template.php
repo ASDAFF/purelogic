@@ -26,4 +26,9 @@ $MESS["SBPE_CALENDAR_EVENT"] = "Event";
 $MESS["BLOG_POST_AUTOSAVE"] = "Blog post data has not been saved.";
 $MESS["BLOG_POST_AUTOSAVE2"] = "Revert to autosaved values?";
 $MESS["LISTS_CATALOG_PROCESSES_ACCESS_DENIED"] = "No access";
+$MESS["BLOG_TAB_TASK"] = "Task";
+$MESS["BLOG_POST_EDIT_T_CREATE_TASK_SUCCESS_TITLE"] = "Task has been created";
+$MESS["BLOG_POST_EDIT_T_CREATE_TASK_SUCCESS_DESCRIPTION"] = "You can now view and edit the task.";
+$MESS["BLOG_POST_EDIT_T_CREATE_TASK_BUTTON_TITLE"] = "View task";
+$MESS["MPF_DRAG_ATTACHMENTS2"] = "Upload files?";
 ?>

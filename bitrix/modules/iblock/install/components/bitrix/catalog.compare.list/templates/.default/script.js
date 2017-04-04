@@ -90,6 +90,8 @@ window.JCCatalogCompareList.prototype.deleteCompareResult = function(result)
 	{
 		if (!!result.STATUS && result.STATUS === 'OK' && !!result.ID)
 		{
+			BX.onCustomEvent('onCatalogDeleteCompare', [result.ID]);
+
 			tbl = BX(this.visual.LIST);
 			if (tbl)
 			{

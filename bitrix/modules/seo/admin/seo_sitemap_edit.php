@@ -249,7 +249,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && check_bitrix_sessid() && (strlen($_PO
 				{
 					if($auto === 'Y')
 					{
-						$result = SitemapForumTable::add($ID, $forumId);
+						$result = SitemapForumTable::add(array('SITEMAP_ID' => $ID, 'ENTITY_ID' => $forumId));
 					}
 				}
 			}

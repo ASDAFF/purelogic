@@ -31,7 +31,7 @@ $APPLICATION->IncludeComponent(
 						"InputVideo",
 						"Table", "Justify", "InsertOrderedList",
 						"InsertUnorderedList",
-						"Source", "MentionUser", "Spoiler"
+						"Source", "MentionUser"
 				),
 				"BUTTONS" => Array(
 						"UploadFile",
@@ -364,7 +364,8 @@ window.oEditEventManager = new window.EditEventManager(<?=CUtil::PhpToJSObject(
 			'SelectMR' => GetMessageJS('EC_PL_SEL_MEET_ROOM'),
 			'OpenMRPage' => GetMessageJS('EC_PL_OPEN_MR_PAGE'),
 			'MRNotReservedErr' => GetMessageJS('EC_MR_RESERVE_ERR_BUSY'),
-			'MRReserveErr' => GetMessageJS('EC_MR_RESERVE_ERR')
+			'MRReserveErr' => GetMessageJS('EC_MR_RESERVE_ERR'),
+			'EC_BUSY_ALERT' => GetMessageJS('EC_BUSY_ALERT')
 		),
 		'workTimeStart' => $arParams["TIME_START"],
 		'workTimeEnd' => $arParams["TIME_END"]

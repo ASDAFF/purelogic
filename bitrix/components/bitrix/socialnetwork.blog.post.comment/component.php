@@ -25,7 +25,8 @@ $bSocialnetwork = CModule::IncludeModule("socialnetwork");
 $bIntranetInstalled = IsModuleInstalled("intranet");
 
 $arResult["bTasksAvailable"] = (
-	IsModuleInstalled("tasks")
+	(!isset($arParams["bPublicPage"]) || !$arParams["bPublicPage"])
+	&& IsModuleInstalled("tasks")
 	&& (
 		!CModule::IncludeModule('bitrix24')
 		|| CBitrix24BusinessTools::isToolAvailable($USER->GetID(), "tasks")
@@ -214,18 +215,18 @@ if(IntVal($_REQUEST["comment_post_id"]) > 0)
 	$arBlog = CBlogTools::htmlspecialcharsExArray($arBlog);
 
 	if($arPost["AUTHOR_ID"] == $user_id)
-{
-	$arResult["Perm"] = BLOG_PERMS_FULL;
-	$arResult["PostPerm"] = BLOG_PERMS_FULL;
-}
-else
-{
-	$arResult["PostPerm"] = CBlogPost::GetSocNetPostPerms($arParams["ID"]);
-	if ($arResult["PostPerm"] > BLOG_PERMS_DENY)
 	{
-		$arResult["Perm"] = CBlogComment::GetSocNetUserPerms($arParams["ID"], $arPost["AUTHOR_ID"]);
+		$arResult["Perm"] = BLOG_PERMS_FULL;
+		$arResult["PostPerm"] = BLOG_PERMS_FULL;
 	}
-}
+	else
+	{
+		$arResult["PostPerm"] = CBlogPost::GetSocNetPostPerms($arParams["ID"]);
+		if ($arResult["PostPerm"] > BLOG_PERMS_DENY)
+		{
+			$arResult["Perm"] = CBlogComment::GetSocNetUserPerms($arParams["ID"], $arPost["AUTHOR_ID"]);
+		}
+	}
 
 	$arResult["is_ajax_post"] = "Y";
 }
@@ -239,19 +240,13 @@ else
 
 	if($arResult["PostPerm"] > BLOG_PERMS_DENY)
 	{
-		if (
+		$arResult["Perm"] = (
 			$bIntranetInstalled
 			&& IsModuleInstalled("bitrix24")
 			&& $arParams["POST_DATA"]["HAVE_ALL_IN_ADR"] == "Y"
-		)
-		{
-			if($arPost["AUTHOR_ID"] != $user_id)
-				$arResult["Perm"] = BLOG_PERMS_WRITE;
-			else
-				$arResult["Perm"] = BLOG_PERMS_FULL;
-		}
-		else
-			$arResult["Perm"] = CBlogComment::GetSocNetUserPerms($arParams["ID"], $arPost["AUTHOR_ID"]);
+				? ($arPost["AUTHOR_ID"] == $user_id ? BLOG_PERMS_FULL : BLOG_PERMS_WRITE)
+				: CBlogComment::GetSocNetUserPerms($arParams["ID"], $arPost["AUTHOR_ID"])
+		);
 	}
 }
 
@@ -305,6 +300,10 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 			)
 			{
 				$arResult["ERROR_MESSAGE"] = GetMessage("B_B_PC_MES_ERROR_DELETE");
+				if ($ex = $APPLICATION->GetException())
+				{
+					$arResult["ERROR_MESSAGE"] .= ": ".$ex->GetString();
+				}
 			}
 		}
 	}
@@ -324,7 +323,10 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 			{
 				if(check_bitrix_sessid())
 				{
-					if($commentID = CBlogComment::Update($arComment["ID"], Array("PUBLISH_STATUS" => BLOG_PUBLISH_STATUS_PUBLISH)))
+					if($commentID = CBlogComment::Update($arComment["ID"], Array(
+						"PUBLISH_STATUS" => BLOG_PUBLISH_STATUS_PUBLISH,
+						"SEARCH_GROUP_ID" => \Bitrix\Main\Config\Option::get("socialnetwork", "userbloggroup_id", false, SITE_ID)
+					)))
 					{
 						BXClearCache(true, "/blog/comment/".intval($arParams["ID"] / 100)."/".$arParams["ID"]."/");
 						$parserBlog = new blogTextParser(false, $arParams["PATH_TO_SMILE"], array("bPublic" => $arParams["bPublicPage"]));
@@ -359,7 +361,11 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 							$text4message = $parserBlog->convert($arComment["POST_TEXT"], false, $arImages, $arAllow, array("isSonetLog"=>true));
 
 							$text4mail = $parserBlog->convert4mail($arComment["POST_TEXT"]);
-							$commentUrl = CComponentEngine::MakePathFromTemplate(htmlspecialcharsBack($arParams["PATH_TO_POST"]), array("post_id"=> CBlogPost::GetPostID($arPost["ID"], $arPost["CODE"], $arParams["ALLOW_POST_CODE"]), "user_id" => $arPost["AUTHOR_ID"]));
+							$postUrl = CComponentEngine::MakePathFromTemplate(htmlspecialcharsBack($arParams["PATH_TO_POST"]), array("post_id"=> CBlogPost::GetPostID($arPost["ID"], $arPost["CODE"], $arParams["ALLOW_POST_CODE"]), "user_id" => $arPost["AUTHOR_ID"]));
+
+							$commentUrl = $postUrl;
+							$commentUrl .= (strpos($commentUrl, "?") !== false ? "&" : "?");
+							$commentUrl .= $arParams["COMMENT_ID_VAR"]."=".$arComment["ID"]."#com".$arComment["ID"];
 
 							$arFieldsForSocnet = array(
 								"ENTITY_TYPE" => SONET_ENTITY_USER,
@@ -389,6 +395,16 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 								"LC",
 								CSocNetLogRights::CheckForUserAll($log_id)
 							);
+
+							CBlogPost::NotifyImPublish(array(
+								"TYPE" => "COMMENT",
+								"TITLE" => $arPost["TITLE"],
+								"TO_USER_ID" => $arComment["AUTHOR_ID"],
+								"POST_URL" => $postUrl,
+								"COMMENT_URL" => $commentUrl,
+								"POST_ID" => $arPost["ID"],
+								"COMMENT_ID" => $arComment["ID"],
+							));
 						}
 						$arResult["ajax_comment"] = $arComment["ID"];
 					}
@@ -618,6 +634,7 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 						"AUTHOR_IP1" => $UserIP[1],
 						"URL" => $arBlog["URL"],
 						"PARENT_ID" => false,
+						"SEARCH_GROUP_ID" => \Bitrix\Main\Config\Option::get("socialnetwork", "userbloggroup_id", false, SITE_ID)
 					);
 
 					if ($arResult["Perm"] == BLOG_PERMS_PREMODERATE)
@@ -942,7 +959,31 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 										)
 									));
 								}
+							}
+							elseif ($arFields["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_READY)
+							{
+								$arPostCodes = array();
+								$arPSR = CBlogPost::GetSocnetPerms($arPost["ID"]);
+								if (!empty($arPSR['SG']))
+								{
+									foreach($arPSR['SG'] as $key => $arCodes)
+									{
+										$arPostCodes = array_merge($arPostCodes, $arCodes);
+									}
+								}
 
+								if (!empty($arPostCodes))
+								{
+									CBlogPost::NotifyImReady(array(
+										"TYPE" => "COMMENT",
+										"POST_ID" => $arPost["ID"],
+										"COMMENT_ID" => $commentId,
+										"TITLE" => htmlspecialcharsBack($arPost["TITLE"]),
+										"COMMENT_URL" => $commentUrl,
+										"FROM_USER_ID" => intval($user_id),
+										"TO_SOCNET_RIGHTS" => $arPostCodes
+									));
+								}
 							}
 
 							$res = CBlogImage::GetList(array(), array("POST_ID"=>$arPost["ID"], "BLOG_ID" => $arBlog["ID"], "IS_COMMENT" => "Y", "COMMENT_ID" => false, "<=TIMESTAMP_X" => ConvertTimeStamp(AddToTimeStamp(Array("HH" => -3)), "FULL")));
@@ -1013,7 +1054,7 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 						|| empty($arOldComment)
 					)
 					{
-						$arResult["COMMENT_ERROR"] = "<b>".GetMessage("B_B_PC_COM_ERROR_EDIT")."</b><br />".GetMessage("B_B_PC_COM_ERROR_LOST");
+						$arResult["COMMENT_ERROR"] = GetMessage("B_B_PC_COM_ERROR_EDIT").": ".GetMessage("B_B_PC_COM_ERROR_LOST");
 					}
 					elseif (
 						$arOldComment["AUTHOR_ID"] == $user_id
@@ -1099,7 +1140,7 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 						$dbComment = CBlogComment::GetList(array(), Array("POST_ID" => $arPost["ID"], "BLOG_ID" => $arBlog["ID"], ">ID" => $commentID));
 						if($dbComment->Fetch() && $arResult["Perm"] < BLOG_PERMS_FULL && !$bIntranetInstalled)
 						{
-							$arResult["COMMENT_ERROR"] = "<b>".GetMessage("B_B_PC_COM_ERROR_EDIT")."</b><br />".GetMessage("B_B_PC_EDIT_ALREADY_COMMENTED");
+							$arResult["COMMENT_ERROR"] = GetMessage("B_B_PC_COM_ERROR_EDIT").": ".GetMessage("B_B_PC_EDIT_ALREADY_COMMENTED");
 						}
 						else
 						{
@@ -1119,6 +1160,8 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 									$arFields
 								);
 							}
+
+							$arFields["SEARCH_GROUP_ID"] = \Bitrix\Main\Config\Option::get("socialnetwork", "userbloggroup_id", false, SITE_ID);
 
 							if($commentID = CBlogComment::Update($commentID, $arFields))
 							{
@@ -1201,14 +1244,14 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 							{
 								if ($e = $APPLICATION->GetException())
 								{
-									$arResult["COMMENT_ERROR"] = "<b>".GetMessage("B_B_PC_COM_ERROR_EDIT")."</b><br />".$e->GetString();
+									$arResult["COMMENT_ERROR"] = GetMessage("B_B_PC_COM_ERROR_EDIT").": ".$e->GetString();
 								}
 							}
 						}
 					}
 					else
 					{
-						$arResult["COMMENT_ERROR"] = "<b>".GetMessage("B_B_PC_COM_ERROR_EDIT")."</b><br />".GetMessage("B_B_PC_NO_RIGHTS_EDIT");
+						$arResult["COMMENT_ERROR"] = GetMessage("B_B_PC_COM_ERROR_EDIT").": ".GetMessage("B_B_PC_NO_RIGHTS_EDIT");
 					}
 				}
 			}
@@ -1242,7 +1285,16 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 				$arResult["ajax_comment"] = IntVal($_REQUEST["new_comment_id"]);
 			}
 
-			if(IntVal($arParams["ID"]) > 0 && IntVal($arPost["NUM_COMMENTS"]) > 0 || $arResult["ajax_comment"] > 0)
+			if(
+				(
+					IntVal($arParams["ID"]) > 0
+					&& (
+						(isset($arPost["NUM_COMMENTS_ALL"]) && IntVal($arPost["NUM_COMMENTS_ALL"]) > 0)
+						|| IntVal($arPost["NUM_COMMENTS"]) > 0
+					)
+				)
+				|| $arResult["ajax_comment"] > 0
+			)
 			{
 				$cache = new CPHPCache;
 
@@ -1271,7 +1323,7 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 					$arCacheID[$param_key] = (array_key_exists($param_key, $arParams) ? $arParams[$param_key] : false);
 				}
 
-				$cache_id = "blog_comment_".$USER->IsAuthorized()."_".md5(serialize($arCacheID))."_".LANGUAGE_ID."_".$arParams["DATE_TIME_FORMAT"];
+				$cache_id = "blog_comment_".$USER->IsAuthorized()."_".md5(serialize($arCacheID))."_".LANGUAGE_ID."_".$arParams["DATE_TIME_FORMAT"]."_".Bitrix\Main\Context::getCurrent()->getCulture()->getDateTimeFormat();
 				if ($arResult["TZ_OFFSET"] <> 0)
 				{
 					$cache_id .= "_".$arResult["TZ_OFFSET"];
@@ -1298,7 +1350,7 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 						{
 							foreach($arResult["Assets"]["CSS"] as $cssFile)
 							{
-								\Bitrix\Main\Page\Asset::getInstance()->addCss($cssFile, true);
+								\Bitrix\Main\Page\Asset::getInstance()->addCss($cssFile);
 							}
 						}
 
@@ -1306,7 +1358,7 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 						{
 							foreach($arResult["Assets"]["JS"] as $jsFile)
 							{
-								\Bitrix\Main\Page\Asset::getInstance()->addJs($jsFile, true);
+								\Bitrix\Main\Page\Asset::getInstance()->addJs($jsFile);
 							}
 						}
 					}
@@ -1401,8 +1453,6 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 					{
 						$arComment = $arCommentsAll[$i];
 
-
-
 						$bHasImg = false;
 						if($arPost["HAS_COMMENT_IMAGES"] != "N")
 						{
@@ -1475,21 +1525,6 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 							unset($arComment["AUTHOR_NAME"]);
 							unset($arComment["AUTHOR_EMAIL"]);
 
-							$arAllow = array("HTML" => "N", "ANCHOR" => "Y", "BIU" => "Y", "IMG" => "Y", "QUOTE" => "Y", "CODE" => "Y", "FONT" => "Y", "LIST" => "Y", "SMILES" => "Y", "NL2BR" => "N", "VIDEO" => "Y", "SHORT_ANCHOR" => "Y");
-							if(COption::GetOptionString("blog","allow_video", "Y") != "Y" || $arParams["ALLOW_VIDEO"] != "Y")
-								$arAllow["VIDEO"] = "N";
-
-							if($arParams["NO_URL_IN_COMMENTS"] == "L" || (IntVal($arComment["AUTHOR_ID"]) <= 0  && $arParams["NO_URL_IN_COMMENTS"] == "A"))
-								$arAllow["CUT_ANCHOR"] = "Y";
-
-							if($arParams["NO_URL_IN_COMMENTS_AUTHORITY_CHECK"] == "Y" && $arAllow["CUT_ANCHOR"] != "Y" && IntVal($arComment["AUTHOR_ID"]) > 0)
-							{
-								$authorityRatingId = CRatings::GetAuthorityRating();
-								$arRatingResult = CRatings::GetRatingResult($authorityRatingId, $arComment["AUTHOR_ID"]);
-								if($arRatingResult["CURRENT_VALUE"] < $arParams["NO_URL_IN_COMMENTS_AUTHORITY"])
-									$arAllow["CUT_ANCHOR"] = "Y";
-							}
-
 							$bHasProps = false;
 							$urlPreviewText = false;
 
@@ -1548,29 +1583,58 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 									}
 								}
 							}
-
-							if (is_array($arComment["COMMENT_PROPERTIES"]["DATA"]["UF_BLOG_COMMENT_FILE"]))
-							{
-								$p->arUserfields = array("UF_BLOG_COMMENT_FILE" => array_merge($arComment["COMMENT_PROPERTIES"]["DATA"]["UF_BLOG_COMMENT_FILE"], array("TAG" => "DOCUMENT ID")));
-							}
-
-							$arComment["TextFormated"] = $p->convert($arComment["POST_TEXT"], false, $arImages, $arAllow, $arConvertParams);
-							if (!empty($urlPreviewText))
-							{
-								$arComment["TextFormated"] .= $urlPreviewText;
-							}
 							if (is_array($arComment["COMMENT_PROPERTIES"]["DATA"]["UF_BLOG_COMMENT_FILE"]))
 							{
 								$arComment["COMMENT_PROPERTIES"]["DATA"]["UF_BLOG_COMMENT_FILE"]["~VALUE"] = $arComment["COMMENT_PROPERTIES"]["DATA"]["UF_BLOG_COMMENT_FILE"]["VALUE"];
 							}
-							$arComment["showedImages"] = $p->showedImages;
-							if(!empty($p->showedImages))
+
+							if ($commentAuxProvider = \Bitrix\Socialnetwork\CommentAux\Base::findProvider(
+								$arComment,
+								array(
+									"mobile" => (isset($arParams["MOBILE"]) && $arParams["MOBILE"] == "Y"),
+									"cache" => true
+								)
+							))
 							{
-								foreach($p->showedImages as $val)
+								$arComment["TextFormated"] = $commentAuxProvider->getText();
+								$arComment["AuxType"] = $commentAuxProvider->getType();
+							}
+							else
+							{
+								$arAllow = array("HTML" => "N", "ANCHOR" => "Y", "BIU" => "Y", "IMG" => "Y", "QUOTE" => "Y", "CODE" => "Y", "FONT" => "Y", "LIST" => "Y", "SMILES" => "Y", "NL2BR" => "N", "VIDEO" => "Y", "SHORT_ANCHOR" => "Y");
+								if(COption::GetOptionString("blog","allow_video", "Y") != "Y" || $arParams["ALLOW_VIDEO"] != "Y")
+									$arAllow["VIDEO"] = "N";
+
+								if($arParams["NO_URL_IN_COMMENTS"] == "L" || (IntVal($arComment["AUTHOR_ID"]) <= 0  && $arParams["NO_URL_IN_COMMENTS"] == "A"))
+									$arAllow["CUT_ANCHOR"] = "Y";
+
+								if($arParams["NO_URL_IN_COMMENTS_AUTHORITY_CHECK"] == "Y" && $arAllow["CUT_ANCHOR"] != "Y" && IntVal($arComment["AUTHOR_ID"]) > 0)
 								{
-									if(!empty($arResult["arImages"][$arComment["ID"]][$val]))
+									$authorityRatingId = CRatings::GetAuthorityRating();
+									$arRatingResult = CRatings::GetRatingResult($authorityRatingId, $arComment["AUTHOR_ID"]);
+									if($arRatingResult["CURRENT_VALUE"] < $arParams["NO_URL_IN_COMMENTS_AUTHORITY"])
+										$arAllow["CUT_ANCHOR"] = "Y";
+								}
+
+								if (is_array($arComment["COMMENT_PROPERTIES"]["DATA"]["UF_BLOG_COMMENT_FILE"]))
+								{
+									$p->arUserfields = array("UF_BLOG_COMMENT_FILE" => array_merge($arComment["COMMENT_PROPERTIES"]["DATA"]["UF_BLOG_COMMENT_FILE"], array("TAG" => "DOCUMENT ID")));
+								}
+
+								$arComment["TextFormated"] = $p->convert($arComment["POST_TEXT"], false, $arImages, $arAllow, $arConvertParams);
+								if (!empty($urlPreviewText))
+								{
+									$arComment["TextFormated"] .= $urlPreviewText;
+								}
+								$arComment["showedImages"] = $p->showedImages;
+								if(!empty($p->showedImages))
+								{
+									foreach($p->showedImages as $val)
 									{
-										unset($arResult["arImages"][$arComment["ID"]][$val]);
+										if(!empty($arResult["arImages"][$arComment["ID"]][$val]))
+										{
+											unset($arResult["arImages"][$arComment["ID"]][$val]);
+										}
 									}
 								}
 							}
@@ -1650,11 +1714,7 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 		}
 
 		$arResult["commentUrl"] = CComponentEngine::MakePathFromTemplate(htmlspecialcharsBack($arParams["PATH_TO_POST"]), array("post_id" => CBlogPost::GetPostID($arPost["ID"], $arPost["CODE"], $arParams["ALLOW_POST_CODE"]), "user_id" => $arPost["AUTHOR_ID"]));
-		if(strpos($arResult["commentUrl"], "?") !== false)
-			$arResult["commentUrl"] .= "&";
-		else
-			$arResult["commentUrl"] .= "?";
-		$arResult["commentUrl"] .= $arParams["COMMENT_ID_VAR"]."=#comment_id###comment_id#";
+		$arResult["commentUrl"] .= (strpos($arResult["commentUrl"], "?") !== false ? "&" : "?").$arParams["COMMENT_ID_VAR"]."=#comment_id###comment_id#";
 
 		if($arResult["use_captcha"])
 		{
@@ -1681,77 +1741,70 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 				"pathToUser" => $arParams["PATH_TO_USER"],
 			);
 
+			$handlerManager = new Bitrix\Socialnetwork\CommentAux\HandlerManager();
+
 			foreach($arResult["CommentsResult"] as $k1 => $v1)
 			{
 				if(IntVal($commentUrlID) > 0 && $commentUrlID == $v1["ID"] && $v1["AUTHOR_ID"] == $user_id && $v1["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_READY)
 					$arResult["MESSAGE"] = GetMessage("B_B_PC_HIDDEN_POSTED");
 
-				if(!empty($arParams["POST_DATA"]["SPERM_HIDDEN"]) && strlen($v1["SHARE_DEST"]) > 0)
+				/** @var bool|object $handler */
+				if ($handler = $handlerManager->getHandlerByPostText($v1["POST_TEXT"]))
 				{
-					$dest = explode(",", $v1["SHARE_DEST"]);
-					if(!empty($dest))
+					if ($handler->checkRecalcNeeded($v1, $arParams))
 					{
-						$bDestCuted = false;
-						foreach($dest as $destId)
+						$params = $handler->getParamsFromFields($v1);
+						if (!empty($params))
 						{
-							if(in_array($destId, $arParams["POST_DATA"]["SPERM_HIDDEN"]))
-							{
-								$bDestCuted = true;
-								break;
-							}
+							$handler->setParams($params);
 						}
-
-						if($bDestCuted)
+						$handler->setOptions(array(
+							'mobile' => (isset($arParams["MOBILE"]) && $arParams["MOBILE"] == "Y"),
+							'bPublicPage' => (isset($arParams["bPublicPage"]) && $arParams["bPublicPage"]),
+							'cache' => false
+						));
+						$arResult["CommentsResult"][$k1]["TextFormated"]  = $handler->getText();
+					}
+				}
+				else // check for old shares
+				{
+					if (
+						!empty($v1["SHARE_DEST"])
+						&& !empty($arParams["POST_DATA"]["SPERM_HIDDEN"])
+					)
+					{
+						$dest = explode(",", $v1["SHARE_DEST"]);
+						if(!empty($dest))
 						{
-							$arDest = array();
+							$bDestCut = false;
 							foreach($dest as $destId)
 							{
-								if(!in_array($destId, $arParams["POST_DATA"]["SPERM_HIDDEN"]))
+								if(in_array($destId, $arParams["POST_DATA"]["SPERM_HIDDEN"]))
 								{
-									$type = substr($destId, 0, 2);
-									$entityId = substr($destId, 2);
-									$name = "";
-									$link = "";
-									$url = "";
-									if($destId == "UA")
-									{
-										if (!$arParams["POST_DATA"]["bExtranetSite"] && defined("BITRIX24_PATH_COMPANY_STRUCTURE_VISUAL"))
-											$arDest[] = "[url=".BITRIX24_PATH_COMPANY_STRUCTURE_VISUAL."]".($bIntranetInstalled ? GetMessage("B_B_SHARE_ALL") : GetMessage("B_B_SHARE_ALL_BUS"))."[/url]";
-										else
-											$arDest[] = ($bIntranetInstalled ? GetMessage("B_B_SHARE_ALL") : GetMessage("B_B_SHARE_ALL_BUS"));
-											;
-
-									}
-									elseif($type == "SG" || $type == "DR")
-									{
-										$arDest[] = "[url=".$arParams["POST_DATA"]["SPERM_NAME"][$type][$entityId]["URL"]."]".htmlspecialcharsback($arParams["POST_DATA"]["SPERM_NAME"][$type][$entityId]["NAME"])."[/url]";
-
-									}
-									else
-									{
-										$type = "U";
-										$entityId = substr($destId, 1);
-										$arDest[] = "[user=".$arParams["POST_DATA"]["SPERM_NAME"][$type][$entityId]["ID"]."]".htmlspecialcharsback($arParams["POST_DATA"]["SPERM_NAME"][$type][$entityId]["NAME"])."[/user]";
-									}
+									$bDestCut = true;
+									break;
 								}
 							}
-							$arDest[] = GetMessage("B_B_SHARE_HIDDEN_1");
-							$destText = GetMessage("B_B_SHARE_1");
-							if(count($arDest) > 1)
-							{
-								$destText = GetMessage("B_B_SHARE");
-							}
-							$destText .= implode(", ", $arDest);
 
-							if(!$p)
+							if($bDestCut)
 							{
-								$p = new blogTextParser(false, $arParams["PATH_TO_SMILE"], array("bPublic" => $arParams["bPublicPage"]));
-								$arAllow = array("HTML" => "N", "ANCHOR" => "Y", "BIU" => "Y", "IMG" => "Y", "QUOTE" => "Y", "CODE" => "Y", "FONT" => "Y", "LIST" => "Y", "SMILES" => "Y", "NL2BR" => "N", "VIDEO" => "Y", "SHORT_ANCHOR" => "Y");
+								if ($handler = \Bitrix\Socialnetwork\CommentAux\Base::init(\Bitrix\Socialnetwork\CommentAux\Share::getType(), array(
+									'destinationList' => $dest,
+									'hiddenDestinationList' => $arParams["POST_DATA"]["SPERM_HIDDEN"]
+									),
+									array(
+										'mobile' => (isset($arParams["MOBILE"]) && $arParams["MOBILE"] == "Y"),
+										'cache' => false
+									)
+								))
+								{
+									$arResult["CommentsResult"][$k1]["TextFormated"]  = $handler->getText();
+								}
 							}
-							$arResult["CommentsResult"][$k1]["TextFormated"] = $p->convert($destText, false, array(), $arAllow, $arConvertParserParams);
 						}
 					}
 				}
+
 				$bAuthor = false;
 				if(IntVal($v1["AUTHOR_ID"])>0 && $v1["AUTHOR_ID"] == $user_id)
 					$bAuthor = true;
@@ -1819,7 +1872,13 @@ if(!empty($arPost) && $arPost["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH &
 					}
 					else
 					{
-						if($v1["AUTHOR_ID"] != $user_id && $v1["PUBLISH_STATUS"] != BLOG_PUBLISH_STATUS_PUBLISH)
+						if(
+							(
+								$user_id <= 0 // anonymous
+								|| $v1["AUTHOR_ID"] != $user_id
+							)
+							&& $v1["PUBLISH_STATUS"] != BLOG_PUBLISH_STATUS_PUBLISH
+						)
 						{
 							unset($arResult["CommentsResult"][$k1]);
 							unset($arResult["IDS"][$k1]);

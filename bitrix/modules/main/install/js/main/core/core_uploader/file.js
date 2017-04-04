@@ -332,7 +332,7 @@ var mobileNames = {};
 				}
 			}
 			var res, patt = [], repl = [], tmp;
-			while ((res = /#(.+?)#/gi.exec(template)) && !!res)
+			while ((res = /#([^\\<\\>\\"\\']+?)#/gi.exec(template)) && !!res)
 			{
 				if (this[res[1]] !== undefined)
 				{

@@ -217,6 +217,11 @@ class CIBlockSection extends CAllIBlockSection
 					$arSqlOrder[$by] = " BS.CODE ".$order." ";
 					$additionalSelect["CODE"] = $arFields["CODE"]." AS CODE";
 					break;
+				case "external_id":
+				case "xml_id":
+					$arSqlOrder[$by] = " BS.XML_ID ".$order." ";
+					$additionalSelect["XML_ID"] = $arFields["XML_ID"]." AS XML_ID";
+					break;
 				case "active":
 					$arSqlOrder[$by] = " BS.ACTIVE ".$order." ";
 					$additionalSelect["ACTIVE"] = $arFields["ACTIVE"]." AS ACTIVE";

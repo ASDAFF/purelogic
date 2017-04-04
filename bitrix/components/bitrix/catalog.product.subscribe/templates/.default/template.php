@@ -27,17 +27,17 @@ $paramsForJs = array(
 $templateData = $paramsForJs;
 ?>
 
-<span id="<?=htmlspecialcharsbx($arResult['BUTTON_ID'])?>" class=
-	"<?=htmlspecialcharsbx($arResult['BUTTON_CLASS'])?>" data-item=
-	"<?=htmlspecialcharsbx($arResult['PRODUCT_ID'])?>" style=
-		"<?=($arResult['DEFAULT_DISPLAY']?'':'display: none;')?>">
-	<?=Loc::getMessage('CPST_SUBSCRIBE_BUTTON_NAME')?>
+<span id="<?=htmlspecialcharsbx($arResult['BUTTON_ID'])?>"
+		class="<?=htmlspecialcharsbx($arResult['BUTTON_CLASS'])?>"
+		data-item="<?=htmlspecialcharsbx($arResult['PRODUCT_ID'])?>"
+		style="<?=($arResult['DEFAULT_DISPLAY']?'':'display: none;')?>">
+	<span>
+		<?=Loc::getMessage('CPST_SUBSCRIBE_BUTTON_NAME')?>
+	</span>
 </span>
 <input type="hidden" id="<?=htmlspecialcharsbx($arResult['BUTTON_ID'])?>_hidden">
 
 <script type="text/javascript">
-	var <?=$jsObject?> = new JCCatalogProductSubscribe(<?=CUtil::phpToJSObject($paramsForJs, false, true)?>);
-
 	BX.message({
 		CPST_SUBSCRIBE_POPUP_TITLE: '<?=GetMessageJS('CPST_SUBSCRIBE_POPUP_TITLE');?>',
 		CPST_SUBSCRIBE_BUTTON_NAME: '<?=GetMessageJS('CPST_SUBSCRIBE_BUTTON_NAME');?>',
@@ -55,4 +55,6 @@ $templateData = $paramsForJs;
 		CPST_POPUP_SUBSCRIBED_TITLE: '<?=GetMessageJS('CPST_POPUP_SUBSCRIBED_TITLE');?>',
 		CPST_POPUP_SUBSCRIBED_TEXT: '<?=GetMessageJS('CPST_POPUP_SUBSCRIBED_TEXT');?>'
 	});
+
+	var <?=$jsObject?> = new JCCatalogProductSubscribe(<?=CUtil::phpToJSObject($paramsForJs, false, true)?>);
 </script>

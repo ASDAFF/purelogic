@@ -161,7 +161,6 @@ class Uploader
 
 	public function setParams($params)
 	{
-		global $APPLICATION;
 		$params = (is_array($params) ? $params : array());
 
 		if (array_key_exists("urlToUpload", $params))
@@ -211,6 +210,15 @@ class Uploader
 		if (array_key_exists("controlId", $params))
 			$this->controlId = $params["controlId"];
 		$this->params["controlId"] = $this->controlId;
+	}
+
+	/**
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function getParam($key)
+	{
+		return $this->params[$key];
 	}
 
 	public function setHandler($name, $callback)

@@ -8,7 +8,7 @@ Loc::loadMessages(__FILE__);
 
 ?>
 <form id="pay" name="pay" method="POST" action="<?=$params['URL']?>">
-	<input type="hidden" name="LMI_PAYMENT_AMOUNT" value="<?=$params["PAYMENT_SHOULD_PAY"];?>">
+	<input type="hidden" name="LMI_PAYMENT_AMOUNT" value="<?=roundEx($params["PAYMENT_SHOULD_PAY"], 2);?>">
 	<input type="hidden" name="LMI_CURRENCY" value="<?=$params['PAYMENT_CURRENCY']?>">
 	<input type="hidden" name="LMI_PAYMENT_DESC" value="<?=str_replace(array('#PAYMENT_ID#', '#DATE_INSERT#'), array($params['PAYMENT_ID'], $params['PAYMENT_DATE_INSERT']), Loc::getMessage('SALE_HPS_PAYMASTER_TEMPLATE_DESC_PAYMENT'))?>">
 	<input type="hidden" name="LMI_PAYMENT_NO" value="<?= $params["PAYMENT_ID"] ?>">

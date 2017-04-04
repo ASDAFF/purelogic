@@ -382,12 +382,6 @@ elseif($arResult["FORM_DATA"]["TYPE"] == "N:Sequence")
 	$readOnlyAdd = false;
 	$readOnlyEdit = false;
 }
-elseif(preg_match("/^(E|E:)/", $arResult["FORM_DATA"]["TYPE"]))
-{
-	//No default value input
-
-	$readOnlyAdd = false;
-}
 elseif(!is_array($arPropertyFields["HIDE"]) || !in_array("DEFAULT_VALUE", $arPropertyFields["HIDE"]))
 {//Show default property value input if it was not cancelled by property
 	if(is_array($arUserType))
@@ -418,6 +412,7 @@ elseif(!is_array($arPropertyFields["HIDE"]) || !in_array("DEFAULT_VALUE", $arPro
 						"DESCRIPTION"=>"",
 						"MODE" => "EDIT_FORM",
 						"FORM_NAME" => "form_".$arResult["FORM_ID"],
+						"MULTIPLE" => $arResult["FORM_DATA"]["MULTIPLE"]
 					),
 				)
 			);
@@ -437,6 +432,12 @@ elseif(!is_array($arPropertyFields["HIDE"]) || !in_array("DEFAULT_VALUE", $arPro
 			);
 		}
 	}
+}
+elseif(preg_match("/^(E|E:)/", $arResult["FORM_DATA"]["TYPE"]))
+{
+	//No default value input
+
+	$readOnlyAdd = false;
 }
 
 if($USER_TYPE_SETTINGS_HTML)
@@ -462,7 +463,8 @@ if(preg_match("/^(G|G:)/", $arResult["FORM_DATA"]["TYPE"]))
 	if($arResult["FIELD_ID"])
 		$customHtml .= '<input type="hidden" name="TYPE" value="'.$arResult["FORM_DATA"]["TYPE"].'">';
 }
-elseif(preg_match("/^(E|E:)/", $arResult["FORM_DATA"]["TYPE"]))
+elseif(preg_match("/^(E|E:)/", $arResult["FORM_DATA"]["TYPE"])
+	&& !in_array($arResult['FORM_DATA']['TYPE'], $arResult["LIST_UNIQUE_ETYPE"]))
 {
 	$arTab1Fields[] = array(
 		"id"=>"LINK_IBLOCK_ID",

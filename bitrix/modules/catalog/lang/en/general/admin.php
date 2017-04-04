@@ -33,4 +33,5 @@ $MESS["PRICES_SECTION"] = "Prices";
 $MESS["PRICES_SECTION_TITLE"] = "Price types; rounding; surcharges";
 $MESS["PRICE_ROUND"] = "Rounding";
 $MESS["PRICE_ROUND_TITLE"] = "Price rounding";
+$MESS["CM_SUBSCRIPTION_PRODUCT"] = "Product subscriptions";
 ?>

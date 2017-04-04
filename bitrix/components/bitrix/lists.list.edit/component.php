@@ -71,7 +71,7 @@ $arParams["CAN_EDIT"] =
 	)
 ;
 
-$bBizProc = IsModuleInstalled('bizproc');
+$bBizProc = CModule::IncludeModule('bizproc') && CBPRuntime::isFeatureEnabled();
 $arIBlock = CIBlock::GetArrayByID(intval($arParams["~IBLOCK_ID"]));
 
 if($arIBlock)
@@ -299,7 +299,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && check_bitrix_sessid())
 	{
 		if($arParams["IBLOCK_TYPE_ID"] != COption::GetOptionString("lists", "livefeed_iblock_type_id"))
 		{
-			if(CModule::includeModule('bizproc'))
+			if(CModule::includeModule('bizproc') && CBPRuntime::isFeatureEnabled())
 			{
 				\Bitrix\Lists\Importer::migrateList($arResult["IBLOCK_ID"]);
 

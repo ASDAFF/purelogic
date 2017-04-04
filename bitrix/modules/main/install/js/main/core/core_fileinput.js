@@ -1252,271 +1252,273 @@ filePath.prototype = {
 };
 var
 FramePresetID = 0,
-FramePreset = function(params)
-{
-	this.id = 'framePreset' + (FramePresetID++);
-	this.onAfterShow = BX.delegate(this.onAfterShow, this);
-	this.addRow = BX.delegate(this.addRow, this);
-	this.delRow = BX.delegate(this.delRow, this);
-	if (params)
-	{
-		this.init(params);
-	}
-};
-FramePreset.prototype = {
-	active : null,
-	id : 'framePreset0',
-	values : [],
-	valuesInner : [],
-	popup : null,
-	number : 0,
-	maxLength : 10,
-	getTemplateNode : function()
-	{
-		return [
-			'<li>',
+FramePreset = function() {
+	var d = function(params) {
+		this.id = 'framePreset' + (FramePresetID++);
+		this.onAfterShow = BX.delegate(this.onAfterShow, this);
+		this.addRow = BX.delegate(this.addRow, this);
+		this.delRow = BX.delegate(this.delRow, this);
+		if (params)
+		{
+			this.init(params);
+		}
+	};
+	d.prototype = {
+		active : null,
+		id : 'framePreset0',
+		values : [],
+		valuesInner : [],
+		popup : null,
+		number : 0,
+		maxLength : 10,
+		getTemplateNode : function()
+		{
+			return [
+				'<li>',
 				'<div class="adm-fileinput-item-panel">',
-					'<span class="adm-fileinput-item-panel-btn adm-btn-del" id="#classId##id#_del">&nbsp;</span>',
+				'<span class="adm-fileinput-item-panel-btn adm-btn-del" id="#classId##id#_del">&nbsp;</span>',
 				'</div>',
 				'<div class="adm-fileinput-presets-item">',
-					'<input class="adm-fileinput-presets-title" id="presets_#id#__title_" name="presets[#id#][title]" type="text" value="#title#" placeholder="', BX.message("JS_CORE_FI_TITLE"), '" />',
-					'<input class="adm-fileinput-presets-width" name="presets[#id#][width]" type="text" value="#width#" placeholder="', BX.message("JS_CORE_FI_WIDTH"), '" />',
-					'<input class="adm-fileinput-presets-hight" name="presets[#id#][height]" type="text" value="#height#" placeholder="', BX.message("JS_CORE_FI_HEIGHT"), '" />',
+				'<input class="adm-fileinput-presets-title" id="presets_#id#__title_" name="presets[#id#][title]" type="text" value="#title#" placeholder="', BX.message("JS_CORE_FI_TITLE"), '" />',
+				'<input class="adm-fileinput-presets-width" name="presets[#id#][width]" type="text" value="#width#" placeholder="', BX.message("JS_CORE_FI_WIDTH"), '" />',
+				'<input class="adm-fileinput-presets-hight" name="presets[#id#][height]" type="text" value="#height#" placeholder="', BX.message("JS_CORE_FI_HEIGHT"), '" />',
 				'</div>',
-			'</li>'
-		].join("").replace(/#classId#/gi, this.id);
-	},
-	getTemplate : function()
-	{
-		return [
-			'<div class="adm-fileinput-presets-container" id="#classId#_container">',
+				'</li>'
+			].join("").replace(/#classId#/gi, this.id);
+		},
+		getTemplate : function()
+		{
+			return [
+				'<div class="adm-fileinput-presets-container" id="#classId#_container">',
 				'<form id="#classId#_form">',
-					'<ol class="adm-fileinput-list adm-fileinput-presets" id="#classId#_list">',
-						'#nodes#',
-					'</ol>',
+				'<ol class="adm-fileinput-list adm-fileinput-presets" id="#classId#_list">',
+				'#nodes#',
+				'</ol>',
 				'</form>',
 				'<a href="#" id="#classId#_add_point" class="adm-fileinput-item-add">', BX.message("JS_CORE_FI_ADD_PRESET"), '</a>',
 				'<div style="clear:both;"></div>',
-			'</div>'
-		].join("");
-	},
-	init : function(params)
-	{
-		this.values = [];
-		this.length = 0;
-		if (BX.type.isArray(params["presets"]))
+				'</div>'
+			].join("");
+		},
+		init : function(params)
 		{
-			var id;
-			for (var ii = 0; ii < params["presets"].length; ii++)
+			this.values = [];
+			this.length = 0;
+			if (BX.type.isArray(params["presets"]))
 			{
-				id = this.values.length;
-				this.values.push({id : id,
-					title : params["presets"][ii]["title"],
-					width : params["presets"][ii]["width"],
-					height : params["presets"][ii]["height"]});
-			}
-
-			this.length = this.values.length;
-			this.setActive(params["presetActive"]);
-		}
-	},
-	setActive : function(id)
-	{
-		id = parseInt(id);
-		this.activeId = this.values[id] ? id : 0;
-		this.active = (this.values[this.activeId] || null);
-	},
-	edit : function(params)
-	{
-		var
-			node = BX.proxy_context,
-			html = '',
-			values = this.values;
-		for (var ii = 0; ii < values.length; ii ++)
-		{
-			html += this.getTemplateNode()
-				.replace(/#id#/gi, values[ii]["id"])
-				.replace(/#title#/gi, values[ii]["title"])
-				.replace(/#width#/gi, values[ii]["width"])
-				.replace(/#height#/gi, values[ii]["height"]);
-		}
-
-		if (this.values.length < this.maxLength && params && params["width"] && params["height"])
-		{
-			html += this.getTemplateNode()
-				.replace(/#id#/gi, ii)
-				.replace(/#title#/gi, "")
-				.replace(/#width#/gi, params["width"])
-				.replace(/#height#/gi, params["height"]);
-		}
-
-		if (!!this.popup)
-			this.popup.close();
-		var res = BX.pos(node);
-
-		this.popup = new BX.PopupWindow('bx-preset-popup-' + node.id, node, {
-			lightShadow : true,
-			offsetTop: -3,
-			className : "bxu-poster-popup",
-			offsetLeft: Math.ceil(res.width / 2),
-			autoHide: true,
-			closeByEsc: true,
-			zIndex : getZIndex(30 + BX.PopupWindow.getOption("popupOverlayZindex") - BX.PopupWindow.getOption("popupZindex")),
-			bindOptions: {position: "top"},
-			overlay : false,
-			events : {
-				onAfterPopupShow : this.onAfterShow,
-				onPopupClose : function() { this.destroy() },
-				onPopupDestroy : BX.proxy(function() { this.popup = null; }, this)
-			},
-			buttons : [
-				new BX.PopupWindowButton( {text : BX.message('CANVAS_OK'), className : "popup-window-button-accept", events : { click : BX.delegate(function() {
-					var data = BX.UploaderUtils.FormToArray(BX(this.id + '_form'));
-					this.onApply(data.data);
-					this.popup.close();
-				}, this) } } ),
-				new BX.PopupWindowButtonLink( {text : BX.message('CANVAS_CANCEL'), className : "popup-window-button-link-cancel", events : { click : BX.delegate(function(){this.popup.close();}, this) } } )
-			],
-			content : this.getTemplate().replace(/#classId#/gi, this.id).replace(/#nodes#/i, html)
-		});
-		this.popup.show();
-		this.popup.setAngle({position:'bottom'});
-		this.popup.bindOptions.forceBindPosition = true;
-		this.popup.adjustPosition();
-		BX.focus(BX('popupText' + node.id));
-		this.popup.bindOptions.forceBindPosition = false;
-	},
-	onAfterShow : function()
-	{
-		BX.bind(BX(this.id + "_add_point"), "click", this.addRow);
-		var node, notEmpty = false;
-		for (var ii = 0; ii < this.length; ii++)
-		{
-			node = BX(this.id + ii + "_del");
-			if (node)
-			{
-				BX.bind(node, "click", this.delRow);
-				notEmpty = (notEmpty===false ? 0 : notEmpty) + 1;
-			}
-		}
-		if (notEmpty === false)
-			this.addRow();
-		this.checkAddButton();
-		if (BX('presets_' + ii + '__title_'))
-			BX.focus(BX('presets_' + ii + '__title_'))
-
-	},
-	checkAddButton : function()
-	{
-		var list = BX(this.id + '_list'),
-			active = (this.maxLength > list.childNodes.length);
-		if (active)
-			BX.removeClass(BX(this.id + "_add_point"), "disabled");
-		else
-			BX.addClass(BX(this.id + "_add_point"), "disabled");
-		return active;
-	},
-	addRow : function(e)
-	{
-		BX.PreventDefault(e);
-		var list = BX(this.id + '_list'), id;
-		if (list && this.checkAddButton())
-		{
-			id = this.length++;
-			list.appendChild(BX.create('LI', {html :  this.getTemplateNode()
-				.replace(/^<li(.*?)>/gi, "")
-				.replace(/<\/li(.*?)>$/gi, "")
-				.replace(/#id#/gi, id)
-				.replace(/#title#/gi, "")
-				.replace(/#width#/gi, "")
-				.replace(/#height#/gi, "") }));
-			BX.defer_proxy(function(){
-				BX.bind(BX(this.id + id + "_del"), "click", this.delRow);
-			}, this)();
-		}
-		this.checkAddButton();
-		return false;
-	},
-	delRow : function()
-	{
-		var node = BX.proxy_context;
-		if (BX(node))
-		{
-			var li = BX.findParent(node, {tagName : "LI"});
-			if (li)
-			{
-				BX.remove(li);
-			}
-		}
-		this.checkAddButton();
-	},
-	onApply : function(data)
-	{
-		this.values = [];
-		if (data && data["presets"])
-		{
-
-			for (var id, ii = 0; ii < data["presets"].length; ii++)
-			{
-				if (data["presets"][ii] && data["presets"][ii]["width"] > 0 && data["presets"][ii]["height"] > 0)
+				var id;
+				for (var ii = 0; ii < params["presets"].length; ii++)
 				{
 					id = this.values.length;
-					this.values.push({
-						id : id,
-						width : data["presets"][ii]["width"],
-						height : data["presets"][ii]["height"],
-						title : (data["presets"][ii]["title"] ||
-							(data["presets"][ii]["width"] + 'x' + data["presets"][ii]["height"]))
-					});
+					this.values.push({id : id,
+						title : params["presets"][ii]["title"],
+						width : params["presets"][ii]["width"],
+						height : params["presets"][ii]["height"]});
+				}
+
+				this.length = this.values.length;
+				this.setActive(params["presetActive"]);
+			}
+		},
+		setActive : function(id)
+		{
+			id = parseInt(id);
+			this.activeId = this.values[id] ? id : 0;
+			this.active = (this.values[this.activeId] || null);
+		},
+		edit : function(params)
+		{
+			var
+				node = BX.proxy_context,
+				html = '',
+				values = this.values;
+			for (var ii = 0; ii < values.length; ii ++)
+			{
+				html += this.getTemplateNode()
+					.replace(/#id#/gi, values[ii]["id"])
+					.replace(/#title#/gi, values[ii]["title"])
+					.replace(/#width#/gi, values[ii]["width"])
+					.replace(/#height#/gi, values[ii]["height"]);
+			}
+
+			if (this.values.length < this.maxLength && params && params["width"] && params["height"])
+			{
+				html += this.getTemplateNode()
+					.replace(/#id#/gi, ii)
+					.replace(/#title#/gi, "")
+					.replace(/#width#/gi, params["width"])
+					.replace(/#height#/gi, params["height"]);
+			}
+
+			if (!!this.popup)
+				this.popup.close();
+			var res = BX.pos(node);
+
+			this.popup = new BX.PopupWindow('bx-preset-popup-' + node.id, node, {
+				lightShadow : true,
+				offsetTop: -3,
+				className : "bxu-poster-popup",
+				offsetLeft: Math.ceil(res.width / 2),
+				autoHide: true,
+				closeByEsc: true,
+				zIndex : getZIndex(30 + BX.PopupWindow.getOption("popupOverlayZindex") - BX.PopupWindow.getOption("popupZindex")),
+				bindOptions: {position: "top"},
+				overlay : false,
+				events : {
+					onAfterPopupShow : this.onAfterShow,
+					onPopupClose : function() { this.destroy() },
+					onPopupDestroy : BX.proxy(function() { this.popup = null; }, this)
+				},
+				buttons : [
+					new BX.PopupWindowButton( {text : BX.message('CANVAS_OK'), className : "popup-window-button-accept", events : { click : BX.delegate(function() {
+						var data = BX.UploaderUtils.FormToArray(BX(this.id + '_form'));
+						this.onApply(data.data);
+						this.popup.close();
+					}, this) } } ),
+					new BX.PopupWindowButtonLink( {text : BX.message('CANVAS_CANCEL'), className : "popup-window-button-link-cancel", events : { click : BX.delegate(function(){this.popup.close();}, this) } } )
+				],
+				content : this.getTemplate().replace(/#classId#/gi, this.id).replace(/#nodes#/i, html)
+			});
+			this.popup.show();
+			this.popup.setAngle({position:'bottom'});
+			this.popup.bindOptions.forceBindPosition = true;
+			this.popup.adjustPosition();
+			BX.focus(BX('popupText' + node.id));
+			this.popup.bindOptions.forceBindPosition = false;
+		},
+		onAfterShow : function()
+		{
+			BX.bind(BX(this.id + "_add_point"), "click", this.addRow);
+			var node, notEmpty = false;
+			for (var ii = 0; ii < this.length; ii++)
+			{
+				node = BX(this.id + ii + "_del");
+				if (node)
+				{
+					BX.bind(node, "click", this.delRow);
+					notEmpty = (notEmpty===false ? 0 : notEmpty) + 1;
 				}
 			}
-		}
-		this.save();
-		BX.onCustomEvent(this, "onApply", [this.values, this]);
-	},
-	savedLastTime : '',
-	save : function()
-	{
-		var sParam = '';
-		sParam += '&p[0][c]=main&p[0][n]=fileinput';
-		if (this.values.length > 0)
+			if (notEmpty === false)
+				this.addRow();
+			this.checkAddButton();
+			if (BX('presets_' + ii + '__title_'))
+				BX.focus(BX('presets_' + ii + '__title_'))
+
+		},
+		checkAddButton : function()
 		{
-			for (var jj, ii = 0; ii < this.values.length; ii++)
+			var list = BX(this.id + '_list'),
+				active = (this.maxLength > list.childNodes.length);
+			if (active)
+				BX.removeClass(BX(this.id + "_add_point"), "disabled");
+			else
+				BX.addClass(BX(this.id + "_add_point"), "disabled");
+			return active;
+		},
+		addRow : function(e)
+		{
+			BX.PreventDefault(e);
+			var list = BX(this.id + '_list'), id;
+			if (list && this.checkAddButton())
 			{
-				for (jj in this.values[ii])
+				id = this.length++;
+				list.appendChild(BX.create('LI', {html :  this.getTemplateNode()
+					.replace(/^<li(.*?)>/gi, "")
+					.replace(/<\/li(.*?)>$/gi, "")
+					.replace(/#id#/gi, id)
+					.replace(/#title#/gi, "")
+					.replace(/#width#/gi, "")
+					.replace(/#height#/gi, "") }));
+				BX.defer_proxy(function(){
+					BX.bind(BX(this.id + id + "_del"), "click", this.delRow);
+				}, this)();
+			}
+			this.checkAddButton();
+			return false;
+		},
+		delRow : function()
+		{
+			var node = BX.proxy_context;
+			if (BX(node))
+			{
+				var li = BX.findParent(node, {tagName : "LI"});
+				if (li)
 				{
-					if (this.values[ii].hasOwnProperty(jj))
+					BX.remove(li);
+				}
+			}
+			this.checkAddButton();
+		},
+		onApply : function(data)
+		{
+			this.values = [];
+			if (data && data["presets"])
+			{
+				data["presets"] = BX.util.array_values(data["presets"]);
+				for (var id, ii = 0; ii < data["presets"].length; ii++)
+				{
+					if (data["presets"][ii] && data["presets"][ii]["width"] > 0 && data["presets"][ii]["height"] > 0)
 					{
-						if (jj != "id")
-							sParam += "&p[0][v][presets][" + ii + "][" + jj + "]=" + BX.util.urlencode(this.values[ii][jj]);
+						id = this.values.length;
+						this.values.push({
+							id : id,
+							width : data["presets"][ii]["width"],
+							height : data["presets"][ii]["height"],
+							title : (data["presets"][ii]["title"] ||
+							(data["presets"][ii]["width"] + 'x' + data["presets"][ii]["height"]))
+						});
 					}
 				}
 			}
-		}
-		else
+			this.save();
+			BX.onCustomEvent(this, "onApply", [this.values, this]);
+		},
+		savedLastTime : '',
+		save : function()
 		{
-			sParam += "&p[0][v][presets]=";
-		}
-		if (this.savedLastTime != sParam)
+			var sParam = '';
+			sParam += '&p[0][c]=main&p[0][n]=fileinput';
+			if (this.values.length > 0)
+			{
+				for (var jj, ii = 0; ii < this.values.length; ii++)
+				{
+					for (jj in this.values[ii])
+					{
+						if (this.values[ii].hasOwnProperty(jj))
+						{
+							if (jj != "id")
+								sParam += "&p[0][v][presets][" + ii + "][" + jj + "]=" + BX.util.urlencode(this.values[ii][jj]);
+						}
+					}
+				}
+			}
+			else
+			{
+				sParam += "&p[0][v][presets]=";
+			}
+			if (this.savedLastTime != sParam)
+			{
+				BX.ajax({
+					'method': 'GET',
+					'dataType': 'html',
+					'processData': false,
+					'cache': false,
+					'url': BX.userOptions.path+sParam+'&sessid='+BX.bitrix_sessid()
+				});
+			}
+		},
+		getActive : function()
 		{
-			BX.ajax({
-				'method': 'GET',
-				'dataType': 'html',
-				'processData': false,
-				'cache': false,
-				'url': BX.userOptions.path+sParam+'&sessid='+BX.bitrix_sessid()
-			});
+			this.activeId = (this.values[this.activeId] ? this.activeId : 0);
+			var res = this.values[this.activeId];
+			if (res)
+				res["id"] = this.activeId;
+			return (res || null);
 		}
-	},
-	getActive : function()
-	{
-		this.activeId = (this.values[this.activeId] ? this.activeId : 0);
-		var res = this.values[this.activeId];
-		if (res)
-			res["id"] = this.activeId;
-		return (res || null);
-	}
-};
+	};
+	return d;
+} ();
 
 var preset, cnv,
 	FrameMaster = function(params)
@@ -1937,7 +1939,7 @@ FrameMaster.prototype = {
 			</div> \
 			<div class="adm-photoeditor-sidebar-options"> \
 				<div class="sidebar-options-checkbox-container"> \
-					<input type="checkbox" value="Y" id="', this.id , 'scaleChained" /> \
+					<input type="checkbox" value="Y" id="', this.id , 'scaleChained" checked /> \
 					<label for="', this.id , 'scaleChained"><span class="label-icon"></span></label> \
 				</div> \
 			</div> \

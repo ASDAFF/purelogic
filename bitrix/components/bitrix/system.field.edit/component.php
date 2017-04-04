@@ -66,11 +66,16 @@ if($arUserField["USER_TYPE"])
 		switch ($arUserField["USER_TYPE"]["BASE_TYPE"])
 		{
 			case "double":
-				if (strlen($res)>0)
+				if ($res <> '')
+				{
 					$res = round(doubleval($res), $arUserField["SETTINGS"]["PRECISION"]);
+				}
 				break;
 			case "int":
-				$res = intval($res);
+				if ($res <> '')
+				{
+					$res = intval($res);
+				}
 				break;
 			default:
 				$res = htmlspecialcharsbx($res);
@@ -128,7 +133,7 @@ if($arUserField["USER_TYPE"])
 
 	$arParams["form_name"] = !empty($arParams["form_name"]) ? $arParams["form_name"] : "form1";
 
-	$arResult["RANDOM"] = $this->randString();
+	$arResult["RANDOM"] = ($arParams["RANDOM"] <> ''? $arParams["RANDOM"] : $this->randString());
 
 	$APPLICATION->AddHeadScript($this->getPath()."/script.js");
 

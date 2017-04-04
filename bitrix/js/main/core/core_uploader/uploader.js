@@ -49,8 +49,8 @@
 			this.controlID = this.controlId = (params["controlId"] || "bitrixUploader");
 
 			this.dialogName = "BX.Uploader";
-			this.id = (!!params["id"] ? params["id"] : Math.random());
-			this.CID = (!!params["CID"] ? !!params["CID"] : ("CID" + BX.UploaderUtils.getId()));
+			this.id = (BX.type.isNotEmptyString(params["id"]) ? params["id"] : Math.random());
+			this.CID = (BX.type.isNotEmptyString(params["CID"]) ? params["CID"] : ("CID" + BX.UploaderUtils.getId()));
 			this.streams = new BX.UploaderStreams(params['streams'], this);
 
 			// Limits
@@ -69,15 +69,6 @@
 				this.limits[keys[ii]] = (typeof params[keys[ii]] == "number" && params[keys[ii]] < this.limits[keys[ii]] ? params[keys[ii]] : this.limits[keys[ii]]);
 			}
 			this.limits["phpPostSize"] = Math.min(this.limits["phpPostMaxSize"], settings.phpPostMinSize);
-
-			this.CEF = !!window["BXDesktopSystem"];
-			if (this.CEF)
-			{
-				this.limits["phpUploadMaxFilesize"] = Math.min(200*1024*1024, parseInt(BX.message('phpUploadMaxFilesize')), parseInt(params["phpUploadMaxFilesize"] ? params["phpUploadMaxFilesize"] : BX.message('phpUploadMaxFilesize')));
-				this.limits["phpPostMaxSize"] = Math.min(210*1024*1024, parseInt(BX.message('phpPostMaxSize')), parseInt(params["phpPostMaxSize"] ? params["phpPostMaxSize"] : BX.message('phpPostMaxSize')));
-				this.limits["uploadMaxFilesize"] = this.limits["phpUploadMaxFilesize"];
-				this.limits["phpPostSize"] = this.limits["phpPostMaxSize"];
-			}
 
 	// ALLOW_UPLOAD = 'A'll files | 'I'mages | 'F'iles with selected extensions
 	// ALLOW_UPLOAD_EXT = comma-separated list of allowed file extensions (ALLOW_UPLOAD='F')
@@ -1330,9 +1321,6 @@
 		adjustPostSize : function(stream, increase)
 		{
 			var result = false, sugestedSize = null;
-
-			if (this.CEF)
-				return result;
 
 			var deltaTime = (stream.xhr.finishTime - stream.xhr.startTime);
 			if (increase !== false)

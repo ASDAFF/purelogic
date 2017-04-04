@@ -133,4 +133,15 @@ $MESS["CC_BSC1_SHIPMENT_ERROR_15"] = "Dokument-ID: #XML_1C_DOCUMENT_ID#. Fehler 
 $MESS["CC_BSC1_SHIPMENT_ERROR_16"] = "Dokument-ID #XML_1C_DOCUMENT_ID#. Fehler beim Löschen des Elements. Lieferung für Bestellung ##ORDER_ID# wurde nicht gefunden.";
 $MESS["CC_BSC1_SHIPMENT_ERROR_17"] = "Dokument-ID #XML_1C_DOCUMENT_ID#: Lieferung wurde nicht erstellt. Die neue Lieferung wurde zum Löschen vormarkiert.";
 $MESS["CC_BSC1_SHIPMENT_ERROR_18"] = "Dokument-ID #XML_1C_DOCUMENT_ID#. Lieferung für Bestellung ##ORDER_ID# kann nicht erstellt bzw. geändert werden, weil das Basisdokument abgeschlossen ist.";
+$MESS["CC_BSC1_CONTAINER"] = "Container";
+$MESS["CC_BSC1_1C_TRACKING_NUMBER"] = "Nummer zum Verfolgen";
+$MESS["CC_BSC1_PAYMENT_ERROR_11"] = "ID des Dokuments #XML_1C_DOCUMENT_ID#. Die Zahlung für Bestellung ##ORDER_ID# kann nicht erstellt oder bearbeitet werden, weil das ursprüngliche Element gelöscht wurde.";
+$MESS["CC_BSC1_PROPERTY_VALUES"] = "EigenschaftsWerte";
+$MESS["CC_BSC1_PROPERTY_VALUE"] = "EigenschaftsWert";
+$MESS["CC_BSC1_CASHBOX_CHECKS"] = "KassenzettelInformation";
+$MESS["CC_BSC1_CASHBOX_CHECK"] = "KassenzettelInformation";
+$MESS["CC_BSC1_CASHBOX_PRINT_CHECK"] = "PRINT_CHECK";
+$MESS["CC_BSC1_CASHBOX_URL"] = "URL";
+$MESS["CC_BSC1_CASHBOX_FISCAL_SIGN"] = "FISCAL_SIGN";
+$MESS["CC_BSC1_CASHBOX_REG_NUMBER_KKT"] = "REG_NUMBER_KKT";
 ?>

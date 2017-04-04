@@ -630,7 +630,8 @@ class CatalogBigdataProductsComponent extends CSaleBestsellersComponent
 				if ($this->isAjax())
 				{
 					$APPLICATION->restartBuffer();
-					echo CUtil::PhpToJSObject(array('STATUS' => 'ERROR', 'MESSAGE' => $e->getMessage()));
+					header('Content-Type: application/json');
+					echo Main\Web\Json::encode(array('STATUS' => 'ERROR', 'MESSAGE' => $e->getMessage()));
 					die();
 				}
 

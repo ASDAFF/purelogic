@@ -18,4 +18,6 @@ $MESS["MPL_HAVE_WRITTEN"] = "Hat geschrieben:";
 $MESS["MPL_SAFE_EDIT"] = "Sie schreiben eine Nachricht. Sollen Änderungen zurückgesetzt werden?";
 $MESS["BLOG_C_VIEW1"] = "Mehr Kommentare";
 $MESS["BPC_MES_CREATE_TASK"] = "Aufgabe erstellen";
+$MESS["MPL_ERROR_OCCURRED"] = "Das ist ein Fehler.";
+$MESS["MPL_CLOSE"] = "Schließen";
 ?>

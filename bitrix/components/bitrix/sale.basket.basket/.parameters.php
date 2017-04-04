@@ -105,6 +105,10 @@ $arComponentParameters = Array(
 		"GIFTS" => array(
 			"NAME" => GetMessage("SBB_GIFTS"),
 		),
+		'ANALYTICS_SETTINGS' => array(
+			'NAME' => GetMessage('SBB_ANALYTICS_SETTINGS'),
+			'SORT' => 11000
+		)
 	),
 	"PARAMETERS" => Array(
 		"PATH_TO_ORDER" => Array(
@@ -155,13 +159,6 @@ $arComponentParameters = Array(
 			"TYPE" => "CHECKBOX",
 			"MULTIPLE" => "N",
 			"DEFAULT" => "N",
-			"ADDITIONAL_VALUES"=>"N",
-			"PARENT" => "ADDITIONAL_SETTINGS",
-		),
-		"COUNT_DISCOUNT_4_ALL_QUANTITY" => Array(
-			"NAME"=>GetMessage("SBB_COUNT_DISCOUNT_4_ALL_QUANTITY"),
-			"TYPE"=>"CHECKBOX",
-			"DEFAULT"=>"N",
 			"ADDITIONAL_VALUES"=>"N",
 			"PARENT" => "ADDITIONAL_SETTINGS",
 		),

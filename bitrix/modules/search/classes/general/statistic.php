@@ -52,6 +52,7 @@ class CSearchStatistic
 	function PhraseStat($result_count = 0, $page_num = 0)
 	{
 		$DB = CDatabase::GetModuleConnection('search');
+		$DB->StartUsingMasterOnly();
 
 		$result_count = intval($result_count);
 		$page_num = intval($page_num);
@@ -85,6 +86,7 @@ class CSearchStatistic
 				)
 			);
 		}
+		$DB->StopUsingMasterOnly();
 	}
 
 	public static function GetList($arOrder = false, $arFilter = false, $arSelect = false, $bGroup = false)
@@ -332,7 +334,7 @@ class CSearchStatistic
 			if ($phrase_id)
 			{
 				$DB = CDatabase::GetModuleConnection('search');
-
+				$DB->StartUsingMasterOnly();
 				$rs = $DB->Query("
 					SELECT *
 					FROM b_search_phrase
@@ -351,6 +353,7 @@ class CSearchStatistic
 						WHERE ID = ".$phrase_id."
 					");
 				}
+				$DB->StopUsingMasterOnly();
 			}
 		}
 	}

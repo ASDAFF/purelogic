@@ -1527,7 +1527,7 @@ final class ImportProcess extends Location\Util\Process
 		);
 
 		// get static index, it will be always in memory
-		$parameters['filter'] = array('TYPE_ID' => array('COUNTRY', 'COUNTRY_DISTRICT', 'REGION')); // todo: from typegroup later
+		$parameters['filter'] = array('TYPE.CODE' => array('COUNTRY', 'COUNTRY_DISTRICT', 'REGION')); // todo: from typegroup later
 
 		$this->data['existedlocs'] = array('static' => array());
 		$res = Location\LocationTable::getList($parameters);

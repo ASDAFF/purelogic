@@ -4,6 +4,7 @@ use	Bitrix\Sale\Internals\StatusTable,
 	Bitrix\Sale\Internals\StatusLangTable,
 	Bitrix\Sale\Internals\StatusGroupTaskTable,
 	Bitrix\Sale\Internals\OrderTable,
+	Bitrix\Sale\Internals\OrderArchiveTable,
 	Bitrix\Sale\Compatible,
 	Bitrix\Main\TaskTable,
 	Bitrix\Main\OperationTable,
@@ -293,6 +294,15 @@ class CSaleStatus
 		))->fetch())
 		{
 			$APPLICATION->ThrowException(Loc::getMessage("SKGS_ERROR_DELETE"), "ERROR_DELETE_STATUS_TO_ORDER");
+			return false;
+		}		
+		
+		if (OrderArchiveTable::getList(array(
+			'filter' => array('=STATUS_ID' => $statusId),
+			'limit' => 1
+		))->fetch())
+		{
+			$APPLICATION->ThrowException(Loc::getMessage("SKGS_ERROR_ARCHIVED_DELETE"), "ERROR_DELETE_STATUS_TO_ARCHIVED_ORDER");
 			return false;
 		}
 

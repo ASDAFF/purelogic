@@ -158,7 +158,7 @@ if (!empty($arError)):
 	if ($arParams["AJAX_CALL"] == "Y"):
 		$res = array("error" => $arError, "note" => $arNote, "id" => $arParams["MID"], "post" => ShowError($arError["title"]));
 		if ($_REQUEST["CONVERT_DATA"] == "Y")
-			array_walk($res, "htmlspecialcharsEx");
+			array_walk($res, "htmlspecialcharsbx");
 		$APPLICATION->RestartBuffer();
 		?><?=CUtil::PhpToJSObject($res)?><?
 		die();

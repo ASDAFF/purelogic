@@ -159,7 +159,7 @@ if ($ELEMENT_ID)
 else
 	$arResult["FORM_ID"] = "lists_element_add_".$arResult["IBLOCK_ID"];
 
-$bBizproc = CModule::IncludeModule("bizproc") && ($arIBlock["BIZPROC"] != "N");
+$bBizproc = CModule::IncludeModule("bizproc") && CBPRuntime::isFeatureEnabled() && ($arIBlock["BIZPROC"] != "N");
 
 $arResult["~LISTS_URL"] = str_replace(
 	array("#group_id#"),
@@ -335,6 +335,7 @@ $tab_name = $arResult["FORM_ID"]."_active_tab";
 
 //Assume there was no error
 $bVarsFromForm = false;
+$arResult["LIST_UNIQUE_ETYPE"] = array('E:ECrm');
 
 //Form submitted
 if(
@@ -884,14 +885,7 @@ foreach($arResult["FIELDS"] as $FIELD_ID => $arField)
 	{
 		if($bVarsFromForm)
 		{
-			if(array_key_exists("n0", $_POST[$FIELD_ID]))
-			{
-				$data[$FIELD_ID] = $_POST[$FIELD_ID];
-			}
-			else
-			{
-				$data[$FIELD_ID] = array("n0" => array("VALUE" => current($_POST[$FIELD_ID]), "DESCRIPTION" => ""));
-			}
+			$data[$FIELD_ID] = $_POST[$FIELD_ID];
 		}
 		elseif($arResult["ELEMENT_ID"] || $copy_id)
 		{

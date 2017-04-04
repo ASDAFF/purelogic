@@ -92,11 +92,11 @@ if (!function_exists('__SLGetLogRecord'))
 	{
 		global $APPLICATION, $CACHE_MANAGER, $USER_FIELD_MANAGER, $DB, $USER;
 
-		static 
-			$isExtranetInstalled, 
+		static
+			$isExtranetInstalled,
 			$isExtranetUser,
-			$arUserIdVisible, 
-			$arAvailableExtranetUserID, 
+			$arUserIdVisible,
+			$arAvailableExtranetUserID,
 
 			$bCurrentUserIsAdmin,
 			$arSocNetFeaturesSettings;
@@ -266,7 +266,7 @@ if (!function_exists('__SLGetLogRecord'))
 						&& (
 							IsModuleInstalled("extranet")
 							|| (
-								is_set($arEvent["URL"]) 
+								is_set($arEvent["URL"])
 								&& (strpos($arEvent["URL"], "#GROUPS_PATH#") !== false)
 							)
 						)
@@ -631,6 +631,13 @@ if (!function_exists('__SLGetLogRecord'))
 					"ENTITY_XML_ID" => $arForumMetaData[0]."_".$arEvent["FIELDS_FORMATTED"]["EVENT"]["SOURCE_ID"],
 					"NOTIFY_TAGS" => $arForumMetaData[2]
 				);
+
+				// Calendar events could generate different livefeed entries with same SOURCE_ID
+				// That's why we should add entry ID to make comment interface work
+				if ($arEvent["FIELDS_FORMATTED"]["EVENT"]["EVENT_ID"] == 'calendar')
+				{
+					$arEvent["FIELDS_FORMATTED"]["COMMENTS_PARAMS"]["ENTITY_XML_ID"] .= '_'.$arEvent["FIELDS_FORMATTED"]["EVENT"]["ID"];
+				}
 			}
 			else
 			{
@@ -674,7 +681,7 @@ if (!function_exists('__SLGetLogRecord'))
 		}
 		elseif (
 			$arCommentEvent
-			&& array_key_exists("OPERATION_ADD", $arCommentEvent) 
+			&& array_key_exists("OPERATION_ADD", $arCommentEvent)
 			&& $arCommentEvent["OPERATION_ADD"] == "log_rights"
 		)
 		{
@@ -873,19 +880,21 @@ if (!function_exists('__SLEGetLogCommentRecord'))
 {
 	function __SLEGetLogCommentRecord($arComments, $arParams, &$arAssets)
 	{
-		global $DB;
+		global $DB, $APPLICATION;
+
+		static $arUserCache = array();
 
 		// for the same post log_update - time only, if not - date and time
 		$timestamp = MakeTimeStamp(array_key_exists("LOG_DATE_FORMAT", $arComments)
-			? $arComments["LOG_DATE_FORMAT"] 
+			? $arComments["LOG_DATE_FORMAT"]
 			: $arComments["LOG_DATE"]
 		);
 
 		$timeFormated = FormatDateFromDB($arComments["LOG_DATE"],
 			(
-				stripos($arParams["DATE_TIME_FORMAT"], 'a') 
+				stripos($arParams["DATE_TIME_FORMAT"], 'a')
 				|| (
-					$arParams["DATE_TIME_FORMAT"] == 'FULL' 
+					$arParams["DATE_TIME_FORMAT"] == 'FULL'
 					&& IsAmPmMode()
 				) !== false
 					? (strpos(FORMAT_DATETIME, 'TT')!==false ? 'G:MI TT' : 'G:MI T')
@@ -925,7 +934,7 @@ if (!function_exists('__SLEGetLogCommentRecord'))
 		}
 
 		$path2Entity = (
-			$arComments["ENTITY_TYPE"] == SONET_ENTITY_GROUP 
+			$arComments["ENTITY_TYPE"] == SONET_ENTITY_GROUP
 				? CComponentEngine::MakePathFromTemplate($arParams["PATH_TO_GROUP"], array("group_id" => $arComments["ENTITY_ID"]))
 				: CComponentEngine::MakePathFromTemplate($arParams["PATH_TO_USER"], array("user_id" => $arComments["ENTITY_ID"]))
 		);
@@ -968,8 +977,45 @@ if (!function_exists('__SLEGetLogCommentRecord'))
 				"NAME_TEMPLATE" => $arParams["NAME_TEMPLATE"].$suffix,
 				"SHOW_LOGIN" => $arParams["SHOW_LOGIN"],
 				"PATH_TO_CONPANY_DEPARTMENT" => $arParams["PATH_TO_CONPANY_DEPARTMENT"],
-				"INLINE" => "Y"
+				"INLINE" => "Y",
+				"EXTERNAL_AUTH_ID" => $arComments["~CREATED_BY_EXTERNAL_AUTH_ID"]
 			);
+			if (
+				isset($arParams["ENTRY_HAS_CRM_USER"])
+				&& $arParams["ENTRY_HAS_CRM_USER"]
+				&& IsModuleInstalled('crm')
+			)
+			{
+				$ar = array();
+
+				if (isset($arUserCache[$arComments["USER_ID"]]))
+				{
+					$ar = $arUserCache[$arComments["USER_ID"]];
+				}
+				else
+				{
+					$arSelectParams = array(
+						"FIELDS" => array("ID"),
+						"SELECT" => array("UF_USER_CRM_ENTITY")
+					);
+
+					$res = CUser::getList(
+						($by="id"),
+						($order="asc"),
+						array("ID_EQUAL_EXACT" => intval($arComments["USER_ID"])),
+						$arSelectParams
+					);
+					if ($ar = $res->fetch())
+					{
+						$arUserCache[$ar["ID"]] = $ar;
+					}
+				}
+
+				if (!empty($ar))
+				{
+					$arCreatedBy["TOOLTIP_FIELDS"] = array_merge($arCreatedBy["TOOLTIP_FIELDS"], $ar);
+				}
+			}
 		}
 		else
 		{
@@ -1062,9 +1108,8 @@ if (!function_exists('__SLEGetLogCommentRecord'))
 				&& !empty($arComments["UF"]["UF_SONET_COM_URL_PRV"]["VALUE"])
 			)
 			{
-
-				$arCss = $GLOBALS["APPLICATION"]->sPath2css;
-				$arJs = $GLOBALS["APPLICATION"]->arHeadScripts;
+				$arCss = $APPLICATION->sPath2css;
+				$arJs = $APPLICATION->arHeadScripts;
 
 				$urlPreviewText = \Bitrix\Socialnetwork\ComponentHelper::getUrlPreviewContent($arComments["UF"]["UF_SONET_COM_URL_PRV"], array(
 					"MOBILE" => "N",
@@ -1077,8 +1122,8 @@ if (!function_exists('__SLEGetLogCommentRecord'))
 					$arTmpCommentEvent["EVENT_FORMATTED"]["FULL_MESSAGE_CUT"] .= $urlPreviewText;
 				}
 
-				$arAssets["CSS"] = array_merge($arAssets["CSS"], array_diff($GLOBALS["APPLICATION"]->sPath2css, $arCss));
-				$arAssets["JS"] = array_merge($arAssets["JS"], array_diff($GLOBALS["APPLICATION"]->arHeadScripts, $arJs));
+				$arAssets["CSS"] = array_merge($arAssets["CSS"], array_diff($APPLICATION->sPath2css, $arCss));
+				$arAssets["JS"] = array_merge($arAssets["JS"], array_diff($APPLICATION->arHeadScripts, $arJs));
 
 				unset($arComments["UF"]["UF_SONET_COM_URL_PRV"]);
 			}
@@ -1177,7 +1222,10 @@ if (!function_exists('__SLEGetLogCommentRecord'))
 						"LAST_NAME",
 						"SECOND_NAME",
 						"LOGIN",
-						"EMAIL"
+						"EMAIL",
+						"EXTERNAL_AUTH_ID",
+						"UF_USER_CRM_ENTITY",
+						"UF_DEPARTMENT"
 					);
 					foreach ($arTmpCommentEvent["CREATED_BY"]["TOOLTIP_FIELDS"] as $field => $value)
 					{

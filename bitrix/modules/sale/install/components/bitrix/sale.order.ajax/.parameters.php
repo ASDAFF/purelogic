@@ -140,6 +140,13 @@ $arComponentParameters = array(
 		)
 	),
 	"PARAMETERS" => array(
+		"ACTION_VARIABLE" => array(
+			"NAME" => GetMessage('SOA_ACTION_VARIABLE'),
+			"TYPE" => "STRING",
+			"MULTIPLE" => "N",
+			"DEFAULT" => "action",
+			"PARENT" => "ADDITIONAL_SETTINGS",
+		),
 		"PATH_TO_BASKET" => array(
 			"NAME" => GetMessage("SOA_PATH_TO_BASKET1"),
 			"TYPE" => "STRING",
@@ -201,6 +208,18 @@ $arComponentParameters = array(
 			"TYPE" => "CHECKBOX",
 			"MULTIPLE" => "N",
 			"DEFAULT" => "N",
+			"PARENT" => "BASE",
+		),
+		"SHOW_NOT_CALCULATED_DELIVERIES" => array(
+			"NAME" => GetMessage("SOA_SHOW_NOT_CALCULATED_DELIVERIES"),
+			"TYPE" => "LIST",
+			"MULTIPLE" => "N",
+			"DEFAULT" => "L",
+			"VALUES" => array(
+				'N' => GetMessage("SOA_SHOW_NOT_CALCULATED_DELIVERIES_N"),
+				'L' => GetMessage("SOA_SHOW_NOT_CALCULATED_DELIVERIES_L"),
+				'Y' => GetMessage("SOA_SHOW_NOT_CALCULATED_DELIVERIES_Y"),
+			),
 			"PARENT" => "BASE",
 		),
 		"DELIVERY_NO_SESSION" => array(

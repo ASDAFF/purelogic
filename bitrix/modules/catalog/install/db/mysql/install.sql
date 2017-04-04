@@ -19,7 +19,7 @@ create table if not exists b_catalog_price
 	CATALOG_GROUP_ID int not null,
 	PRICE decimal(18,2) not null,
 	CURRENCY char(3) not null,
-	TIMESTAMP_X timestamp not null,
+	TIMESTAMP_X timestamp not null default NOW() on update NOW(),
 	QUANTITY_FROM int null,
 	QUANTITY_TO int null,
 	TMP_ID varchar(40) null,
@@ -36,7 +36,7 @@ create table if not exists b_catalog_product
 	QUANTITY double not null,
 	QUANTITY_TRACE char(1) not null default 'N',
 	WEIGHT double not null default '0',
-	TIMESTAMP_X timestamp not null,
+	TIMESTAMP_X timestamp not null default NOW() on update NOW(),
 	PRICE_TYPE char(1) not null default 'S',
 	RECUR_SCHEME_LENGTH int null,
 	RECUR_SCHEME_TYPE char(1) not null default 'D',
@@ -167,7 +167,7 @@ create table if not exists b_catalog_discount
 	VALUE decimal(18,4) not null default '0.0',
 	CURRENCY char(3) not null,
 	MIN_ORDER_SUM decimal(18,4) null default '0.0',
-	TIMESTAMP_X timestamp not null,
+	TIMESTAMP_X timestamp not null default NOW() on update NOW(),
 	COUNT_PERIOD char(1) not null default 'U',
 	COUNT_SIZE int not null default '0',
 	COUNT_TYPE char(1) not null default 'Y',
@@ -184,6 +184,7 @@ create table if not exists b_catalog_discount
 	NOTES varchar(255) null,
 	CONDITIONS text null,
 	UNPACK text null,
+	SALE_ID int null,
 	primary key (ID),
 	index IX_C_D_COUPON(COUPON),
 	index IX_C_D_ACT(ACTIVE, ACTIVE_FROM, ACTIVE_TO),
@@ -280,7 +281,7 @@ create table if not exists b_catalog_discount_coupon
 create table if not exists b_catalog_vat
 (
 	ID int(11) NOT NULL auto_increment,
-	TIMESTAMP_X timestamp NOT NULL,
+	TIMESTAMP_X timestamp not null default NOW() on update NOW(),
 	ACTIVE char(1) NOT NULL default 'Y',
 	C_SORT int(18) NOT NULL default 100,
 	NAME varchar(50) NOT NULL default '',
@@ -459,6 +460,7 @@ create table if not exists b_catalog_measure_ratio
 	ID INT NOT NULL AUTO_INCREMENT,
 	PRODUCT_ID INT NOT NULL,
 	RATIO DOUBLE NOT NULL DEFAULT '1',
+	IS_DEFAULT CHAR(1) NOT NULL DEFAULT 'N',
 	PRIMARY KEY (ID),
 	UNIQUE INDEX IX_B_CATALOG_MEASURE_RATIO(PRODUCT_ID, RATIO)
 );

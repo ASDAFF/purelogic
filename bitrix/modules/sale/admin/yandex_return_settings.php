@@ -117,7 +117,7 @@ $contextMenu->Show();
 		$tabRControl->BeginNextTab();
 	?>
 		<input type="hidden" name="settings[<?=$personTypeId;?>][PERSON_TYPE_ID]" value="<?=$personTypeId;?>">
-		<?if (\Bitrix\Sale\BusinessValue::get('YANDEX_SHOP_ID', 'PAYSYSTEM_'.$ID, $personTypeId)):?>
+		<?if (\Bitrix\Sale\BusinessValue::get('YANDEX_SHOP_ID', 'PAYSYSTEM_'.$ID, $personTypeId) && \Bitrix\Sale\BusinessValue::get('YANDEX_CN', 'PAYSYSTEM_'.$ID, $personTypeId)):?>
 			<?
 			$showButton = true;
 			$strCN = PaySystem\YandexCert::getCn($ID, $personTypeId);

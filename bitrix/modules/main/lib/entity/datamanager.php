@@ -56,7 +56,6 @@ abstract class DataManager
 		if (isset(static::$entity[$class]))
 		{
 			unset(static::$entity[$class]);
-			return true;
 		}
 	}
 
@@ -81,7 +80,7 @@ abstract class DataManager
 	}
 
 	/**
-	 * Returns entity map definition
+	 * Returns entity map definition.
 	 */
 	public static function getMap()
 	{
@@ -177,7 +176,7 @@ abstract class DataManager
 	/**
 	 * Executes the query and returns selection by parameters of the query. This function is an alias to the Query object functions
 	 *
-	 * @param array $parameters Array of query parameters, available keys are:
+	 * @param array $parameters An array of query parameters, available keys are:
 	 * 		"select" => array of fields in the SELECT part of the query, aliases are possible in the form of "alias"=>"field"
 	 * 		"filter" => array of filters in the WHERE part of the query in the form of "(condition)field"=>"value"
 	 * 		"group" => array of fields in the GROUP BY part of the query
@@ -185,6 +184,9 @@ abstract class DataManager
 	 * 		"limit" => integer indicating maximum number of rows in the selection (like LIMIT n in MySql)
 	 * 		"offset" => integer indicating first row number in the selection (like LIMIT n, 100 in MySql)
 	 *		"runtime" => array of entity fields created dynamically
+	 * 		"cache => array of cache options
+	 * 			"ttl" => integer indicating cache TTL
+	 * 			"cache_joins" => boolean enabling to cache joins, false by default
 	 * @return Main\DB\Result
 	 * @throws \Bitrix\Main\ArgumentException
 	 */
@@ -230,9 +232,20 @@ abstract class DataManager
 					break;
 				case 'data_doubling':
 					if($value)
+					{
 						$query->enableDataDoubling();
+					}
 					else
+					{
 						$query->disableDataDoubling();
+					}
+					break;
+				case 'cache':
+					$query->setCacheTtl($value["ttl"]);
+					if(isset($value["cache_joins"]))
+					{
+						$query->cacheJoins($value["cache_joins"]);
+					}
 					break;
 				default:
 					throw new Main\ArgumentException("Unknown parameter: ".$param, $param);
@@ -272,10 +285,11 @@ abstract class DataManager
 
 	protected static function replaceFieldName($data = array())
 	{
+		$entity = static::getEntity();
 		foreach ($data as $fieldName => $value)
 		{
 			/** @var ScalarField $field */
-			$field = static::getEntity()->getField($fieldName);
+			$field = $entity->getField($fieldName);
 			$columnName = $field->getColumnName();
 			if($columnName != $fieldName)
 			{
@@ -309,7 +323,7 @@ abstract class DataManager
 				if (!isset($data[$key]))
 				{
 					throw new Main\ArgumentException(sprintf(
-						'Primary `%s` was not found when trying to query %s row.', $key, static::getEntity()->getName()
+						'Primary `%s` was not found when trying to query %s row.', $key, $entity->getName()
 					));
 				}
 
@@ -322,7 +336,7 @@ abstract class DataManager
 			{
 				throw new Main\ArgumentException(sprintf(
 					'Require multi primary {`%s`}, but one scalar value "%s" found when trying to query %s row.',
-					join('`, `', $entity_primary), $primary, static::getEntity()->getName()
+					join('`, `', $entity_primary), $primary, $entity->getName()
 				));
 			}
 
@@ -332,16 +346,17 @@ abstract class DataManager
 
 	protected static function validatePrimary($primary)
 	{
+		$entity = static::getEntity();
 		if (is_array($primary))
 		{
 			if(empty($primary))
 			{
 				throw new Main\ArgumentException(sprintf(
-					'Empty primary found when trying to query %s row.', static::getEntity()->getName()
+					'Empty primary found when trying to query %s row.', $entity->getName()
 				));
 			}
 
-			$entity_primary = static::getEntity()->getPrimaryArray();
+			$entity_primary = $entity->getPrimaryArray();
 
 			foreach (array_keys($primary) as $key)
 			{
@@ -349,7 +364,7 @@ abstract class DataManager
 				{
 					throw new Main\ArgumentException(sprintf(
 						'Unknown primary `%s` found when trying to query %s row.',
-						$key, static::getEntity()->getName()
+						$key, $entity->getName()
 					));
 				}
 			}
@@ -357,7 +372,7 @@ abstract class DataManager
 		else
 		{
 			throw new Main\ArgumentException(sprintf(
-				'Unknown type of primary "%s" found when trying to query %s row.', gettype($primary), static::getEntity()->getName()
+				'Unknown type of primary "%s" found when trying to query %s row.', gettype($primary), $entity->getName()
 			));
 		}
 
@@ -368,7 +383,7 @@ abstract class DataManager
 			{
 				throw new Main\ArgumentException(sprintf(
 					'Unknown value type "%s" for primary "%s" found when trying to query %s row.',
-					gettype($value), $key, static::getEntity()->getName()
+					gettype($value), $key, $entity->getName()
 				));
 			}
 		}
@@ -384,8 +399,9 @@ abstract class DataManager
 	 */
 	public static function checkFields(Result $result, $primary, array $data)
 	{
+		$entity = static::getEntity();
 		//checks required fields
-		foreach (static::getEntity()->getFields() as $field)
+		foreach ($entity->getFields() as $field)
 		{
 			if ($field instanceof ScalarField && $field->isRequired())
 			{
@@ -407,26 +423,21 @@ abstract class DataManager
 		// checks data - fieldname & type & strlen etc.
 		foreach ($data as $k => $v)
 		{
-			if (static::getEntity()->hasField($k) && static::getEntity()->getField($k) instanceof ScalarField)
+			if ($entity->hasField($k) && $entity->getField($k) instanceof ScalarField)
 			{
-				$field = static::getEntity()->getField($k);
+				$field = $entity->getField($k);
 			}
-			elseif (static::getEntity()->hasUField($k))
+			elseif ($entity->hasUField($k))
 			{
 				// should be continue
 				// checking is inside uf manager
-				$field = static::getEntity()->getUField($k);
-			}
-			elseif (static::getEntity()->hasField($k) && static::getEntity()->getField($k) instanceof FileField)
-			{
-				// why not
-				$field = static::getEntity()->getField($k);
+				$field = $entity->getUField($k);
 			}
 			else
 			{
 				throw new Main\ArgumentException(sprintf(
 					'Field `%s` not found in entity when trying to query %s row.',
-					$k, static::getEntity()->getName()
+					$k, $entity->getName()
 				));
 			}
 
@@ -465,7 +476,7 @@ abstract class DataManager
 			$data = $event->mergeFields($data);
 
 			// set fields with default values
-			foreach (static::getEntity()->getFields() as $field)
+			foreach ($entity->getFields() as $field)
 			{
 				if ($field instanceof ScalarField && !array_key_exists($field->getName(), $data))
 				{
@@ -482,10 +493,10 @@ abstract class DataManager
 			$ufdata = array();
 
 			// separate userfields
-			if (static::getEntity()->getUfId())
+			if ($entity->getUfId())
 			{
 				// collect uf data
-				$userfields = $USER_FIELD_MANAGER->GetUserFields(static::getEntity()->getUfId());
+				$userfields = $USER_FIELD_MANAGER->GetUserFields($entity->getUfId());
 
 				foreach ($userfields as $userfield)
 				{
@@ -506,7 +517,7 @@ abstract class DataManager
 			// check uf data
 			if (!empty($ufdata))
 			{
-				if (!$USER_FIELD_MANAGER->CheckFields(static::getEntity()->getUfId(), false, $ufdata))
+				if (!$USER_FIELD_MANAGER->CheckFields($entity->getUfId(), false, $ufdata))
 				{
 					if (is_object($APPLICATION) && $APPLICATION->getException())
 					{
@@ -544,7 +555,7 @@ abstract class DataManager
 			// use save modifiers
 			foreach ($data as $fieldName => $value)
 			{
-				$field = static::getEntity()->getField($fieldName);
+				$field = $entity->getField($fieldName);
 				$data[$fieldName] = $field->modifyValueBeforeSave($value, $data);
 			}
 
@@ -576,8 +587,10 @@ abstract class DataManager
 			// save uf data
 			if (!empty($ufdata))
 			{
-				$USER_FIELD_MANAGER->update(static::getEntity()->getUfId(), end($primary), $ufdata);
+				$USER_FIELD_MANAGER->update($entity->getUfId(), end($primary), $ufdata);
 			}
+
+			$entity->cleanCache();
 
 			//event after adding
 			$event = new Event($entity, self::EVENT_ON_AFTER_ADD, array("id" => $id, "fields" => $data));
@@ -637,10 +650,10 @@ abstract class DataManager
 			$ufdata = array();
 
 			// separate userfields
-			if (static::getEntity()->getUfId())
+			if ($entity->getUfId())
 			{
 				// collect uf data
-				$userfields = $USER_FIELD_MANAGER->GetUserFields(static::getEntity()->getUfId());
+				$userfields = $USER_FIELD_MANAGER->GetUserFields($entity->getUfId());
 
 				foreach ($userfields as $userfield)
 				{
@@ -661,7 +674,7 @@ abstract class DataManager
 			// check uf data
 			if (!empty($ufdata))
 			{
-				if (!$USER_FIELD_MANAGER->CheckFields(static::getEntity()->getUfId(), end($primary), $ufdata))
+				if (!$USER_FIELD_MANAGER->CheckFields($entity->getUfId(), end($primary), $ufdata))
 				{
 					if (is_object($APPLICATION) && $APPLICATION->getException())
 					{
@@ -699,7 +712,7 @@ abstract class DataManager
 			// use save modifiers
 			foreach ($data as $fieldName => $value)
 			{
-				$field = static::getEntity()->getField($fieldName);
+				$field = $entity->getField($fieldName);
 				$data[$fieldName] = $field->modifyValueBeforeSave($value, $data);
 			}
 
@@ -734,8 +747,10 @@ abstract class DataManager
 			// save uf data
 			if (!empty($ufdata))
 			{
-				$USER_FIELD_MANAGER->update(static::getEntity()->getUfId(), end($primary), $ufdata);
+				$USER_FIELD_MANAGER->update($entity->getUfId(), end($primary), $ufdata);
 			}
+
+			$entity->cleanCache();
 
 			//event after update
 			$event = new Event($entity, self::EVENT_ON_AFTER_UPDATE, array("id" => $primary, "fields" => $data));
@@ -820,10 +835,12 @@ abstract class DataManager
 			$connection->queryExecute($sql);
 
 			// delete uf data
-			if (static::getEntity()->getUfId())
+			if ($entity->getUfId())
 			{
-				$USER_FIELD_MANAGER->delete(static::getEntity()->getUfId(), end($primary));
+				$USER_FIELD_MANAGER->delete($entity->getUfId(), end($primary));
 			}
+
+			$entity->cleanCache();
 
 			//event after delete
 			$event = new Event($entity, self::EVENT_ON_AFTER_DELETE, array("id" => $primary));

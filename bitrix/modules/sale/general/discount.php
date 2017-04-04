@@ -2,7 +2,8 @@
 use Bitrix\Main,
 	Bitrix\Main\Loader,
 	Bitrix\Main\Localization\Loc,
-	Bitrix\Sale;
+	Bitrix\Sale,
+	Bitrix\Currency;
 
 Loc::loadMessages(__FILE__);
 
@@ -31,6 +32,7 @@ class CAllSaleDiscount
 			return;
 
 		$isOrderConverted = \Bitrix\Main\Config\Option::get("main", "~sale_converted_15", 'N');
+		$onlySaleDiscounts = (string)Main\Config\Option::get('sale', 'use_sale_discount_only') == 'Y';
 		$oldDelivery = '';
 
 		$checkIds = true;
@@ -154,7 +156,9 @@ class CAllSaleDiscount
 				$arIDS,
 				array(
 					'=MODULE_ID' => 'catalog',
-					'=ENTITY' => 'ELEMENT_PROPERTY'
+					'@ENTITY' => array(
+						'ELEMENT_PROPERTY', 'PRICE'
+					)
 				)
 			);
 			if (empty($entityList))
@@ -190,6 +194,7 @@ class CAllSaleDiscount
 			$arExtend = array(
 				'catalog' => array(
 					'fields' => true,
+					'price' => !empty($entityList['catalog']['PRICE']),
 					'props' => $useProps,
 				),
 			);
@@ -249,7 +254,7 @@ class CAllSaleDiscount
 
 			$currentDatetime = new Main\Type\DateTime();
 			$discountSelect = array(
-				'ID', 'PRIORITY', 'SORT', 'LAST_DISCOUNT', 'UNPACK', 'APPLICATION', 'USE_COUPONS', 'EXECUTE_MODULE',
+				'ID', 'PRIORITY', 'SORT', 'LAST_DISCOUNT', 'LAST_LEVEL_DISCOUNT', 'UNPACK', 'APPLICATION', 'USE_COUPONS', 'EXECUTE_MODULE',
 				'NAME', 'CONDITIONS_LIST', 'ACTIONS_LIST'
 			);
 			$discountOrder = array('PRIORITY' => 'DESC', 'SORT' => 'ASC', 'ID' => 'ASC');
@@ -284,50 +289,35 @@ class CAllSaleDiscount
 				$discountSelect['DISCOUNT_COUPON'] = 'COUPON.COUPON';
 			}
 
+			$newDiscounts = null;
+			$resultDiscountFullList = array();
 			$discountIterator = Sale\Internals\DiscountTable::getList(array(
 				'select' => $discountSelect,
 				'filter' => $discountFilter,
 				'order' => $discountOrder
 			));
+
 			$discountApply = array();
-			$resultDiscountFullList = array();
 			$resultDiscountList = array();
 			$resultDiscountKeys = array();
 			$resultDiscountIndex = 0;
+			$skipPriorityLevel = null;
 			while ($discount = $discountIterator->fetch())
 			{
 				$discount['ID'] = (int)$discount['ID'];
 				if (isset($discountApply[$discount['ID']]))
 					continue;
-				$discount['MODULE'] = 'sale';
-				$discount['MODULE_ID'] = 'sale';
-				if ($discount['USE_COUPONS'] == 'Y')
-					$discount['COUPON'] = $couponList[$discount['DISCOUNT_COUPON']];
 				$discountApply[$discount['ID']] = true;
-				$applyFlag = true;
-				if (isset(self::$cacheDiscountHandlers[$discount['ID']]))
+
+				if($skipPriorityLevel == $discount['PRIORITY'])
 				{
-					$moduleList = self::$cacheDiscountHandlers[$discount['ID']]['MODULES'];
-					if (!empty($moduleList))
-					{
-						foreach ($moduleList as &$moduleID)
-						{
-							if (!isset(self::$usedModules[$moduleID]))
-							{
-								self::$usedModules[$moduleID] = Loader::includeModule($moduleID);
-							}
-							if (!self::$usedModules[$moduleID])
-							{
-								$applyFlag = false;
-								break;
-							}
-						}
-						unset($moduleID);
-						if ($applyFlag)
-							$discount['MODULES'] = $moduleList;
-					}
-					unset($moduleList);
+					continue;
 				}
+				$skipPriorityLevel = null;
+
+				static::prefillDiscountFields($discount, $couponList);
+				$applyFlag = static::workWithDiscountHandlers($discount);
+
 				if ($isOrderConverted == 'Y')
 					Sale\Compatible\DiscountCompatibility::setOrderData($arOrder);
 				if ($applyFlag && self::__Unpack($arOrder, $discount['UNPACK']))
@@ -363,6 +353,11 @@ class CAllSaleDiscount
 							$resultDiscountIndex++;
 							if ($discount['LAST_DISCOUNT'] == 'Y')
 								break;
+
+							if ($discount['LAST_LEVEL_DISCOUNT'] == 'Y')
+							{
+								$skipPriorityLevel = $discount['PRIORITY'];
+							}
 						}
 						Sale\Discount\Actions::clearAction();
 					}
@@ -436,10 +431,7 @@ class CAllSaleDiscount
 					else
 						$arShoppingCartItem['PRICE'] = roundEx($arShoppingCartItem['PRICE'], SALE_VALUE_PRECISION);
 				}
-				else
-				{
-					$arShoppingCartItem['DISCOUNT_PRICE'] = 0;
-				}
+
 				if (isset($arShoppingCartItem['VAT_RATE']))
 				{
 					$vatRate = (float)$arShoppingCartItem['VAT_RATE'];
@@ -475,11 +467,51 @@ class CAllSaleDiscount
 		$arOrder["ORDER_PRICE"] = roundEx($arOrder["ORDER_PRICE"], SALE_VALUE_PRECISION);
 	}
 
-	public function PrepareCurrency4Where($val, $key, $operation, $negative, $field, &$arField, &$arFilter)
+	private static function prefillDiscountFields(array &$discount, array $couponList)
 	{
-		$val = doubleval($val);
+		$discount['MODULE'] = 'sale';
+		$discount['MODULE_ID'] = 'sale';
+		if($discount['USE_COUPONS'] == 'Y')
+		{
+			$discount['COUPON'] = $couponList[$discount['DISCOUNT_COUPON']];
+		}
+	}
 
-		$baseSiteCurrency = "";
+	private static function workWithDiscountHandlers(array &$discount)
+	{
+		$applyFlag = true;
+		if (isset(self::$cacheDiscountHandlers[$discount['ID']]))
+		{
+			$moduleList = self::$cacheDiscountHandlers[$discount['ID']]['MODULES'];
+			if (!empty($moduleList))
+			{
+				foreach ($moduleList as &$moduleID)
+				{
+					if (!isset(self::$usedModules[$moduleID]))
+					{
+						self::$usedModules[$moduleID] = Loader::includeModule($moduleID);
+					}
+					if (!self::$usedModules[$moduleID])
+					{
+						$applyFlag = false;
+						break;
+					}
+				}
+				unset($moduleID);
+				if ($applyFlag)
+					$discount['MODULES'] = $moduleList;
+			}
+			unset($moduleList);
+		}
+
+		return $applyFlag;
+	}
+
+	public function PrepareCurrency4Where($val, $key, $operation, $negative, $field, $arField, $arFilter)
+	{
+		$val = (float)$val;
+
+		$baseSiteCurrency = '';
 		if (isset($arFilter["LID"]) && strlen($arFilter["LID"]) > 0)
 			$baseSiteCurrency = CSaleLang::GetLangCurrency($arFilter["LID"]);
 		elseif (isset($arFilter["CURRENCY"]) && strlen($arFilter["CURRENCY"]) > 0)
@@ -488,25 +520,22 @@ class CAllSaleDiscount
 		if (strlen($baseSiteCurrency) <= 0)
 			return false;
 
-		$strSqlSearch = "";
+		$strSqlSearch = '';
 
-		$by = "sort";
-		$order = "asc";
-		$dbCurrency = CCurrency::GetList($by, $order);
-		while ($arCurrency = $dbCurrency->Fetch())
+		foreach (array_keys(Currency\CurrencyManager::getCurrencyList()) as $currency)
 		{
-			$val1 = roundEx(CCurrencyRates::ConvertCurrency($val, $baseSiteCurrency, $arCurrency["CURRENCY"]), SALE_VALUE_PRECISION);
-			if (strlen($strSqlSearch) > 0)
+			$val1 = roundEx(CCurrencyRates::ConvertCurrency($val, $baseSiteCurrency, $currency), SALE_VALUE_PRECISION);
+			if ($strSqlSearch != '')
 				$strSqlSearch .= " OR ";
 
-			$strSqlSearch .= "(D.CURRENCY = '".$arCurrency["CURRENCY"]."' AND ";
+			$strSqlSearch .= "(D.CURRENCY = '".$currency."' AND ";
 			if ($negative == "Y")
 				$strSqlSearch .= "NOT";
 			$strSqlSearch .= "(".$field." ".$operation." ".$val1." OR ".$field." IS NULL OR ".$field." = 0)";
 			$strSqlSearch .= ")";
 		}
-
-		return "(".$strSqlSearch.")";
+		unset($currency);
+		return ($strSqlSearch == '' ? false : '('.$strSqlSearch.')');
 	}
 
 	public function GetByID($ID)
@@ -689,12 +718,18 @@ class CAllSaleDiscount
 
 		$useConditions = array_key_exists('CONDITIONS', $arFields) || $ACTION == 'ADD';
 		$useActions = array_key_exists('ACTIONS', $arFields) || $ACTION == 'ADD';
-		$updateData = $useConditions || $useActions;
+		$usePredictions = array_key_exists('PREDICTIONS', $arFields) || $ACTION == 'ADD';
+		$updateData = $useConditions || $useActions || $usePredictions;
 		$discountSite = (isset($arFields['LID']) ? trim($arFields['LID']) : '');
 		$usedHandlers = array();
 		$usedEntities = array();
 		$executeModule = '';
 		$conditionData = array(
+			'HANDLERS' => array(),
+			'ENTITY' => array(),
+			'EXECUTE_MODULE' => array()
+		);
+		$predictionData = array(
 			'HANDLERS' => array(),
 			'ENTITY' => array(),
 			'EXECUTE_MODULE' => array()
@@ -740,6 +775,15 @@ class CAllSaleDiscount
 			}
 		}
 
+		if ($usePredictions && $arFields['PREDICTIONS'])
+		{
+			$arFields['PREDICTIONS_APP'] = '';
+			if (!self::prepareDiscountConditions($arFields['PREDICTIONS'], $arFields['PREDICTIONS_APP'], $predictionData, self::PREPARE_CONDITIONS, $discountSite))
+			{
+				return false;
+			}
+		}
+
 		if ($useActions)
 		{
 			if (!isset($arFields['ACTIONS']) || empty($arFields['ACTIONS']))
@@ -781,6 +825,24 @@ class CAllSaleDiscount
 					return false;
 				}
 			}
+			if (!$usePredictions)
+			{
+				$rsDiscounts = CSaleDiscount::GetList(
+					array(),
+					array('ID' => $discountID),
+					false,
+					false,
+					array('ID', 'PREDICTIONS', 'LID')
+				);
+				if ($discountInfo = $rsDiscounts->Fetch() && $discountInfo['PREDICTIONS'])
+				{
+					$discountInfo['PREDICTIONS_APP'] = '';
+					if (!self::prepareDiscountConditions($discountInfo['PREDICTIONS'], $discountInfo['PREDICTIONS_APP'], $predictionData, self::PREPARE_CONDITIONS, $discountInfo['LID']))
+					{
+						return false;
+					}
+				}
+			}
 			if (!$useActions)
 			{
 				$rsDiscounts = CSaleDiscount::GetList(
@@ -803,33 +865,42 @@ class CAllSaleDiscount
 					return false;
 				}
 			}
-			if (!empty($conditionData['HANDLERS']) || !empty($actionData['HANDLERS']))
+			if (!empty($conditionData['HANDLERS']) || !empty($actionData['HANDLERS']) || !empty($predictionData['HANDLERS']))
 			{
-				if (!empty($conditionData['HANDLERS']))
-					$usedHandlers = $conditionData['HANDLERS'];
-				if (!empty($actionData['HANDLERS']))
-				{
-					if (empty($usedHandlers))
-					{
-						$usedHandlers = $actionData['HANDLERS'];
-					}
-					else
-					{
-						$usedHandlers['MODULES'] = array_unique(array_merge($usedHandlers['MODULES'], $actionData['HANDLERS']['MODULES']));
-						$usedHandlers['EXT_FILES'] = array_unique(array_merge($usedHandlers['EXT_FILES'], $actionData['HANDLERS']['EXT_FILES']));
-					}
-				}
+				$conditionData['HANDLERS']['MODULES'] = $conditionData['HANDLERS']['MODULES']?: array();
+				$actionData['HANDLERS']['MODULES'] = $actionData['HANDLERS']['MODULES']?: array();
+				$predictionData['HANDLERS']['MODULES'] = $predictionData['HANDLERS']['MODULES']?: array();
+
+				$conditionData['HANDLERS']['EXT_FILES'] = $conditionData['HANDLERS']['EXT_FILES']?: array();
+				$actionData['HANDLERS']['EXT_FILES'] = $actionData['HANDLERS']['EXT_FILES']?: array();
+				$predictionData['HANDLERS']['EXT_FILES'] = $predictionData['HANDLERS']['EXT_FILES']?: array();
+
+				$usedHandlers = array(
+					'MODULES' => array_unique(array_merge(
+						$conditionData['HANDLERS']['MODULES'],
+						$actionData['HANDLERS']['MODULES'],
+						$predictionData['HANDLERS']['MODULES']
+					)),
+					'EXT_FILES' => array_unique(array_merge(
+						$conditionData['HANDLERS']['EXT_FILES'],
+						$actionData['HANDLERS']['EXT_FILES'],
+						$predictionData['HANDLERS']['EXT_FILES']
+					)),
+				);
 			}
 
-			if (!empty($conditionData['EXECUTE_MODULE']) || !empty($actionData['EXECUTE_MODULE']))
+			if (!empty($conditionData['EXECUTE_MODULE']) || !empty($actionData['EXECUTE_MODULE']) || !empty($predictionData['EXECUTE_MODULE']))
 			{
-				$executeModuleList = array();
-				if (!empty($conditionData['EXECUTE_MODULE']))
-					$executeModuleList = $conditionData['EXECUTE_MODULE'];
-				if (!empty($actionData['EXECUTE_MODULE']))
-				{
-					$executeModuleList = (empty($executeModuleList) ? $actionData['EXECUTE_MODULE'] : array_merge($executeModuleList, $actionData['EXECUTE_MODULE']));
-				}
+				$conditionData['EXECUTE_MODULE'] = $conditionData['EXECUTE_MODULE']?: array();
+				$actionData['EXECUTE_MODULE'] = $actionData['EXECUTE_MODULE']?: array();
+				$predictionData['EXECUTE_MODULE'] = $predictionData['EXECUTE_MODULE']?: array();
+
+				$executeModuleList = array_merge(
+					$conditionData['EXECUTE_MODULE'],
+					$actionData['EXECUTE_MODULE'],
+					$predictionData['EXECUTE_MODULE']
+				);
+
 				$executeModuleList = array_unique($executeModuleList);
 				if (count($executeModuleList) > 1)
 				{
@@ -840,14 +911,17 @@ class CAllSaleDiscount
 				unset($executeModuleList);
 			}
 
-			if (!empty($conditionData['ENTITY']) || !empty($actionData['ENTITY']))
+			if (!empty($conditionData['ENTITY']) || !empty($actionData['ENTITY']) || !empty($predictionData['ENTITY']))
 			{
-				if (!empty($conditionData['ENTITY']))
-					$usedEntities = $conditionData['ENTITY'];
-				if (!empty($actionData['ENTITY']))
-				{
-					$usedEntities = (empty($usedEntities) ? $actionData['ENTITY'] : array_merge($usedEntities, $actionData['ENTITY']));
-				}
+				$conditionData['ENTITY'] = $conditionData['ENTITY']?: array();
+				$actionData['ENTITY'] = $actionData['ENTITY']?: array();
+				$predictionData['ENTITY'] = $predictionData['ENTITY']?: array();
+
+				$usedEntities = array_merge(
+					$conditionData['ENTITY'],
+					$actionData['ENTITY'],
+					$predictionData['ENTITY']
+				);
 			}
 		}
 		if (($ACTION == 'ADD' || $updateData) && $executeModule == '')
@@ -870,6 +944,15 @@ class CAllSaleDiscount
 			{
 				$APPLICATION->ThrowException(Loc::getMessage("BT_MOD_SALE_DISC_ERR_USER_GROUPS_ABSENT_SHORT"), "USER_GROUPS");
 				return false;
+			}
+		}
+
+		if(empty($arFields['SHORT_DESCRIPTION']) && !empty($arFields['ACTIONS']))
+		{
+			$actionConfiguration = Sale\Discount\Actions::getActionConfiguration($arFields);
+			if($actionConfiguration)
+			{
+				$arFields['SHORT_DESCRIPTION'] = serialize($actionConfiguration);
 			}
 		}
 
@@ -1396,7 +1479,7 @@ class CAllSaleDiscount
 			$obCond = new CSaleCondTree();
 			$boolCond = $obCond->Init(BT_COND_MODE_GENERATE, BT_COND_BUILD_SALE, array('INIT_CONTROLS' => array(
 				'SITE_ID' => $site,
-				'CURRENCY' => CSaleLang::GetLangCurrency($site),
+				'CURRENCY' => Sale\Internals\SiteCurrencyTable::getSiteCurrency($site),
 			)));
 		}
 		else

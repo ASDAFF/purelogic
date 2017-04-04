@@ -124,4 +124,6 @@ $MESS["main_menu_diag"] = "Диагностика";
 $MESS["main_menu_diag_title"] = "Инструменты администратора";
 $MESS["MAIN_MENU_COMPOSITE"] = "Композитный сайт";
 $MESS["MAIN_MENU_COMPOSITE_ALT"] = "Управление режимом";
+$MESS["MAIN_MENU_HTTPS"] = "Настройка HTTPS";
+$MESS["MAIN_MENU_HTTPS_ALT"] = "Настройка HTTPS-соединения для Вашего сайта";
 ?>

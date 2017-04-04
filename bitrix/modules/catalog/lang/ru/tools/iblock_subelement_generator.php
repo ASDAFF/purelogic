@@ -14,6 +14,7 @@ $MESS["IB_SEG_PROPERTY_ADD"] = "Добавить свойство";
 $MESS["IB_SEG_PROPERTY_ADD_ALL"] = "Загрузить все";
 $MESS["IB_SEG_VAT"] = "Ставка НДС";
 $MESS["IB_SEG_VAT_INCLUDED"] = "НДС включен в цену";
+$MESS["IB_SEG_PURCHASING_PRICE"] = "Закупочная цена:";
 $MESS["IB_SEG_DETAIL"] = "Подробно";
 $MESS["IB_SEG_ANNOUNCE"] = "Анонс";
 $MESS["IB_SEG_SELECTED_PROPERTIES"] = "Выбранные свойства";
@@ -32,4 +33,5 @@ $MESS["IB_SEG_SKU_PROPERTIES"] = "Свойства SKU";
 $MESS["IB_SEG_PARENT_PROPERTIES"] = "Свойства родителя";
 $MESS["IB_SEG_QUANTITY"] = "Доступное количество:";
 $MESS["IB_SEG_MEASURE"] = "Единица измерения:";
+$MESS["IB_SEG_EMPTY_VALUE"] = "не выбрано";
 ?>

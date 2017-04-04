@@ -158,6 +158,11 @@ class OrderCompatibility
 
 		unset($orderFields['TAX_PRICE']);
 
+		if (array_key_exists('STATUS_ID', $orderFields) && $order->getId() > 0)
+		{
+			$order->setField('STATUS_ID', $orderFields['STATUS_ID']);
+			unset($orderFields['STATUS_ID']);
+		}
 
 		$order->setFieldsNoDemand($orderFields);
 
@@ -1885,17 +1890,10 @@ class OrderCompatibility
 				$r = $shipment->tryReserve();
 				if (!$r->isSuccess())
 				{
-					$shipment->setField('MARKED', 'Y');
-
-					if (is_array($r->getErrorMessages()))
+					Sale\EntityMarker::addMarker($order, $shipment, $r);
+					if (!$shipment->isSystem())
 					{
-						$oldErrorText = $shipment->getField('REASON_MARKED');
-						foreach($r->getErrorMessages() as $error)
-						{
-							$oldErrorText .= (strval($oldErrorText) != '' ? "\n" : ""). $error;
-						}
-
-						$shipment->setField('REASON_MARKED', $oldErrorText);
+						$shipment->setField('MARKED', 'Y');
 					}
 
 					$result->addErrors($r->getErrors());
@@ -1909,6 +1907,11 @@ class OrderCompatibility
 					$r = $shipment->tryUnreserve();
 					if (!$r->isSuccess())
 					{
+						Sale\EntityMarker::addMarker($order, $shipment, $r);
+						if (!$shipment->isSystem())
+						{
+							$shipment->setField('MARKED', 'Y');
+						}
 						$result->addErrors($r->getErrors());
 					}
 				}

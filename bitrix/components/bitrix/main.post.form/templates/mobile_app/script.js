@@ -453,7 +453,7 @@
 				this.writingParams.text += e.text;
 				this.writingParams["~text"] = e.text;
 
-				window.app.onCustomEvent("main.post.form/text", [e.text]);
+				window.BXMobileApp.onCustomEvent("main.post.form/text", [e.text], true, true);
 
 				if (this.writingParams.text.length > 4)
 				{

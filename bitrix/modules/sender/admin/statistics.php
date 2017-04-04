@@ -103,7 +103,7 @@ if($ID > 0)
 			'COUNT_SEND_ALL', 'COUNT_SEND_NONE', 'COUNT_SEND_ERROR', 'COUNT_SEND_SUCCESS',
 			'COUNT_SEND_DENY', 'COUNT_READ', 'COUNT_CLICK', 'COUNT_UNSUB'
 		),
-		'filter' => array('MAILING_CHAIN_ID' => $ID, '!DATE_SENT' => null),
+		'filter' => array('=MAILING_CHAIN_ID' => $ID, '!DATE_SENT' => null),
 		'order' => array('DATE_SENT' => 'DESC', 'DATE_CREATE' => 'DESC'),
 		'limit' => 1
 	));
@@ -122,7 +122,7 @@ if($ID > 0)
 				'COUNT_SEND_ALL', 'COUNT_READ', 'COUNT_CLICK', 'COUNT_UNSUB'
 			),
 			'filter' => array(
-				'MAILING_CHAIN_ID' => $ID,
+				'=MAILING_CHAIN_ID' => $ID,
 				'!STATUS' => \Bitrix\Sender\PostingTable::STATUS_NEW,
 			),
 			'order' => array('DATE_SENT' => 'DESC', 'ID' => 'DESC'),
@@ -504,13 +504,13 @@ $oFilter = new CAdminFilter(
 			<?
 			$arr = array();
 			$mailingChainDb = \Bitrix\Sender\MailingChainTable::getList(array(
-				'select' => array('REFERENCE'=>'SUBJECT','REFERENCE_ID'=>'ID'),
+				'select' => array('SUBJECT', 'TITLE', 'ID'),
 				'filter' => array('MAILING_ID' => $MAILING_ID)
 			));
 			while($arMailingChain = $mailingChainDb->fetch())
 			{
-				$arr['reference'][] = $arMailingChain['REFERENCE'];
-				$arr['reference_id'][] = $arMailingChain['REFERENCE_ID'];
+				$arr['reference'][] = $arMailingChain['TITLE'] ? $arMailingChain['TITLE'] : $arMailingChain['SUBJECT'];
+				$arr['reference_id'][] = $arMailingChain['ID'];
 			}
 			echo SelectBoxFromArray("find_mailing_chain_id", $arr, $ID, false, "");
 			?>

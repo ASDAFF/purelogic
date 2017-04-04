@@ -45,6 +45,7 @@ $funcSuffix = uniqid();
 				'contact': '<?=CUtil::JSEscape(GetMessage('CRM_FF_CONTACT'))?>',
 				'company': '<?=CUtil::JSEscape(GetMessage('CRM_FF_COMPANY'))?>',
 				'deal': '<?=CUtil::JSEscape(GetMessage('CRM_FF_DEAL'))?>',
+				'quote': '<?=CUtil::JSEscape(GetMessage('CRM_FF_QUOTE'))?>',
 				'ok': '<?=CUtil::JSEscape(GetMessage('CRM_FF_OK'))?>',
 				'cancel': '<?=CUtil::JSEscape(GetMessage('CRM_FF_CANCEL'))?>',
 				'close': '<?=CUtil::JSEscape(GetMessage('CRM_FF_CLOSE'))?>',

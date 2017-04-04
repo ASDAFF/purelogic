@@ -81,14 +81,14 @@ else
 
 	if (!Loader::includeModule('catalog'))
 	{
-		$this->AbortDataCache();
+		$obCache->AbortDataCache();
 		return;
 	}
 
 	$basePrice = CCatalogGroup::GetBaseGroup();
 	if (empty($basePrice))
 	{
-		$this->AbortDataCache();
+		$obCache->AbortDataCache();
 		return;
 	}
 

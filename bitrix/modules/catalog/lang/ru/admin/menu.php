@@ -47,4 +47,5 @@ $MESS["PRICES_SECTION"] = "Цены";
 $MESS["PRICES_SECTION_TITLE"] = "Типы цен, округление, наценки";
 $MESS["PRICE_ROUND"] = "Округление";
 $MESS["PRICE_ROUND_TITLE"] = "Округление цен";
+$MESS["SUBSCRIPTION_PRODUCT"] = "Подписка на товары";
 ?>

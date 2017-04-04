@@ -130,6 +130,18 @@ if ($arResult["MODE"] == "AJAX")
 					department : <?=(empty($arResult["TO_DEST"]['LAST']['DEPARTMENT'])? '{}': CUtil::PhpToJSObject($arResult["TO_DEST"]['LAST']['DEPARTMENT']))?>
 				},
 				itemsSelected : <?=(empty($arResult["TO_DEST"]['SELECTED'])? '{}': CUtil::PhpToJSObject($arResult["TO_DEST"]['SELECTED']))?>,
+				itemsSelectedUndeleted : <?=(
+					!empty($arResult["TO_DEST"]['SELECTED'])
+					&& isset($arParams["GROUP_ID"])
+					&& intval($arParams["GROUP_ID"]) > 0
+					&& array_key_exists('SG'.$arParams["GROUP_ID"], $arResult["TO_DEST"]['SELECTED'])
+					&& (
+						empty($arParams["DESTINATION"])
+						|| !in_array('SG'.$arParams["GROUP_ID"], $arParams["DESTINATION"])
+					)
+						? CUtil::PhpToJSObject(array('SG'.intval($arParams["GROUP_ID"])))
+						: '{}'
+				)?>,
 				destSort: <?=(empty($arResult["TO_DEST"]["SORT"]) ? '{}' : CUtil::PhpToJSObject($arResult["TO_DEST"]["SORT"]))?>
 			});
 		</script>
@@ -226,7 +238,7 @@ else
 	if ($arParams["USE_TARGET"] != "N")
 	{
 		$this->SetViewTarget((
-			strpos(SITE_TEMPLATE_ID, "bitrix24") !== false
+				SITE_TEMPLATE_ID === "bitrix24"
 				? (strlen($arParams["PAGETITLE_TARGET"]) > 0 ? $arParams["PAGETITLE_TARGET"] : "pagetitle")
 				: (strlen($arParams["TARGET_ID"]) > 0 ? $arParams["TARGET_ID"] : "sonet_blog_form")
 			),
@@ -346,7 +358,7 @@ else
 	$isCompositeMode === false ?: $dynamicArea->end();
 	$logCounter = intval($arResult["LOG_COUNTER"]);
 
-	if (strpos(SITE_TEMPLATE_ID, "bitrix24") !== false)
+	if (SITE_TEMPLATE_ID === "bitrix24")
 	{
 		?><a href="" id="lenta-sort-button" class="lenta-sort-button" onclick="return showLentaMenu(this);" onmousedown="BX.addClass(this, 'lenta-sort-button-press')" onmouseup="BX.removeClass(this,'lenta-sort-button-press')"><?
 			?><span class="lenta-sort-button-left"></span><?

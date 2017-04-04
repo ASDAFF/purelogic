@@ -1214,18 +1214,10 @@
 	margin: 0 20px;
 }
 
-.feed-event .feed-add-post-edit-form
-{
-	border-top: 1px solid #f0f1f2;
-}
-
 .feed-event .feed-add-post-text
 {
 	padding: 0 !important;
 }
-
-
-
 
 .feed-cal-full-day .bxec-tz-wrap{display: none;}
 .feed-event-hidden-wrap {

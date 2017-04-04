@@ -1109,7 +1109,7 @@ $tabControl->BeginNextTab();
 
 						var txt = '';
 						txt += '<form name="license_form">';
-						txt += '<iframe name="license_text" src="http://www.1c-bitrix.ru/license.php?module='+name+'&free_module='+freeModule+'&updatesystem=Y" style="width:622px; height:410px; display:block;"></iframe>';
+						txt += '<iframe name="license_text" src="//www.1c-bitrix.ru/license.php?module='+name+'&free_module='+freeModule+'&updatesystem=Y" style="width:622px; height:410px; display:block;"></iframe>';
 						txt += '<input name="agree_license" type="checkbox" value="Y" id="agree_license_id">';
 						txt += '<label for="agree_license_id"><?= GetMessageJS("SUP_SUBT_AGREE") ?></label>';
 						txt += '</form>';

@@ -41,4 +41,8 @@ $MESS["SPOL_TPL_LOADED"] = "Geliefert";
 $MESS["SPOL_TPL_NOTLOADED"] = "Nicht geliefert";
 $MESS["SPOL_CANCEL_PAYMENT"] = "zurück";
 $MESS["SPOL_ORDER_SHIPMENT_STATUS"] = "Lieferstatus";
+$MESS["SPOL_TPL_RESTRICTED_PAID"] = "Wird überprüft";
+$MESS["SOPL_TPL_RESTRICTED_PAID_MESSAGE"] = "<b>Wichtig:</b> die Bestellung kann bezahlt werden, nachdem sie von einem verantwortlichen Mitarbeiter überprüft wird";
+$MESS["SPOL_CHECK_TITLE"] = "Account";
+$MESS["SPOL_CHECK_NUM"] = "Account ##CHECK_NUMBER#";
 ?>

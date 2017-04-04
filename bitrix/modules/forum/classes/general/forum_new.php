@@ -612,6 +612,11 @@ class CAllForumNew
 	{
 		global $DB, $CACHE_MANAGER, $aForumPermissions;
 		$ID = intVal($ID);
+		if (is_integer($arUserGroups))
+		{
+			global $USER;
+			$arUserGroups = ($USER->getId() == $arUserGroups ? $USER->GetUserGroupArray() : CUser::GetUserGroup($arUserGroups));
+		}
 		$arUserGroups = (!is_array($arUserGroups) ? array($arUserGroups) : $arUserGroups);
 		sort($arUserGroups);
 		$key = $ID."_".implode("_", $arUserGroups);

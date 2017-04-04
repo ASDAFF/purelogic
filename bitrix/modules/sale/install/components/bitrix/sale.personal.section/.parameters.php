@@ -138,7 +138,7 @@ $arComponentParameters = array(
 			"NAME" => GetMessage("SPS_PATH_TO_PAYMENT"),
 			"TYPE" => "STRING",
 			"MULTIPLE" => "N",
-			"DEFAULT" => "/personal/order/payment",
+			"DEFAULT" => "/personal/order/payment/",
 			"COLS" => 25,
 			"PARENT" => "URL_TEMPLATES",
 		),
@@ -146,7 +146,7 @@ $arComponentParameters = array(
 			"NAME" => GetMessage("SPS_PATH_TO_CONTACT"),
 			"TYPE" => "STRING",
 			"MULTIPLE" => "N",
-			"DEFAULT" => "/about/contacts",
+			"DEFAULT" => "/about/contacts/",
 			"COLS" => 25,
 			"PARENT" => "URL_TEMPLATES",
 		),
@@ -154,7 +154,7 @@ $arComponentParameters = array(
 			"NAME" => GetMessage("SPS_PATH_TO_BASKET"),
 			"TYPE" => "STRING",
 			"MULTIPLE" => "N",
-			"DEFAULT" => "/personal/cart",
+			"DEFAULT" => "/personal/cart/",
 			"COLS" => 25,
 			"PARENT" => "URL_TEMPLATES",
 		),
@@ -389,20 +389,55 @@ if ($arCurrentValues["SHOW_ORDER_PAGE"] !== "N")
 
 		$statusList = array();
 
-		$listStatusNames = Bitrix\Sale\OrderStatus::getAllStatusesNames();
+		$listStatusNames = Bitrix\Sale\OrderStatus::getAllStatusesNames(LANGUAGE_ID);
 		foreach($listStatusNames as $key => $data)
 		{
 			$statusList[$key] = $data;
 		}
 
-		$arComponentParameters['PARAMETERS']['ORDER_HISTORIC_STATUSES'] = array(
-			"NAME" => GetMessage("SPS_HISTORIC_STATUSES"),
+		$orderSortList = array(
+			'STATUS' => GetMessage("SPS_ORDER_LIST_SORT_STATUS"),
+			'ID' => GetMessage("SPS_ORDER_LIST_SORT_ID"),
+			'ACCOUNT_NUMBER'=> GetMessage("SPS_ORDER_LIST_SORT_ACCOUNT_NUMBER"),
+			'DATE_INSERT'=> GetMessage("SPS_ORDER_LIST_SORT_DATE_CREATE"),
+			'PRICE'=> GetMessage("SPS_ORDER_LIST_SORT_PRICE")
+		);
+
+		$arComponentParameters['PARAMETERS']['ORDER_DEFAULT_SORT'] = array(
+			"NAME" => GetMessage("SPS_ORDER_LIST_DEFAULT_SORT"),
 			"TYPE" => "LIST",
-			"VALUES" => $statusList,
-			"MULTIPLE" => "Y",
-			"DEFAULT" => "F",
+			"VALUES" => $orderSortList,
+			"MULTIPLE" => "N",
+			"DEFAULT" => "STATUS",
 			"PARENT" => "ORDER",
 		);
+
+
+		$arComponentParameters['PARAMETERS']['ACCOUNT_PAYMENT_SELL_USER_INPUT'] = array(
+			"NAME"=>GetMessage("SPS_ACCEPT_USER_AMOUNT"),
+			"TYPE"=>"CHECKBOX",
+			"MULTIPLE"=>"N",
+			"DEFAULT" => "Y",
+			"ADDITIONAL_VALUES"=>"N",
+			"PARENT" => "ACCOUNT",
+		);
+
+		if (CBXFeatures::IsFeatureEnabled('SaleAccounts'))
+		{
+			$arComponentParameters['PARAMETERS']['ALLOW_INNER'] = array(
+				"NAME" => GetMessage("SPS_ALLOW_INNER"),
+				"TYPE" => "CHECKBOX",
+				"DEFAULT" => "N",
+				"PARENT" => "ORDER",
+			);
+
+			$arComponentParameters['PARAMETERS']['ONLY_INNER_FULL'] = array(
+				"NAME" => GetMessage("SPS_ONLY_INNER_FULL"),
+				"TYPE" => "CHECKBOX",
+				"DEFAULT" => "N",
+				"PARENT" => "ORDER",
+			);
+		}
 	}
 }
 

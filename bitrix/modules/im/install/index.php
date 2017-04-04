@@ -85,6 +85,11 @@ class im extends CModule
 		}
 
 		CModule::IncludeModule("im");
+		
+		if(CIMMessenger::IsMysqlDb() && $DB->Query("CREATE fulltext index IXF_IM_MESS_1 on b_im_message (MESSAGE)", true))
+		{
+			\Bitrix\Im\Model\MessageTable::getEntity()->enableFullTextIndex("MESSAGE");
+		}
 
 		if (CIMConvert::ConvertCount() > 0)
 		{

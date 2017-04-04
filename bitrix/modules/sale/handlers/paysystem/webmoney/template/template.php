@@ -10,7 +10,7 @@ if ($params['ENCODING'])
 	$paymentDesc = $APPLICATION->ConvertCharset($paymentDesc, SITE_CHARSET, $params['ENCODING']);
 ?>
 <form id="pay" name="pay" method="POST" action="<?=$params['URL']?>">
-	<input type="hidden" name="LMI_PAYMENT_AMOUNT" value="<?=$params["PAYMENT_SHOULD_PAY"]?>">
+	<input type="hidden" name="LMI_PAYMENT_AMOUNT" value="<?=roundEx($params["PAYMENT_SHOULD_PAY"], 2);?>">
 	<?if (ToUpper($params['ENCODING']) == 'UTF-8' || ToUpper(SITE_CHARSET) == 'UTF-8') :?>
 		<input type="hidden" name="LMI_PAYMENT_DESC_BASE64" value="<?=base64_encode($paymentDesc);?>">
 	<?else:?>

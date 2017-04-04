@@ -218,20 +218,29 @@ class CCloudStorage
 				$bNeedResize = false;
 				$result = true;
 			}
+			elseif (
+				is_array($delayInfo = CCloudStorage::ResizeImageFileGet($cacheImageFile))
+				&& $delayInfo["ERROR_CODE"] < 10
+			)
+			{
+				$callbackData["cacheSTARTED"] = true;
+				if ($arFile["FILE_SIZE"] > 1)
+					$callbackData["fileSize"] = $arFile["FILE_SIZE"];
+				$bNeedResize = false;
+				$result = true;
+			}
 			//Check if it is cache file was deleted, but not the file in the cloud
 			elseif ($fs = $obTargetBucket->FileExists($callbackData["fileURL"]))
 			{
 				//If file was resized before the fact was registered
-				if (
-					!$bImmediate
-					&& COption::GetOptionString("clouds", "delayed_resize") === "Y"
-				)
+				if (COption::GetOptionString("clouds", "delayed_resize") === "Y")
 				{
 					CCloudStorage::ResizeImageFileAdd(
 						$arDestinationSize,
 						$arFile,
 						$cacheImageFile,
-						$arResizeParams
+						$arResizeParams,
+						9 //already where
 					);
 				}
 
@@ -341,6 +350,21 @@ class CCloudStorage
 
 					$obTargetBucket->IncFileCounter($iFileSize);
 
+					if (
+						COption::GetOptionString("clouds", "delayed_resize") === "Y"
+						&& !is_array(CCloudStorage::ResizeImageFileGet($cacheImageFile))
+					)
+					{
+						$arDestinationSize = array();
+						CCloudStorage::ResizeImageFileAdd(
+							$arDestinationSize,
+							$arFile,
+							$cacheImageFile,
+							$arResizeParams,
+							9 //already there
+						);
+					}
+
 					return true;
 				}
 				else
@@ -415,7 +439,7 @@ class CCloudStorage
 		return $a;
 	}
 
-	public static function ResizeImageFileAdd(&$arDestinationSize, $sourceFile, $destinationFile, $arResizeParams)
+	public static function ResizeImageFileAdd(&$arDestinationSize, $sourceFile, $destinationFile, $arResizeParams, $errorCode = 0)
 	{
 		global $DB;
 		$destinationFile = preg_replace("/^https?:/i", "", $destinationFile);
@@ -441,7 +465,7 @@ class CCloudStorage
 			$arResizeParams["type"] = $sourceFile["CONTENT_TYPE"];
 			$DB->Add("b_clouds_file_resize", array(
 				"~TIMESTAMP_X" => $DB->CurrentTimeFunction(),
-				"ERROR_CODE" => "0",
+				"ERROR_CODE" => intval($errorCode),
 				"PARAMS" => serialize($arResizeParams),
 				"FROM_PATH" => $sourceFile["SRC"],
 				"TO_PATH" => $destinationFile,
@@ -1107,8 +1131,8 @@ class CCloudStorage
 
 							imagejpeg($properlyOriented, $arFile["tmp_name"], $jpgQuality);
 							clearstatcache(true, $arFile["tmp_name"]);
-							$arFile['size'] = filesize($arFile["tmp_name"]);
 						}
+						$arFile['size'] = filesize($arFile["tmp_name"]);
 					}
 				}
 
@@ -1131,6 +1155,8 @@ class CCloudStorage
 		}
 		elseif ($copySize !== false)
 		{
+			$arFile["WIDTH"] = $arFile["width"];
+			$arFile["HEIGHT"] = $arFile["height"];
 			$arFile["size"] = $copySize;
 			$bucket->IncFileCounter($copySize);
 		}
@@ -1320,7 +1346,10 @@ class CCloudStorage
 								LocalRedirect($to_file, true, "301 Moved Permanently");
 							}
 						}
-						elseif ($obBucket->FileExists($request_uri))
+						elseif (
+							!preg_match("/[?&]/", $request_uri)
+							&& $obBucket->FileExists($request_uri)
+						)
 						{
 							if (COption::GetOptionString("clouds", "log_404_errors") === "Y")
 								CEventLog::Log("WARNING", "CLOUDS_404", "clouds", $_SERVER["REQUEST_URI"], $_SERVER["HTTP_REFERER"]);

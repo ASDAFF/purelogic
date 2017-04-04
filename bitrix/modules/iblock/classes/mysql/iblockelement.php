@@ -990,6 +990,7 @@ class CIBlockElement extends CAllIBlockElement
 
 			if(
 				$arDef["DELETE_WITH_DETAIL"] === "Y"
+				&& is_array($arFields["DETAIL_PICTURE"])
 				&& $arFields["DETAIL_PICTURE"]["del"] === "Y"
 			)
 			{
@@ -999,7 +1000,7 @@ class CIBlockElement extends CAllIBlockElement
 			if(
 				$arDef["FROM_DETAIL"] === "Y"
 				&& (
-					$arFields["PREVIEW_PICTURE"]["size"] <= 0
+					(is_array($arFields["PREVIEW_PICTURE"]) && $arFields["PREVIEW_PICTURE"]["size"] <= 0)
 					|| $arDef["UPDATE_WITH_DETAIL"] === "Y"
 				)
 				&& is_array($arFields["DETAIL_PICTURE"])
@@ -1077,7 +1078,7 @@ class CIBlockElement extends CAllIBlockElement
 					$arFields["PREVIEW_PICTURE"]["tmp_name"] = $tmp_name;
 				}
 
-				CIBLock::FilterPicture($arFields["PREVIEW_PICTURE"]["tmp_name"], array(
+				CIBlock::FilterPicture($arFields["PREVIEW_PICTURE"]["tmp_name"], array(
 					"name" => "watermark",
 					"position" => $arDef["WATERMARK_FILE_POSITION"],
 					"type" => "file",
@@ -1108,7 +1109,7 @@ class CIBlockElement extends CAllIBlockElement
 					$arFields["PREVIEW_PICTURE"]["tmp_name"] = $tmp_name;
 				}
 
-				CIBLock::FilterPicture($arFields["PREVIEW_PICTURE"]["tmp_name"], array(
+				CIBlock::FilterPicture($arFields["PREVIEW_PICTURE"]["tmp_name"], array(
 					"name" => "watermark",
 					"position" => $arDef["WATERMARK_TEXT_POSITION"],
 					"type" => "text",
@@ -1161,7 +1162,7 @@ class CIBlockElement extends CAllIBlockElement
 					$arFields["DETAIL_PICTURE"]["tmp_name"] = $tmp_name;
 				}
 
-				CIBLock::FilterPicture($arFields["DETAIL_PICTURE"]["tmp_name"], array(
+				CIBlock::FilterPicture($arFields["DETAIL_PICTURE"]["tmp_name"], array(
 					"name" => "watermark",
 					"position" => $arDef["WATERMARK_FILE_POSITION"],
 					"type" => "file",
@@ -1192,7 +1193,7 @@ class CIBlockElement extends CAllIBlockElement
 					$arFields["DETAIL_PICTURE"]["tmp_name"] = $tmp_name;
 				}
 
-				CIBLock::FilterPicture($arFields["DETAIL_PICTURE"]["tmp_name"], array(
+				CIBlock::FilterPicture($arFields["DETAIL_PICTURE"]["tmp_name"], array(
 					"name" => "watermark",
 					"position" => $arDef["WATERMARK_TEXT_POSITION"],
 					"type" => "text",
@@ -1630,6 +1631,7 @@ class CIBlockElement extends CAllIBlockElement
 
 		if(
 			isset($arFields["PREVIEW_PICTURE"])
+			&& is_array($arFields["PREVIEW_PICTURE"])
 			&& $arFields["PREVIEW_PICTURE"]["COPY_FILE"] == "Y"
 			&& $arFields["PREVIEW_PICTURE"]["copy"]
 		)
@@ -1640,6 +1642,7 @@ class CIBlockElement extends CAllIBlockElement
 
 		if(
 			isset($arFields["DETAIL_PICTURE"])
+			&& is_array($arFields["DETAIL_PICTURE"])
 			&& $arFields["DETAIL_PICTURE"]["COPY_FILE"] == "Y"
 			&& $arFields["DETAIL_PICTURE"]["copy"]
 		)
@@ -1710,7 +1713,7 @@ class CIBlockElement extends CAllIBlockElement
 
 		//Read current property values from database
 		$arDBProps = array();
-		if (CIBLock::GetArrayByID($IBLOCK_ID, "VERSION") == 2)
+		if (CIBlock::GetArrayByID($IBLOCK_ID, "VERSION") == 2)
 		{
 			$rs = $DB->Query("
 				select *
@@ -1856,7 +1859,7 @@ class CIBlockElement extends CAllIBlockElement
 
 			if ($prop["PROPERTY_TYPE"] == "L")
 			{
-				$DB->Query(CIBLockElement::DeletePropertySQL($prop, $ELEMENT_ID));
+				$DB->Query(CIBlockElement::DeletePropertySQL($prop, $ELEMENT_ID));
 				if ($prop["VERSION"] == 2 && $prop["MULTIPLE"] == "Y")
 				{
 					$arV2ClearCache[$prop["ID"]] =
@@ -1917,7 +1920,7 @@ class CIBlockElement extends CAllIBlockElement
 			elseif ($prop["PROPERTY_TYPE"] == "G")
 			{
 				$bRecalcSections = true;
-				$DB->Query(CIBLockElement::DeletePropertySQL($prop, $ELEMENT_ID));
+				$DB->Query(CIBlockElement::DeletePropertySQL($prop, $ELEMENT_ID));
 				if ($prop["VERSION"] == 2 && $prop["MULTIPLE"] == "Y")
 				{
 					$arV2ClearCache[$prop["ID"]] =
@@ -2545,7 +2548,7 @@ class CIBlockElement extends CAllIBlockElement
 
 		foreach ($arFilesToDelete as $deleteTask)
 		{
-			CIBLockElement::DeleteFile(
+			CIBlockElement::DeleteFile(
 				$deleteTask["FILE_ID"],
 				false,
 				"PROPERTY", $deleteTask["ELEMENT_ID"],

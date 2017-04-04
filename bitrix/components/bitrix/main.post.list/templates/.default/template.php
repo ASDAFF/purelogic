@@ -17,6 +17,11 @@ if (!empty($arParams["RATING_TYPE_ID"]))
 }
 
 CUtil::InitJSCore(array("date", "fx", "popup", "viewer", "tooltip"));
+if (CModule::IncludeModule('socialnetwork'))
+{
+	CUtil::InitJSCore(array("comment_aux"));
+}
+
 $tooltip_ajax_page = (
 	isset($arParams["AUTHOR_URL"])
 	&& $arParams["AUTHOR_URL"] != ""
@@ -164,7 +169,8 @@ BX.ready(function(){
 			rights : {
 				MODERATE : '<?=$arParams["RIGHTS"]["MODERATE"]?>',
 				EDIT : '<?=$arParams["RIGHTS"]["EDIT"]?>',
-				DELETE : '<?=$arParams["RIGHTS"]["DELETE"]?>'
+				DELETE : '<?=$arParams["RIGHTS"]["DELETE"]?>',
+				CREATETASK : '<?=$arParams["RIGHTS"]["CREATETASK"]?>'
 			},
 			sign : '<?=$arParams["SIGN"]?>'
 		},

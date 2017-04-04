@@ -1,4 +1,7 @@
 <?
+/** @global CMain $APPLICATION
+ * @global CDatabase $DB
+ */
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_before.php");
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/currency/prolog.php");
 $CURRENCY_RIGHT = $APPLICATION->GetGroupRight("currency");
@@ -234,9 +237,13 @@ function setThousandsVariant(lang)
 <input type="hidden" name="Update" value="Y">
 <input type="hidden" name="from" value="<?echo htmlspecialcharsbx($from)?>">
 <input type="hidden" name="BASE" value="<?echo htmlspecialcharsbx($currency['BASE']); ?>">
-<?if(strlen($return_url)>0):?><input type="hidden" name="return_url" value="<?=htmlspecialcharsbx($return_url)?>"><?endif?>
+<?
+if (isset($return_url) && $return_url != '')
+{
+	?><input type="hidden" name="return_url" value="<?=htmlspecialcharsbx($return_url)?>"><?
+}
 
-<?$tabControl->Begin();?>
+$tabControl->Begin();?>
 <?$tabControl->BeginNextTab();?>
 	<tr class="adm-detail-required-field">
 		<td width="40%"><?echo GetMessage("currency_curr")?>:</td>
@@ -279,7 +286,7 @@ function setThousandsVariant(lang)
 <?$tabControl->BeginNextTab();
 	foreach ($currencyLangs as $lang => $settings)
 	{
-		?><tr class="heading"><td colspan="2"><?echo htmlspecialcharsex($langList[$lang]); ?></td></tr>
+		?><tr class="heading"><td colspan="2"><?=htmlspecialcharsbx($langList[$lang]); ?></td></tr>
 		<tr>
 			<td width="40%"><?echo GetMessage("CURRENCY_FULL_NAME")?>:</td>
 			<td width="60%"><input title="<?echo GetMessage("CURRENCY_FULL_NAME_DESC")?>" type="text" maxlength="50" size="15" name="LANG_<? echo $lang; ?>[FULL_NAME]" value="<?=htmlspecialcharsbx($settings['FULL_NAME']);?>"></td>
@@ -290,7 +297,7 @@ function setThousandsVariant(lang)
 				<select name="format_<? echo $lang; ?>" onchange="setTemplate('<? echo $lang; ?>')">
 					<option value="">-<?echo GetMessage("CURRENCY_SELECT_TEMPLATE")?>-</option>
 					<?foreach ($arTemplates as $key => $ar):?>
-						<option value="<?=$key?>"><?=$ar["TEXT"]?></option>
+						<option value="<?=htmlspecialcharsbx($key); ?>"><?=htmlspecialcharsbx($ar["TEXT"]); ?></option>
 					<?endforeach?>
 				</select>
 			</td>
@@ -310,9 +317,9 @@ function setThousandsVariant(lang)
 				<?
 				foreach ($separatorList as $separatorID => $separatorTitle)
 				{
-					?><option value="<? echo $separatorID ?>"<?
+					?><option value="<?=htmlspecialcharsbx($separatorID); ?>"<?
 						echo ($settings['THOUSANDS_VARIANT'] == $separatorID
-						? ' selected' : '');?>><? echo htmlspecialcharsex($separatorTitle); ?></option><?
+						? ' selected' : '');?>><?=htmlspecialcharsbx($separatorTitle); ?></option><?
 				}
 				unset($separatorID, $separatorTitle);
 				?>

@@ -76,7 +76,7 @@ foreach(array(
 $arParams["DATE_TIME_FORMAT"] = trim(empty($arParams["DATE_TIME_FORMAT"]) ? $DB->DateFormatToPHP(CSite::GetDateFormat("FULL")) : $arParams["DATE_TIME_FORMAT"]);
 $arParams["NAME_TEMPLATE"] = (empty($arParams["NAME_TEMPLATE"]) ? CSite::GetNameFormat() : $arParams["NAME_TEMPLATE"]);
 $arParams["SHOW_LOGIN"] = ($arParams["SHOW_LOGIN"] == "Y");
-$arParams["AVATAR_SIZE"] = intval($arParams["AVATAR_SIZE"]);
+$arParams["AVATAR_SIZE"] = (isset($_REQUEST["avatar_size"]) && intval($_REQUEST["avatar_size"]) > 0 ? intval($_REQUEST["avatar_size"]) : intval($arParams["AVATAR_SIZE"]));
 $arParams["SET_TITLE"] = "N";
 CRatingsComponentsMain::GetShowRating($arParams); // $arParams["SHOW_RATING"]
 $arParams["MESSAGE_LENGTH"] = ($arParams["MESSAGE_LENGTH"] > 0 ? $arParams["MESSAGE_LENGTH"] : 90);

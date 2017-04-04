@@ -98,7 +98,7 @@
 
 .bx-no-touch .bx_item_list_you_looked_horizontal .bx_catalog_item:hover .bx_catalog_item_container {
     position:absolute;
-    z-index:990;
+    z-index:190;
     top:0;
     left:0;
     right:0;
@@ -205,7 +205,7 @@
 .bx_item_list_you_looked_horizontal .bx_catalog_item_images_double,
 .bx_item_list_you_looked_horizontal .bx_catalog_item_images{
     position:relative;
-    z-index:910;
+    z-index:180;
     display:block;
     padding-top:135%;
     width:100%;

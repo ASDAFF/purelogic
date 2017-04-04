@@ -16,14 +16,14 @@ class CTextParser
 	public $imageHeight = 800;
 	public $maxStringLen = 0;
 	public $maxAnchorLength = 40;
+	//https://www.w3.org/TR/CSS2/fonts.html#propdef-font-size
 	public $arFontSize = array(
-		1 => 40, //"xx-small"
-		2 => 60, //"x-small"
-		3 => 80, //"small"
-		4 => 100, //"medium"
-		5 => 120, //"large"
-		6 => 140, //"x-large"
-		7 => 160, //"xx-large"
+		1 => "xx-small",
+		2 => "small",
+		3 => "medium",
+		4 => "large",
+		5 => "x-large",
+		6 => "xx-large",
 	);
 	public $allow = array(
 		"HTML" => "N",
@@ -42,7 +42,8 @@ class CTextParser
 		"SHORT_ANCHOR" => "N",
 		"ALIGN" => "Y",
 		"USERFIELDS" => "N",
-		"USER" => "Y"
+		"USER" => "Y",
+		"P" => "Y"
 	);
 	public $smiles = null;
 	protected $wordSeparator = "\\s.,;:!?\\#\\-\\*\\|\\[\\]\\(\\)\\{\\}";
@@ -237,6 +238,18 @@ class CTextParser
 				}
 				while($replaced > 0);
 			}
+			if ($this->allow["P"]=="Y")
+			{
+				$replaced = 0;
+				do
+				{
+					$text = preg_replace(
+						"/<p[^>a-z]*>(.+?)<\\/p[^>a-z]*>/is".BX_UTF_PCRE_MODIFIER,
+						"[p]\\1[/p]",
+						$text, -1, $replaced);
+				}
+				while($replaced > 0);
+			}
 			if ($this->allow["IMG"]=="Y")
 			{
 				$text = preg_replace(
@@ -357,13 +370,16 @@ class CTextParser
 				$patt[] = "/(?<=\\&lt\\;)((".$this->getAnchorSchemes()."):\\/\\/[._:a-z0-9@-].*?)(?=\\&gt\\;)/is".BX_UTF_PCRE_MODIFIER;
 
 			$word_separator = str_replace("?", "", $this->wordSeparator);
-			$patt[] = "/(?<=^|[".$word_separator."]|\\s)(?<!\\[nomodify\\]|<nomodify>)((".$this->getAnchorSchemes()."):\\/\\/[._:a-z0-9@-].*?)(?=[\\s'\"{}\\[\\]]|&quot;|\$)/is".BX_UTF_PCRE_MODIFIER;
+			if (self::strpos($text, "(") !== false)
+				$patt[] = "/(?<=\\()(?<!\\[nomodify\\]|<nomodify>)((".$this->getAnchorSchemes()."):\\/\\/[._:a-z0-9@-].*?)(?=\\))/is".BX_UTF_PCRE_MODIFIER;
 			if (self::strpos($text, "“") !== false)
 				$patt[] = "/(?<=[".self::chr("“")."])(?<!\\[nomodify\\]|<nomodify>)((".$this->getAnchorSchemes()."):\\/\\/[._:a-z0-9@-].*?)(?=[".self::chr("”")."])/is".BX_UTF_PCRE_MODIFIER;
 			if (self::strpos($text, "‘") !== false)
 				$patt[] = "/(?<=[".self::chr("‘")."])(?<!\\[nomodify\\]|<nomodify>)((".$this->getAnchorSchemes()."):\\/\\/[._:a-z0-9@-].*?)(?=[".self::chr("’")."])/is".BX_UTF_PCRE_MODIFIER;
 			if (self::strpos($text, "«") !== false)
 				$patt[] = "/(?<=[".self::chr("«")."])(?<!\\[nomodify\\]|<nomodify>)((".$this->getAnchorSchemes()."):\\/\\/[._:a-z0-9@-].*?)(?=[".self::chr("»")."])/is".BX_UTF_PCRE_MODIFIER;
+
+			$patt[] = "/(?<=^|[".$word_separator."]|\\s)(?<!\\[nomodify\\]|<nomodify>)((".$this->getAnchorSchemes()."):\\/\\/[._:a-z0-9@-].*?)(?=[\\s'\"{}\\[\\]]|&quot;|\$)/is".BX_UTF_PCRE_MODIFIER;
 
 			$text = preg_replace_callback($patt, array($this, "preconvertUrl"), $text);
 		}
@@ -417,7 +433,8 @@ class CTextParser
 				"FONT" => "N",
 				"TABLE" => "N",
 				"ALIGN" => "N",
-				"QUOTE" => "N"
+				"QUOTE" => "N",
+				"P" => "Y"
 			), $this->allow
 		);
 		foreach ($res as $tag => $val)
@@ -474,7 +491,6 @@ class CTextParser
 						$text = preg_replace($arUrlPatterns, "", $text);
 					}
 					break;
-
 				case "BIU":
 					$replaced  = 0;
 					do
@@ -482,6 +498,17 @@ class CTextParser
 						$text = preg_replace(
 							"/\\[([busi])\\](.*?)\\[\\/(\\1)\\]/is".BX_UTF_PCRE_MODIFIER,
 							"<\\1>\\2</\\1>",
+						$text, -1, $replaced);
+					}
+					while($replaced > 0);
+					break;
+				case "P":
+					$replaced  = 0;
+					do
+					{
+						$text = preg_replace(
+							"/\\[p\\](.*?)\\[\\/p\\](([ \r\t]*)\n?)/is".BX_UTF_PCRE_MODIFIER,
+							"<p>\\1</p>",
 						$text, -1, $replaced);
 					}
 					while($replaced > 0);
@@ -545,11 +572,56 @@ class CTextParser
 					}
 					break;
 				case "TABLE":
-					while (preg_match("/\\[table\\](.+?)\\[\\/table\\]/is".BX_UTF_PCRE_MODIFIER, $text))
+					while (preg_match("/\\[table\\]/is".BX_UTF_PCRE_MODIFIER, $text))
 					{
-						$text = preg_replace_callback(
-							"/\\[table\\](.*?)\\[\\/table\\](?:(?:[\\040\\r\\t]*)\\n?)/is".BX_UTF_PCRE_MODIFIER,
-							array($this, "convertTable"),
+						$tagToCheckList = array("td", "th", "tr", "table");
+						foreach($tagToCheckList as $tagToCheck)
+						{
+							preg_match_all("/\\[".$tagToCheck."\\]/is".BX_UTF_PCRE_MODIFIER, $text, $matches);
+							$opentags = count($matches['0']);
+
+							preg_match_all("/\\[\\/".$tagToCheck."\\]/is", $text, $matches);
+							$closetags = count($matches['0']);
+
+							$unclosed = $opentags - $closetags;
+							for ($i = 0; $i < $unclosed; $i++)
+							{
+								$text .= '[/'.$tagToCheck.']';
+							}
+						}
+
+						$openTableTag = (
+							$this->bMobile
+								? "<div style=\"overflow-x: auto;\"><table class=\"data-table\">"
+								: "<table class=\"data-table\">"
+							);
+							$closeTableTag = (
+							$this->bMobile
+								? "</table></div>"
+								: "</table>"
+						);
+
+						$text = preg_replace(
+							array(
+								"/\\[table\\]/is".BX_UTF_PCRE_MODIFIER,
+								"/\\[\\/table\\](?:(?:[\\040\\r\\t]*)\\n?)/is".BX_UTF_PCRE_MODIFIER,
+								"/(\\s*?)\\[tr\\]/is".BX_UTF_PCRE_MODIFIER,
+								"/\\[\\/tr\\](\\s*?)/is".BX_UTF_PCRE_MODIFIER,
+								"/(\\s*?)\\[td\\]/is".BX_UTF_PCRE_MODIFIER,
+								"/\\[\\/td\\](\\s*?)/is".BX_UTF_PCRE_MODIFIER,
+								"/(\\s*?)\\[th\\]/is".BX_UTF_PCRE_MODIFIER,
+								"/\\[\\/th\\](\\s*?)/is".BX_UTF_PCRE_MODIFIER,
+							),
+							array(
+								$openTableTag,
+								$closeTableTag,
+								"<tr>",
+								"</tr>",
+								"<td>",
+								"</td>",
+								"<th>",
+								"</th>",
+							),
 							$text
 						);
 					}
@@ -753,8 +825,8 @@ class CTextParser
 		$arPattern[] = "/\\[url\\s*=\\s*(\\S+?)\\s*\\](.*?)\\[\\/url\\]/is".BX_UTF_PCRE_MODIFIER;
 		$arReplace[] = "\\2 (URL: \\1 )";
 
-		$arPattern[] = "/\\[img\\](.+?)\\[\\/img\\]/is".BX_UTF_PCRE_MODIFIER;
-		$arReplace[] = "(IMAGE: \\1)";
+		$arPattern[] = "/\\[img([^\\]]*)\\](.+?)\\[\\/img\\]/is".BX_UTF_PCRE_MODIFIER;
+		$arReplace[] = "(IMAGE: \\2)";
 
 		$arPattern[] = "/\\[video([^\\]]*)\\](.+?)\\[\\/video[\\s]*\\]/is".BX_UTF_PCRE_MODIFIER;
 		$arReplace[] = "(VIDEO: \\2)";
@@ -1001,32 +1073,6 @@ class CTextParser
 		return $this->convert_quote_tag($matches[1]);
 	}
 
-	public function convertTable($matches)
-	{
-		$text = preg_replace(
-			array(
-				"/(\\s*?)\\[tr\\](\\s*?)(.*?)(\\s*?)\\[\\/tr\\](\\s*?)/is".BX_UTF_PCRE_MODIFIER,
-				"/(\\s*?)\\[td\\](.*?)\\[\\/td\\](\\s*?)/is".BX_UTF_PCRE_MODIFIER,
-				"/(\\s*?)\\[th\\](.*?)\\[\\/th\\](\\s*?)/is".BX_UTF_PCRE_MODIFIER,
-				),
-			array(
-				"<tr>\\3</tr>",
-				"<td>\\2</td>",
-				"<th>\\2</th>",
-				),
-			$matches[1]
-		);
-
-		if ($this->bMobile)
-		{
-			return "<div style=\"overflow-x: auto;\"><table class=\"data-table\">".$text."</table></div>";
-		}
-		else
-		{
-			return "<table class=\"data-table\">".$text."</table>";
-		}
-	}
-
 	function convert_quote_tag($text = "")
 	{
 		if (strlen($text)<=0)
@@ -1154,7 +1200,9 @@ class CTextParser
 			if ($count <= 0)
 				return $text;
 			$value = intval($value > $count ? ($count - 1) : $value);
-			return '<span style="font-size:'.$this->arFontSize[$value].'%;">'.$text.'</span>';
+			//compatibility with old percent values
+			$size = (is_numeric($this->arFontSize[$value])? $this->arFontSize[$value].'%' : $this->arFontSize[$value]);
+			return '<span style="font-size:'.$size.';">'.$text.'</span>';
 		}
 		elseif ($attr == 'color')
 		{
@@ -1282,7 +1330,7 @@ class CTextParser
 			));
 		}
 
-		return $res;
+		return $this->defended_tags($res, "replace");
 	}
 
 	protected function render_user($fields)
@@ -1624,7 +1672,8 @@ class CTextParser
 				'NL2BR'  => 'Y',
 				'VIDEO'  => 'Y',
 				'TABLE'  => 'Y',
-				'ALIGN'  => 'Y'
+				'ALIGN'  => 'Y',
+				'P'      => 'Y'
 			),
 			array('HTML' => 'N')
 		);

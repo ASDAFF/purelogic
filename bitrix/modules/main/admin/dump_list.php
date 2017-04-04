@@ -419,7 +419,7 @@ while($f = $rsDirContent->NavNext(true, "f_"))
 	$row->AddField("SIZE", CFile::FormatSize($size));
 	$row->AddField("PLACE", $f['PLACE']);
 	if ($f['DATE'])
-		$row->AddField("DATE", ($t = time() - $f['DATE']) < 86400 && $t > 0 ? HumanTime($t).' '.GetMessage('DUMP_BACK') : ConvertTimeStamp($f['DATE'], 'FULL'));
+		$row->AddField("DATE", FormatDate('x', $f['DATE']));
 
 	$arActions = Array();
 

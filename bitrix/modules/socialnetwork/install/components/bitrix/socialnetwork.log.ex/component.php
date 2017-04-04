@@ -27,7 +27,7 @@ $pathToUser = COption::GetOptionString("main", "TOOLTIP_PATH_TO_USER", false, SI
 $pathToUser = ($pathToUser ? $pathToUser : SITE_DIR."company/personal/user/#user_id#/");
 
 $folderUsers = COption::GetOptionString("socialnetwork", "user_page", false, SITE_ID);
-$folderUsers = ($folderUsers ? $folderUsers : SITE_DIR."company/personal/");
+$folderUsers = ($folderUsers ? $folderUsers : (CModule::IncludeModule('extranet') && CExtranet::IsExtranetSite() ? SITE_DIR."contacts/personal/" : SITE_DIR."company/personal/"));
 
 $folderWorkgroups = COption::GetOptionString("socialnetwork", "workgroups_page", false, SITE_ID);
 $folderWorkgroups = ($folderWorkgroups ? $folderWorkgroups : SITE_DIR."workgroups/");
@@ -271,9 +271,9 @@ $bUseLogin = $arParams['SHOW_LOGIN'] != "N" ? true : false;
 if (StrLen($arParams["ENTITY_TYPE"]) <= 0)
 	$arParams["ENTITY_TYPE"] = Trim($_REQUEST["flt_entity_type"]);
 
-$arParams["AVATAR_SIZE_COMMON"] = (isset($arParams["AVATAR_SIZE_COMMON"]) && intval($arParams["AVATAR_SIZE_COMMON"]) > 0) ? intval($arParams["AVATAR_SIZE_COMMON"]) : 58;
-$arParams["AVATAR_SIZE"] = (isset($arParams["AVATAR_SIZE"]) && intval($arParams["AVATAR_SIZE"]) > 0) ? intval($arParams["AVATAR_SIZE"]) : 50;
-$arParams["AVATAR_SIZE_COMMENT"] = (isset($arParams["AVATAR_SIZE_COMMENT"]) && intval($arParams["AVATAR_SIZE_COMMENT"]) > 0) ? intval($arParams["AVATAR_SIZE_COMMENT"]) : 39;
+$arParams["AVATAR_SIZE_COMMON"] = (isset($arParams["AVATAR_SIZE_COMMON"]) && intval($arParams["AVATAR_SIZE_COMMON"]) > 0) ? intval($arParams["AVATAR_SIZE_COMMON"]) : 100;
+$arParams["AVATAR_SIZE"] = (isset($arParams["AVATAR_SIZE"]) && intval($arParams["AVATAR_SIZE"]) > 0) ? intval($arParams["AVATAR_SIZE"]) : 100;
+$arParams["AVATAR_SIZE_COMMENT"] = (isset($arParams["AVATAR_SIZE_COMMENT"]) && intval($arParams["AVATAR_SIZE_COMMENT"]) > 0) ? intval($arParams["AVATAR_SIZE_COMMENT"]) : 100;
 
 $arParams["USE_COMMENTS"] = (isset($arParams["USE_COMMENTS"]) ? $arParams["USE_COMMENTS"] : "N");
 $arParams["COMMENTS_IN_EVENT"] = (isset($arParams["COMMENTS_IN_EVENT"]) && intval($arParams["COMMENTS_IN_EVENT"]) > 0 ? $arParams["COMMENTS_IN_EVENT"] : "3");
@@ -677,7 +677,13 @@ if (IsModuleInstalled("photogallery"))
 		&& CModule::IncludeModule("iblock")
 	)
 	{
-		$dbRes = CIBlock::GetList(array(), array("SITE_ID" => SITE_ID, "CODE" => "user_photogallery"));
+		$dbRes = CIBlock::GetList(
+			array(),
+			array(
+				"SITE_ID" => SITE_ID,
+				"=CODE" => "user_photogallery"
+			)
+		);
 		if ($arRes = $dbRes->Fetch())
 		{
 			$arParams["PHOTO_USER_IBLOCK_ID"] = $arRes["ID"];
@@ -689,7 +695,13 @@ if (IsModuleInstalled("photogallery"))
 		&& CModule::IncludeModule("forum")
 	)
 	{
-		$dbRes = CForumNew::GetListEx(array(), array("SITE_ID" => SITE_ID, "XML_ID" => "PHOTOGALLERY_COMMENTS"));
+		$dbRes = CForumNew::GetListEx(
+			array(),
+			array(
+				"SITE_ID" => SITE_ID,
+				"XML_ID" => "PHOTOGALLERY_COMMENTS"
+			)
+		);
 		if ($arRes = $dbRes->Fetch())
 		{
 			$arParams["PHOTO_FORUM_ID"] = $arRes["ID"];
@@ -734,6 +746,15 @@ if (
 		elseif ($arParams["ENTITY_TYPE"] == SONET_ENTITY_GROUP)
 		{
 			$arResult["Group"] = CSocNetGroup::GetByID($arParams["GROUP_ID"]);
+			if (
+				$arResult["Group"]['OPENED'] == 'Y'
+				&& $USER->IsAuthorized()
+				&& !$bCurrentUserIsAdmin
+				&& !in_array(CSocNetUserToGroup::GetUserRole($user_id, $arResult["Group"]["ID"]), array(SONET_ROLES_OWNER, SONET_ROLES_MODERATOR, SONET_ROLES_USER))
+			)
+			{
+				$arResult["Group"]['READ_ONLY'] = 'Y';
+			}
 		}
 	}
 
@@ -808,6 +829,7 @@ if (
 		$ENTITY_ID = $arParams["GROUP_ID"];
 
 		$arFilter["LOG_RIGHTS"] = "SG".intval($arParams["GROUP_ID"]);
+		$arFilter["LOG_RIGHTS_SG"] = "OSG".intval($arParams["GROUP_ID"]).'_'.($USER->IsAuthorized() ? SONET_ROLES_AUTHORIZED : SONET_ROLES_ALL);
 		$arParams["SET_LOG_PAGE_CACHE"] = "Y";
 		$arParams["USE_FOLLOW"] = "N";
 		$arParams["SET_LOG_COUNTER"] = "N";
@@ -1074,6 +1096,7 @@ if (
 	{
 		$arOrder = array("LOG_DATE"	=> "DESC");
 	}
+	$arOrder["ID"] = "DESC";
 
 	$events = GetModuleEvents("socialnetwork", "OnBuildSocNetLogOrder");
 	while ($arEvent = $events->Fetch())
@@ -1194,9 +1217,13 @@ if (
 		}
 
 		$arListParams = array(
-			"CHECK_RIGHTS" => "Y",
-			"CHECK_VIEW" => "Y"
+			"CHECK_RIGHTS" => "Y"
 		);
+
+		if ($arParams["LOG_ID"] <= 0)
+		{
+			$arListParams["CHECK_VIEW"] = "Y";
+		}
 	}
 
 	if (

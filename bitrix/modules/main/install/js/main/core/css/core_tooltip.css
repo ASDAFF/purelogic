@@ -160,16 +160,19 @@
 	vertical-align: middle;
 }
 
-.bx-user-info-data .bx-user-info-data-cont  .bx-user-info-extranet {
+.bx-user-info-data .bx-user-info-data-cont  .bx-user-info-extranet,
+.bx-user-info-data .bx-user-info-data-cont  .bx-user-info-email,
+.bx-user-info-data .bx-user-info-data-cont  .bx-user-info-emailcrm {
 	margin-bottom: 1px;
 }
 
-.bx-user-info-extranet {
+.bx-user-info-extranet, .bx-user-info-email, .bx-user-info-emailcrm {
 	padding-left: 17px;
 	position: relative;
 }
 
-.bx-user-info-extranet a {
+.bx-user-info-extranet a, .bx-user-info-email a, .bx-user-info-emailcrm a,
+.bx-user-info-extranet a:hover, .bx-user-info-email a:hover, .bx-user-info-emailcrm a:hover {
 	color: #d9930a;
 }
 
@@ -177,7 +180,7 @@
 	background: url(/bitrix/components/bitrix/main.user.link/templates/.default/images/extranet-icon.png);
 	content: '';
 	left: 0;
-	top: 5px;
+	top: 3px;
 	height: 13px;
 	position: absolute;
 	width: 13px;
@@ -187,6 +190,24 @@
 	color: #a3a3a3;
 	font-size: 11px;
 	margin:-2px 0 0 0;
+}
+
+/* Mail user */
+.bx-user-info-email:before, .bx-user-info-emailcrm:before {
+	content: '';
+	position: absolute;
+	top: 1px;
+	left: 0;
+	height: 13px;
+	width: 13px;
+}
+
+.bx-user-info-email:before {
+	background: url(../images/template_sprite.png) -135px -1605px;
+}
+
+.bx-user-info-emailcrm:before {
+	background: url(../images/template_sprite.png?1) -153px -1605px;
 }
 
 .bx-user-info-data  .bx-user-info-data-cont .bx-user-info-data-name a {

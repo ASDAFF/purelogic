@@ -564,6 +564,11 @@ div.sale-order-detail-about-order-inner-container-repeat {
 	border-bottom: 1px solid #f2f2f2;
 }
 
+.sale-order-detail-about-order-inner-container-comments
+{
+	margin-top:35px;
+}
+
 .sale-order-detail-about-order-inner-container-details-list {
 	padding: 0;
 }
@@ -717,6 +722,7 @@ div.sale-order-detail-payment-options-methods-image-container {
 }
 
 .sale-order-detail-payment-options-methods-info-title-status-alert,
+.sale-order-detail-payment-options-methods-info-title-status-restricted,
 .sale-order-detail-payment-options-methods-info-title-status-success {
 	display: inline-block;
 	padding: 4px 10px 5px 8px;
@@ -736,6 +742,13 @@ div.sale-order-detail-payment-options-methods-image-container {
 	color: #597707;
 }
 
+.sale-order-detail-payment-options-methods-info-title-status-restricted {
+	background: #f3f4f5;
+	border: 1px solid rgba(128,134,142,0.20);
+	color: #535c69;
+}
+
+.sale-order-detail-payment-options-methods-info-total-check,
 .sale-order-detail-payment-options-methods-info-total-price {
 	padding: 4px 0 0 0;
 	font: 13px "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -749,6 +762,17 @@ div.sale-order-detail-payment-options-methods-image-container {
 
 div.sale-order-detail-payment-options-methods-button-container {
 	padding: 0 15px 0 0;
+}
+
+.sale-order-detail-payment-options-methods-info-total-check{
+	width:100%;
+	float: left;
+}
+
+.sale-order-detail-sum-check-left{
+	display: inline;
+	float: left;
+	padding-right: 5px;
 }
 
 .sale-order-detail-payment-options-methods-button-element,
@@ -1269,6 +1293,15 @@ div.sale-order-detail-payment-options-methods-template {
 .sale-order-detail-order-item-size {
 	font: 13px "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: #7c7c7c;
+}
+
+.sale-order-detail-status-restricted-message-block{
+	padding-top:10px;
+}
+
+.sale-order-detail-status-restricted-message{
+	font: 11px "Helvetica Neue", Arial, Helvetica, sans-serif;
+	color: #9e9fa2;
 }
 
 /* Close icon */

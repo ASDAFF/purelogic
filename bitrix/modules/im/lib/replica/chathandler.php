@@ -24,6 +24,7 @@ class ChatHandler extends \Bitrix\Replica\Client\BaseHandler
 	protected $fields = array(
 		"TITLE" => "text",
 		"DESCRIPTION" => "text",
+		"DATE_CREATE" => "datetime",
 	);
 
 	/**

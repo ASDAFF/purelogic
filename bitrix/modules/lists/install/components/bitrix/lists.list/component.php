@@ -126,7 +126,7 @@ if($arParams["IBLOCK_TYPE_ID"] == COption::GetOptionString("lists", "livefeed_ib
 	$arResult["PROCESSES"] = true;
 }
 
-if ($arResult["IBLOCK"]["BIZPROC"] == "Y" && CModule::IncludeModule('bizproc'))
+if ($arResult["IBLOCK"]["BIZPROC"] == "Y" && CModule::IncludeModule('bizproc') && CBPRuntime::isFeatureEnabled())
 {
 	$arParams["CAN_EDIT_BIZPROC"] = (
 		!$arResult["IS_SOCNET_GROUP_CLOSED"]
@@ -385,7 +385,7 @@ $grid_options = new CGridOptions($arResult["GRID_ID"]);
 $grid_columns = $grid_options->GetVisibleColumns();
 $grid_sort = $grid_options->GetSorting(array("sort"=>array("name"=>"asc")));
 
-if($arResult["IBLOCK"]["BIZPROC"]=="Y" && CModule::IncludeModule('bizproc'))
+if($arResult["IBLOCK"]["BIZPROC"]=="Y" && CModule::IncludeModule('bizproc') && CBPRuntime::isFeatureEnabled())
 {
 	$arDocumentTemplates = CBPDocument::GetWorkflowTemplatesForDocumentType(
 		BizProcDocument::generateDocumentComplexType($arParams["IBLOCK_TYPE_ID"], $arResult["IBLOCK_ID"])
@@ -493,6 +493,7 @@ $i = 1;
 $arFilterable = array();
 $arCustomFilter = array();
 $arDateFilter = array();
+$listPropertyNotFilter = array('F', 'S:DiskFile', 'E:ECrm');
 
 foreach($arListFields as $FIELD_ID => $arField)
 {
@@ -549,10 +550,7 @@ foreach($arListFields as $FIELD_ID => $arField)
 				"filter" => &$arResult["FILTER"][$i],
 			);
 	}
-	elseif($arField["TYPE"] == "F")
-	{
-	}
-	elseif($arField["TYPE"] == "S:DiskFile")
+	elseif(in_array($arField["TYPE"], $listPropertyNotFilter))
 	{
 	}
 	elseif($arField["TYPE"] == "SORT" || $arField["TYPE"] == "N")
@@ -760,6 +758,7 @@ else
 	$arDocumentStatesForBP = array();
 }
 
+$arResult["LIST_UNIQUE_ETYPE"] = array('E:ECrm');
 $arResult["ELEMENTS_CAN_DELETE"] = array();
 $arResult["ELEMENTS_CAN_MOVE"] = array();
 $arResult["ELEMENTS_ROWS"] = array();
@@ -773,6 +772,7 @@ while($obElement = $rsElements->GetNextElement())
 	if(!empty($arProperties))
 	{
 		$rsProp = CIBlockElement::GetProperty($arIBlock["ID"], $data["ID"]);
+		$listMultyProperty = array();
 		while($arProp = $rsProp->Fetch())
 		{
 			$FIELD_ID = "PROPERTY_".$arProp["ID"];
@@ -783,7 +783,17 @@ while($obElement = $rsElements->GetNextElement())
 				if(!isset($data[$FIELD_ID]))
 					$data[$FIELD_ID] = array();
 
-				if(is_array($arField["PROPERTY_USER_TYPE"]) && is_array($arField["PROPERTY_USER_TYPE"]["GetPublicViewHTML"]))
+				if(is_array($arField["PROPERTY_USER_TYPE"]) && is_array($arField["PROPERTY_USER_TYPE"]["GetPublicViewHTMLMulty"]))
+				{
+					if(!is_array($listMultyProperty[$FIELD_ID]))
+						$listMultyProperty[$FIELD_ID] = array();
+
+					if(is_array($arProp["VALUE"]))
+						$listMultyProperty[$FIELD_ID] = $arProp["VALUE"];
+					else
+						$listMultyProperty[$FIELD_ID][] = $arProp["VALUE"];
+				}
+				elseif(is_array($arField["PROPERTY_USER_TYPE"]) && is_array($arField["PROPERTY_USER_TYPE"]["GetPublicViewHTML"]))
 				{
 					$strHTMLControlName = array();
 					if($arField["PROPERTY_USER_TYPE"]["USER_TYPE"] == "EList")
@@ -804,6 +814,18 @@ while($obElement = $rsElements->GetNextElement())
 				}
 			}
 		}
+		if(!empty($listMultyProperty))
+		{
+			foreach($listMultyProperty as $fieldId => $listValue)
+			{
+				$data[$fieldId][] = call_user_func_array(
+					$arResult["FIELDS"][$fieldId]["PROPERTY_USER_TYPE"]["GetPublicViewHTMLMulty"], array(
+					$arResult["FIELDS"][$fieldId],
+					array("VALUE" => $listValue),
+					array(),
+				));
+			}
+		}
 	}
 
 	if(isset($data["CREATED_BY"]))
@@ -821,7 +843,7 @@ while($obElement = $rsElements->GetNextElement())
 	if(isset($data["TIMESTAMP_X"]))
 		$data['TIMESTAMP_X'] = FormatDateFromDB($data['TIMESTAMP_X']);
 
-	if(CModule::IncludeModule("bizproc"))
+	if(CModule::IncludeModule("bizproc") && CBPRuntime::isFeatureEnabled())
 	{
 		$documentStates = CBPDocument::GetDocumentStates(
 			BizProcDocument::generateDocumentComplexType($arIBlock["IBLOCK_TYPE_ID"], $arIBlock["ID"]),
@@ -846,7 +868,7 @@ while($obElement = $rsElements->GetNextElement())
 		$arUserGroupsForBPTmp[] = "Author";
 
 	$arBPStart = array();
-	if(CModule::IncludeModule('bizproc'))
+	if(CModule::IncludeModule('bizproc') && CBPRuntime::isFeatureEnabled())
 	{
 		foreach($arDocumentTemplates as $arWorkflowTemplate)
 		{
@@ -946,7 +968,7 @@ while($obElement = $rsElements->GetNextElement())
 		);
 	}
 
-	if(CModule::IncludeModule("bizproc"))
+	if(CModule::IncludeModule("bizproc") && CBPRuntime::isFeatureEnabled())
 	{
 		if(!empty($documentStates))
 		{

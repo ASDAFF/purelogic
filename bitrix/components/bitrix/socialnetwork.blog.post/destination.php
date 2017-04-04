@@ -51,21 +51,7 @@ else
 $arDestUser = Array();
 $arResult["FEED_DESTINATION"]['SELECTED'] = Array();
 
-$bAllowToAll = (COption::GetOptionString("socialnetwork", "allow_livefeed_toall", "Y") == "Y");
-if ($bAllowToAll)
-{
-	$arToAllRights = unserialize(COption::GetOptionString("socialnetwork", "livefeed_toall_rights", 'a:1:{i:0;s:2:"AU";}'));
-	if (!$arToAllRights)
-	{
-		$arToAllRights = array("AU");
-	}
-
-	$arUserGroupCode = array_merge(array("AU"), CAccess::GetUserCodesArray($GLOBALS["USER"]->GetID()));
-	if (count(array_intersect($arToAllRights, $arUserGroupCode)) <= 0)
-	{
-		$bAllowToAll = false;
-	}
-}
+$bAllowToAll = \Bitrix\Socialnetwork\ComponentHelper::getAllowToAllDestination();
 
 if (
 	CModule::IncludeModule('extranet') 

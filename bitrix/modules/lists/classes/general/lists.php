@@ -259,7 +259,7 @@ class CLists
 
 	function OnAfterIBlockDelete($iblock_id)
 	{
-		if(CModule::includeModule('bizproc'))
+		if(CModule::includeModule('bizproc') && CBPRuntime::isFeatureEnabled())
 			BizProcDocument::deleteDataIblock($iblock_id);
 	}
 
@@ -381,7 +381,7 @@ class CLists
 		}
 	}
 
-    public static function getLiveFeed($iblockId)
+	public static function getLiveFeed($iblockId)
 	{
 		global $DB;
 		$iblockId = intval($iblockId);
@@ -423,7 +423,7 @@ class CLists
 
 	public function OnAfterIBlockElementDelete($fields)
 	{
-		if(CModule::includeModule('bizproc'))
+		if(CModule::includeModule('bizproc') && CBPRuntime::isFeatureEnabled())
 		{
 			$errors = array();
 
@@ -469,7 +469,7 @@ class CLists
 	 */
 	public static function completeWorkflow($workflowId, $iblockType, $elementId, $iblockId, $action)
 	{
-		if(!Loader::includeModule('bizproc'))
+		if(!Loader::includeModule('bizproc') || !CBPRuntime::isFeatureEnabled())
 		{
 			return Loc::getMessage('LISTS_MODULE_BIZPROC_NOT_INSTALLED');
 		}
@@ -618,6 +618,10 @@ class CLists
 		if(!empty($iblock['PICTURE']))
 		{
 			$iblock['PICTURE'] = CFile::makeFileArray($iblock['PICTURE']);
+		}
+		if(!empty($iblock['CODE']))
+		{
+			$iblock['CODE'] = $iblock['CODE'].'_copy';
 		}
 		$iblockObject = new CIBlock;
 		if(!$iblockObject)

@@ -51,4 +51,13 @@ $MESS["SPS_USE_AJAX_LOCATIONS"] = "Erweiterte Auswahl der Standorte nutzen";
 $MESS["SPS_ICON_OF_CUSTOM_PAGE"] = "Name der Klasse FontAwesome";
 $MESS["SPS_COMPATIBLE_LOCATION_MODE"] = "Liste der Standorte für alte Vorlagenversionen anfordern";
 $MESS["SPS_SHOW_CUSTOM_PAGE"] = "Eigene Seite hinzufügen";
+$MESS["SPS_PATH_TO_CUSTOM_PAGE"] = "Pfad zur benutzerdefinierten Seiten";
+$MESS["SPS_ALLOW_INNER"] = "Bezahlung vom internen Konto erlauben";
+$MESS["SPS_ONLY_INNER_FULL"] = "Vom internen Konto kann nur voller Betrag der Bestellung bezahlt werden";
+$MESS["SPS_ORDER_LIST_SORT_STATUS"] = "Status";
+$MESS["SPS_ORDER_LIST_SORT_ACCOUNT_NUMBER"] = "Bestellung #";
+$MESS["SPS_ORDER_LIST_SORT_ID"] = "ID der Bestellung";
+$MESS["SPS_ORDER_LIST_SORT_DATE_CREATE"] = "Erstellt am";
+$MESS["SPS_ORDER_LIST_SORT_PRICE"] = "Gesamtbetrag der Bestellung";
+$MESS["SPS_ORDER_LIST_DEFAULT_SORT"] = "Sortierung der Bestellung";
 ?>

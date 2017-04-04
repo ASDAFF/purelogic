@@ -3,7 +3,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 
 $module_id = "catalog";
 
-if ($USER->CanDoOperation('catalog_read')) :
+if ($USER->CanDoOperation('catalog_read')):
 
 	if ($ex = $APPLICATION->GetException())
 	{
@@ -96,9 +96,14 @@ if ($USER->CanDoOperation('catalog_read')) :
 			</td>
 		</tr>
 		<?endforeach;
+		if (!$USER->CanDoOperation('edit_php')):
+			?><tr><td colspan="2"><?
+				echo BeginNote();
+				echo GetMessage('CAT_1CE_SETTINGS_SAVE_DENIED');
+				echo EndNote();
+			?></td></tr><?
+		endif;
 	else:
 		CAdminMessage::ShowMessage(GetMessage("CAT_NO_IBLOCK_MOD"));
 	endif;
-
 endif;
-?>

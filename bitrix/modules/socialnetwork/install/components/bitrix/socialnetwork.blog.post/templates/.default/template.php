@@ -17,13 +17,19 @@ if (!$arResult["bFromList"])
 }
 
 $ajax_page = $APPLICATION->GetCurPageParam("", array("logajax", "bxajaxid", "logout"));
+$voteId = false;
 
 $extensions = array('ajax', 'viewer', 'tooltip', 'popup');
 if ($arResult["bTasksAvailable"])
 {
 	$extensions[] = 'tasks_util_query';
 }
+
 CJSCore::Init($extensions);
+
+$bodyClass = $APPLICATION->GetPageProperty("BodyClass");
+$bodyClass = $bodyClass ? $bodyClass." no-paddings" : "no-paddings";
+$APPLICATION->SetPageProperty("BodyClass", $bodyClass);
 
 ?><script>
 	BX.message({
@@ -137,7 +143,8 @@ else
 		}
 
 		if (
-			array_key_exists("FOLLOW", $arParams)
+			!$arResult["ReadOnly"]
+			&& array_key_exists("FOLLOW", $arParams)
 			&& strlen($arParams["FOLLOW"]) > 0
 			&& intval($arParams["LOG_ID"]) > 0
 		)
@@ -212,11 +219,22 @@ else
 						$aditStyles .= " sonet-log-item-where-".$arParams["ENTITY_TYPE"]."-".$arParams["ENTITY_ID"]."-".str_replace("_", '-', $arParams["EVENT_ID_FULLSET"]);
 				}
 			}
+
+			$avatar = false;
+			if (
+				isset($arResult["arUser"]["PERSONAL_PHOTO_resized"]["src"]) &&
+				strlen($arResult["arUser"]["PERSONAL_PHOTO_resized"]["src"]) > 0
+			)
+			{
+				$avatar = $arResult["arUser"]["PERSONAL_PHOTO_resized"]["src"];
+			}
 			?>
 			<div class="feed-post-cont-wrap<?=$aditStyles?>" id="blg-post-img-<?=$arResult["Post"]["ID"]?>">
-				<div class="feed-user-avatar<?=(isset($arResult["arUser"]["PERSONAL_PHOTO_resized"]["src"]) && strlen($arResult["arUser"]["PERSONAL_PHOTO_resized"]["src"]) > 0 ? " feed-user-avatar-white" : "")?>"><?
-					?><img src="<?=(isset($arResult["arUser"]["PERSONAL_PHOTO_resized"]["src"]) && strlen($arResult["arUser"]["PERSONAL_PHOTO_resized"]["src"]) > 0 ? $arResult["arUser"]["PERSONAL_PHOTO_resized"]["src"] : "/bitrix/images/1.gif")?>" width="<?=$arParams["AVATAR_SIZE"]?>" height="<?=$arParams["AVATAR_SIZE"]?>"><?
-				?></div>
+				<div class="feed-user-avatar"
+					<? if ($avatar):?>
+						style="background: url('<?=$avatar?>'); background-size: cover;"
+					<? endif ?>
+				></div>
 				<div class="feed-post-title-block"><?
 					$anchor_id = $arResult["Post"]["ID"];
 					$arTmpUser = array(
@@ -375,8 +393,20 @@ else
 									?><a href="javascript:void(0)" onclick="showHiddenDestination('<?=$arResult["Post"]["ID"]?>', this)" class="feed-post-link-new"><?=GetMessage("BLOG_DESTINATION_MORE_".$suffix, Array("#NUM#" => $more_cnt))?></a><span id="blog-destination-hidden-<?=$arResult["Post"]["ID"]?>" style="display:none;"><?
 								}
 								if($i != 1)
+								{
 									echo ", ";
-								?><a href="<?=$val["URL"]?>" class="feed-add-post-destination-new<?=(array_key_exists("IS_EXTRANET", $val) && $val["IS_EXTRANET"] == "Y" ? " feed-add-post-destination-new-extranet" : "")?>"><?=$val["NAME"]?></a><?
+								}
+								if (
+									strlen($val["URL"]) > 0
+									&& !$arResult["bPublicPage"]
+								)
+								{
+									?><a href="<?=$val["URL"]?>" class="feed-add-post-destination-new<?=(array_key_exists("IS_EXTRANET", $val) && $val["IS_EXTRANET"] == "Y" ? " feed-add-post-destination-new-extranet" : "")?>"><?=$val["NAME"]?></a><?
+								}
+								else
+								{
+									?><span class="feed-add-post-destination-new"><?=$val["NAME"]?></span><?
+								}
 							}
 						}
 						if(!empty($arResult["Post"]["SPERM_SHOW"]["DR"]))
@@ -442,7 +472,17 @@ else
 									);
 									?><span class="feed-add-post-destination-prefix<?=$classPrefixAdditional?>"><?=$val["CRM_PREFIX"]?>:&nbsp;</span><?
 								}
-								?><a href="<?=$val["URL"]?>" class="feed-add-post-destination-new"><?=$val["NAME"]?></a><?
+								if (
+									strlen($val["URL"]) > 0
+									&& !$arResult["bPublicPage"]
+								)
+								{
+									?><a href="<?=$val["URL"]?>" class="feed-add-post-destination-new"><?=$val["NAME"]?></a><?
+								}
+								else
+								{
+									?><span class="feed-add-post-destination-new"><?=$val["NAME"]?></span><?
+								}
 							}
 						}
 
@@ -487,7 +527,6 @@ else
 				<div class="feed-post-text-block<?=($arResult["Post"]["IS_IMPORTANT"] ? " feed-info-block" : "")?>" id="blog_post_outer_<?=$arResult["Post"]["ID"]?>">
 					<div class="<?if($arResult["bFromList"]):?>feed-post-text-block-inner<?endif;?>">
 						<div class="feed-post-text-block-inner-inner" id="blog_post_body_<?=$arResult["Post"]["ID"]?>"><?=$arResult["Post"]["textFormated"]?><?
-
 						if (
 							$arResult["POST_PROPERTIES"]["SHOW"] == "Y"
 							&& array_key_exists("UF_BLOG_POST_VOTE", $arResult["POST_PROPERTIES"]["DATA"])
@@ -512,6 +551,7 @@ else
 									null, 
 									array("HIDE_ICONS"=>"Y")
 								);?><?
+								$voteId = $arPostField["VALUE"];
 							}
 							unset($arResult["POST_PROPERTIES"]["DATA"]["UF_BLOG_POST_VOTE"]);
 						}
@@ -669,16 +709,21 @@ else
 								foreach($arResult["GRATITUDE"]["USERS_FULL"] as $arGratUser)
 								{
 									$anchor_id = 'post_grat_'.$arGratUser["ID"].'_'.RandString(5);
-									?><span class="feed-user-name-wrap"><?
-										?><div class="feed-user-avatar<?=(isset($arGratUser['AVATAR_SRC']) && strlen($arGratUser['AVATAR_SRC']) > 0 ? " feed-user-avatar-white" : "")?>"><?
-											?><img src="<?=(isset($arGratUser['AVATAR_SRC']) && strlen($arGratUser['AVATAR_SRC']) > 0 ? $arGratUser['AVATAR_SRC'] : "/bitrix/images/1.gif")?>" <?
-												?>width="<?=(isset($arGratUser['AVATAR_SIZE']) && intval($arGratUser['AVATAR_SIZE']) > 0 ? intval($arGratUser['AVATAR_SIZE']) : '50')?>" <?
-												?>height="<?=(isset($arGratUser['AVATAR_SIZE']) && intval($arGratUser['AVATAR_SIZE']) > 0 ? intval($arGratUser['AVATAR_SIZE']) : '50')?>"><?
-										?></div><?
-										?><div class="feed-user-name-wrap-inner"><?
+									$avatar = false;
+									if (isset($arGratUser["AVATAR_SRC"]) && strlen($arGratUser["AVATAR_SRC"]) > 0)
+									{
+										$avatar = $arGratUser["AVATAR_SRC"];
+									}
+									?><span class="feed-user-name-wrap">
+										<div class="feed-user-avatar"
+											<? if ($avatar):?>
+												style="background: url('<?=$avatar?>'); background-size: cover;"
+											<? endif ?>>
+										</div>
+										<div class="feed-user-name-wrap-inner"><?
 											?><a class="feed-workday-user-name" href="<?=($arGratUser['URL'] ? $arGratUser['URL'] : 'javascript:void(0);')?>" id="<?=$anchor_id?>"><?=CUser::FormatName($arParams['NAME_TEMPLATE'], $arGratUser)?></a><?
-											?><span class="feed-workday-user-position"><?=htmlspecialcharsbx($arGratUser['WORK_POSITION'])?></span><?
-										?></div><?
+											?><span class="feed-workday-user-position"><?=htmlspecialcharsbx($arGratUser['WORK_POSITION'])?></span>
+										</div><?
 									?></span><?
 									if ($arGratUser['URL'])
 									{
@@ -698,12 +743,17 @@ else
 							foreach($arResult["GRATITUDE"]["USERS_FULL"] as $arGratUser)
 							{
 								$anchor_id = 'post_grat_'.$arGratUser["ID"].'_'.RandString(5);
-								?><span class="feed-user-name-wrap"><?
-									?><div class="feed-user-avatar"><?
-										?><img src="<?=(isset($arGratUser['AVATAR_SRC']) && strlen($arGratUser['AVATAR_SRC']) > 0 ? $arGratUser['AVATAR_SRC'] : "/bitrix/images/1.gif")?>" <?
-											?>width="<?=(isset($arGratUser['AVATAR_SIZE']) && intval($arGratUser['AVATAR_SIZE']) > 0 ? intval($arGratUser['AVATAR_SIZE']) : '26')?>" <?
-											?>height="<?=(isset($arGratUser['AVATAR_SIZE']) && intval($arGratUser['AVATAR_SIZE']) > 0 ? intval($arGratUser['AVATAR_SIZE']) : '26')?>"><?
-									?></div><?
+								$avatar = false;
+								if (isset($arGratUser["AVATAR_SRC"]) && strlen($arGratUser["AVATAR_SRC"]) > 0)
+								{
+									$avatar = $arGratUser["AVATAR_SRC"];
+								}
+								?><span class="feed-user-name-wrap">
+									<div class="feed-user-avatar"
+										<? if ($avatar):?>
+											style="background: url('<?=$avatar?>'); background-size: cover;"
+										<? endif ?>>
+									</div><?
 									?><a class="feed-workday-user-name" href="<?=($arGratUser['URL'] ? $arGratUser['URL'] : 'javascript:void(0);')?>" id="<?=$anchor_id?>"><?=CUser::FormatName($arParams['NAME_TEMPLATE'], $arGratUser)?></a><?
 									?><!--<span class="feed-workday-user-position"><?=htmlspecialcharsbx($arGratUser['WORK_POSITION'])?></span>--><?
 								?></span><?
@@ -773,15 +823,18 @@ else
 					endif;
 
 					if (
-						array_key_exists("FOLLOW", $arParams)
+						!$arResult["ReadOnly"]
+						&& array_key_exists("FOLLOW", $arParams)
 						&& strlen($arParams["FOLLOW"]) > 0
 						&& intval($arParams["LOG_ID"]) > 0
-					):
+					)
+                    {
 						?><span class="feed-inform-follow" data-follow="<?=($arParams["FOLLOW"] == "Y" ? "Y" : "N")?>" id="log_entry_follow_<?=intval($arParams["LOG_ID"])?>" onclick="__blogPostSetFollow(<?=intval($arParams["LOG_ID"])?>)"><a href="javascript:void(0);"><?=GetMessage("BLOG_POST_FOLLOW_".($arParams["FOLLOW"] == "Y" ? "Y" : "N"))?></a></span><?
-					endif;
+                    }
 
 					if (
 						!$arResult["bPublicPage"]
+						&& !$arResult["ReadOnly"]
 						&& $USER->IsAuthorized()
 						&& !in_array($arParams["TYPE"], array("DRAFT", "MODERATION"))
 						&& IntVal($arParams["LOG_ID"]) > 0
@@ -815,6 +868,7 @@ else
 						if (
 							$USER->IsAuthorized()
 							&& !$arResult["bPublicPage"]
+							&& !$arResult["ReadOnly"]
 						)
 						{
 							$arParams["ADIT_MENU"][3] = Array(
@@ -877,6 +931,20 @@ else
 							"text_php" => GetMessage("BLOG_BLOG_BLOG_EDIT"),
 							"href" => CUtil::JSEscape($arResult["urlToEdit"]),
 						);
+
+						if ($voteId)
+						{
+							$arParams["ADIT_MENU"][10] = Array(
+								"text_php" => GetMessage("BLOG_POST_VOTE_EXPORT"),
+								"href" => CUtil::JSEscape(CHTTP::urlAddParams(
+									CHTTP::urlDeleteParams(
+										$arResult["Post"]["urlToPost"],
+										array("exportVoting")
+									),
+									array("exportVoting" => $voteId)
+								)),
+							);
+						}
 					}
 
 					if (!empty($arParams["ADIT_MENU"]))
@@ -1011,10 +1079,12 @@ else
 				include_once($_SERVER["DOCUMENT_ROOT"].$templateFolder."/destination.php");
 			}
 
-			$APPLICATION->IncludeComponent(
-				"bitrix:socialnetwork.blog.post.comment",
-				"",
-				Array(
+			if ($arResult["CommentPerm"] >= BLOG_PERMS_READ)
+			{
+				$APPLICATION->IncludeComponent(
+					"bitrix:socialnetwork.blog.post.comment",
+					"",
+					Array(
 						"bPublicPage" => $arResult["bPublicPage"],
 						"SEF" => $arParams["SEF"],
 						"BLOG_VAR" => $arResult["ALIASES"]["blog"],
@@ -1058,7 +1128,6 @@ else
 						"BLOG_DATA" => $arResult["Blog"],
 						"FROM_LOG" => $arParams["FROM_LOG"],
 						"bFromList" => $arResult["bFromList"],
-						"bPublicPage" => $arResult["bPublicPage"],
 						"LAST_LOG_TS" => $arParams["LAST_LOG_TS"],
 						"MARK_NEW_COMMENTS" => $arParams["MARK_NEW_COMMENTS"],
 						"AVATAR_SIZE" => $arParams["AVATAR_SIZE"],
@@ -1070,13 +1139,14 @@ else
 						"MOBILE" => $arParams["MOBILE"],
 						"LAZYLOAD" => $arParams["LAZYLOAD"]
 					),
-				$component
-			);
-
+					$component
+				);
+			}
 		}
 
 		if (
 			!$arResult["bPublicPage"]
+			&& !$arResult["ReadOnly"]
 			&& intval($arParams["LOG_ID"]) > 0
 			&& array_key_exists("FAVORITES_USER_ID", $arParams)
 		)

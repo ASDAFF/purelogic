@@ -85,4 +85,6 @@ $MESS["BT_MOD_SALE_COND_BASKET_PRODUCT_ID_LABEL"] = "Товар в корзин�
 $MESS["BT_MOD_SALE_COND_BASKET_PRODUCT_ID_PREFIX"] = "поле Товар корзины";
 $MESS["BT_MOD_SALE_COND_BASKET_PRODUCT_NAME_LABEL"] = "Название товара в корзине";
 $MESS["BT_MOD_SALE_COND_BASKET_PRODUCT_NAME_PREFIX"] = "поле Название товара в корзине";
+$MESS["BT_SALE_COND_GROUP_PAST_ORDER_NAME"] = "Предыдущий оплаченный заказ";
+$MESS["BT_SALE_COND_GROUP_PAST_ORDER_NAME_SUFFIX"] = " (пред. заказ)";
 ?>

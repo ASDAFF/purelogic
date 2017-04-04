@@ -160,14 +160,7 @@ Class lists extends CModule
 		if($defaultLang == 'ua')
 			$defaultLang = 'ru';
 		\Bitrix\Lists\Importer::installProcesses($defaultLang);
-		if (IsModuleInstalled("bitrix24"))
-		{
-			\Bitrix\Main\Config\Option::set("lists", "livefeed_url", "/company/processes/");
-		}
-		else
-		{
-			\Bitrix\Main\Config\Option::set("lists", "livefeed_url", "/services/processes/");
-		}
+		\Bitrix\Main\Config\Option::set("lists", "livefeed_url", "/bizproc/processes/");
 
 		if ($isSocnetInstalled && strlen($socnet_iblock_type_id) <= 0)
 		{

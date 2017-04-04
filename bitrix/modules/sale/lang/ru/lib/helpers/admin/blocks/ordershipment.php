@@ -51,3 +51,5 @@ $MESS["SALE_ORDER_SHIPMENT_TRACKING_STATUS_REFRESH"] = "Обновить";
 $MESS["SALE_ORDER_SHIPMENT_TRACKING_DESCRIPTION"] = "Описание статуса";
 $MESS["SALE_ORDER_SHIPMENT_TRACKING_S_EMPTY"] = "Необходимо указать идентификатор отправления";
 $MESS["SALE_ORDER_SHIPMENT_BLOCK_DELIVERY_ADDITIONAL"] = "Дополнительная информация службы доставки";
+$MESS["SALE_ORDER_SHIPMENT_TRACKING_URL"] = "Подробнее о статусе отправления";
+$MESS['SALE_ORDER_SHIPMENT_HIDDEN'] = "[Скрыто]";

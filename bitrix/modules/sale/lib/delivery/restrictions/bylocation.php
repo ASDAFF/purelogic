@@ -4,9 +4,11 @@ namespace Bitrix\Sale\Delivery\Restrictions;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Sale\Delivery\DeliveryLocationTable;
 use Bitrix\Sale\Internals\CollectableEntity;
+use Bitrix\Sale\Internals\Entity;
 use Bitrix\Sale\Location\Connector;
 use Bitrix\Sale\Location\GroupLocationTable;
 use Bitrix\Sale\Location\LocationTable;
+use Bitrix\Sale\Order;
 use Bitrix\Sale\Shipment;
 
 Loc::loadMessages(__FILE__);
@@ -57,10 +59,22 @@ class ByLocation extends Base
 		}
 	}
 
-	protected static function extractParams(CollectableEntity $shipment)
+	protected static function extractParams(Entity $entity)
 	{
-		/** @var \Bitrix\Sale\Order $order */
-		$order = $shipment->getCollection()->getOrder();
+		if ($entity instanceof CollectableEntity)
+		{
+			/** @var \Bitrix\Sale\Order $order */
+			$order = $entity->getCollection()->getOrder();
+		}
+		elseif ($entity instanceof Order)
+		{
+			/** @var \Bitrix\Sale\Order $order */
+			$order = $entity;
+		}
+
+		if (!$order)
+			return '';
+
 
 		if(!$props = $order->getPropertyCollection())
 			return '';

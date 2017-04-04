@@ -48,53 +48,69 @@ class CIMHistory
 		$arUsers = Array();
 
 		$limitById = '';
-		$arRelation = \CIMChat::GetPrivateRelation($fromUserId, $toUserId);
-		if ($arRelation)
+		if ($toUserId == $fromUserId)
 		{
-			if ($arRelation['START_ID'] > 0)
+			$chat = new CIMChat();
+			$chatId = $chat->GetPersonalChat();
+			$startId = 0;
+		}
+		else
+		{
+			$arRelation = \CIMChat::GetPrivateRelation($fromUserId, $toUserId);
+			$chatId = $arRelation['CHAT_ID'];
+			$startId = $arRelation['START_ID'];
+		}
+		if ($chatId > 0)
+		{
+			$op = "*%";
+			if (\CIMMessenger::IsMysqlDb())
 			{
-				$limitById = 'AND M.ID >= '.intval($arRelation['START_ID']);
+				if (\Bitrix\Im\Model\MessageTable::getEntity()->fullTextIndexEnabled("MESSAGE"))
+				{
+					$op = "*";
+				}
+				else
+				{
+					if ($DB->IndexExists("b_im_message", array("MESSAGE"), true))
+					{
+						\Bitrix\Im\Model\MessageTable::getEntity()->enableFullTextIndex("MESSAGE");
+						$op = "*";
+					}
+				}
 			}
-
-			if (!$bTimeZone)
-				CTimeZone::Disable();
-			$strSql ="
-				SELECT
-					M.ID,
-					M.CHAT_ID,
-					M.MESSAGE,
-					".$DB->DatetimeToTimestampFunction('M.DATE_CREATE')." DATE_CREATE,
-					M.AUTHOR_ID,
-					".$fromUserId." R1_USER_ID,
-					".$toUserId." R2_USER_ID,
-					M.NOTIFY_EVENT
-				FROM b_im_message M
-				WHERE
-					M.CHAT_ID = '".$arRelation['CHAT_ID']."'
-				AND M.MESSAGE like '%".$DB->ForSql($searchText)."%'
-					".$limitById."
-				ORDER BY M.DATE_CREATE DESC, M.ID DESC
-			";
-			if (!$bTimeZone)
-				CTimeZone::Enable();
-			$dbRes = $DB->Query($strSql, false, "File: ".__FILE__."<br>Line: ".__LINE__);
-
-
+			$where = Array(
+				'CHAT_ID' => $chatId,
+				$op.'MESSAGE' => $searchText,
+			);
+			if ($startId)
+			{
+				$where['>=ID'] = intval($startId);
+			}
+			
+			$orm = \Bitrix\Im\Model\MessageTable::getList(Array(
+				'select' => Array(
+					'ID', 'CHAT_ID', 'MESSAGE', 'AUTHOR_ID', 'NOTIFY_EVENT', 'DATE_CREATE'
+				),
+				'filter' => $where,
+				'order' => array('DATE_CREATE' => 'DESC', 'ID' => 'DESC'),
+				'limit' => 1000,
+			));
+			
 			$CCTP = new CTextParser();
 			$CCTP->MaxStringLen = 200;
 			$CCTP->allow = array("HTML" => "N",  "USER" => "N",  "ANCHOR" => $this->bHideLink? "N": "Y", "BIU" => "Y", "IMG" => "N", "QUOTE" => "N", "CODE" => "N", "FONT" => "N", "LIST" => "N", "SMILES" => $this->bHideLink? "N": "Y", "NL2BR" => "Y", "VIDEO" => "N", "TABLE" => "N", "CUT_ANCHOR" => "N", "ALIGN" => "N");
-			while ($arRes = $dbRes->Fetch())
+			while ($arRes = $orm->fetch())
 			{
 				if ($fromUserId == $arRes['AUTHOR_ID'])
 				{
-					$arRes['TO_USER_ID'] = $arRes['R2_USER_ID'];
-					$arRes['FROM_USER_ID'] = $arRes['R1_USER_ID'];
+					$arRes['TO_USER_ID'] = $toUserId;
+					$arRes['FROM_USER_ID'] = $fromUserId;
 					$convId = $arRes['TO_USER_ID'];
 				}
 				else
 				{
-					$arRes['TO_USER_ID'] = $arRes['R1_USER_ID'];
-					$arRes['FROM_USER_ID'] = $arRes['R2_USER_ID'];
+					$arRes['TO_USER_ID'] = $fromUserId;
+					$arRes['FROM_USER_ID'] = $toUserId;
 					$convId = $arRes['FROM_USER_ID'];
 				}
 
@@ -103,7 +119,7 @@ class CIMHistory
 					'chatId' => $arRes['CHAT_ID'],
 					'senderId' => $arRes['FROM_USER_ID'],
 					'recipientId' => $arRes['TO_USER_ID'],
-					'date' => $arRes['DATE_CREATE'],
+					'date' => $arRes['DATE_CREATE']->getTimestamp(),
 					'system' => $arRes['NOTIFY_EVENT'] == 'private'? 'N': 'Y',
 					'text' => $CCTP->convertText(htmlspecialcharsbx($arRes['MESSAGE']))
 				);
@@ -125,8 +141,6 @@ class CIMHistory
 						$arFiles[$fileId] = $fileId;
 					}
 				}
-				if (isset($arMessages[$messageId]['params']['URL_ID']))
-					unset($arMessages[$messageId]['params']['URL_ID']);
 			}
 			$arMessageFiles = CIMDisk::GetFiles($chatId, $arFiles);
 			$arMessages = CIMMessageLink::prepareShow($arMessages, $params);
@@ -174,12 +188,23 @@ class CIMHistory
 		$arUsers = Array();
 
 		$limitById = '';
-		$arRelation = \CIMChat::GetPrivateRelation($fromUserId, $toUserId);
-		if ($arRelation)
+		if ($toUserId == $fromUserId)
 		{
-			if ($arRelation['START_ID'] > 0)
+			$chat = new CIMChat();
+			$chatId = $chat->GetPersonalChat();
+			$startId = 0;
+		}
+		else
+		{
+			$arRelation = \CIMChat::GetPrivateRelation($fromUserId, $toUserId);
+			$chatId = $arRelation['CHAT_ID'];
+			$startId = $arRelation['START_ID'];
+		}
+		if ($chatId > 0)
+		{
+			if ($startId > 0)
 			{
-				$limitById = 'AND M.ID >= '.intval($arRelation['START_ID']);
+				$limitById = 'AND M.ID >= '.intval($startId);
 			}
 
 			if (!$bTimeZone)
@@ -196,7 +221,7 @@ class CIMHistory
 					M.NOTIFY_EVENT
 				FROM b_im_message M
 				WHERE
-					M.CHAT_ID = ".$arRelation['CHAT_ID']."
+					M.CHAT_ID = ".$chatId."
 				AND M.DATE_CREATE >= ".$sqlDateStart." AND M.DATE_CREATE <=  ".$sqlDateEnd."
 					".$limitById."
 				ORDER BY M.DATE_CREATE DESC, M.ID DESC
@@ -242,8 +267,6 @@ class CIMHistory
 						$arFiles[$fileId] = $fileId;
 					}
 				}
-				if (isset($arMessages[$messageId]['params']['URL_ID']))
-					unset($arMessages[$messageId]['params']['URL_ID']);
 			}
 			$arMessageFiles = CIMDisk::GetFiles($chatId, $arFiles);
 			$arMessages = CIMMessageLink::prepareShow($arMessages, $params);
@@ -279,17 +302,30 @@ class CIMHistory
 		$arUsers = Array();
 
 		$limitById = '';
-		$arRelation = \CIMChat::GetPrivateRelation($fromUserId, $toUserId);
-		if ($arRelation)
+		
+		if ($toUserId == $fromUserId)
 		{
-			if ($arRelation['START_ID'] > 0)
+			$chat = new CIMChat();
+			$chatId = $chat->GetPersonalChat();
+			$startId = 0;
+		}
+		else
+		{
+			$arRelation = \CIMChat::GetPrivateRelation($fromUserId, $toUserId);
+			$chatId = $arRelation['CHAT_ID'];
+			$startId = $arRelation['START_ID'];
+		}
+		
+		if ($chatId > 0)
+		{
+			if ($startId > 0)
 			{
-				$limitById = 'AND M.ID >= '.intval($arRelation['START_ID']);
+				$limitById = 'AND M.ID >= '.intval($startId);
 			}
 			$sqlStr = "
 				SELECT COUNT(M.ID) as CNT
 				FROM b_im_message M
-				WHERE M.CHAT_ID = ".$arRelation['CHAT_ID']."
+				WHERE M.CHAT_ID = ".$chatId."
 				".$limitById."
 			";
 			$res_cnt = $DB->Query($sqlStr);
@@ -312,7 +348,7 @@ class CIMHistory
 						".$toUserId." R2_USER_ID
 					FROM b_im_message M
 					WHERE
-						M.CHAT_ID = ".$arRelation['CHAT_ID']."
+						M.CHAT_ID = ".$chatId."
 						".$limitById."
 					ORDER BY M.DATE_CREATE DESC, M.ID DESC
 				";
@@ -364,8 +400,6 @@ class CIMHistory
 							$arFiles[$fileId] = $fileId;
 						}
 					}
-					if (isset($arMessages[$messageId]['params']['URL_ID']))
-						unset($arMessages[$messageId]['params']['URL_ID']);
 				}
 				$arMessageFiles = CIMDisk::GetFiles($chatId, $arFiles);
 				$arMessages = CIMMessageLink::prepareShow($arMessages, $params);
@@ -389,6 +423,11 @@ class CIMHistory
 
 		$userId = intval($userId);
 
+		if ($this->user_id == $userId)
+		{
+			return false;
+		}
+		
 		$strSql ="
 			SELECT
 				MAX(M.ID)+1 MAX_ID,
@@ -484,36 +523,43 @@ class CIMHistory
 			$GLOBALS["APPLICATION"]->ThrowException(GetMessage("IM_HISTORY_SEARCH_EMPTY"), "ERROR_SEARCH_EMPTY");
 			return false;
 		}
-
-		$limitById = '';
+		
+		$op = "*%";
+		if (\CIMMessenger::IsMysqlDb())
+		{
+			if (\Bitrix\Im\Model\MessageTable::getEntity()->fullTextIndexEnabled("MESSAGE"))
+			{
+				$op = "*";
+			}
+			else
+			{
+				if ($DB->IndexExists("b_im_message", array("MESSAGE"), true))
+				{
+					\Bitrix\Im\Model\MessageTable::getEntity()->enableFullTextIndex("MESSAGE");
+					$op = "*";
+				}
+			}
+		}
+		$where = Array(
+			'RELATION.USER_ID' => $this->user_id,
+			'RELATION.CHAT_ID' => $chatId,
+			'!=RELATION.MESSAGE_TYPE' => IM_MESSAGE_PRIVATE,
+			$op.'MESSAGE' => $searchText,
+		);
 		$ar = \CIMChat::GetRelationById($chatId, $this->user_id);
 		if ($ar && $ar['START_ID'] > 0)
 		{
-			$limitById = 'AND M.ID >= '.intval($ar['START_ID']);
+			$where['>=ID'] = intval($ar['START_ID']);
 		}
-
-		if (!$bTimeZone)
-			CTimeZone::Disable();
-		$strSql ="
-			SELECT
-				M.ID,
-				M.CHAT_ID,
-				M.MESSAGE,
-				".$DB->DatetimeToTimestampFunction('M.DATE_CREATE')." DATE_CREATE,
-				M.AUTHOR_ID
-			FROM b_im_relation R1
-			INNER JOIN b_im_message M ON M.CHAT_ID = R1.CHAT_ID
-			WHERE
-				R1.USER_ID = ".$this->user_id."
-			AND R1.CHAT_ID = ".$chatId."
-			AND R1.MESSAGE_TYPE <> '".IM_MESSAGE_PRIVATE."'
-			AND M.MESSAGE like '%".$DB->ForSql($searchText)."%'
-				".$limitById."
-			ORDER BY M.DATE_CREATE DESC, M.ID DESC
-		";
-		if (!$bTimeZone)
-			CTimeZone::Enable();
-		$dbRes = $DB->Query($strSql, false, "File: ".__FILE__."<br>Line: ".__LINE__);
+		
+		$orm = \Bitrix\Im\Model\MessageTable::getList(Array(
+				'select' => Array(
+					'ID', 'CHAT_ID', 'MESSAGE', 'AUTHOR_ID', 'DATE_CREATE'
+				),
+				'filter' => $where,
+				'order' => array('DATE_CREATE' => 'DESC', 'ID' => 'DESC'),
+				'limit' => 1000,
+			));
 
 		$arMessages = Array();
 		$arMessageId = Array();
@@ -523,14 +569,14 @@ class CIMHistory
 		$CCTP = new CTextParser();
 		$CCTP->MaxStringLen = 200;
 		$CCTP->allow = array("HTML" => "N", "USER" => "N",  "ANCHOR" => $this->bHideLink? "N": "Y", "BIU" => "Y", "IMG" => "N", "QUOTE" => "N", "CODE" => "N", "FONT" => "N", "LIST" => "N", "SMILES" => $this->bHideLink? "N": "Y", "NL2BR" => "Y", "VIDEO" => "N", "TABLE" => "N", "CUT_ANCHOR" => "N", "ALIGN" => "N");
-		while ($arRes = $dbRes->Fetch())
+		while ($arRes = $orm->fetch())
 		{
 			$arMessages[$arRes['ID']] = Array(
 				'id' => $arRes['ID'],
 				'chatId' => $arRes['CHAT_ID'],
 				'senderId' => $arRes['AUTHOR_ID'],
 				'recipientId' => $arRes['CHAT_ID'],
-				'date' => $arRes['DATE_CREATE'],
+				'date' => $arRes['DATE_CREATE']->getTimestamp(),
 				'text' => $CCTP->convertText(htmlspecialcharsbx($arRes['MESSAGE']))
 			);
 
@@ -549,8 +595,6 @@ class CIMHistory
 					$arFiles[$fileId] = $fileId;
 				}
 			}
-			if (isset($arMessages[$messageId]['params']['URL_ID']))
-				unset($arMessages[$messageId]['params']['URL_ID']);
 		}
 		$arMessageFiles = CIMDisk::GetFiles($chatId, $arFiles);
 		$arMessages = CIMMessageLink::prepareShow($arMessages, $params);
@@ -643,8 +687,6 @@ class CIMHistory
 					$arFiles[$fileId] = $fileId;
 				}
 			}
-			if (isset($arMessages[$messageId]['params']['URL_ID']))
-				unset($arMessages[$messageId]['params']['URL_ID']);
 		}
 		$arMessageFiles = CIMDisk::GetFiles($chatId, $arFiles);
 		$arMessages = CIMMessageLink::prepareShow($arMessages, $params);
@@ -699,10 +741,11 @@ class CIMHistory
 					M.CHAT_ID,
 					M.MESSAGE,
 					".$DB->DatetimeToTimestampFunction('M.DATE_CREATE')." DATE_CREATE,
-					M.AUTHOR_ID
+					M.AUTHOR_ID,
+					C.ENTITY_TYPE CHAT_ENTITY_TYPE
 				FROM b_im_message M
-				INNER JOIN b_im_relation R1 ON M.CHAT_ID = R1.CHAT_ID
-				WHERE R1.CHAT_ID = ".$chatId." AND R1.USER_ID = ".$this->user_id." ".$limitById."
+				LEFT JOIN b_im_chat C ON M.CHAT_ID = C.ID
+				WHERE M.CHAT_ID = ".$chatId." ".$limitById."
 				ORDER BY M.DATE_CREATE DESC, M.ID DESC
 			";
 			if (!$bTimeZone)
@@ -715,6 +758,10 @@ class CIMHistory
 			$CCTP->allow = array("HTML" => "N", "USER" => "N",  "ANCHOR" => $this->bHideLink? "N": "Y", "BIU" => "Y", "IMG" => "N", "QUOTE" => "N", "CODE" => "N", "FONT" => "N", "LIST" => "N", "SMILES" => $this->bHideLink? "N": "Y", "NL2BR" => "Y", "VIDEO" => "N", "TABLE" => "N", "CUT_ANCHOR" => "N", "ALIGN" => "N");
 			while ($arRes = $dbRes->Fetch())
 			{
+				if ($arRes['CHAT_ENTITY_TYPE'] != 'LIVECHAT' && \Bitrix\Im\User::getInstance($this->user_id)->isConnector())
+				{
+					return false;
+				}
 				$arMessages[$arRes['ID']] = Array(
 					'id' => $arRes['ID'],
 					'chatId' => $arRes['CHAT_ID'],
@@ -741,8 +788,6 @@ class CIMHistory
 						$arFiles[$fileId] = $fileId;
 					}
 				}
-				if (isset($arMessages[$messageId]['params']['URL_ID']))
-					unset($arMessages[$messageId]['params']['URL_ID']);
 			}
 			$arMessageFiles = CIMDisk::GetFiles($chatId, $arFiles);
 			$arMessages = CIMMessageLink::prepareShow($arMessages, $params);

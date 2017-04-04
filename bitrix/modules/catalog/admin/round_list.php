@@ -36,9 +36,12 @@ $filterFields = array(
 	'filter_price_type'
 );
 $adminList->InitFilter($filterFields);
+$filterValues = array(
+	'filter_price_type' => (isset($filter_price_type) ? $filter_price_type : '')
+);
 
-if ($request['filter_price_type'] > 0)
-	$filter['=CATALOG_GROUP_ID'] = $request['filter_price_type'];
+if ($filterValues['filter_price_type'] != '')
+	$filter['=CATALOG_GROUP_ID'] = $filterValues['filter_price_type'];
 
 $roundValues = Catalog\Helpers\Admin\RoundEdit::getPresetRoundValues(true);
 
@@ -487,15 +490,13 @@ require($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admin_aft
 	?>
 	<tr>
 		<td><? echo Loc::getMessage('PRICE_ROUND_LIST_FILTER_PRICE_TYPE'); ?>:</td>
-		<td><select name="filter_price_type"><?
-			$currentValue = (!empty($request['filter_price_type']) ? $request['filter_price_type'] : '');
-			?><option value=""<?=($currentValue == '' ? ' selected' : ''); ?>><?=htmlspecialcharsbx(Loc::getMessage('PRICE_ROUND_LIST_FILTER_PRICE_TYPE_ANY')); ?></option><?
+		<td><select name="filter_price_type">
+			<option value=""<?=($filterValues['filter_price_type'] == '' ? ' selected' : ''); ?>><?=htmlspecialcharsbx(Loc::getMessage('PRICE_ROUND_LIST_FILTER_PRICE_TYPE_ANY')); ?></option><?
 			foreach (Catalog\Helpers\Admin\Tools::getPriceTypeList(false) as $id => $title)
 			{
-				?><option value="<?=$id; ?>"<?=($currentValue == $id ? ' selected' : ''); ?>><?=htmlspecialcharsbx($title); ?></option><?
-				unset($title, $id);
+				?><option value="<?=$id; ?>"<?=($filterValues['filter_price_type'] == $id ? ' selected' : ''); ?>><?=htmlspecialcharsbx($title); ?></option><?
 			}
-			unset($priceType);
+			unset($title, $id);
 			?></select>
 		</td>
 	</tr>

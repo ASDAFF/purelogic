@@ -83,7 +83,7 @@ if ($REQUEST_METHOD=="POST" && strlen($Update)>0 && $saleModulePermissions>="U" 
 
 		$updateSum = $CURRENT_BUDGET - $OLD_BUDGET;
 
-		if ($updateSum > 0)
+		if ($updateSum != 0)
 		{
 			if (!CSaleUserAccount::UpdateAccount($USER_ID, $updateSum, $CURRENCY, "MANUAL", 0, $CHANGE_REASON))
 			{

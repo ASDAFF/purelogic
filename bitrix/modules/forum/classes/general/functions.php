@@ -29,9 +29,9 @@ class forumTextParser extends CTextParser
 	public $arFilesIDParsed = array();
 
 
-	function forumTextParser($lang = false, $pathToSmiles = '', $type=false, $mode = 'full')
+	function __construct($lang = false, $pathToSmiles = '', $type=false, $mode = 'full')
 	{
-		$this->CTextParser();
+		parent::__construct();
 		$this->arFiles = array();
 		$this->arFilesParsed = array();
 		$this->serverName = (defined("SITE_SERVER_NAME") && strlen(SITE_SERVER_NAME) > 0 ? SITE_SERVER_NAME : COption::GetOptionString("main", "server_name", ""));
@@ -135,7 +135,7 @@ class forumTextParser extends CTextParser
 		$this->imageWidth = ($this->image_params["width"] > 0 ? $this->image_params["width"] : ($this->imageWidth > 0 ? $this->imageWidth : 300));
 		$this->imageHeight = ($this->image_params["height"] > 0 ? $this->image_params["height"] : ($this->imageHeight > 0 ? $this->imageHeight : 300));
 		
-		$this->userPath = (empty($this->userPath) && !empty($this->pathToUser) ? $this->pathToUser : $this->userPath);
+		$this->userPath = str_replace(array("#UID#", "#uid#"), "#user_id#", (empty($this->userPath) && !empty($this->pathToUser) ? $this->pathToUser : $this->userPath));
 
 		$this->type = $type;
 
@@ -227,6 +227,7 @@ class forumTextParser extends CTextParser
 		}
 		return $text;
 	}
+
 	function ParserSpoiler(&$text, &$obj)
 	{
 		$matches = array();

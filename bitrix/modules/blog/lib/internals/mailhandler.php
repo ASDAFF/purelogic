@@ -150,25 +150,15 @@ final class MailHandler
 			$fields["POST_TEXT"]
 		);
 
+		if (Loader::includeModule('disk'))
+		{
+			\Bitrix\Disk\Uf\FileUserType::setValueForAllowEdit("BLOG_COMMENT", true);
+		}
+
 		$commentId = \CBlogComment::add($fields);
 
 		if ($commentId)
 		{
-			if (!empty($fields[$ufCode]))
-			{
-				$tmp = array(
-					"AUTHOR_ID" => $fields["AUTHOR_ID"],
-					$ufCode => $fields[$ufCode]
-				);
-
-				\Bitrix\Disk\Uf\FileUserType::setValueForAllowEdit(array(
-					"ENTITY_ID" => "BLOG_COMMENT",
-					"VALUE_ID" => $commentId
-				), true);
-
-				\CBlogComment::update($commentId, $tmp);
-			}
-
 			\BXClearCache(true, "/blog/comment/".intval($postId / 100)."/".$postId."/");
 			$connection = \Bitrix\Main\Application::getConnection();
 			$helper = $connection->getSqlHelper();
@@ -455,7 +445,8 @@ final class MailHandler
 			if (strlen($fields["TITLE"]) <= 0)
 			{
 				$fields["MICRO"] = "Y";
-				$fields["TITLE"] = TruncateText(trim(preg_replace(array("/\n+/is".BX_UTF_PCRE_MODIFIER, "/\s+/is".BX_UTF_PCRE_MODIFIER), " ", \blogTextParser::killAllTags($fields["DETAIL_TEXT"]))), 100);
+				$fields["TITLE"] = preg_replace("/\[ATTACHMENT\s*=\s*[^\]]*\]/is".BX_UTF_PCRE_MODIFIER, "", \blogTextParser::killAllTags($fields["DETAIL_TEXT"]));
+				$fields["TITLE"] = TruncateText(trim(preg_replace(array("/\n+/is".BX_UTF_PCRE_MODIFIER, "/\s+/is".BX_UTF_PCRE_MODIFIER), " ", $fields["TITLE"])), 100);
 				if(strlen($fields["TITLE"]) <= 0)
 				{
 					$fields["TITLE"] = Loc::getMessage("BLOG_MAILHANDLER_EMPTY_TITLE_PLACEHOLDER");
@@ -498,25 +489,15 @@ final class MailHandler
 				$fields["DETAIL_TEXT"]
 			);
 
+			if (Loader::includeModule('disk'))
+			{
+				\Bitrix\Disk\Uf\FileUserType::setValueForAllowEdit("BLOG_POST", true);
+			}
+
 			$postId = \CBlogPost::add($fields);
 
 			if ($postId)
 			{
-				if (!empty($fields[$ufCode]))
-				{
-					$tmp = array(
-						"AUTHOR_ID" => $fields["AUTHOR_ID"],
-						$ufCode => $fields[$ufCode]
-					);
-
-					\Bitrix\Disk\Uf\FileUserType::setValueForAllowEdit(array(
-						"ENTITY_ID" => "BLOG_POST",
-						"VALUE_ID" => $postId
-					), true);
-
-					\CBlogPost::update($postId, $tmp);
-				}
-
 				BXClearCache(true, "/".$siteId."/blog/last_messages_list/");
 
 				$fields["ID"] = $postId;

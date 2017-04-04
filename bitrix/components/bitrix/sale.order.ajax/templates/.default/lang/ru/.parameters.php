@@ -132,4 +132,11 @@ $MESS["SERVICES_IMAGES_SCALING_TIP"] = "Включает изображения 
 $MESS["SOA_ADAPTIVE"] = "адаптивный";
 $MESS["SOA_STANDARD"] = "стандартный";
 $MESS["SOA_NO_SCALE"] = "без сжатия";
+$MESS["USE_ENHANCED_ECOMMERCE"] = "Отправлять данные электронной торговли в Google и Яндекс";
+$MESS["USE_ENHANCED_ECOMMERCE_TIP"] = "Требуется дополнительная настройка в Google Analytics Enhanced 
+Ecommerce и/или Яндекс.Метрике";
+$MESS["DATA_LAYER_NAME"] = "Имя контейнера данных";
+$MESS["BRAND_PROPERTY"] = "Свойство, в котором указан бренд товара";
+$MESS['PAY_SYSTEM_PAYABLE_ERROR_TEXT'] = "Текст уведомления при статусе заказа, недоступном для оплаты";
+$MESS['PAY_SYSTEM_PAYABLE_ERROR_DEFAULT'] = "Вы сможете оплатить заказ после того, как менеджер проверит наличие полного комплекта товаров на складе. Сразу после проверки вы получите письмо с инструкциями по оплате. Оплатить заказ можно будет в персональном разделе сайта.";
 ?>

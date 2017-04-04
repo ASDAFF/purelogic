@@ -11,4 +11,5 @@ $MESS["BPC_MES_VOTE"] = "Кому подобається";
 $MESS["BPC_MES_VOTE1"] = "Мені подобається";
 $MESS["BPC_MES_VOTE2"] = "Не подобається";
 $MESS["INCORRECT_SERVER_RESPONSE"] = "Некоректна відповідь від сервера.";
+$MESS["BPC_MES_CREATETASK"] = "Створити завдання";
 ?>

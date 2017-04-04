@@ -76,4 +76,12 @@ $MESS["BLG_GP_PUSH_9A_FEMALE"] = "#name# добавила вас в получа
 $MESS["BLG_GP_IM_9B"] = "сообщению";
 $MESS["BLG_GP_PUSH_USER"] = "Неизвестный пользователь";
 $MESS["SONET_IM_NEW_POST"] = "Добавлено новое сообщение #title# в группе #group_name#.";
+$MESS["SONET_IM_NEW_POST_TO_MODERATE_W_TITLE"] = "На #link_mod_start#модерацию#link_mod_end# поступило новое сообщение “#title#”";
+$MESS["SONET_IM_NEW_POST_TO_MODERATE_WO_TITLE"] = "На #link_mod_start#модерацию#link_mod_end# поступило новое сообщение";
+$MESS["SONET_IM_NEW_COMMENT_TO_MODERATE_W_TITLE"] = "На модерацию поступил #link_com_start#новый комментарий#link_com_end# к сообщению “#title#”";
+$MESS["SONET_IM_NEW_COMMENT_TO_MODERATE_WO_TITLE"] = "На модерацию поступил #link_com_start#новый комментарий#link_com_end# к сообщению";
+$MESS["SONET_IM_NEW_POST_PUBLISHED_W_TITLE"] = "Ваше #link_post_start#сообщение “#title#“#link_post_end# опубликовано модератором";
+$MESS["SONET_IM_NEW_POST_PUBLISHED_WO_TITLE"] = "Ваше #link_post_start#сообщение#link_post_end# опубликовано модератором";
+$MESS["SONET_IM_NEW_COMMENT_PUBLISHED_W_TITLE"] = "Ваш #link_com_start#комментарий#link_com_end# к сообщению “#title#“ опубликован модератором";
+$MESS["SONET_IM_NEW_COMMENT_PUBLISHED_WO_TITLE"] = "Ваш #link_com_start#комментарий#link_com_end# к сообщению опубликован модератором";
 ?>

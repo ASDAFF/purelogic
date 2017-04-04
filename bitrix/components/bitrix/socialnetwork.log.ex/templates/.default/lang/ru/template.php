@@ -31,4 +31,8 @@ $MESS["SONET_C30_T_CREATE_TASK_SUCCESS_TITLE"] = "Задача создана";
 $MESS["SONET_C30_T_CREATE_TASK_FAILURE_TITLE"] = "Ошибка";
 $MESS["SONET_C30_T_CREATE_TASK_SUCCESS_DESCRIPTION"] = "Вы можете перейти к просмотру и редактированию задачи";
 $MESS["SONET_C30_T_CREATE_TASK_ERROR_GET_DATA"] = "Не удалось получить данные для создания задачи";
+$MESS["SONET_C30_T_CREATE_TASK_LINK"] = "Задача создана на основании #ENTITY#";
+$MESS["SONET_C30_T_CREATE_TASK_LINK_BLOG_POST"] = "сообщения Живой ленты";
+$MESS["SONET_C30_T_CREATE_TASK_LINK_BLOG_COMMENT"] = "комментария к сообщению Живой ленты";
+
 ?>

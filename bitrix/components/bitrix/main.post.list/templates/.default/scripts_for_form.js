@@ -107,7 +107,7 @@
 								extSel = origRes;
 								this.handler.oEditor.action.actions.quote.setExternalSelection(author + extSel);
 							}
-							else if (author !== '')
+							else if (author)
 							{
 								this.handler.oEditor.action.actions.quote.setExternalSelection(author + extSel);
 							}
@@ -392,9 +392,13 @@
 						data = this.OnUCFormResponseData;
 					if (!!data)
 					{
-						if (!!data['errorMessage'])
+						if (data['errorMessage'])
 						{
 							this.showError(data['errorMessage']);
+						}
+						else if (data["status"] == "error")
+						{
+							this.showError((BX.type.isNotEmptyString(data["message"]) ? data["message"] : ""));
 						}
 						else
 						{

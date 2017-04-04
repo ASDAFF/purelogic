@@ -207,7 +207,7 @@ class CCalendarEventHandlers
 						'id' => $guest['USER_ID'],
 						'name' => CUser::FormatName(CSite::GetNameFormat(null, $arParams['SITE_ID']), $guest, true),
 						'status' => $guest['STATUS'],
-						'accessibility' => $guest['ACCESSIBILITY'],
+						'accessibility' => $arEvent['ACCESSIBILITY'],
 						'bHost' => $guest['USER_ID'] == $arEvent['MEETING_HOST'],
 
 					);

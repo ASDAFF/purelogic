@@ -282,7 +282,6 @@ class CIMEvent
 		else // with source
 		{
 			if (
-				false &&
 				$arParams['OWNER_ID'] != $arParams['USER_ID']
 				&& $bSocialnetworkInstalled
 				&& $arParams['ENTITY_TYPE_ID'] == 'BLOG_COMMENT'
@@ -891,6 +890,9 @@ class CIMEvent
 				{
 					if (\Bitrix\Im\User::getInstance($arParams["ID"])->isBot())
 						return true;
+					
+					if (!\Bitrix\Im\User::getInstance($arParams["ID"])->isActive())
+						return true;
 
 					$userInChat = CIMChat::GetRelationById($commonChatId, $arParams["ID"]);
 					$userCanJoin = CIMChat::CanJoinGeneralChatId($arParams["ID"]);
@@ -989,6 +991,7 @@ class DesktopApplication extends Bitrix\Main\Authentication\Application
 		"/desktop_app/",
 		"/online/",
 		"/bitrix/tools/disk/",
+		"/disk/downloadFile/",
 		"/bitrix/services/disk/index.php"
 	);
 

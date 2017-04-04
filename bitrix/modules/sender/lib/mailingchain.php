@@ -72,6 +72,11 @@ class MailingChainTable extends Entity\DataManager
 				'data_type' => 'datetime',
 			),
 
+			'TITLE' => array(
+				'data_type' => 'string',
+				'title' => Loc::getMessage('SENDER_ENTITY_MAILING_CHAIN_FIELD_TITLE_TITLE'),
+			),
+
 			'EMAIL_FROM' => array(
 				'data_type' => 'string',
 				'required' => true,
@@ -179,7 +184,59 @@ class MailingChainTable extends Entity\DataManager
 	}
 
 	/**
-	 * @param $mailingChainId
+	 * Copy mailing chain.
+	 *
+	 * @param integer $id Chain id
+	 * @return int|null Copied chain id
+	 */
+	public static function copy($id)
+	{
+		$dataDb = static::getList(array('filter' => array('ID' => $id)));
+		if (!$data = $dataDb->fetch())
+		{
+			return null;
+		}
+
+		$copiedDb = static::add(array(
+			'MAILING_ID' => $data['MAILING_ID'],
+			'EMAIL_FROM' => $data['EMAIL_FROM'],
+			'TITLE' => $data['TITLE'],
+			'SUBJECT' => $data['SUBJECT'],
+			'MESSAGE' => $data['MESSAGE'],
+			'TEMPLATE_TYPE' => $data['TEMPLATE_TYPE'],
+			'TEMPLATE_ID' => $data['TEMPLATE_ID'],
+			'PRIORITY' => $data['PRIORITY'],
+			'LINK_PARAMS' => $data['LINK_PARAMS'],
+		));
+
+		if (!$copiedDb->isSuccess())
+		{
+			return null;
+		}
+		$copiedId = $copiedDb->getId();
+
+		$attachmentDb = MailingAttachmentTable::getList(array(
+			'filter' => array('=CHAIN_ID' => $id)
+		));
+		while($attachment = $attachmentDb->fetch())
+		{
+			$copiedFileId = \CFile::CopyFile($attachment['FILE_ID']);
+			if (!$copiedFileId)
+			{
+				continue;
+			}
+
+			MailingAttachmentTable::add(array(
+				'CHAIN_ID' => $copiedId,
+				'FILE_ID' => $copiedFileId
+			));
+		}
+
+		return $copiedId;
+	}
+
+	/**
+	 * @param integer $mailingChainId
 	 * @return int|null
 	 */
 	public static function initPosting($mailingChainId)

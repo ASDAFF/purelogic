@@ -155,6 +155,14 @@ class CBPApproveActivity
 		$arParameters["CommentRequired"] = $this->IsPropertyExists("CommentRequired") ? $this->CommentRequired : "N";
 		$arParameters["AccessControl"] = $this->IsPropertyExists("AccessControl") && $this->AccessControl == 'Y' ? 'Y' : 'N';
 
+		$overdueDate = $this->OverdueDate;
+		$timeoutDuration = $this->CalculateTimeoutDuration();
+		if ($timeoutDuration > 0)
+		{
+			$overdueDate = ConvertTimeStamp(time() + max($timeoutDuration, CBPSchedulerService::getDelayMinLimit()), "FULL");
+		}
+
+		/** @var CBPTaskService $taskService */
 		$taskService = $this->workflow->GetService("TaskService");
 		$this->taskId = $taskService->CreateTask(
 			array(
@@ -162,7 +170,7 @@ class CBPApproveActivity
 				"WORKFLOW_ID" => $this->GetWorkflowInstanceId(),
 				"ACTIVITY" => "ApproveActivity",
 				"ACTIVITY_NAME" => $this->name,
-				"OVERDUE_DATE" => $this->OverdueDate,
+				"OVERDUE_DATE" => $overdueDate,
 				"NAME" => $this->Name,
 				"DESCRIPTION" => $this->Description,
 				"PARAMETERS" => $arParameters,
@@ -184,9 +192,9 @@ class CBPApproveActivity
 			));
 		}
 
-		$timeoutDuration = $this->CalculateTimeoutDuration();
 		if ($timeoutDuration > 0)
 		{
+			/** @var CBPSchedulerService $schedulerService */
 			$schedulerService = $this->workflow->GetService("SchedulerService");
 			$this->subscriptionId = $schedulerService->SubscribeOnTime($this->workflow->GetInstanceId(), $this->name, time() + $timeoutDuration);
 		}

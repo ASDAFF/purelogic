@@ -136,14 +136,11 @@ if (!empty($arResult["SHOW_FIELDS"]))
 						break;
 					case "PREVIEW_PICTURE":
 					case "DETAIL_PICTURE":
-						if(is_array($arElement["FIELDS"][$code])):?>
+						if (!empty($arElement["FIELDS"][$code]) && is_array($arElement["FIELDS"][$code])):?>
 							<a href="<?=$arElement["DETAIL_PAGE_URL"]?>"><img
-							border="0"
-							src="<?=$arElement["FIELDS"][$code]["SRC"]?>"
-							width="auto"
-							height="150"
-							alt="<?=$arElement["FIELDS"][$code]["ALT"]?>"
-							title="<?=$arElement["FIELDS"][$code]["TITLE"]?>"
+							border="0" src="<?=$arElement["FIELDS"][$code]["SRC"]?>"
+							width="auto" height="150"
+							alt="<?=$arElement["FIELDS"][$code]["ALT"]?>" title="<?=$arElement["FIELDS"][$code]["TITLE"]?>"
 							/></a>
 						<?endif;
 						break;
@@ -191,11 +188,24 @@ if (!empty($arResult["SHOW_OFFER_FIELDS"]))
 			<td><?=GetMessage("IBLOCK_OFFER_FIELD_".$code)?></td>
 			<?foreach($arResult["ITEMS"] as $arElement)
 			{
-			?>
-			<td>
-				<?=(is_array($arElement["OFFER_FIELDS"][$code])? implode("/ ", $arElement["OFFER_FIELDS"][$code]): $arElement["OFFER_FIELDS"][$code])?>
-			</td>
-			<?
+			?><td><?
+				switch ($code)
+				{
+					case 'PREVIEW_PICTURE':
+					case 'DETAIL_PICTURE':
+						if (!empty($arElement["OFFER_FIELDS"][$code]) && is_array($arElement["OFFER_FIELDS"][$code]))
+						{
+							?><img border="0" src="<?= $arElement["OFFER_FIELDS"][$code]["SRC"] ?>"
+							width="auto" height="150"
+							alt="<?= $arElement["OFFER_FIELDS"][$code]["ALT"] ?>" title="<?= $arElement["OFFER_FIELDS"][$code]["TITLE"] ?>"
+							/><?
+						}
+						break;
+					default:
+						?><?=(is_array($arElement["OFFER_FIELDS"][$code])? implode("/ ", $arElement["OFFER_FIELDS"][$code]): $arElement["OFFER_FIELDS"][$code])?><?
+						break;
+				}
+			?></td><?
 			}
 			unset($arElement);
 			?>

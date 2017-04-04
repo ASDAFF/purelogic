@@ -144,7 +144,7 @@ RatingLike.Vote = function(likeId, voteAction)
 			'RATING_VOTE_TYPE_ID': BXRL[likeId].entityTypeId, 
 			'RATING_VOTE_ENTITY_ID': BXRL[likeId].entityId, 
 			'RATING_VOTE_ACTION': voteAction,
-			'sessid': BX.message('RVSessID')
+			'sessid': BX.bitrix_sessid()
 		},
 		'callback': function(data) 
 		{
@@ -185,11 +185,11 @@ RatingLike.Vote = function(likeId, voteAction)
 					&& oMSL.logId
 				)
 				{
-					app.onCustomEvent('onLogEntryRatingLike', {
+					BXMobileApp.onCustomEvent('onLogEntryRatingLike', {
 						rating_id: likeId,
 						voteAction: voteAction,
 						logId: oMSL.logId
-					});
+					}, true);
 				}
 			}
 			else

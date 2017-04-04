@@ -383,10 +383,10 @@ else
 	$strPhoto = "";
 }
 
-if (IsModuleInstalled('extranet'))
+if (IsModuleInstalled('extranet') || IsModuleInstalled('mail'))
 {
 	if (
-		!is_array($arUserFields) 
+		!is_array($arUserFields)
 		|| count($arUserFields) <= 0
 	)
 	{
@@ -397,7 +397,25 @@ if (IsModuleInstalled('extranet'))
 		(is_array($arUserFields["UF_DEPARTMENT"]["VALUE"]) && count($arUserFields["UF_DEPARTMENT"]["VALUE"]) <= 0)
 		|| (!is_array($arUserFields["UF_DEPARTMENT"]["VALUE"]) && intval($arUserFields["UF_DEPARTMENT"]["VALUE"]) <= 0)
 	);
-	$strUserNameClass = ($bExtranetUser ? " bx-user-info-extranet" : "");
+	$bEmailUser = ($arResult["User"]["EXTERNAL_AUTH_ID"] == 'email');
+	$bCrmEmailUser = !empty($arUserFields["UF_USER_CRM_ENTITY"]["VALUE"]);
+
+	if ($bCrmEmailUser)
+	{
+		$strUserNameClass = " bx-user-info-emailcrm";
+	}
+	elseif ($bEmailUser)
+	{
+		$strUserNameClass = " bx-user-info-email";
+	}
+	elseif ($bExtranetUser)
+	{
+		$strUserNameClass = " bx-user-info-extranet";
+	}
+	else
+	{
+		$strUserNameClass = "";
+	}
 }
 		
 $strNameFormatted = CUser::FormatName($arParams['NAME_TEMPLATE'], $arTmpUser, $bUseLogin);

@@ -49,4 +49,15 @@ $MESS["SOA_ERROR_MESSAGE_SETTINGS1"] = "Benachrichtigungsnachrichten";
 $MESS["SOA_COMPATIBLE_MODE1"] = "Kompatibilitätsmodus für Nutzung von früheren Vorlagen";
 $MESS["COMPATIBLE_MODE_TIP"] = "Aktivieren Sie diese Option, wenn Sie eine Vorlage von vorherigen Modulversionen nutzen";
 $MESS["SOA_USE_PRELOAD"] = "Zahlungs- und Lieferdaten automatisch mithilfe von Daten aus vorheriger Bestellung ausfüllen";
+$MESS["SOA_SHOW_NOT_CALCULATED_DELIVERIES"] = "Lieferservices, welche nicht korrekt kalkuliert wurden";
+$MESS["SOA_SHOW_NOT_CALCULATED_DELIVERIES_N"] = "nicht anzeigen";
+$MESS["SOA_SHOW_NOT_CALCULATED_DELIVERIES_L"] = "Zum Schluss anzeigen";
+$MESS["SOA_SHOW_NOT_CALCULATED_DELIVERIES_Y"] = "Wie gewöhnlich anzeigen";
+$MESS["SHOW_NOT_CALCULATED_DELIVERIES_TIP"] = "Option \"Lieferungen mit dem externen Zugriff auf Services vorher kalkulieren\" aktivieren, um die Lieferungen von diesem Typ sortieren zu können.";
+$MESS["SOA_ACTION_VARIABLE"] = "Variable mit der Aktion";
+$MESS["ACTION_VARIABLE_TIP"] = "Gibt den Namen einer Variable an, die den Aktionsidentifikator enthält: processOrder, showOrder etc. Standardwert: <i>action</i>.";
+$MESS["SOA_ALLOW_APPEND_ORDER"] = "Anbindung einer neuen Bestellung an existierenden Nutzer-Account erlauben";
+$MESS["ALLOW_APPEND_ORDER_TIP"] = "Wenn ein Nutzer mit der angegebenen E-Mail bereits existiert, wird die neue Bestellung an den existierenden Account angehängt.
+Ist die Option nicht aktiv, wird der Fehler der Nutzer existiert bereits angezeigt.
+";
 ?>

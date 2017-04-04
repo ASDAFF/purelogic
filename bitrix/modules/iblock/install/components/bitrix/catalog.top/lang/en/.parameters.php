@@ -75,4 +75,12 @@ $MESS["CP_BCT_HIDE_NOT_AVAILABLE_LAST"] = "move to the bottom";
 $MESS["CP_BCT_HIDE_NOT_AVAILABLE_SHOW"] = "show as usual";
 $MESS["CP_BCT_HIDE_NOT_AVAILABLE_EXT2"] = "Products unavailable for purchase";
 $MESS["HIDE_NOT_AVAILABLE_TIP"] = "A product whose quantity is equal to or less than zero will be unavailable for purchase if: 1) stock control option is enabled for the product, and 2) out-of-stock items cannot be purchased. A product having SKU(s) is considered available if there is at least one available SKU.";
+$MESS["SORT_SETTINGS"] = "Sorting Preferences";
+$MESS["ANALYTICS_SETTINGS"] = "Analytics Preferences";
+$MESS["CP_BCT_COMPATIBLE_MODE"] = "Enable compatibility mode";
+$MESS["CP_BCT_HIDE_NOT_AVAILABLE_OFFERS"] = "Unavailable SKU's";
+$MESS["CP_BCT_HIDE_NOT_AVAILABLE_OFFERS_HIDE"] = "don't show";
+$MESS["CP_BCT_HIDE_NOT_AVAILABLE_OFFERS_SUBSCRIBE"] = "show as subscribe-to option";
+$MESS["CP_BCT_HIDE_NOT_AVAILABLE_OFFERS_SHOW"] = "show all";
+$MESS["COMPATIBLE_MODE_TIP"] = "This option is required for customized templates created for use with the iblock module version older than 17.0.0. It is recommended to migrate the template to the new format. See the documentation for more information.";
 ?>

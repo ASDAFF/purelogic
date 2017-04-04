@@ -70,6 +70,7 @@ $maxImageSize = array(
 	"H" => $listImageSize,
 );
 unset($listImageSize);
+$useCalendarTime = (string)Main\Config\Option::get('iblock', 'list_full_date_edit') == 'Y';
 
 define("MODULE_ID", "iblock");
 define("ENTITY", "CIBlockDocument");
@@ -1086,7 +1087,7 @@ if ($arID = $lAdmin->GroupAction())
 			}
 			else
 			{
-				$lAdmin->AddGroupError(GetMessage("IBLIST_A_UPDERR_ACCESS", array("#ID#" => $ID)), $TYPE.$ID);
+				$lAdmin->AddGroupError(GetMessage("IBLIST_A_UPDERR_ACCESS", array("#ID#" => $ID)), $ID);
 			}
 			break;
 		}
@@ -2097,18 +2098,22 @@ while($arRes = $rsData->NavNext(true, "f_"))
 			elseif($prop['PROPERTY_TYPE']=='E')
 			{
 				$VALUE_NAME = 'FIELDS['.$f_ID.'][PROPERTY_'.$prop['ID'].']['.$prop['PROPERTY_VALUE_ID'].']';
+				$fixIBlock = $prop["LINK_IBLOCK_ID"] > 0;
+				$windowTableId = 'iblockprop-'.Iblock\PropertyTable::TYPE_ELEMENT.'-'.$prop['ID'].'-'.$prop['LINK_IBLOCK_ID'];
 				if($t = GetElementName($prop["VALUE"]))
 				{
 					$arEditHTML[] = '<input type="text" name="'.$VALUE_NAME.'" id="'.$VALUE_NAME.'" value="'.$prop["VALUE"].'" size="5">'.
-					'<input type="button" value="..." onClick="jsUtils.OpenWindow(\'iblock_element_search.php?lang='.LANGUAGE_ID.'&amp;IBLOCK_ID='.$prop["LINK_IBLOCK_ID"].'&amp;n='.urlencode($VALUE_NAME).'\', 600, 500);">'.
+					'<input type="button" value="..." onClick="jsUtils.OpenWindow(\'iblock_element_search.php?lang='.LANGUAGE_ID.'&amp;IBLOCK_ID='.$prop["LINK_IBLOCK_ID"].'&amp;n='.urlencode($VALUE_NAME).($fixIBlock ? '&amp;iblockfix=y' : '').'&amp;tableId='.$windowTableId.'\', 900, 700);">'.
 					'&nbsp;<span id="sp_'.$VALUE_NAME.'" >'.$t['NAME'].'</span>';
 				}
 				else
 				{
 					$arEditHTML[] = '<input type="text" name="'.$VALUE_NAME.'" id="'.$VALUE_NAME.'" value="" size="5">'.
-					'<input type="button" value="..." onClick="jsUtils.OpenWindow(\'iblock_element_search.php?lang='.LANGUAGE_ID.'&amp;IBLOCK_ID='.$prop["LINK_IBLOCK_ID"].'&amp;n='.urlencode($VALUE_NAME).'\', 600, 500);">'.
+					'<input type="button" value="..." onClick="jsUtils.OpenWindow(\'iblock_element_search.php?lang='.LANGUAGE_ID.'&amp;IBLOCK_ID='.$prop["LINK_IBLOCK_ID"].'&amp;n='.urlencode($VALUE_NAME).($fixIBlock ? '&amp;iblockfix=y' : '').'&amp;tableId='.$windowTableId.'\', 900, 700);">'.
 					'&nbsp;<span id="sp_'.$VALUE_NAME.'" ></span>';
 				}
+				unset($windowTableId);
+				unset($fixIBlock);
 			}
 			$last_property_id = $prop['ID'];
 		}
@@ -2153,9 +2158,13 @@ while($arRes = $rsData->NavNext(true, "f_"))
 			elseif($prop['PROPERTY_TYPE']=='E')
 			{
 				$VALUE_NAME = 'FIELDS['.$f_ID.'][PROPERTY_'.$prop['ID'].'][n0]';
+				$fixIBlock = $prop["LINK_IBLOCK_ID"] > 0;
+				$windowTableId = 'iblockprop-'.Iblock\PropertyTable::TYPE_ELEMENT.'-'.$prop['ID'].'-'.$prop['LINK_IBLOCK_ID'];
 				$arEditHTML[] = '<input type="text" name="'.$VALUE_NAME.'" id="'.$VALUE_NAME.'" value="" size="5">'.
-					'<input type="button" value="..." onClick="jsUtils.OpenWindow(\'iblock_element_search.php?lang='.LANGUAGE_ID.'&amp;IBLOCK_ID='.$prop["LINK_IBLOCK_ID"].'&amp;n='.urlencode($VALUE_NAME).'\', 600, 500);">'.
+					'<input type="button" value="..." onClick="jsUtils.OpenWindow(\'iblock_element_search.php?lang='.LANGUAGE_ID.'&amp;IBLOCK_ID='.$prop["LINK_IBLOCK_ID"].'&amp;n='.urlencode($VALUE_NAME).($fixIBlock ? '&amp;iblockfix=y' : '').'&amp;tableId='.$windowTableId.'\', 900, 700);">'.
 					'&nbsp;<span id="sp_'.$VALUE_NAME.'" ></span>';
+				unset($windowTableId);
+				unset($fixIBlock);
 			}
 
 			if(
@@ -2432,8 +2441,8 @@ foreach($arRows as $f_ID => $row)
 		{
 			$row->AddInputField("TAGS");
 		}
-		$row->AddCalendarField("DATE_ACTIVE_FROM");
-		$row->AddCalendarField("DATE_ACTIVE_TO");
+		$row->AddCalendarField("DATE_ACTIVE_FROM", array(), $useCalendarTime);
+		$row->AddCalendarField("DATE_ACTIVE_TO", array(), $useCalendarTime);
 
 		if(!empty($arWFStatusPerm))
 			$row->AddSelectField("WF_STATUS_ID", $arWFStatusPerm);
@@ -3462,32 +3471,26 @@ if ($boolSKU && $boolSKUFiltrable)
 $oFilter = new CAdminFilter($sTableID."_filter", $arFindFields);
 ?><script type="text/javascript">
 var arClearHiddenFields = [];
-function applyFilter(el)
-{
-	BX.adminPanel.showWait(el);
-	<?=$sTableID."_filter";?>.OnSet('<?echo CUtil::JSEscape($sTableID)?>', '<?echo CUtil::JSEscape($APPLICATION->GetCurPage().'?type='.urlencode($type).'&IBLOCK_ID='.urlencode($IBLOCK_ID).'&lang='.LANGUAGE_ID.'&')?>');
-	return false;
-}
 
-function deleteFilter(el)
+function clearFilterFields()
 {
-	BX.adminPanel.showWait(el);
-	if (0 < arClearHiddenFields.length)
+	var index;
+
+	for (index = 0; index < arClearHiddenFields.length; index++)
 	{
-		for (var index = 0; index < arClearHiddenFields.length; index++)
+		if (window[arClearHiddenFields[index]] !== undefined)
 		{
-			if (undefined != window[arClearHiddenFields[index]])
+			if ('ClearForm' in window[arClearHiddenFields[index]])
 			{
-				if ('ClearForm' in window[arClearHiddenFields[index]])
-				{
-					window[arClearHiddenFields[index]].ClearForm();
-				}
+				window[arClearHiddenFields[index]].ClearForm();
 			}
 		}
 	}
-	<?=$sTableID."_filter"?>.OnClear('<?echo CUtil::JSEscape($sTableID)?>', '<?echo CUtil::JSEscape($APPLICATION->GetCurPage().'?type='.urlencode($type).'&IBLOCK_ID='.urlencode($IBLOCK_ID).'&lang='.urlencode(LANGUAGE_ID).'&')?>');
-	return false;
 }
+
+BX.ready(function(){
+	BX.addCustomEvent(window, 'onBeforeAdminFilterClear', clearFilterFields);
+});
 
 try {
 	var DecimalSeparator = Number("1.2").toLocaleString().charCodeAt(1);
@@ -3804,11 +3807,11 @@ if ($boolSKU && $boolSKUFiltrable)
 <?
 	}
 }
-
-$oFilter->Buttons();
-?><span class="adm-btn-wrap"><input type="submit"  class="adm-btn" name="set_filter" value="<? echo GetMessage("admin_lib_filter_set_butt"); ?>" title="<? echo GetMessage("admin_lib_filter_set_butt_title"); ?>" onClick="return applyFilter(this);"></span>
-<span class="adm-btn-wrap"><input type="submit"  class="adm-btn" name="del_filter" value="<? echo GetMessage("admin_lib_filter_clear_butt"); ?>" title="<? echo GetMessage("admin_lib_filter_clear_butt_title"); ?>" onClick="deleteFilter(this); return false;"></span>
-<?
+$oFilter->Buttons(array(
+	"table_id" => $sTableID,
+	"url" => $APPLICATION->GetCurPage().'?type='.$type.'&IBLOCK_ID='.$IBLOCK_ID,
+	"form" => "find_form",
+));
 $oFilter->End();
 ?>
 </form>

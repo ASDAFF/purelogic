@@ -4,9 +4,14 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 use Bitrix\Main\Localization\Loc,
 	Bitrix\Main\Page\Asset;
 
-Asset::getInstance()->addJs("/bitrix/components/bitrix/sale.order.payment.change/templates/.default/script.js");
-Asset::getInstance()->addCss("/bitrix/components/bitrix/sale.order.payment.change/templates/.default/style.css");
-CJSCore::Init(array('clipboard'));
+if ($arParams['GUEST_MODE'] !== 'Y')
+{
+	Asset::getInstance()->addJs("/bitrix/components/bitrix/sale.order.payment.change/templates/.default/script.js");
+	Asset::getInstance()->addCss("/bitrix/components/bitrix/sale.order.payment.change/templates/.default/style.css");
+}
+$this->addExternalCss("/bitrix/css/main/bootstrap.css");
+
+CJSCore::Init(array('clipboard', 'fx'));
 
 $APPLICATION->SetTitle("");
 
@@ -43,9 +48,16 @@ else
 				)) ?>
 			</h1>
 		</div>
-		<a class="sale-order-detail-back-to-list-link-up" href="<?= htmlspecialcharsbx($arResult["URL_TO_LIST"]) ?>">
-			&larr; <?= Loc::getMessage('SPOD_RETURN_LIST_ORDERS') ?>
-		</a>
+		<?
+		if ($arParams['GUEST_MODE'] !== 'Y')
+		{
+			?>
+			<a class="sale-order-detail-back-to-list-link-up" href="<?= htmlspecialcharsbx($arResult["URL_TO_LIST"]) ?>">
+				&larr; <?= Loc::getMessage('SPOD_RETURN_LIST_ORDERS') ?>
+			</a>
+			<?
+		}
+		?>
 		<div class="col-md-12 col-sm-12 col-xs-12 sale-order-detail-general">
 			<div class="row">
 				<div class="col-md-12 cols-sm-12 col-xs-12 sale-order-detail-general-head">
@@ -137,7 +149,7 @@ else
 										<?
 										if ($arResult['CANCELED'] !== 'Y')
 										{
-											echo $arResult["STATUS"]["NAME"];
+											echo htmlspecialcharsbx($arResult["STATUS"]["NAME"]);
 										}
 										else
 										{
@@ -147,7 +159,7 @@ else
 									</div>
 								</div>
 
-								<div class="col-md-2 col-sm-6 sale-order-detail-about-order-inner-container-price">
+								<div class="col-md-<?=($arParams['GUEST_MODE'] !== 'Y') ? 2 : 4?> col-sm-6 sale-order-detail-about-order-inner-container-price">
 									<div class="sale-order-detail-about-order-inner-container-price-title">
 										<?= Loc::getMessage('SPOD_ORDER_PRICE')?>:
 									</div>
@@ -155,21 +167,28 @@ else
 										<?= $arResult["PRICE_FORMATED"]?>
 									</div>
 								</div>
-								<div class="col-md-2 col-sm-6 sale-order-detail-about-order-inner-container-repeat">
-									<a href="<?=$arResult["URL_TO_COPY"]?>" class="sale-order-detail-about-order-inner-container-repeat-button">
-										<?= Loc::getMessage('SPOD_ORDER_REPEAT') ?>
-									</a>
-									<?
-									if ($arResult["CAN_CANCEL"] === "Y")
-									{
-										?>
-										<a href="<?=$arResult["URL_TO_CANCEL"]?>" class="sale-order-detail-about-order-inner-container-repeat-cancel">
-											<?= Loc::getMessage('SPOD_ORDER_CANCEL') ?>
+								<?
+								if ($arParams['GUEST_MODE'] !== 'Y')
+								{
+									?>
+									<div class="col-md-2 col-sm-6 sale-order-detail-about-order-inner-container-repeat">
+										<a href="<?=$arResult["URL_TO_COPY"]?>" class="sale-order-detail-about-order-inner-container-repeat-button">
+											<?= Loc::getMessage('SPOD_ORDER_REPEAT') ?>
 										</a>
 										<?
+										if ($arResult["CAN_CANCEL"] === "Y")
+										{
+											?>
+											<a href="<?=$arResult["URL_TO_CANCEL"]?>" class="sale-order-detail-about-order-inner-container-repeat-cancel">
+												<?= Loc::getMessage('SPOD_ORDER_CANCEL') ?>
+											</a>
+											<?
+										}
+										?>
+									</div>
+									<?
 									}
-									?>
-								</div>
+								?>
 							</div>
 							<div class="col-md-12 col-sm-12 col-xs-12 sale-order-detail-about-order-inner-container-details">
 								<h4 class="sale-order-detail-about-order-inner-container-details-title">
@@ -224,7 +243,9 @@ else
 													}
 													else
 													{
-														if ($property['MULTIPLE'] == 'Y' && $property['TYPE'] !== 'FILE')
+														if ($property['MULTIPLE'] == 'Y'
+															&& $property['TYPE'] !== 'FILE'
+															&& $property['TYPE'] !== 'LOCATION')
 														{
 															$propertyList = unserialize($property["VALUE"]);
 															foreach ($propertyList as $propertyElement)
@@ -234,7 +255,7 @@ else
 														}
 														else
 														{
-															echo $property["VALUE"];
+															echo htmlspecialcharsbx($property["VALUE"]);
 														}
 													}
 													?>
@@ -245,6 +266,19 @@ else
 									}
 									?>
 								</ul>
+								<?
+								if (strlen($arResult["USER_DESCRIPTION"]))
+								{
+									?>
+									<h4 class="sale-order-detail-about-order-inner-container-details-title sale-order-detail-about-order-inner-container-comments">
+										<?= Loc::getMessage('SPOD_ORDER_DESC') ?>
+									</h4>
+									<div class="col-xs-12 sale-order-detail-about-order-inner-container-list-item-element">
+										<?=nl2br(htmlspecialcharsbx($arResult["USER_DESCRIPTION"]))?>
+									</div>
+									<?
+								}
+								?>
 							</div>
 						</div>
 					</div>
@@ -276,7 +310,7 @@ else
 												<?
 												if ($arResult['CANCELED'] !== 'Y')
 												{
-													echo $arResult["STATUS"]["NAME"];
+													echo htmlspecialcharsbx($arResult["STATUS"]["NAME"]);
 												}
 												else
 												{
@@ -311,7 +345,9 @@ else
 																<?
 																$paymentData[$payment['ACCOUNT_NUMBER']] = array(
 																	"payment" => $payment['ACCOUNT_NUMBER'],
-																	"order" => $arResult['ACCOUNT_NUMBER']
+																	"order" => $arResult['ACCOUNT_NUMBER'],
+																	"allow_inner" => $arParams['ALLOW_INNER'],
+																	"only_inner_full" => $arParams['ONLY_INNER_FULL']
 																);
 																$paymentSubTitle = Loc::getMessage('SPOD_TPL_BILL')." ".Loc::getMessage('SPOD_NUM_SIGN').$payment['ACCOUNT_NUMBER'];
 																if(isset($payment['DATE_BILL']))
@@ -330,6 +366,13 @@ else
 																	<?=Loc::getMessage('SPOD_PAYMENT_PAID')?></span>
 																	<?
 																}
+																elseif ($arResult['IS_ALLOW_PAY'] == 'N')
+																{
+																	?>
+																	<span class="sale-order-detail-payment-options-methods-info-title-status-restricted">
+																	<?=Loc::getMessage('SPOD_TPL_RESTRICTED_PAID')?></span>
+																	<?
+																}
 																else
 																{
 																	?>
@@ -345,10 +388,44 @@ else
 															<span class="sale-order-detail-sum-number"><?=$payment['PRICE_FORMATED']?></span>
 														</div>
 														<?
-														if ($payment['PAID'] !== 'Y' && $arResult['CANCELED'] !== 'Y')
+														if (!empty($payment['CHECK_DATA']))
+														{
+															$listCheckLinks = "";
+															foreach ($payment['CHECK_DATA'] as $checkInfo)
+															{
+																$title = Loc::getMessage('SPOD_CHECK_NUM', array('#CHECK_NUMBER#' => $checkInfo['ID']))." - ". htmlspecialcharsbx($checkInfo['TYPE_NAME']);
+																if (strlen($checkInfo['LINK']) > 0)
+																{
+																	$link = $checkInfo['LINK'];
+																	$listCheckLinks .= "<div><a href='$link' target='_blank'>$title</a></div>";
+																}
+															}
+															if (strlen($listCheckLinks) > 0)
+															{
+																?>
+																<div class="sale-order-detail-payment-options-methods-info-total-check">
+																	<div class="sale-order-detail-sum-check-left"><?= Loc::getMessage('SPOD_CHECK_TITLE')?>:</div>
+																	<div class="sale-order-detail-sum-check-left">
+																		<?=$listCheckLinks?>
+																	</div>
+																</div>
+																<?
+															}
+														}
+														if ($payment['PAID'] !== 'Y' && $arResult['CANCELED'] !== 'Y' && $arParams['GUEST_MODE'] !== 'Y')
 														{
 															?>
 															<a href="#" id="<?=$payment['ACCOUNT_NUMBER']?>" class="sale-order-detail-payment-options-methods-info-change-link"><?=Loc::getMessage('SPOD_CHANGE_PAYMENT_TYPE')?></a>
+															<?
+														}
+														?>
+														<?
+														if ($arResult['IS_ALLOW_PAY'] === 'N' && $payment['PAID'] !== 'Y')
+														{
+															?>
+															<div class="sale-order-detail-status-restricted-message-block">
+																<span class="sale-order-detail-status-restricted-message"><?=Loc::getMessage('SOPD_TPL_RESTRICTED_PAID_MESSAGE')?></span>
+															</div>
 															<?
 														}
 														?>
@@ -359,7 +436,7 @@ else
 														?>
 														<div class="col-md-2 col-sm-12 col-xs-12 sale-order-detail-payment-options-methods-button-container">
 															<?
-															if ($payment['PAY_SYSTEM']['PSA_NEW_WINDOW'] === 'Y')
+															if ($payment['PAY_SYSTEM']['PSA_NEW_WINDOW'] === 'Y' && $arResult["IS_ALLOW_PAY"] !== "N")
 															{
 																?>
 																<a class="btn-theme sale-order-detail-payment-options-methods-button-element-new-window"
@@ -371,7 +448,7 @@ else
 															}
 															else
 															{
-																if ($payment["PAID"] === "Y" || $arResult["CANCELED"] === "Y")
+																if ($payment["PAID"] === "Y" || $arResult["CANCELED"] === "Y" || $arResult["IS_ALLOW_PAY"] === "N")
 																{
 																	?>
 																	<a class="btn-theme sale-order-detail-payment-options-methods-button-element inactive-button"><?= Loc::getMessage('SPOD_ORDER_PAY') ?></a>
@@ -399,7 +476,8 @@ else
 												if ($payment["PAID"] !== "Y"
 													&& $payment['PAY_SYSTEM']["IS_CASH"] !== "Y"
 													&& $payment['PAY_SYSTEM']['PSA_NEW_WINDOW'] !== 'Y'
-													&& $arResult['CANCELED'] !== 'Y')
+													&& $arResult['CANCELED'] !== 'Y'
+													&& $arResult["IS_ALLOW_PAY"] !== "N")
 												{
 													?>
 													<div class="row sale-order-detail-payment-options-methods-template col-md-12 col-sm-12 col-xs-12">
@@ -958,7 +1036,14 @@ else
 				</div>
 			</div>
 		</div><!--sale-order-detail-general-->
-		<a class="sale-order-detail-back-to-list-link-down" href="<?= $arResult["URL_TO_LIST"] ?>">&larr; <?= Loc::getMessage('SPOD_RETURN_LIST_ORDERS')?></a>
+		<?
+		if ($arParams['GUEST_MODE'] !== 'Y')
+		{
+			?>
+			<a class="sale-order-detail-back-to-list-link-down" href="<?= $arResult["URL_TO_LIST"] ?>">&larr; <?= Loc::getMessage('SPOD_RETURN_LIST_ORDERS')?></a>
+			<?
+		}
+		?>
 	</div>
 	<?
 	$javascriptParams = array(

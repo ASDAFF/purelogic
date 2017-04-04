@@ -2,6 +2,11 @@
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 use Bitrix\Main\Localization\Loc;
 
+if ($arParams['SHOW_ORDER_PAGE'] !== 'Y')
+{
+	LocalRedirect($arParams['SEF_FOLDER']);
+}	
+	
 $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_MAIN"), $arResult['SEF_FOLDER']);
 $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_ORDERS"), $arResult['PATH_TO_ORDERS']);
 $APPLICATION->IncludeComponent(
@@ -21,9 +26,12 @@ $APPLICATION->IncludeComponent(
 		"NAV_TEMPLATE" => $arParams["NAV_TEMPLATE"],
 		"ACTIVE_DATE_FORMAT" => $arParams["ACTIVE_DATE_FORMAT"],
 		"HISTORIC_STATUSES" => $arParams["ORDER_HISTORIC_STATUSES"],
+		"ALLOW_INNER" => $arParams["ALLOW_INNER"],
+		"ONLY_INNER_FULL" => $arParams["ONLY_INNER_FULL"],
 		"CACHE_TYPE" => $arParams["CACHE_TYPE"],
 		"CACHE_TIME" => $arParams["CACHE_TIME"],
 		"CACHE_GROUPS" => $arParams["CACHE_GROUPS"],
+		"DEFAULT_SORT" => $arParams["ORDER_DEFAULT_SORT"],
 	),
 	$component
 );

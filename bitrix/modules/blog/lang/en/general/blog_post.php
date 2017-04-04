@@ -76,4 +76,12 @@ $MESS["BLG_GP_PUSH_9A_FEMALE"] = "#name# shared the #post# with you";
 $MESS["BLG_GP_IM_9B"] = "post";
 $MESS["BLG_GP_PUSH_USER"] = "Unknown user";
 $MESS["SONET_IM_NEW_POST"] = "A new message #title# has been added to the group #group_name#.";
+$MESS["SONET_IM_NEW_POST_TO_MODERATE_W_TITLE"] = "New post “#title#” was submitted for #link_mod_start#moderation#link_mod_end#";
+$MESS["SONET_IM_NEW_POST_TO_MODERATE_WO_TITLE"] = "New post was submitted for #link_mod_start#moderation#link_mod_end#";
+$MESS["SONET_IM_NEW_COMMENT_TO_MODERATE_W_TITLE"] = "New #link_com_start#comment#link_com_end# to the post “#title#”was submitted for moderation";
+$MESS["SONET_IM_NEW_COMMENT_TO_MODERATE_WO_TITLE"] = "New #link_com_start#comment#link_com_end# to the post was submitted for moderation";
+$MESS["SONET_IM_NEW_POST_PUBLISHED_W_TITLE"] = "Your #link_post_start#post “#title#“#link_post_end# was published by the moderator";
+$MESS["SONET_IM_NEW_POST_PUBLISHED_WO_TITLE"] = "Your #link_post_start#post#link_post_end# was published by the moderator";
+$MESS["SONET_IM_NEW_COMMENT_PUBLISHED_W_TITLE"] = "Your #link_com_start#comment#link_com_end# to the post “#title#“ was published by the moderator";
+$MESS["SONET_IM_NEW_COMMENT_PUBLISHED_WO_TITLE"] = "Your #link_com_start#comment#link_com_end# to the post was published by the moderator";
 ?>

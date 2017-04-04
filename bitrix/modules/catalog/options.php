@@ -216,24 +216,23 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['Update']) && !$bReadO
 		if (isset($_POST['AVAIL_CONTENT_GROUPS']) && is_array($_POST['AVAIL_CONTENT_GROUPS']))
 		{
 			$fieldsClear = $_POST['AVAIL_CONTENT_GROUPS'];
-			CatalogClearArray($fieldsClear);
-			foreach ($fieldsClear as &$oneValue)
+			Main\Type\Collection::normalizeArrayValuesByInt($fieldsClear);
+			if (!empty($fieldsClear))
 			{
-				if (isset($arOldAvailContentGroups[$oneValue]))
-					unset($arOldAvailContentGroups[$oneValue]);
-			}
-			if (isset($oneValue))
+				foreach ($fieldsClear as $oneValue)
+				{
+					if (isset($arOldAvailContentGroups[$oneValue]))
+						unset($arOldAvailContentGroups[$oneValue]);
+				}
 				unset($oneValue);
-
+			}
 		}
 		Option::set('catalog', 'avail_content_groups', implode(',', $fieldsClear), '');
 		if (!empty($arOldAvailContentGroups))
 		{
 			$arOldAvailContentGroups = array_keys($arOldAvailContentGroups);
-			foreach ($arOldAvailContentGroups as &$oneValue)
-			{
+			foreach ($arOldAvailContentGroups as $oneValue)
 				CCatalogProductGroups::DeleteByGroup($oneValue);
-			}
 			unset($oneValue);
 		}
 	}

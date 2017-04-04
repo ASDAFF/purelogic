@@ -1,4 +1,6 @@
 <?
+use Bitrix\Bizproc\SchedulerEventTable;
+
 include_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/bizproc/classes/general/runtimeservice.php");
 
 class CBPSchedulerService
@@ -103,20 +105,43 @@ class CBPSchedulerService
 
 	public function SubscribeOnEvent($workflowId, $eventHandlerName, $eventModule, $eventName, $entityId = null)
 	{
+		$entityKey = null;
+		if (is_array($entityId))
+		{
+			foreach ($entityId as $entityKey => $entityId)
+				break;
+		}
+		elseif ($entityId !== null)
+		{
+			$entityKey = 0;
+		}
+
+		if (!SchedulerEventTable::isSubscribed($workflowId, $eventHandlerName, $eventModule, $eventName, $entityId))
+		{
+			SchedulerEventTable::add(array(
+				'WORKFLOW_ID' => (string)$workflowId,
+				'HANDLER' => (string)$eventHandlerName,
+				'EVENT_MODULE' => (string)$eventModule,
+				'EVENT_TYPE' => (string)$eventName,
+				'ENTITY_ID' => (string)$entityId
+			));
+		}
+
 		RegisterModuleDependences(
 			$eventModule,
 			$eventName,
-			"bizproc",
-			"CBPSchedulerService",
-			"OnEvent",
+			'bizproc',
+			'CBPSchedulerService',
+			'sendEvents',
 			100,
-			"",
-			array($workflowId, $eventHandlerName, array('SchedulerService' => 'OnEvent', 'EntityId' => $entityId))
+			'',
+			array($eventModule, $eventName, $entityKey)
 		);
 	}
 
 	public function UnSubscribeOnEvent($workflowId, $eventHandlerName, $eventModule, $eventName, $entityId = null)
 	{
+		// Clean old-style registry entry.
 		UnRegisterModuleDependences(
 			$eventModule,
 			$eventName,
@@ -126,8 +151,40 @@ class CBPSchedulerService
 			"",
 			array($workflowId, $eventHandlerName, array('SchedulerService' => 'OnEvent', 'EntityId' => $entityId))
 		);
+
+		$entityKey = null;
+		if (is_array($entityId))
+		{
+			foreach ($entityId as $entityKey => $entityId)
+				break;
+		}
+		elseif ($entityId !== null)
+		{
+			$entityKey = 0;
+		}
+
+		SchedulerEventTable::deleteBySubscription($workflowId, $eventHandlerName, $eventModule, $eventName, $entityId);
+
+		if (!SchedulerEventTable::hasSubscriptions($eventModule, $eventName))
+		{
+			UnRegisterModuleDependences(
+				$eventModule,
+				$eventName,
+				'bizproc',
+				'CBPSchedulerService',
+				'sendEvents',
+				'',
+				array($eventModule, $eventName, $entityKey)
+			);
+		}
 	}
 
+	/**
+	 * @deprecated
+	 * @param $workflowId
+	 * @param $eventName
+	 * @param array $arEventParameters
+	 */
 	public static function OnEvent($workflowId, $eventName, $arEventParameters = array())
 	{
 		$num = func_num_args();
@@ -157,5 +214,46 @@ class CBPSchedulerService
 
 		}
 	}
+
+	public static function sendEvents($eventModule, $eventName, $entityKey)
+	{
+		$eventParameters = array('SchedulerService' => 'OnEvent'); // compatibility
+
+		$num = func_num_args();
+		if ($num > 3)
+		{
+			for ($i = 3; $i < $num; $i++)
+				$eventParameters[] = func_get_arg($i);
+		}
+
+		$filter = array(
+			'=EVENT_MODULE' => $eventModule,
+			'=EVENT_TYPE' => $eventName
+		);
+
+		$entityId = null;
+		if ($entityKey === 0 && isset($eventParameters[0]))
+			$entityId = (string)$eventParameters[0];
+		elseif ($entityKey !== null && isset($eventParameters[0][$entityKey]))
+			$entityId = (string)$eventParameters[0][$entityKey];
+
+		if ($entityId !== null)
+			$filter['=ENTITY_ID'] = $entityId;
+
+		$iterator = SchedulerEventTable::getList(array(
+			'filter' => $filter
+		));
+
+		while ($row = $iterator->fetch())
+		{
+			try
+			{
+				CBPRuntime::SendExternalEvent($row['WORKFLOW_ID'], $row['HANDLER'], $eventParameters);
+			}
+			catch (Exception $e)
+			{
+				SchedulerEventTable::delete($row['ID']); //Check this.
+			}
+		}
+	}
 }
-?>

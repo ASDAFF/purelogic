@@ -375,6 +375,7 @@
 .bx-soa-coupon-input {
     display: inline-block;
     position:relative;
+	vertical-align: middle;
 }
 .bx-soa-coupon-input:after {
     content:"";
@@ -1022,10 +1023,10 @@ ul.bx-soa-pp-list li {
 
 /*CHECKBOX*/
 @media (min-width:1200px) {
-    .bx-soa-pp .bx-soa-pp-company:nth-child(4n+1) {clear: both;}
+    .bx-soa-pp .bx-soa-pp-company:nth-child(3n+1) {clear: both;}
 }
 
-@media (min-width:992px) and (max-width:1199px) {
+@media (min-width:992px) {
     .bx-soa-pp .bx-soa-pp-company:nth-child(3n+1) {clear: both;}
 }
 

@@ -67,4 +67,5 @@ $MESS["SONET_UG_IM_UNMODERATE_F"] = "is no more a moderator of  #group_name#";
 $MESS["SONET_UG_IM_OWNER"] = "is now an owner of  #group_name#";
 $MESS["SONET_UG_IM_OWNER_M"] = "is now an owner of  #group_name#";
 $MESS["SONET_UG_IM_OWNER_F"] = "is now an owner of  #group_name#";
+$MESS["SONET_UG_EMPTY_DATE_LAST_VIEW"] = "Last viewed date is incorrect";
 ?>

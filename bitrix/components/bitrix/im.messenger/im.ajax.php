@@ -76,12 +76,15 @@ if (\Bitrix\Im\User::getInstance($USER->GetID())->isConnector())
 		$_POST['IM_LIKE_MESSAGE'] == 'Y' ||
 		$_POST['IM_DELETE_MESSAGE'] == 'Y' ||
 		$_POST['IM_READ_MESSAGE'] == 'Y' ||
+		$_POST['IM_UNREAD_MESSAGE'] == 'Y' ||
 		$_POST['IM_FILE_REGISTER'] == 'Y' ||
 		$_POST['IM_FILE_UPLOAD'] == 'Y' ||
 		$_POST['IM_FILE_UNREGISTER'] == 'Y' ||
 		$_POST['IM_FILE_DELETE'] == 'Y' ||
 		$_POST['IM_UPDATE_STATE'] == 'Y' ||
-		$_POST['IM_LOAD_LAST_MESSAGE'] == 'Y'
+		$_POST['IM_LOAD_LAST_MESSAGE'] == 'Y' ||
+		$_POST['IM_HISTORY_LOAD_MORE'] == 'Y' ||
+		$_POST['IM_URL_ATTACH_DELETE'] == 'Y'
 	))
 	{
 		echo CUtil::PhpToJsObject(Array(
@@ -142,16 +145,33 @@ else if ($_POST['IM_FILE_REGISTER'] == 'Y')
 	CUtil::decodeURIComponent($_POST);
 	$_POST['FILES'] = CUtil::JsObjectToPhp($_POST['FILES']);
 
-	$result = CIMDisk::UploadFileRegister($_POST['CHAT_ID'], $_POST['FILES'], $_POST['TEXT']);
+	$result = CIMDisk::UploadFileRegister($_POST['CHAT_ID'], $_POST['FILES'], $_POST['TEXT'], $_POST['OL_SILENT'] == 'Y');
 	if (!$result)
 	{
 		$errorMessage = 'ERROR';
+	}
+	
+	if ($_POST['TEXT'])
+	{
+		$ar['MESSAGE'] = trim(str_replace(Array('[BR]', '[br]'), "\n", $_POST['TEXT']));
+		$ar['MESSAGE'] = preg_replace("/\[DISK\=([0-9]+)\]/i", "", $ar['MESSAGE']);
+	
+		$CCTP = new CTextParser();
+		$CCTP->MaxStringLen = 200;
+		$CCTP->allow = array("HTML" => "N", "USER" => "N",  "ANCHOR" => (isset($_POST['MOBILE'])?"N": "Y"), "BIU" => "Y", "IMG" => "N", "QUOTE" => "N", "CODE" => "N", "FONT" => "N", "LIST" => "N", "SMILES" => "Y", "NL2BR" => "Y", "VIDEO" => "N", "TABLE" => "N", "CUT_ANCHOR" => "N", "ALIGN" => "N");
+		
+		$ar['MESSAGE'] = $CCTP->convertText(htmlspecialcharsbx($ar['MESSAGE']));
+	}
+	else
+	{
+		$ar['MESSAGE'] = '';
 	}
 
 	echo CUtil::PhpToJsObject(Array(
 		'FILE_ID' => $result['FILE_ID'],
 		'CHAT_ID' => $_POST['CHAT_ID'],
 		'RECIPIENT_ID' => $_POST['RECIPIENT_ID'],
+		'MESSAGE_TEXT' => $ar['MESSAGE'],
 		'MESSAGE_ID' => $result['MESSAGE_ID'],
 		'MESSAGE_TMP_ID' => $_POST['MESSAGE_TMP_ID'],
 		'ERROR' => $errorMessage
@@ -196,7 +216,7 @@ else if ($_POST['IM_FILE_UPLOAD_FROM_DISK'] == 'Y')
 	CUtil::decodeURIComponent($_POST);
 	$_POST['FILES'] = CUtil::JsObjectToPhp($_POST['FILES']);
 
-	$result = CIMDisk::UploadFileFromDisk($_POST['CHAT_ID'], $_POST['FILES'], $_POST['MESSAGE']);
+	$result = CIMDisk::UploadFileFromDisk($_POST['CHAT_ID'], $_POST['FILES'], $_POST['MESSAGE'], $_POST['OL_SILENT'] == 'Y');
 	if (!$result)
 	{
 		$errorMessage = 'ERROR';
@@ -536,6 +556,7 @@ else if ($_POST['IM_SEND_MESSAGE'] == 'Y')
 				"FROM_USER_ID" => $userId,
 				"TO_CHAT_ID" => $chatId,
 				"MESSAGE" 	 => $_POST['MESSAGE'],
+				"SILENT_CONNECTOR" => $_POST['OL_SILENT'] == 'Y'?'Y':'N'
 			);
 			$insertID = CIMChat::AddMessage($ar);
 		}
@@ -562,10 +583,14 @@ else if ($_POST['IM_SEND_MESSAGE'] == 'Y')
 			$errorMessage = GetMessage('IM_UNKNOWN_ERROR');
 	}
 
-	$params = CIMMessageParam::Get(Array($insertID));
-	$arMessages = CIMMessageLink::prepareShow(Array(), $params);
 
+	$message = CIMMessenger::GetById($insertID, Array('WITH_FILES' => 'Y'));
+	$arMessages[$insertID]['params'] = $message['PARAMS'];
+	
+	$arMessages = CIMMessageLink::prepareShow($arMessages, Array($insertID => $message['PARAMS']));
+	
 	$ar['MESSAGE'] = trim(str_replace(Array('[BR]', '[br]'), "\n", $_POST['MESSAGE']));
+	$ar['MESSAGE'] = preg_replace("/\[DISK\=([0-9]+)\]/i", "", $ar['MESSAGE']);
 
 	$CCTP = new CTextParser();
 	$CCTP->MaxStringLen = 200;
@@ -575,11 +600,14 @@ else if ($_POST['IM_SEND_MESSAGE'] == 'Y')
 	$arResult = Array(
 		'TMP_ID' => $tmpID,
 		'ID' => $insertID,
+		'CHAT_ID' => $message['CHAT_ID'],
 		'SEND_DATE' => time()+$userTzOffset,
 		'SEND_MESSAGE' => $CCTP->convertText(htmlspecialcharsbx($ar['MESSAGE'])),
 		'SEND_MESSAGE_PARAMS' => $arMessages[$insertID]['params'],
+		'SEND_MESSAGE_FILES' => $message['FILES'],
 		'SENDER_ID' => intval($USER->GetID()),
 		'RECIPIENT_ID' => $_POST['CHAT'] == 'Y'? htmlspecialcharsbx($_POST['RECIPIENT_ID']): intval($_POST['RECIPIENT_ID']),
+		'OL_SILENT' => $_POST['OL_SILENT'],
 		'ERROR' => $errorMessage
 	);
 	if (isset($_POST['MOBILE']))
@@ -688,6 +716,17 @@ else if ($_POST['IM_DELETE_MESSAGE'] == 'Y')
 	);
 	echo CUtil::PhpToJsObject($arResult);
 }
+else if ($_POST['IM_URL_ATTACH_DELETE'] == 'Y')
+{
+	$errorMessage = '';
+	
+	$result = CIMMessenger::UrlAttachDelete($_POST['ID'], $_POST['ATTACH_ID']);
+
+	$arResult = Array(
+		'ERROR' => $errorMessage
+	);
+	echo CUtil::PhpToJsObject($arResult);
+}
 else if ($_POST['IM_LIKE_MESSAGE'] == 'Y')
 {
 	$errorMessage = '';
@@ -724,11 +763,31 @@ else if ($_POST['IM_READ_MESSAGE'] == 'Y')
 		'ERROR' => $errorMessage
 	));
 }
+else if ($_POST['IM_UNREAD_MESSAGE'] == 'Y')
+{
+	$errorMessage = "";
+	if (substr($_POST['USER_ID'], 0, 4) == 'chat')
+	{
+		$CIMChat = new CIMChat();
+		$CIMChat->SetUnReadMessage(intval(substr($_POST['USER_ID'],4)), (isset($_POST['LAST_ID']) && intval($_POST['LAST_ID'])>0 ? $_POST['LAST_ID']: null));
+	}
+	else
+	{
+		$CIMMessage = new CIMMessage();
+		$CIMMessage->SetUnReadMessage($_POST['USER_ID'], (isset($_POST['LAST_ID']) && intval($_POST['LAST_ID'])>0 ? $_POST['LAST_ID']: null));
+	}
+	echo CUtil::PhpToJsObject(Array(
+		'USER_ID' => htmlspecialcharsbx($_POST['USER_ID']),
+		'ERROR' => $errorMessage
+	));
+}
 else if ($_POST['IM_LOAD_LAST_MESSAGE'] == 'Y')
 {
 	$error = '';
 	$arMessage = Array();
 
+	$entityType = '';
+	$entityId = '';
 	if ($_POST['CHAT'] == 'Y')
 	{
 		$chatId = intval(substr($_POST['USER_ID'], 4));
@@ -749,6 +808,11 @@ else if ($_POST['IM_LOAD_LAST_MESSAGE'] == 'Y')
 			unset($arMessage['usersMessage'][$chatId]);
 			if (isset($_POST['READ']) && $_POST['READ'] == 'Y')
 				$CIMChat->SetReadMessage($chatId);
+			
+			$orm = \Bitrix\Im\Model\ChatTable::getById($chatId);
+			$chatData = $orm->fetch();
+			$entityType = $chatData['ENTITY_TYPE'];
+			$entityId = $chatData['ENTITY_ID'];
 		}
 	}
 	else
@@ -782,7 +846,7 @@ else if ($_POST['IM_LOAD_LAST_MESSAGE'] == 'Y')
 			if (isset($_POST['READ']) && $_POST['READ'] == 'Y')
 				$CIMMessage->SetReadMessage(intval($_POST['USER_ID']));
 
-			if ($_POST['USER_LOAD'] == 'Y' && count($arMessage['users']) <= 1)
+			if ($_POST['USER_LOAD'] == 'Y' && count($arMessage['users']) <= 1 && $_POST['USER_ID'] != $USER->GetId())
 			{
 				$arMessage = Array();
 				$error = 'ACCESS_DENIED';
@@ -805,7 +869,15 @@ else if ($_POST['IM_LOAD_LAST_MESSAGE'] == 'Y')
 	if ($error == '')
 	{
 		CIMMessenger::SetCurrentTab($_POST['TAB']);
+		
+		$dialogId = $_POST['USER_ID'];
+		$userId = $USER->GetId();
+		foreach(GetModuleEvents("im", "OnLoadLastMessage", true) as $arEvent)
+		{
+			ExecuteModuleEventEx($arEvent, array($chatId, $dialogId, $entityType, $entityId, $userId));
+		}
 	}
+	
 
 	echo CUtil::PhpToJsObject(Array(
 		'REVISION' => IM_REVISION,
@@ -1167,7 +1239,14 @@ else if ($_POST['IM_NOTIFY_VIEW'] == 'Y')
 	$errorMessage = "";
 
 	$CIMNotify = new CIMNotify();
-	$CIMNotify->MarkNotifyRead($_POST['ID']);
+	if ($_POST['READ'] == 'N')
+	{
+		$CIMNotify->MarkNotifyUnRead($_POST['ID']);
+	}
+	else
+	{
+		$CIMNotify->MarkNotifyRead($_POST['ID']);
+	}
 
 	echo CUtil::PhpToJsObject(Array(
 		'ERROR' => $errorMessage
@@ -1313,7 +1392,7 @@ else if ($_POST['IM_CHAT_EXTEND'] == 'Y')
 	else
 	{
 		$CIMChat = new CIMChat();
-		$result = $CIMChat->AddUser($_POST['CHAT_ID'], $_POST['USERS'], Array('SEARCH_MARK' => $_POST['SEARCH_MARK']));
+		$result = $CIMChat->AddUser($_POST['CHAT_ID'], $_POST['USERS'], $_POST['HISTORY'] != 'Y', Array('SEARCH_MARK' => $_POST['SEARCH_MARK']));
 		if (!$result)
 		{
 			if ($e = $GLOBALS["APPLICATION"]->GetException())
@@ -1374,6 +1453,34 @@ else if ($_POST['IM_CHAT_RENAME'] == 'Y')
 		'CHAT_TITLE' => $_POST['CHAT_TITLE'],
 		'ERROR' => ''
 	));
+}
+else if ($_POST['IM_CRM_SELECTOR'] == 'Y')
+{
+	if (CModule::IncludeModule('crm'))
+	{
+		ob_start();
+		$APPLICATION->IncludeComponent(
+			'bitrix:crm.entity.selector.ajax',
+			'.default',
+			array(
+				"MULTIPLE" => $_REQUEST['multiple'] == 'Y' ? 'Y' : 'N',
+				'VALUE' => $_REQUEST['value'],
+				'ENTITY_TYPE' => $_REQUEST['entityType'],
+				'NAME' => 'olCrmSelector',
+			),
+			null,
+			array('HIDE_ICONS' => 'Y')
+		);
+		$arResult['HTML'] = ob_get_contents();
+		ob_end_clean();
+	}
+	else
+	{
+		$arResult['ERROR'] = 'ACCESS_DENIED';
+	}
+
+	echo CUtil::PhpToJsObject($arResult);
+
 }
 else if ($_POST['IM_CHAT_DATA_LOAD'] == 'Y')
 {
@@ -1551,7 +1658,20 @@ else if ($_POST['IM_CALL'] == 'Y')
 	$userId = intval($USER->GetId());
 
 	$errorMessage = "";
-	if ($_POST['COMMAND'] == 'invite')
+	if ($_POST['COMMAND'] == 'inviteExperimental')
+	{
+		if ($_POST['CHAT'] != 'Y')
+			$chatId = CIMMessage::GetChatId($userId, intval($_POST['CHAT_ID']));
+		
+		$arCallData = CIMCall::InviteExperimental(Array(
+			'CHAT_ID' => $chatId,
+			'USER_ID' => $userId,
+			'RECIPIENT_ID' => $_POST['CHAT'] != 'Y'? intval($_POST['CHAT_ID']): 0,
+			'VIDEO' => $_POST['VIDEO'],
+			'MOBILE' => $_POST['MOBILE'],
+		));
+	}
+	else if ($_POST['COMMAND'] == 'invite')
 	{
 		if ($_POST['CHAT'] != 'Y')
 			$chatId = CIMMessage::GetChatId($userId, intval($_POST['CHAT_ID']));
@@ -1690,6 +1810,7 @@ else if ($_POST['IM_SHARING'] == 'Y' && intval($_POST['USER_ID']) > 0)
 		CPullStack::AddByUser(intval($_POST['USER_ID']), Array(
 			'module_id' => 'im',
 			'command' => 'screenSharing',
+			'expiry' => 3600,
 			'params' => Array(
 				'senderId' => $USER->GetID(),
 				'command' => 'signaling',
@@ -1702,6 +1823,7 @@ else if ($_POST['IM_SHARING'] == 'Y' && intval($_POST['USER_ID']) > 0)
 		CPullStack::AddByUser(intval($_POST['USER_ID']), Array(
 			'module_id' => 'im',
 			'command' => 'screenSharing',
+			'expiry' => 3600,
 			'params' => Array(
 				'senderId' => $USER->GetID(),
 				'command' => $_POST['COMMAND']
@@ -1729,7 +1851,7 @@ else if ($_POST['IM_IDLE'] == 'Y')
 else if ($_POST['IM_START_WRITING'] == 'Y')
 {
 	$errorMessage = "";
-	CIMMessenger::StartWriting($_POST['DIALOG_ID']);
+	CIMMessenger::StartWriting($_POST['DIALOG_ID'], false, "", false, $_POST['OL_SILENT'] == 'Y');
 
 	echo CUtil::PhpToJsObject(Array(
 		'ERROR' => $errorMessage

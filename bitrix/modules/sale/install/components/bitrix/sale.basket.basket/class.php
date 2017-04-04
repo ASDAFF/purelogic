@@ -1,11 +1,12 @@
 <?
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
-use Bitrix\Main\Localization\Loc;
-use Bitrix\Main\Loader;
-use Bitrix\Highloadblock as HL;
-use Bitrix\Sale\DiscountCouponsManager;
-use Bitrix\Sale\PriceMaths;
+use Bitrix\Main\Localization\Loc,
+	Bitrix\Main\Loader,
+	Bitrix\Highloadblock as HL,
+	Bitrix\Sale\DiscountCouponsManager,
+	Bitrix\Sale\PriceMaths;
+
 
 class CBitrixBasketComponent extends CBitrixComponent
 {
@@ -14,6 +15,7 @@ class CBitrixBasketComponent extends CBitrixComponent
 	public $weightKoef = 0;
 	public $weightUnit = 0;
 	public $quantityFloat = "N";
+	/** @deprecated deprecated since 14.0.4 */
 	public $countDiscount4AllQuantity = "N";
 	public $priceVatShowValue = "N";
 	public $hideCoupon = "N";
@@ -35,7 +37,6 @@ class CBitrixBasketComponent extends CBitrixComponent
 			$arParams['QUANTITY_FLOAT'] = 'N';
 
 		$arParams["HIDE_COUPON"] = ($arParams["HIDE_COUPON"] == "Y") ? "Y" : "N";
-		$arParams["COUNT_DISCOUNT_4_ALL_QUANTITY"] = ($arParams["COUNT_DISCOUNT_4_ALL_QUANTITY"] == "Y") ? "Y" : "N";
 		$arParams['PRICE_VAT_SHOW_VALUE'] = ($arParams['PRICE_VAT_SHOW_VALUE'] == 'N') ? 'N' : 'Y';
 		$arParams["USE_PREPAYMENT"] = ($arParams["USE_PREPAYMENT"] == 'Y') ? 'Y' : 'N';
 		$arParams["AUTO_CALCULATION"] = ($arParams["AUTO_CALCULATION"] == 'N') ? 'N' : 'Y';
@@ -105,7 +106,7 @@ class CBitrixBasketComponent extends CBitrixComponent
 		if (!Loader::includeModule('sale'))
 			return false;
 		DiscountCouponsManager::init();
-		$this->setFramemode(false);
+		$this->setFrameMode(false);
 		$this->weightKoef = $this->arParams["WEIGHT_KOEF"];
 		$this->weightUnit = $this->arParams["WEIGHT_UNIT"];
 		$this->columns = $this->arParams["COLUMNS_LIST"];
@@ -113,7 +114,6 @@ class CBitrixBasketComponent extends CBitrixComponent
 
 		$this->quantityFloat = $this->arParams["QUANTITY_FLOAT"];
 
-		$this->countDiscount4AllQuantity = $this->arParams["COUNT_DISCOUNT_4_ALL_QUANTITY"];
 		$this->priceVatShowValue = $this->arParams["PRICE_VAT_SHOW_VALUE"];
 		$this->hideCoupon = $this->arParams["HIDE_COUPON"];
 		$this->usePrepayment = $this->arParams["USE_PREPAYMENT"];
@@ -235,7 +235,8 @@ class CBitrixBasketComponent extends CBitrixComponent
 			array(
 				"ID", "NAME", "CALLBACK_FUNC", "MODULE", "PRODUCT_ID", "PRODUCT_PRICE_ID", "QUANTITY", "DELAY", "CAN_BUY",
 				"PRICE", "WEIGHT", "DETAIL_PAGE_URL", "NOTES", "CURRENCY", "VAT_RATE", "CATALOG_XML_ID",
-				"PRODUCT_XML_ID", "SUBSCRIBE", "DISCOUNT_PRICE", "PRODUCT_PROVIDER_CLASS", "TYPE", "SET_PARENT_ID"
+				"PRODUCT_XML_ID", "SUBSCRIBE", "DISCOUNT_PRICE", "PRODUCT_PROVIDER_CLASS", "TYPE", "SET_PARENT_ID", 'PRODUCT_PRICE_ID',
+				'CUSTOM_PRICE', 'BASE_PRICE'
 			)
 		);
 		while ($arItem = $dbItems->GetNext())
@@ -253,7 +254,7 @@ class CBitrixBasketComponent extends CBitrixComponent
 
 		if (!empty($arElementId) && self::$catalogIncluded)
 		{
-			$productList = CCatalogSKU::getProductList($arElementId);
+			$productList = CCatalogSku::getProductList($arElementId);
 			if (!empty($productList))
 			{
 				foreach ($productList as $offerId => $offerInfo)
@@ -485,10 +486,7 @@ class CBitrixBasketComponent extends CBitrixComponent
 			'BASKET_ITEMS' => $arResult["ITEMS"]["AnDelCanBuy"]
 		);
 
-		$arOptions = array(
-			'COUNT_DISCOUNT_4_ALL_QUANTITY' => $this->countDiscount4AllQuantity,
-		);
-
+		$arOptions = array();
 		$arErrors = array();
 
 		CSaleDiscount::DoProcessOrder($arOrder, $arOptions, $arErrors);
@@ -533,7 +531,6 @@ class CBitrixBasketComponent extends CBitrixComponent
 		$allVATSum = 0;
 
 		$DISCOUNT_PRICE_ALL = 0;
-		$priceWithoutDiscount = 0;
 
 		foreach ($arOrder["BASKET_ITEMS"] as &$arOneItem)
 		{
@@ -659,7 +656,7 @@ class CBitrixBasketComponent extends CBitrixComponent
 						);
 					if ($arPaySysAction = $dbPaySysAction->Fetch())
 					{
-						CSalePaySystemAction::InitParamarrays(false, false, $arPaySysAction["PARAMS"]);
+						CSalePaySystemAction::InitParamArrays(false, false, $arPaySysAction["PARAMS"]);
 
 						$pathToAction = $_SERVER["DOCUMENT_ROOT"].$arPaySysAction["ACTION_FILE"];
 
@@ -733,7 +730,7 @@ class CBitrixBasketComponent extends CBitrixComponent
 				if (!isset($arParents[$arItem['PRODUCT_ID']]))
 					continue;
 
-				$arSKU = CCatalogSKU::GetInfoByProductIBlock($arParents[$arItem['PRODUCT_ID']]['IBLOCK_ID']);
+				$arSKU = CCatalogSku::GetInfoByProductIBlock($arParents[$arItem['PRODUCT_ID']]['IBLOCK_ID']);
 				if (empty($arSKU))
 					continue;
 
@@ -782,7 +779,7 @@ class CBitrixBasketComponent extends CBitrixComponent
 							{
 								$arValues['n'.$arEnum['ID']] = array(
 									'ID' => $arEnum['ID'],
-									'NAME' => $arEnum['VALUE'],
+									'NAME' => htmlspecialcharsbx($arEnum['VALUE']),
 									'PICT' => false
 								);
 							}
@@ -956,7 +953,8 @@ class CBitrixBasketComponent extends CBitrixComponent
 							foreach ($arProp["VALUES"] as $valId => $arValue)
 							{
 								// properties of various type have different values in the used values data
-								if (($arProp["TYPE"] == "L" && in_array($arValue["NAME"], $arUsedValues[$arItem["PRODUCT_ID"]][$arProp["CODE"]]))
+								if (($arProp["TYPE"] == "L" && (in_array($arValue["NAME"], $arUsedValues[$arItem["PRODUCT_ID"]][$arProp["CODE"]])
+											|| in_array(htmlspecialcharsEx($arValue["NAME"]), $arUsedValues[$arItem["PRODUCT_ID"]][$arProp["CODE"]])))
 									|| ($arProp["TYPE"] == "E" && in_array($arValue["ID"], $arUsedValues[$arItem["PRODUCT_ID"]][$arProp["CODE"]]))
 									|| ($arProp["TYPE"] == "S" && in_array($arValue["XML_ID"], $arUsedValues[$arItem["PRODUCT_ID"]][$arProp["CODE"]]))
 								)

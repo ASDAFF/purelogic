@@ -186,6 +186,11 @@ class CSqlUtil
 	{
 		global $DB;
 
+		if(!is_array($arOptions))
+		{
+			$arOptions = array();
+		}
+
 		$strSqlSelect = '';
 		$strSqlFrom = '';
 		$strSqlGroupBy = '';
@@ -272,14 +277,16 @@ class CSqlUtil
 				}
 			}
 
-			if (strlen($strSqlGroupBy) > 0)
+			if($strSqlGroupBy === '')
+			{
+				$strSqlSelect = "%%_DISTINCT_%% ".$strSqlSelect;
+			}
+			elseif(!isset($arOptions['ENABLE_GROUPING_COUNT']) || $arOptions['ENABLE_GROUPING_COUNT'] === true)
 			{
 				if (strlen($strSqlSelect) > 0)
 					$strSqlSelect .= ", ";
 				$strSqlSelect .= "COUNT(%%_DISTINCT_%% ".$arFields[$arFieldsKeys[0]]["FIELD"].") as CNT";
 			}
-			else
-				$strSqlSelect = "%%_DISTINCT_%% ".$strSqlSelect;
 		}
 		// <-- SELECT
 
@@ -305,7 +312,7 @@ class CSqlUtil
 		// ORDER BY -->
 		$arSqlOrder = array();
 		$dbType = strtoupper($DB->type);
-		$nullsLast = is_array($arOptions) && isset($arOptions['NULLS_LAST']) ? (bool)$arOptions['NULLS_LAST'] : false;
+		$nullsLast = isset($arOptions['NULLS_LAST']) ? (bool)$arOptions['NULLS_LAST'] : false;
 		foreach ($arOrder as $by => $order)
 		{
 			$by = strtoupper($by);

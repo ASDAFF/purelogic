@@ -1,0 +1,85 @@
+Date:Tue, 04 Apr 2017 14:54:30 +0300
+Array
+(
+    [0] => Start
+    [1] => Step DiscountCatalogMigratorrun
+    [2] => 
+)
+
+
+Date:Tue, 04 Apr 2017 14:54:30 +0300
+Array
+(
+    [0] => Start
+    [1] => Step DiscountCatalogMigratormoveDiscounts
+    [2] => 
+)
+
+
+Date:Tue, 04 Apr 2017 14:54:30 +0300
+Array
+(
+    [0] => Check fields error
+    [1] => 1
+    [2] => Array
+        (
+            [0] => Неверные условия применения
+        )
+
+)
+
+
+Date:Tue, 04 Apr 2017 14:54:30 +0300
+Array
+(
+    [0] => finished
+    [1] => Step DiscountCatalogMigratormoveDiscounts
+    [2] => 
+)
+
+
+Date:Tue, 04 Apr 2017 14:54:30 +0300
+Array
+(
+    [0] => Start
+    [1] => Step DiscountCatalogMigratormoveCoupons
+    [2] => 
+)
+
+
+Date:Tue, 04 Apr 2017 14:54:30 +0300
+Array
+(
+    [0] => finished
+    [1] => Step DiscountCatalogMigratormoveCoupons
+    [2] => 
+)
+
+
+Date:Tue, 04 Apr 2017 14:54:30 +0300
+Array
+(
+    [0] => Start
+    [1] => Step DiscountCatalogMigratorfillShortDescription
+    [2] => 
+)
+
+
+Date:Tue, 04 Apr 2017 14:54:30 +0300
+Array
+(
+    [0] => finished
+    [1] => Step DiscountCatalogMigratorfillShortDescription
+    [2] => 
+)
+
+
+Date:Tue, 04 Apr 2017 14:54:30 +0300
+Array
+(
+    [0] => finished
+    [1] => Step DiscountCatalogMigratorrun
+    [2] => 
+)
+
+

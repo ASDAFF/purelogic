@@ -206,6 +206,15 @@ class AdvertisingBanner extends \CBitrixComponent
 		}
 	}
 
+	protected function registerBannerTags()
+	{
+		if (defined('BX_COMP_MANAGED_CACHE'))
+		{
+			$taggedCache = Main\Application::getInstance()->getTaggedCache();
+			$taggedCache->registerTag('advertising_banner_type_'.$this->arParams['TYPE']);
+		}
+	}
+
 	protected function loadPreview()
 	{
 		global $APPLICATION;
@@ -284,19 +293,13 @@ class AdvertisingBanner extends \CBitrixComponent
 	{
 		global $USER;
 
-		$this->obCache = new CPHPCache;
-		$this->cache_id = SITE_ID.'|advertising.banner|'.serialize($this->arParams).'|'.$USER->GetGroups();
-		$this->cache_path = '/'.SITE_ID.$this->getRelativePath();
-
-		return $this->obCache->StartDataCache($this->arParams['CACHE_TIME'], $this->cache_id, $this->cache_path);
+		return $this->startResultCache(false, $USER->GetGroups());
 	}
 
 	public function executeComponent()
 	{
-		global $USER, $APPLICATION;
-
 		$this->arResult = array(
-			'ID' => randString(5),
+			'ID' => $this->randString(5),
 			'BANNER' => '',
 			'BANNER_PROPERTIES' => array(),
 		);
@@ -310,56 +313,43 @@ class AdvertisingBanner extends \CBitrixComponent
 			else
 			{
 				$this->loadBanners();
+				$this->registerBannerTags();
 			}
 
-			if (is_array($this->arResult['BANNERS']))
+			if (!empty($this->arResult['BANNERS']) && is_array($this->arResult['BANNERS']))
 			{
-				foreach ($this->arResult['BANNERS'] as $bk => $bv)
-				{
-					if (isset($this->arResult['BANNER'][0]))
-					{
-						$this->arResult['BANNER'] .= '<br />';
-					}
-
-					$this->arResult['BANNER'] .= $bv;
-				}
+				$this->arResult['BANNER'] = implode('<br />', $this->arResult['BANNERS']);
 			}
 
-			$this->arResult['BANNER_PROPERTIES'] = (count($this->arResult['BANNERS_PROPERTIES']) > 0) ? $this->arResult['BANNERS_PROPERTIES'][0] : array();
+			if (!empty($this->arResult['BANNERS_PROPERTIES']) && is_array($this->arResult['BANNERS_PROPERTIES']))
+			{
+				$this->arResult['BANNER_PROPERTIES'] = reset($this->arResult['BANNERS_PROPERTIES']);
+			}
 
 			$this->includeComponentTemplate();
-
-			$this->templateCachedData = $this->getTemplateCachedData();
-
-			$this->obCache->EndDataCache(
-				array(
-					'arResult' => $this->arResult,
-					'templateCachedData' => $this->templateCachedData
-				)
-			);
-		}
-		else
-		{
-			$this->arVars = $this->obCache->GetVars();
-			$this->arResult = $this->arVars['arResult'];
-			$this->initComponentTemplate();
-			$this->setTemplateCachedData($this->arVars['templateCachedData']);
 		}
 
 		if ($this->arParams['PREVIEW'] != 'Y')
 		{
-			if (is_array($this->arResult['BANNERS_PROPERTIES']) && !empty($this->arResult['BANNERS_PROPERTIES']))
-			{
-				foreach ($this->arResult['BANNERS_PROPERTIES'] as $banner)
-				{
-					CAdvBanner::FixShow($banner);
+			$this->doFinalActions();
+		}
+	}
 
-					if ($USER->IsAuthorized() && $APPLICATION->GetShowIncludeAreas())
+	public function doFinalActions()
+	{
+		global $USER, $APPLICATION;
+
+		if (!empty($this->arResult['BANNERS_PROPERTIES']) && is_array($this->arResult['BANNERS_PROPERTIES']))
+		{
+			foreach ($this->arResult['BANNERS_PROPERTIES'] as $banner)
+			{
+				CAdvBanner::FixShow($banner);
+
+				if ($USER->IsAuthorized() && $APPLICATION->GetShowIncludeAreas())
+				{
+					if (($arIcons = CAdvBanner::GetEditIcons($banner, $this->arParams['TYPE'], $this->getIncludeAreaIcons())) !== false)
 					{
-						if (($arIcons = CAdvBanner::GetEditIcons($banner, $this->arParams['TYPE'], $this->getIncludeAreaIcons())) !== false)
-						{
-							$this->addIncludeAreaIcons($arIcons);
-						}
+						$this->addIncludeAreaIcons($arIcons);
 					}
 				}
 			}

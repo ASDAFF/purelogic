@@ -186,7 +186,7 @@ foreach($arResult["ELEMENTS_ROWS"] as $rowId => $rowData)
 					)).'</nobr>';
 			}
 		}
-		elseif(preg_match("/^(G|E|E:)/", $arField["TYPE"]))
+		elseif(preg_match("/^(G|E|E:)/", $arField["TYPE"]) && !in_array($arField["TYPE"], $arResult["LIST_UNIQUE_ETYPE"]))
 		{
 			$linked[$rowId][$fieldId]["TYPE"] = $arField["TYPE"];
 			$linked[$rowId][$fieldId]["FIELD_VALUE"] = array();

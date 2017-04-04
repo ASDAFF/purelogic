@@ -86,8 +86,13 @@ if ($normalCount > 0):
 				foreach ($arResult["GRID"]["ROWS"] as $k => $arItem):
 
 					if ($arItem["DELAY"] == "N" && $arItem["CAN_BUY"] == "Y"):
-				?>
-					<tr id="<?=$arItem["ID"]?>">
+					?>
+					<tr id="<?=$arItem["ID"]?>"
+						 data-item-name="<?=$arItem["NAME"]?>"
+						 data-item-brand="<?=$arItem[$arParams['BRAND_PROPERTY']."_VALUE"]?>"
+						 data-item-price="<?=$arItem["PRICE"]?>"
+						 data-item-currency="<?=$arItem["CURRENCY"]?>"
+					>
 						<td class="margin"></td>
 						<?
 						foreach ($arResult["GRID"]["HEADERS"] as $id => $arHeader):
@@ -152,7 +157,7 @@ if ($normalCount > 0):
 														continue;
 												}
 
-												echo $val["NAME"].":&nbsp;<span>".$val["VALUE"]."<span><br/>";
+												echo $val["NAME"].":&nbsp;<span>".$val["VALUE"]."</span><br/>";
 											endforeach;
 										endif;
 										?>
@@ -206,11 +211,12 @@ if ($normalCount > 0):
 																	endforeach;
 																?>
 																	<li style="width:10%;"
-																		class="sku_prop<?=$selected?>"
-																		data-value-id="<?=$arSkuValue["XML_ID"]?>"
-																		data-element="<?=$arItem["ID"]?>"
-																		data-property="<?=$arProp["CODE"]?>"
-																		>
+																		 class="sku_prop<?=$selected?>"
+																		 data-value-id="<?=$arSkuValue["XML_ID"]?>"
+																		 data-sku-name="<?=$arSkuValue["NAME"]?>"
+																		 data-element="<?=$arItem["ID"]?>"
+																		 data-property="<?=$arProp["CODE"]?>"
+																	>
 																		<a href="javascript:void(0)" class="cnt"><span class="cnt_item" style="background-image:url(<?=$arSkuValue["PICT"]["SRC"];?>)"></span></a>
 																	</li>
 																<?
@@ -240,27 +246,34 @@ if ($normalCount > 0):
 																class="sku_prop_list"
 																>
 																<?
-																foreach ($arProp["VALUES"] as $valueId => $arSkuValue):
+																if (!empty($arProp["VALUES"]))
+																{
+																	foreach ($arProp["VALUES"] as $valueId => $arSkuValue):
 
-																	$selected = "";
-																	foreach ($arItem["PROPS"] as $arItemProp):
-																		if ($arItemProp["CODE"] == $arItem["SKU_DATA"][$propId]["CODE"])
-																		{
-																			if ($arItemProp["VALUE"] == $arSkuValue["NAME"])
-																				$selected = " bx_active";
-																		}
-																	endforeach;
-																?>
-																	<li style="width:10%;"
-																		class="sku_prop<?=$selected?>"
-																		data-value-id="<?=($arProp['TYPE'] == 'S' && $arProp['USER_TYPE'] == 'directory' ? $arSkuValue['XML_ID'] : $arSkuValue['NAME']); ?>"
-																		data-element="<?=$arItem["ID"]?>"
-																		data-property="<?=$arProp["CODE"]?>"
+																		$selected = "";
+																		foreach ($arItem["PROPS"] as $arItemProp):
+																			if ($arItemProp["CODE"] == $arItem["SKU_DATA"][$propId]["CODE"])
+																			{
+																				if ($arItemProp["VALUE"] == $arSkuValue["NAME"]
+																					|| $arItemProp["VALUE"] == htmlspecialcharsEx($arSkuValue["NAME"]))
+																				{
+																					$selected = " bx_active";
+																				}
+																			}
+																		endforeach;
+																	?>
+																		<li style="width:10%;"
+																			 class="sku_prop<?=$selected?>"
+																			 data-value-id="<?=($arProp['TYPE'] == 'S' && $arProp['USER_TYPE'] == 'directory' ? $arSkuValue['XML_ID'] : htmlspecialcharsbx($arSkuValue['NAME'])); ?>"
+																			 data-sku-name="<?=htmlspecialcharsbx($arSkuValue["NAME"])?>"
+																			 data-element="<?=$arItem["ID"]?>"
+																			 data-property="<?=$arProp["CODE"]?>"
 																		>
-																		<a href="javascript:void(0)" class="cnt"><?=$arSkuValue["NAME"]?></a>
-																	</li>
-																<?
-																endforeach;
+																			<a href="javascript:void(0)" class="cnt"><?=$arSkuValue["NAME"]?></a>
+																		</li>
+																	<?
+																	endforeach;
+																}
 																?>
 															</ul>
 														</div>
@@ -397,9 +410,13 @@ if ($normalCount > 0):
 							<td class="control">
 								<?
 								if ($bDeleteColumn):
-								?>
-									<a href="<?=str_replace("#ID#", $arItem["ID"], $arUrls["delete"])?>"><?=GetMessage("SALE_DELETE")?></a><br />
-								<?
+									?>
+									<a href="<?=str_replace("#ID#", $arItem["ID"], $arUrls["delete"])?>"
+										onclick="return deleteProductRow(this)">
+										<?=GetMessage("SALE_DELETE")?>
+									</a>
+									<br />
+									<?
 								endif;
 								if ($bDelayColumn):
 								?>
@@ -420,11 +437,10 @@ if ($normalCount > 0):
 			</tbody>
 		</table>
 	</div>
-	<input type="hidden" id="column_headers" value="<?=CUtil::JSEscape(implode($arHeaders, ","))?>" />
-	<input type="hidden" id="offers_props" value="<?=CUtil::JSEscape(implode($arParams["OFFERS_PROPS"], ","))?>" />
-	<input type="hidden" id="action_var" value="<?=CUtil::JSEscape($arParams["ACTION_VARIABLE"])?>" />
-	<input type="hidden" id="quantity_float" value="<?=$arParams["QUANTITY_FLOAT"]?>" />
-	<input type="hidden" id="count_discount_4_all_quantity" value="<?=($arParams["COUNT_DISCOUNT_4_ALL_QUANTITY"] == "Y") ? "Y" : "N"?>" />
+	<input type="hidden" id="column_headers" value="<?=htmlspecialcharsbx(implode($arHeaders, ","))?>" />
+	<input type="hidden" id="offers_props" value="<?=htmlspecialcharsbx(implode($arParams["OFFERS_PROPS"], ","))?>" />
+	<input type="hidden" id="action_var" value="<?=htmlspecialcharsbx($arParams["ACTION_VARIABLE"])?>" />
+	<input type="hidden" id="quantity_float" value="<?=($arParams["QUANTITY_FLOAT"] == "Y") ? "Y" : "N"?>" />
 	<input type="hidden" id="price_vat_show_value" value="<?=($arParams["PRICE_VAT_SHOW_VALUE"] == "Y") ? "Y" : "N"?>" />
 	<input type="hidden" id="hide_coupon" value="<?=($arParams["HIDE_COUPON"] == "Y") ? "Y" : "N"?>" />
 	<input type="hidden" id="use_prepayment" value="<?=($arParams["USE_PREPAYMENT"] == "Y") ? "Y" : "N"?>" />
@@ -485,14 +501,15 @@ if ($normalCount > 0):
 						<td><?echo GetMessage('SALE_VAT_EXCLUDED')?></td>
 						<td id="allSum_wVAT_FORMATED"><?=$arResult["allSum_wVAT_FORMATED"]?></td>
 					</tr>
-					<?if (floatval($arResult["DISCOUNT_PRICE_ALL"]) > 0):?>
-						<tr>
+					<?
+					$showTotalPrice = (float)$arResult["DISCOUNT_PRICE_ALL"] > 0;
+					?>
+						<tr style="display: <?=($showTotalPrice ? 'table-row' : 'none'); ?>;">
 							<td class="custom_t1"></td>
 							<td class="custom_t2" style="text-decoration:line-through; color:#828282;" id="PRICE_WITHOUT_DISCOUNT">
-								<?=$arResult["PRICE_WITHOUT_DISCOUNT"]?>
+								<?=($showTotalPrice ? $arResult["PRICE_WITHOUT_DISCOUNT"] : ''); ?>
 							</td>
 						</tr>
-					<?endif;?>
 					<?
 					if (floatval($arResult['allVATSum']) > 0):
 						?>

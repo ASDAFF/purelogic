@@ -16,13 +16,19 @@ class CSearchFullText
 	{
 		if (!isset(static::$instance))
 		{
-			if (COption::GetOptionString("search", "full_text_engine") === "sphinx")
+			$full_text_engine = COption::GetOptionString("search", "full_text_engine");
+			if ($full_text_engine === "sphinx")
 			{
 				self::$instance = new CSearchSphinx;
 				self::$instance->connect(
 					COption::GetOptionString("search", "sphinx_connection"),
 					COption::GetOptionString("search", "sphinx_index_name")
 				);
+			}
+			elseif ($full_text_engine === "mysql")
+			{
+				self::$instance = new CSearchMysql;
+				self::$instance->connect();
 			}
 			else
 			{
@@ -76,5 +82,13 @@ class CSearchFullText
 	function getRowFormatter()
 	{
 		return null;
+	}
+}
+
+class CSearchFormatter
+{
+	function format($r)
+	{
+		return $r;
 	}
 }

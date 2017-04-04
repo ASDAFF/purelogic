@@ -17,7 +17,7 @@ class CAllIBlockProperty
 		";
 
 		$bJoinIBlock = false;
-		$arSqlSearch = "";
+		$arSqlSearch = array();
 		foreach($arFilter as $key => $val)
 		{
 			$val = $DB->ForSql($val);
@@ -90,27 +90,29 @@ class CAllIBlockProperty
 				WHERE ".implode("\n\t\t\t\tAND ", $arSqlSearch)."
 			";
 
+		$allowKeys = array(
+			"ID" => true,
+			"IBLOCK_ID" => true,
+			"NAME" => true,
+			"ACTIVE" => true,
+			"SORT" => true,
+			"FILTRABLE" => true,
+			"SEARCHABLE" => true
+		);
+		$orderKeys = array();
 		$arSqlOrder = array();
 		foreach($arOrder as $by => $order)
 		{
 			$by = strtoupper($by);
+			if (!isset($allowKeys[$by]))
+				$by = "TIMESTAMP_X";
+			if (isset($orderKeys[$by]))
+				continue;
+			$orderKeys[$by] = true;
 			$order = strtoupper($order) == "ASC"? "ASC": "DESC";
 
-			if(
-				$by === "ID"
-				|| $by === "IBLOCK_ID"
-				|| $by === "NAME"
-				|| $by === "ACTIVE"
-				|| $by === "SORT"
-				|| $by === "FILTRABLE"
-				|| $by === "SEARCHABLE"
-			)
-				$arSqlOrder[] = " BP.".$by." ".$order;
-			else
-				$arSqlOrder[] = " BP.TIMESTAMP_X ".$order;
+			$arSqlOrder[] = "BP.".$by." ".$order;
 		}
-
-		DelDuplicateSort($arSqlOrder);
 
 		if(!empty($arSqlOrder))
 			$strSql .= "
@@ -216,7 +218,7 @@ class CAllIBlockProperty
 		return $res;
 	}
 	///////////////////////////////////////////////////////////////////
-	// Update
+	// Add
 	///////////////////////////////////////////////////////////////////
 	function Add($arFields)
 	{
@@ -360,7 +362,7 @@ class CAllIBlockProperty
 		if(array_key_exists("CODE", $arFields) && strlen($arFields["CODE"]))
 		{
 			if(strpos("0123456789", substr($arFields["CODE"], 0, 1))!==false)
-				$this->LAST_ERROR .= GetMessage("IBLOCK_PROPERTY_CODE_FIRST_LETTER")."<br>";
+				$this->LAST_ERROR .= GetMessage("IBLOCK_PROPERTY_CODE_FIRST_LETTER").": ".$arFields["CODE"]."<br>";
 			if(preg_match("/[^A-Za-z0-9_]/",  $arFields["CODE"]))
 				$this->LAST_ERROR .= GetMessage("IBLOCK_PROPERTY_WRONG_CODE")."<br>";
 		}
@@ -570,7 +572,6 @@ class CAllIBlockProperty
 
 		return $Result;
 	}
-
 
 	///////////////////////////////////////////////////////////////////
 	// Get property information by ID
@@ -1093,6 +1094,7 @@ class CAllIBlockProperty
 			"GetAdminFilterHTML" => array("CIBlockPropertyElementList","GetAdminFilterHTML"),
 			"PrepareSettings" =>array("CIBlockPropertyElementList","PrepareSettings"),
 			"GetSettingsHTML" =>array("CIBlockPropertyElementList","GetSettingsHTML"),
+			"GetExtendedValue" => array("CIBlockPropertyElementList", "GetExtendedValue"),
 		);
 	}
 

@@ -5,6 +5,7 @@ $MESS["SONET_UG_EMPTY_GROUP_ID"] = "Не указана группа";
 $MESS["SONET_UG_ERROR_NO_GROUP_ID"] = "Группа указана неверно";
 $MESS["SONET_UG_EMPTY_DATE_CREATE"] = "Дата создания указана неверно";
 $MESS["SONET_UG_EMPTY_DATE_UPDATE"] = "Дата изменения параметров указана неверно";
+$MESS["SONET_UG_EMPTY_DATE_LAST_VIEW"] = "Дата последнего просмотра указана неверно";
 $MESS["SONET_UG_EMPTY_ROLE"] = "Не указана роль";
 $MESS["SONET_UG_ERROR_NO_ROLE"] = "Роль указана неверно";
 $MESS["SONET_NO_USER2GROUP"] = "Запись не найдена";

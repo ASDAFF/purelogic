@@ -2860,6 +2860,11 @@ window.MPFMentionInit = function(formId, params)
 			inputName: 'feed-add-post-destination-input',
 			tagInputName: 'bx-destination-tag'
 		}));
+		BX.bind(BX('feed-add-post-destination-input'), 'paste', BX.delegate(BX.SocNetLogDestination.BXfpSearch, {
+			formName: window.BXSocNetLogDestinationFormName,
+			inputName: 'feed-add-post-destination-input',
+			tagInputName: 'bx-destination-tag'
+		}));
 		BX.bind(BX('feed-add-post-destination-input'), 'keydown', BX.delegate(BX.SocNetLogDestination.BXfpSearchBefore, {
 			formName: window.BXSocNetLogDestinationFormName,
 			inputName: 'feed-add-post-destination-input'

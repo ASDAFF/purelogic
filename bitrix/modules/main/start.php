@@ -27,6 +27,7 @@ require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/lib/loader.php");
 		"bitrix\\main\\objectnotfoundexception" => "lib/exception.php",
 		"bitrix\\main\\objectexception" => "lib/exception.php",
 		"bitrix\\main\\systemexception" => "lib/exception.php",
+		"bitrix\\main\\accessdeniedexception" => "lib/exception.php",
 		"bitrix\\main\\io\\invalidpathexception" => "lib/io/ioexception.php",
 		"bitrix\\main\\io\\filenotfoundexception" => "lib/io/ioexception.php",
 		"bitrix\\main\\io\\filedeleteexception" => "lib/io/ioexception.php",

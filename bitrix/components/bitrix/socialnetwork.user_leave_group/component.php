@@ -1,5 +1,14 @@
 <?
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+/** @var CBitrixComponent $this */
+/** @var array $arParams */
+/** @var array $arResult */
+/** @var string $componentPath */
+/** @var string $componentName */
+/** @var string $componentTemplate */
+/** @global CDatabase $DB */
+/** @global CUser $USER */
+/** @global CMain $APPLICATION */
 
 if (!CModule::IncludeModule("socialnetwork"))
 {
@@ -67,9 +76,17 @@ else
 			}
 
 			if ($arResult["CurrentUserPerms"]["UserIsOwner"])
+			{
 				$arResult["FatalError"] = GetMessage("SONET_C37_IS_OWNER").". ";
+			}
 			elseif (!$arResult["CurrentUserPerms"]["UserIsMember"])
+			{
 				$arResult["FatalError"] = GetMessage("SONET_C37_NOT_MEMBER").". ";
+			}
+			elseif (isset($arResult["CurrentUserPerms"]["UserIsAutoMember"]) && $arResult["CurrentUserPerms"]["UserIsAutoMember"])
+			{
+				$arResult["FatalError"] = GetMessage("SONET_C37_IS_AUTO_MEMBER").". ";
+			}
 			else
 			{
 				if ($arParams["SET_TITLE"] == "Y")
@@ -86,7 +103,9 @@ else
 							!CSocNetUserToGroup::DeleteRelation($GLOBALS["USER"]->GetID(), $arResult["Group"]["ID"])
 							&& ($e = $APPLICATION->GetException())
 						)
+						{
 							$errorMessage .= $e->GetString();
+						}
 					}
 
 					if (strlen($errorMessage) > 0)

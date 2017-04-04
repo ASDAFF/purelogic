@@ -87,7 +87,7 @@ class ListExportExcelComponent extends CBitrixComponent
 			return;
 		}
 
-		$this->arResult["BIZPROC"] = (bool)CModule::includeModule("bizproc");
+		$this->arResult["BIZPROC"] = (bool)CModule::includeModule("bizproc") && CBPRuntime::isFeatureEnabled();
 		$this->arResult["DISK"] = (bool)CModule::includeModule("disk");
 
 		$this->listsPerm = CListPermissions::CheckAccess(
@@ -413,7 +413,6 @@ class ListExportExcelComponent extends CBitrixComponent
 					if (in_array($fieldId, $arProperties))
 					{
 						$arField = $this->arResult["FIELDS"][$fieldId];
-
 						if (is_array($arField["PROPERTY_USER_TYPE"]) && is_array($arField["PROPERTY_USER_TYPE"]["GetPublicViewHTML"]))
 						{
 							if($arProp["USER_TYPE"] == "map_yandex")
@@ -457,13 +456,27 @@ class ListExportExcelComponent extends CBitrixComponent
 
 							if($arProp["MULTIPLE"] == "Y")
 							{
-								foreach($arProp["~VALUE"] as $propKey => $propValue)
+								if(is_array($arField["PROPERTY_USER_TYPE"])
+									&& is_array($arField["PROPERTY_USER_TYPE"]["GetPublicViewHTMLMulty"]))
 								{
-									$data[$fieldId][] = call_user_func_array($arField["PROPERTY_USER_TYPE"]["GetPublicViewHTML"], array(
+									$data[$fieldId][] = call_user_func_array(
+										$arField["PROPERTY_USER_TYPE"]["GetPublicViewHTMLMulty"], array(
 										$arField,
-										array("VALUE" => $propValue),
+										array("VALUE" => $arProp["~VALUE"]),
 										array(),
 									));
+								}
+								else
+								{
+									foreach($arProp["~VALUE"] as $propKey => $propValue)
+									{
+										$data[$fieldId][] = call_user_func_array(
+											$arField["PROPERTY_USER_TYPE"]["GetPublicViewHTML"], array(
+											$arField,
+											array("VALUE" => $propValue),
+											array(),
+										));
+									}
 								}
 							}
 							else

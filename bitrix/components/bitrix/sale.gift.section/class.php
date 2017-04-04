@@ -258,6 +258,21 @@ class CSaleGiftSectionComponent extends CCatalogViewedProductsComponent
 		}
 	}
 
+	protected function setItemsPrices()
+	{
+		parent::setItemsPrices();
+
+		foreach ($this->items as &$item)
+		{
+			if (!empty($item['OFFERS']))
+			{
+				continue;
+			}
+
+			$this->setGiftDiscountToMinPrice($item);
+		}
+	}
+
 	protected function formatResult()
 	{
 		$this->items = array_slice($this->items, 0, $this->arParams['PAGE_ELEMENT_COUNT']);

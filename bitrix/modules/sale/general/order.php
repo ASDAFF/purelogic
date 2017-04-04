@@ -1,6 +1,7 @@
 <?
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Sale;
+use Bitrix\Sale\Internals;
 use Bitrix\Sale\PriceMaths;
 
 Loc::loadMessages(__FILE__);
@@ -1607,14 +1608,25 @@ class CAllSaleOrder
 		global $APPLICATION;
 		if (strlen($currency)<=0) return false;
 
-		$dbOrders = CSaleOrder::GetList(array(), array("CURRENCY" => $currency), false, array("nTopCount" => 1), array("ID", "CURRENCY"));
-		if ($arOrders = $dbOrders->Fetch())
+		if (Internals\OrderTable::getList(array(
+			'filter' => array('=CURRENCY' => $currency),
+			'limit' => 1
+		))->fetch())
 		{
-			$APPLICATION->ThrowException(str_replace("#CURRENCY#", $currency, Loc::getMessage("SKGO_ERROR_ORDERS_CURRENCY")), "ERROR_ORDERS_CURRENCY");
-			return False;
+			$APPLICATION->ThrowException(Loc::getMessage("SKGO_ERROR_ORDERS_CURRENCY" , array("#CURRENCY#" => $currency)), "ERROR_ORDERS_CURRENCY");
+			return false;
 		}
 
-		return True;
+		if (Internals\OrderArchiveTable::getList(array(
+			'filter' => array('=CURRENCY' => $currency),
+			'limit' => 1
+		))->fetch())
+		{
+			$APPLICATION->ThrowException(Loc::getMessage("SKGO_ERROR_ORDERS_ARCHIVE_CURRENCY", array("#CURRENCY#" => $currency)), "ERROR_ORDERS_ARCHIVE_CURRENCY");
+			return false;
+		}
+
+		return true;
 	}
 
 	function OnBeforeUserDelete($userID)
@@ -1628,14 +1640,25 @@ class CAllSaleOrder
 			return false;
 		}
 
-		$dbOrders = CSaleOrder::GetList(array(), array("USER_ID" => $userID), false, array("nTopCount" => 1), array("ID", "USER_ID"));
-		if ($arOrders = $dbOrders->Fetch())
+		if (Internals\OrderTable::getList(array(
+			'filter' => array('=USER_ID' => $userID),
+			'limit' => 1
+		))->fetch())
 		{
-			$APPLICATION->ThrowException(str_replace("#USER_ID#", $userID, Loc::getMessage("SKGO_ERROR_ORDERS")), "ERROR_ORDERS");
-			return False;
+			$APPLICATION->ThrowException(Loc::getMessage("SKGO_ERROR_ORDERS", array("#USER_ID#" => $userID)), "ERROR_ORDERS");
+			return false;
 		}
 
-		return True;
+		if (Internals\OrderArchiveTable::getList(array(
+			'filter' => array('=USER_ID' => $userID),
+			'limit' => 1
+		))->fetch())
+		{
+			$APPLICATION->ThrowException(Loc::getMessage("SKGO_ERROR_ORDERS_ARCHIVE", array("#USER_ID#" => $userID)), "ERROR_ORDERS_ARCHIVE");
+			return false;
+		}
+
+		return true;
 	}
 
 	//*************** ACTIONS *********************/
@@ -2387,9 +2410,12 @@ class CAllSaleOrder
 			return false;
 		}
 
-		foreach(GetModuleEvents("sale", "OnSaleBeforeStatusOrder", true) as $arEvent)
-			if (ExecuteModuleEventEx($arEvent, Array($ID, $val))===false)
-				return false;
+		if ($isOrderConverted == 'N')
+		{
+			foreach(GetModuleEvents("sale", "OnSaleBeforeStatusOrder", true) as $arEvent)
+				if (ExecuteModuleEventEx($arEvent, Array($ID, $val))===false)
+					return false;
+		}
 
 		$arFields = array(
 			"STATUS_ID" => $val,
@@ -3442,19 +3468,10 @@ class CAllSaleOrder
 									$r = $shipment->tryUnreserve();
 									if (!$r->isSuccess())
 									{
-										if (!$shipment->isMarked())
+										Sale\EntityMarker::addMarker($order, $shipment, $r);
+										if (!$shipment->isSystem())
 										{
 											$shipment->setField('MARKED', 'Y');
-											if (is_array($r->getErrorMessages()))
-											{
-												$oldErrorText = $shipment->getField('REASON_MARKED');
-												foreach($r->getErrorMessages() as $error)
-												{
-													$oldErrorText .= (strval($oldErrorText) != '' ? "\n" : ""). $error;
-												}
-
-												$shipment->setField('REASON_MARKED', $oldErrorText);
-											}
 										}
 									}
 								}

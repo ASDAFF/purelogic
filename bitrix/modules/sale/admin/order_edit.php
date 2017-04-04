@@ -76,19 +76,40 @@ if ($boolLocked)
 	);
 }
 
-$allowedStatusesView = array();
 $order = Bitrix\Sale\Order::load($_REQUEST["ID"]);
-
-if($order)
-	$allowedStatusesView = \Bitrix\Sale\OrderStatus::getStatusesUserCanDoOperations($USER->GetID(), array('view'));
-
-if(!$order || !in_array($order->getField("STATUS_ID"), $allowedStatusesView))
+if(!$order)
 	LocalRedirect("/bitrix/admin/sale_order.php?lang=".LANGUAGE_ID.GetFilterParams("filter_", false));
 
 $allowedStatusesUpdate = \Bitrix\Sale\OrderStatus::getStatusesUserCanDoOperations($USER->GetID(), array('update'));
 
 if(!in_array($order->getField("STATUS_ID"), $allowedStatusesUpdate))
 	LocalRedirect("/bitrix/admin/sale_order_view.php?ID=".$ID."&lang=".LANGUAGE_ID.GetFilterParams("filter_"));
+
+$isUserResponsible = false;
+$isAllowCompany = false;
+
+if ($saleModulePermissions == 'P')
+{
+	$userCompanyList = array();
+	$groups = $USER->GetUserGroupArray();
+
+	$userCompanyList = \Bitrix\Sale\Services\Company\Manager::getUserCompanyList($USER->GetID());
+
+	if ($order->getField('RESPONSIBLE_ID') == $USER->GetID())
+	{
+		$isUserResponsible = true;
+	}
+
+	if (in_array($order->getField('COMPANY_ID'), $userCompanyList))
+	{
+		$isAllowCompany = true;
+	}
+
+	if (!$isUserResponsible && !$isAllowCompany)
+	{
+		LocalRedirect("/bitrix/admin/sale_order.php?lang=".LANGUAGE_ID.GetFilterParams("filter_", false));
+	}
+}
 
 $userId = isset($_POST["USER_ID"]) ? intval($_POST["USER_ID"]) : $order->getUserId();
 
@@ -110,7 +131,7 @@ $isNeedFieldsRestore = $_SERVER["REQUEST_METHOD"] == "POST" && !$isSavingOperati
 
 //save order params
 if (($isSavingOperation || $isNeedFieldsRestore || $isRefreshDataAndSaveOperation)
-	&& $saleModulePermissions >= "U"
+	&& ($saleModulePermissions >= "U" || ($saleModulePermissions == "P" && ($isAllowCompany === true || $isUserResponsible === true)))
 	&& check_bitrix_sessid()
 	&& $result->isSuccess()
 )
@@ -161,7 +182,7 @@ if (($isSavingOperation || $isNeedFieldsRestore || $isRefreshDataAndSaveOperatio
 				if (!($basket = $order->getBasket()))
 					throw new \Bitrix\Main\ObjectNotFoundException('Entity "Basket" not found');
 
-				$res = $basket->refreshData(array('PRICE', 'QUANTITY', 'COUPONS'));
+				$res = $basket->refreshData(array('PRICE', 'COUPONS'));
 
 				if(!$res->isSuccess())
 					$result->addErrors($res->getErrors());
@@ -450,8 +471,12 @@ echo OrderEdit::getFastNavigationHtml($fastNavItems);
 echo Blocks\OrderInfo::getView($order, $orderBasket);
 
 // Problem block
-if($order->getField("MARKED") == "Y" )
-	echo OrderEdit::getProblemBlockHtml($order->getField("REASON_MARKED"), $order->getId());
+?><div id="sale-adm-order-problem-block"><?
+	if($order->getField("MARKED") == "Y")
+	{
+		echo Blocks\OrderMarker::getView($order->getId());
+	}
+	?></div><?
 
 $aTabs = array(
 	array("DIV" => "tab_order", "TAB" => Loc::getMessage("SALE_TAB_ORDER"), "SHOW_WRAP" => "N", "IS_DRAGGABLE" => "Y"),
@@ -567,7 +592,7 @@ $tabControl->EndTab();
 
 $tabControl->Buttons(
 	array(
-		"disabled" => $boolLocked,
+		"disabled" => true, //while tails are not loaded.
 		"back_url" => "/bitrix/admin/sale_order_edit.php?lang=".LANGUAGE_ID."&unlock=Y&target=list&ID=".$ID.GetFilterParams("filter_"))
 );
 
@@ -588,6 +613,7 @@ $tabControl->End();
 					));
 				?>
 			);
+			BX.Sale.Admin.OrderEditPage.enableFormButtons('sale_order_edit_form');
 		});
 	</script>
 <?else:?>
@@ -597,6 +623,10 @@ $tabControl->End();
 				BX.Sale.Admin.OrderEditPage.ajaxRequests.getOrderTails("<?=$order->getId()?>", "edit", "<?=$basketPrefix?>"),
 				true
 			);
+
+			BX.addCustomEvent('onAfterSaleOrderTailsLoaded', function(){
+				BX.Sale.Admin.OrderEditPage.enableFormButtons('sale_order_edit_form');
+			});
 		});
 	</script>
 <?endif;

@@ -47,7 +47,7 @@
 	};
 	BX.addCustomEvent(window, 'OnUCFormSubmit', function(){ setText(''); });
 
-	BX.addCustomEvent("main.post.form/text", function(text){
+	BXMobileApp.addCustomEvent("main.post.form/text", function(text){
 		text = BX.type.isArray(text) ? text[0] : text;
 		setText(text);
 	});
@@ -520,6 +520,18 @@
 			menu.push({
 				title: BX.message('BPC_MES_DELETE'),
 				callback: function() { repo["list"][ENTITY_XML_ID].act(node.getAttribute('bx-mpl-delete-url'), ID, 'DELETE'); }});
+		if (node.getAttribute("bx-mpl-createtask-show") == "Y")
+			menu.push({
+				title: BX.message('BPC_MES_CREATETASK'),
+				callback: function() {
+					if (typeof oMSL != 'undefined')
+					{
+						oMSL.createTask({
+							entityType: 'BLOG_COMMENT',
+							entityId: ID
+						});
+					}
+				}});
 		if (menu.length > 0)
 		{
 			action = new window.BXMobileApp.UI.ActionSheet({ buttons: menu }, "commentSheet" );
@@ -611,8 +623,17 @@
 			}, this);
 			this.windowEvents['onPull'] = BX.delegate(function(data) {
 				var params = data.params;
-				if (data.module_id == "unicomments" && data.command == "comment_mobile" &&
-					params["ENTITY_XML_ID"] == this.ENTITY_XML_ID && ((params["USER_ID"] + '') != (BX.message("USER_ID") + '')))
+				if (
+					data.command == "comment_mobile"
+					&& params["ENTITY_XML_ID"] == this.ENTITY_XML_ID
+					&& (
+						((params["USER_ID"] + '') != (BX.message("USER_ID") + ''))
+						|| (
+							typeof params["AUX"] != 'undefined'
+							&& BX.util.in_array(params["AUX"], ['createtask', 'fileversion'])
+						)
+					)
+				)
 				{
 					if (data.command == 'comment_mobile' && params["ID"])
 						this.pullNewRecord(params);
@@ -624,7 +645,7 @@
 			BX.addCustomEvent(window, 'OnUCFormResponse', this.windowEvents['OnUCFormResponse']);
 			BX.addCustomEvent(window, 'OnUCAfterRecordAdd', this.windowEvents['OnUCAfterRecordAdd']);
 			BX.addCustomEvent(window, 'OnUCFormBeforeSubmit', this.windowEvents['OnUCFormBeforeSubmit']);
-			BX.addCustomEvent(window, 'onPull', this.windowEvents['onPull']);
+			BX.addCustomEvent(window, 'onPull-unicomments', this.windowEvents['onPull']);
 
 			if (staticParams['SHOW_POST_FORM'] == "Y")
 				MPFForm.link(this.ENTITY_XML_ID, formParams);
@@ -634,6 +655,7 @@
 		};
 		BX.extend(BX.MPL, window["FCList"]);
 		BX.MPL.prototype.init = function() {};
+		BX.MPL.prototype.url["activity"] = BX.message("SITE_DIR") + 'mobile/?mobile_action=comment_activity';
 		BX.MPL.prototype.makeThumb = function(id, message, txt, attachments) {
 			var container = (message.node || BX('record-' + id.join('-') + '-cover'));
 			if (!container)

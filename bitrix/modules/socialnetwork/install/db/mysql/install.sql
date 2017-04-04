@@ -52,6 +52,7 @@ create table b_sonet_user2group
   USER_ID int not null,
   GROUP_ID int not null,
   ROLE char(1) not null default 'U',
+  AUTO_MEMBER char(1) not null default 'N',
   DATE_CREATE datetime not null,
   DATE_UPDATE datetime not null,
   INITIATED_BY_TYPE char(1) not null default 'U',
@@ -202,7 +203,8 @@ create table b_sonet_log
   index IX_SONET_LOG_5(USER_ID, ENTITY_TYPE, LOG_UPDATE),
   index IX_SONET_LOG_6(MODULE_ID),
   index IX_SONET_LOG_7(ENTITY_ID, EVENT_ID),
-  index IX_SONET_LOG_8(RATING_ENTITY_ID, RATING_TYPE_ID)
+  index IX_SONET_LOG_8(RATING_ENTITY_ID, RATING_TYPE_ID),
+  index IX_SONET_LOG_9(EXTERNAL_ID)
 );
 
 create table b_sonet_log_site
@@ -348,4 +350,20 @@ create table b_sonet_subscription
 	CODE varchar(50) not null,
 	primary key (ID),
 	unique IX_SONET_SUBSCRIPTION_1(USER_ID, CODE)
-)
+);
+
+create table b_sonet_group_view
+(
+	USER_ID int(11) not null,
+	GROUP_ID int(11) not null,
+	DATE_VIEW datetime DEFAULT NULL,
+	primary key (USER_ID, GROUP_ID)
+);
+
+create table b_sonet_group_favorites
+(
+	USER_ID int(11) not null,
+	GROUP_ID int(11) not null,
+	DATE_ADD datetime DEFAULT NULL,
+	primary key (USER_ID, GROUP_ID)
+);

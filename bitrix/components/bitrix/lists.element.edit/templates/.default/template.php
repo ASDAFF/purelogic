@@ -252,6 +252,8 @@ foreach($arResult["FIELDS"] as $FIELD_ID => $arField)
 			$arResult["FORM_DATA"][$FIELD_ID] = array($arResult["FORM_DATA"][$FIELD_ID]);
 		foreach($arResult["FORM_DATA"][$FIELD_ID] as $key => $formData)
 		{
+			if(empty($formData["VALUE"]))
+				$formData["VALUE"] = "";
 			$arResult["FORM_DATA"][$FIELD_ID][$key] = $formData["VALUE"];
 			if($read == "Y")
 			{
@@ -263,22 +265,37 @@ foreach($arResult["FIELDS"] as $FIELD_ID => $arField)
 		if($read == "Y")
 		{
 			$listHtml = array();
+			$listValue = array();
+			$method = "GetPublicViewHTML";
 			foreach($arResult["FORM_DATA"]["~".$FIELD_ID] as $formDataValue)
 			{
-				$listHtml[] = call_user_func_array($arField["PROPERTY_USER_TYPE"]["GetPublicViewHTML"],
+				if(is_array($arField["PROPERTY_USER_TYPE"]) 
+					&& is_array($arField["PROPERTY_USER_TYPE"]["GetPublicViewHTMLMulty"]))
+				{
+					$method = "GetPublicViewHTMLMulty";
+				}
+				if(!is_array($listValue[$FIELD_ID]))
+					$listValue[$FIELD_ID] = array();
+				$listValue[$FIELD_ID][] = $formDataValue;
+			}
+			foreach($listValue as $fieldId => $value)
+			{
+				$listHtml[] = call_user_func_array($arField["PROPERTY_USER_TYPE"][$method],
 					array(
 						$arField,
-						$formDataValue,
+						$value,
 						array(
-							"VALUE"=>$FIELD_ID,
+							"VALUE"=>$fieldId,
 							"DESCRIPTION"=>'',
 							"FORM_NAME"=>"form_".$arResult["FORM_ID"],
 							"MODE"=>"FORM_FILL",
 						),
 					));
 			}
+			unset($value);
+
 			$html .= implode("<br>", array_diff($listHtml, array('&nbsp;')));
-			if(preg_match("/^(E|E:)/", $arField["TYPE"]))
+			if(preg_match("/^(E|E:)/", $arField["TYPE"]) && !in_array($arField["TYPE"], $arResult["LIST_UNIQUE_ETYPE"]))
 			{
 				$html = '';
 				$elementQuery = CIBlockElement::getList(
@@ -326,7 +343,8 @@ foreach($arResult["FIELDS"] as $FIELD_ID => $arField)
 	elseif(is_array($arField["PROPERTY_USER_TYPE"]) && array_key_exists("GetPublicEditHTML", $arField["PROPERTY_USER_TYPE"]))
 	{
 		$params = array('width' => '100%','height' => '200px');
-		if($arField["MULTIPLE"] == "Y" && $arField["TYPE"] != "S:DiskFile")
+		$listTypeNotMultiple = array('S:DiskFile', 'E:ECrm');
+		if($arField["MULTIPLE"] == "Y" && !in_array($arField["TYPE"], $listTypeNotMultiple))
 		{
 			$checkHtml = false;
 			$html = '<table id="tbl'.$FIELD_ID.'">';
@@ -529,6 +547,7 @@ foreach($arResult["FIELDS"] as $FIELD_ID => $arField)
 	elseif($arField["PROPERTY_TYPE"] == "N")
 	{
 		$disabled = '';
+		$html = '';
 		if($read == "Y")
 			$disabled = 'disabled';
 
@@ -1069,6 +1088,7 @@ function connectionHtmlEditor($fieldId, $fieldNameForHtml, $params, $content)
 			'autoResize' => true,
 			'autoResizeOffset' => 40,
 			'saveOnBlur' => true,
+			'actionUrl' => '/bitrix/tools/html_editor_action.php',
 			'controlsMap' => array(
 				array('id' => 'Bold', 'compact' => true, 'sort' => 80),
 				array('id' => 'Italic', 'compact' => true, 'sort' => 90),
@@ -1115,7 +1135,7 @@ $arTabs = array(
 );
 
 
-if(CModule::IncludeModule("bizproc") && ($arResult["IBLOCK"]["BIZPROC"] != "N"))
+if(CModule::IncludeModule("bizproc") && CBPRuntime::isFeatureEnabled() && ($arResult["IBLOCK"]["BIZPROC"] != "N"))
 {
 	$arCurrentUserGroups = $GLOBALS["USER"]->GetUserGroupArray();
 	if(!$arResult["ELEMENT_FIELDS"] || $arResult["ELEMENT_FIELDS"]["CREATED_BY"] == $GLOBALS["USER"]->GetID())

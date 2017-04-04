@@ -377,6 +377,7 @@ class CCatalogAdmin
 			'menu_sale_taxes',
 			'menu_sale_settings',
 			'menu_catalog_store',
+			'menu_sale_buyers',
 		);
 
 		foreach ($arMenu as &$arMenuItem)
@@ -402,6 +403,9 @@ class CCatalogAdmin
 					break;
 				case 'menu_catalog_store':
 					static::OnBuildSaleStoreMenu($arMenuItem['items']);
+					break;
+				case 'menu_sale_buyers':
+					static::OnBuildSaleBuyersMenu($arMenuItem['items']);
 					break;
 			}
 
@@ -579,6 +583,36 @@ class CCatalogAdmin
 				"readonly" => !self::$catalogStore,
 			);
 			$arItems = $arResult;
+		}
+	}
+
+	protected static function OnBuildSaleBuyersMenu(&$arItems)
+	{
+		if (self::$catalogRead)
+		{
+			$found = false;
+			if (!empty($arItems))
+			{
+				foreach ($arItems as $item)
+				{
+					if ($item['url'] == "cat_subscription_list.php?lang=".LANGUAGE_ID)
+					{
+						$found = true;
+						break;
+					}
+				}
+				unset($item);
+			}
+			if (!$found)
+			{
+				$arItems[] = array(
+					"text" => Loc::getMessage("CM_SUBSCRIPTION_PRODUCT"),
+					"url" => "cat_subscription_list.php?lang=" . LANGUAGE_ID,
+					"more_url" => array("cat_subscription_list.php"),
+					"title" => Loc::getMessage("CM_SUBSCRIPTION_PRODUCT"),
+				);
+			}
+			unset($found);
 		}
 	}
 

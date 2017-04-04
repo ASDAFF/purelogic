@@ -676,10 +676,10 @@ class CAllBlogUser
 		else
 		{
 			if (intval($arParams["AVATAR_SIZE"]) <= 0)
-				$arParams["AVATAR_SIZE"] = 42;
+				$arParams["AVATAR_SIZE"] = 100;
 
 			if (intval($arParams["AVATAR_SIZE_COMMENT"]) <= 0)
-				$arParams["AVATAR_SIZE_COMMENT"] = 30;
+				$arParams["AVATAR_SIZE_COMMENT"] = 100;
 
 			$bResizeImmediate = (isset($arParams["RESIZE_IMMEDIATE"]) && $arParams["RESIZE_IMMEDIATE"] == "Y");
 
@@ -765,19 +765,39 @@ class CAllBlogUser
 		{
 			if (intval($arParams["AVATAR_SIZE"]) <= 0)
 			{
-				$arParams["AVATAR_SIZE"] = 42;
+				$arParams["AVATAR_SIZE"] = 100;
 			}
 
 			if (intval($arParams["AVATAR_SIZE_COMMENT"]) <= 0)
 			{
-				$arParams["AVATAR_SIZE_COMMENT"] = 30;
+				$arParams["AVATAR_SIZE_COMMENT"] = 100;
+			}
+
+			$arSelectParams = Array(
+				"FIELDS" => Array("ID", "LAST_NAME", "NAME", "SECOND_NAME", "LOGIN", "PERSONAL_PHOTO", "PERSONAL_GENDER", "EXTERNAL_AUTH_ID")
+			);
+
+			if (
+				IsModuleInstalled('intranet')
+				|| IsModuleInstalled('crm')
+			)
+			{
+				$arSelectParams["SELECT"] = array();
+				if (IsModuleInstalled('intranet'))
+				{
+					$arSelectParams["SELECT"][] = "UF_DEPARTMENT";
+				}
+				if (IsModuleInstalled('crm'))
+				{
+					$arSelectParams["SELECT"][] = "UF_USER_CRM_ENTITY";
+				}
 			}
 
 			$dbUser = CUser::GetList(
 				($sort_by = Array('ID'=>'desc')),
 				($dummy=''),
 				Array("ID" => implode(" | ", $arIdToGet)),
-				Array("FIELDS" => Array("ID", "LAST_NAME", "NAME", "SECOND_NAME", "LOGIN", "PERSONAL_PHOTO", "PERSONAL_GENDER", "EXTERNAL_AUTH_ID"))
+				$arSelectParams
 			);
 			while ($arUser = $dbUser->GetNext())
 			{
@@ -811,7 +831,6 @@ class CAllBlogUser
 				$arResult["arUser"][$arUser["ID"]] = CBlogPost::$arBlogUCache[$arUser["ID"]] = $arUser;
 			}
 		}
-
 		return $arResult["arUser"];
 	}
 }

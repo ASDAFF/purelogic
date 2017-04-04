@@ -79,6 +79,7 @@ $arJSCoreConfig = array(
 		'css' => $pathCSS.'/core_viewer.css',
 		'lang' => $pathLang.'/js_core_viewer.php',
 		'rel' => array('ls', 'ajax', 'popup'),
+		'lang_additional' => array('DISK_MYOFFICE' => COption::GetOptionString('disk', 'demo_myoffice', false))
 	),
 	'window' => array(
 		'js' => $pathJS.'/core_window.js',
@@ -163,6 +164,31 @@ $arJSCoreConfig = array(
 		'lang' => $pathLang.'/js_core_clipboard.php',
 		'rel' => array("popup")
 	),
+	'recorder' => array(
+		'js' => '/bitrix/js/main/recorder/recorder.js',
+		'rel' => array('lamejs')
+	),
+	'pin' => array(
+		'js' => '/bitrix/js/main/pin/pin.js',
+		'css' => '/bitrix/js/main/pin/css/pin.css'
+	),
+	'ui_select' => array(
+		'js' => $pathJS.'/core_ui_select.js',
+		'rel' => array('popup')
+	),
+	'ui_date' => array(
+		'js' => $pathJS.'/core_ui_date.js'
+	),
+	'ui' => array(
+		'js' => $pathJS.'/core_ui_factory.js',
+		'rel' => array('ui_select', 'ui_date', 'decl')
+	),
+	'decl' => array(
+		'js' => $pathJS.'/core_decl.js'
+	),
+	'drag_drop' => array(
+		'js' => $pathJS.'/core_dragdrop.js'
+	),
 
 	/* external libs */
 
@@ -232,9 +258,11 @@ $arJSCoreConfig = array(
 		'js' => '/bitrix/js/main/helper/helper.js',
 		'css' => '/bitrix/js/main/helper/css/helper.css',
 	),
-	'pin' => array(
-		'js' => '/bitrix/js/main/pin/pin.js',
-		'css' => '/bitrix/js/main/pin/css/pin.css'
+	'webrtc_adapter' => array(
+		'js' => '/bitrix/js/main/webrtc/adapter.js'
+	),
+	'lamejs' => array(
+		'js' => '/bitrix/js/main/recorder/recorder.js'
 	)
 );
 

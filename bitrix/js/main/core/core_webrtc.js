@@ -29,27 +29,21 @@
 		this.enableMicAutoParameters = true;
 
 		this.configVideo = {
-			maxWidth: 1920,
-			maxHeight: 1080,
-			minWidth: 1280,
-			minHeight: 720
+			width: {min: 1280, max: 1920},
+			height: {min: 720, max: 1080}
 		};
 		this.configVideoGroup = {
-			maxWidth: 1280,
-			maxHeight: 720,
-			minWidth: 1280,
-			minHeight: 720
+			width: {min: 1280, max: 1280},
+			height: {min: 720, max: 720}
 		};
 		this.configVideoMobile = {
-			maxWidth: 1280,
-			maxHeight: 720,
-			minWidth: 1280,
-			minHeight: 720
+			width: {min: 1280, max: 1280},
+			height: {min: 720, max: 720}
 		};
 
 		this.configVideoAfterError = {
-			maxWidth: 1920,
-			maxHeight: 1080
+			width: {max: 1920},
+			height: {max: 1080}
 		};
 
 		this.callStreamSelf = null;
@@ -203,10 +197,6 @@
 				};
 			}
 
-			try { MediaStreamTrack.getSources(function(){}) } catch(e) {
-				MediaStreamTrack.getSources = function(func) {func([])};
-			}
-
 			if (!webkitRTCPeerConnection.prototype.getLocalStreams)
 			{
 				webkitRTCPeerConnection.prototype.getLocalStreams = function()
@@ -289,7 +279,7 @@
 		}
 		else if (this.detectedBrowser == 'chrome')
 		{
-			this.pcConfig = { "iceServers": [ { url:"stun:"+this.turnServer}, { url:"turn:"+this.turnServerLogin+"@"+this.turnServer, credential:this.turnServerPassword} ] };
+			this.pcConfig = { "iceServers": [ { url:"stun:"+this.turnServer}, { url:"turn:"+this.turnServerLogin+"@"+this.turnServer, username: this.turnServerLogin, credential:this.turnServerPassword} ] };
 			this.pcConstraints = {"optional": [{"DtlsSrtpKeyAgreement": true}]};
 		}
 
@@ -379,16 +369,17 @@
 		video = typeof(video) != 'undefined' && video !== true ? video: this.callToGroup? this.configVideoGroup: this.configVideo;
 		if(video && this.defaultCamera)
 		{
-			video.deviceId = {exact: this.defaultCamera};
+			video.deviceId = {ideal: this.defaultCamera};
 		}
 
 		audio = typeof(audio) != 'undefined' && audio !== true? audio: {};
 		if(audio && this.defaultMicrophone)
 		{
-			audio.deviceId = {exact: this.defaultMicrophone};
+			audio.deviceId = {ideal: this.defaultMicrophone};
 		}
 
-		if(this.enableMicAutoParameters === false)
+		/* for unknown reason, these constraints do not work in chrome, when paired with video resolution constraints */
+		if(false && this.enableMicAutoParameters === false)
 		{
 			audio.optional = [
 				{echoCancellation:false},
@@ -427,6 +418,15 @@
 	// this is protected function, you must inherit
 	BX.webrtc.prototype.onUserMediaSuccess = function(stream)
 	{
+		this.log('Media stream received');
+		if(stream && stream.getTracks)
+		{
+			stream.getTracks().forEach(function(track)
+			{
+				this.log(BX.webrtc.mediaStreamTrackToString(track));
+			}.bind(this));
+		}
+
 		if (!this.oneway || this.initiator)
 		{
 			this.callRequestUserMedia[this.callVideo? 'video': 'audio'] = false;
@@ -435,7 +435,7 @@
 
 			if (!this.callActive && stream)
 			{
-				stream.stop();
+				BX.webrtc.stopMediaStream(stream);
 				return false;
 			}
 
@@ -710,8 +710,8 @@
 		{
 			if (this.callStreamUsers.hasOwnProperty(i))
 			{
-				if (this.callStreamUsers[i] && this.callStreamUsers[i].stop)
-					this.callStreamUsers[i].stop();
+				if (this.callStreamUsers[i])
+					BX.webrtc.stopMediaStream(this.callStreamUsers[i]);
 				delete this.callStreamUsers[i];
 			}
 		}
@@ -878,6 +878,7 @@
 
 		if (event.candidate)
 		{
+			this.log("New ICE candidate: ", event.candidate);
 			this.iceCandidates[userId].push({type: 'candidate', label: event.candidate.sdpMLineIndex, id: event.candidate.sdpMid, candidate: event.candidate.candidate});
 
 			clearTimeout(this.iceCandidateTimeout[userId]);
@@ -959,6 +960,19 @@
 	BX.webrtc.prototype.setDefaultMicrophone = function(defaultMicrophone)
 	{
 		this.defaultMicrophone = defaultMicrophone;
+	};
+
+	BX.webrtc.mediaStreamTrackToString = function(track)
+	{
+		var result = '';
+		for(key in track)
+		{
+			if(!BX.type.isFunction(track[key]))
+			{
+				result = result + ' ' + key + ': ' + track[key] + ';';
+			}
+		}
+		return result;
 	};
 
 	BX.webrtc.stopMediaStream = function(mediaStream)

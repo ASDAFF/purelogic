@@ -917,10 +917,6 @@ if(typeof BX.Sale.component.location.selector.system == 'undefined' && typeof BX
 			var inputsHTML = '';
 			var serialized = '';
 
-			console.log('displaySelectedForm');
-			console.log(sv.selected.nodes);
-			console.log(sv.cache.nodes);
-
 			if(sv.selected.nodes.length > 0){
 
 				var separ = '';

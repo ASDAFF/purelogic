@@ -17,4 +17,5 @@ $MESS["MPL_MES_HREF"] = "Перейти до коментарю";
 $MESS["MPL_HAVE_WRITTEN"] = "написав:";
 $MESS["MPL_SAFE_EDIT"] = "Ви пишете повідомлення. Скинути зміни?";
 $MESS["BLOG_C_VIEW1"] = "Більше коментарів";
+$MESS["BPC_MES_CREATE_TASK"] = "Створити завдання";
 ?>

@@ -12,7 +12,9 @@ use Bitrix\Main,
 	Bitrix\Main\Localization,
 	Bitrix\Main\Loader,
 	Bitrix\Main\Data,
-	Bitrix\Sale;
+	Bitrix\Sale,
+	Bitrix\Sale\OrderStatus,
+	Bitrix\Sale\Cashbox\CheckManager;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
@@ -203,6 +205,26 @@ class CBitrixPersonalOrderListComponent extends CBitrixComponent
 
 		$this->tryParseBoolean($arParams['AUTH_FORM_IN_TEMPLATE']);
 
+		if (empty($arParams['ALLOW_INNER']))
+		{
+			$arParams['ALLOW_INNER'] = "N";
+		}
+		
+		if (empty($arParams['ONLY_INNER_FULL']))
+		{
+			$arParams['ONLY_INNER_FULL'] = "Y";
+		}
+
+		if (!CBXFeatures::IsFeatureEnabled('SaleAccounts'))
+		{
+			$arParams['ALLOW_INNER'] = "N";
+		}
+
+		if (empty($arParams['DEFAULT_SORT']))
+		{
+			$arParams['DEFAULT_SORT'] = 'STATUS';
+		}
+
 		return $arParams;
 	}
 
@@ -307,12 +329,11 @@ class CBitrixPersonalOrderListComponent extends CBitrixComponent
 		if (isset($_REQUEST["by"]) && strval($_REQUEST['by']) != '')
 		{
 			if (!in_array($_REQUEST['by'], $tableFieldNameList))
-				$_REQUEST["by"] = 'ID';
+				$_REQUEST["by"] = $this->arParams['DEFAULT_SORT'];
 		}
 
-		$this->sortBy = (strlen($_REQUEST["by"]) ? $_REQUEST["by"]: "ID");
-		$this->sortOrder = (strlen($_REQUEST["order"]) != "" && $_REQUEST["order"] == "ASC" ? "ASC": "DESC");
-
+		$this->sortBy = (strlen($_REQUEST["by"]) ? $_REQUEST["by"]: $this->arParams['DEFAULT_SORT']);
+		$this->sortOrder = (strlen($_REQUEST["order"]) != "" && $_REQUEST["order"] == "ASC" ? "ASC": "DESC");		
 
 		$this->prepareFilter();
 	}
@@ -674,7 +695,7 @@ class CBitrixPersonalOrderListComponent extends CBitrixComponent
 				// Save statuses for Filter form
 				$cachedData['STATUS'] = array();
 
-				$listStatusNames = Sale\OrderStatus::getAllStatusesNames();
+				$listStatusNames = Sale\OrderStatus::getAllStatusesNames(LANGUAGE_ID);
 
 				foreach($listStatusNames as $key => $data)
 				{
@@ -794,7 +815,6 @@ class CBitrixPersonalOrderListComponent extends CBitrixComponent
 				'USER_DESCRIPTION',
 				'ADDITIONAL_INFO',
 
-
 				'TAX_VALUE',
 				'STAT_GID',
 				'RECURRING_ID',
@@ -814,7 +834,14 @@ class CBitrixPersonalOrderListComponent extends CBitrixComponent
 		);
 
 		$getListParams = array(
-			'runtime' => array(
+			'filter' => $this->filter,
+			'select' => $select,
+			'group' => array("STATUS_ID")
+		);
+
+		if ($this->sortBy == 'STATUS')
+		{
+			$getListParams['runtime'] = array(
 				new \Bitrix\Main\Entity\ReferenceField(
 					'STATUS',
 					'\Bitrix\Sale\Internals\StatusTable',
@@ -825,12 +852,13 @@ class CBitrixPersonalOrderListComponent extends CBitrixComponent
 						"join_type" => 'inner'
 					)
 				)
-			),
-			'order' => array("STATUS.SORT" => $this->sortOrder, $this->sortBy => $this->sortOrder),
-			'filter' => $this->filter,
-			'select' => $select,
-			'group' => array("STATUS_ID")
-		);
+			);
+			$getListParams['order'] = array("STATUS.SORT" => 'ASC', 'ID' => $this->sortOrder);
+		}
+		else
+		{
+			$getListParams['order'] = array($this->sortBy => $this->sortOrder);
+		}
 
 		$usePageNavigation = true;
 
@@ -927,7 +955,7 @@ class CBitrixPersonalOrderListComponent extends CBitrixComponent
 		}
 		
 		$trackingManager = Sale\Delivery\Tracking\Manager::getInstance(); 
-		$deliveryStatuses = Sale\DeliveryStatus::getAllStatusesNames();
+		$deliveryStatuses = Sale\DeliveryStatus::getAllStatusesNames(LANGUAGE_ID);
 		
 		$listShipments = Sale\Shipment::getList(array(
 			'select' => array(
@@ -962,10 +990,13 @@ class CBitrixPersonalOrderListComponent extends CBitrixComponent
 		}
 
 		$listPayments = Sale\Payment::getList(array(
-			'select' => array('PAY_SYSTEM_NAME', 'PAY_SYSTEM_ID', 'ACCOUNT_NUMBER', 'ORDER_ID', 'PAID', 'SUM', 'CURRENCY', 'DATE_BILL'),
+			'select' => array('ID', 'PAY_SYSTEM_NAME', 'PAY_SYSTEM_ID', 'ACCOUNT_NUMBER', 'ORDER_ID', 'PAID', 'SUM', 'CURRENCY', 'DATE_BILL'),
 			'filter' => array('ORDER_ID' => $orderIdList)
 		));
 
+		$paymentIdList = array();
+		$paymentList = array();
+		
 		while ($payment = $listPayments->fetch())
 		{
 			$payment['PAY_SYSTEM_NAME'] = htmlspecialcharsbx($payment['PAY_SYSTEM_NAME']);
@@ -973,8 +1004,30 @@ class CBitrixPersonalOrderListComponent extends CBitrixComponent
 			$payment['IS_CASH'] = $this->dbResult['PAYSYS'][$payment['PAY_SYSTEM_ID']]['IS_CASH'];
 			$payment['NEW_WINDOW'] = $this->dbResult['PAYSYS'][$payment['PAY_SYSTEM_ID']]['NEW_WINDOW'];
 			$payment["PSA_ACTION_FILE"] =  htmlspecialcharsbx($this->arParams["PATH_TO_PAYMENT"]).'?ORDER_ID='.urlencode(urlencode($listOrders[$payment["ORDER_ID"]]['ACCOUNT_NUMBER'])).'&PAYMENT_ID='.$payment['ACCOUNT_NUMBER'];
+			$paymentList[$payment['ID']] = $payment;
+			$paymentIdList[] = $payment['ID'];
+		}
+
+		$checkList = CheckManager::collectInfo(
+			array(
+				"PAYMENT_ID" => $paymentIdList
+			)
+		);
+
+		if (!empty($checkList))
+		{
+			foreach ($checkList as $check)
+			{
+				$paymentList[$check['PAYMENT_ID']]['CHECK_DATA'][] = $check;
+			}
+		}
+
+		foreach ($paymentList as $payment)
+		{
 			$listOrderPayment[$payment['ORDER_ID']][] = $payment;
 		}
+
+		$allowStatusList = OrderStatus::getAllowPayStatusList();
 
 		foreach ($orderIdList as $orderId)
 		{
@@ -986,6 +1039,16 @@ class CBitrixPersonalOrderListComponent extends CBitrixComponent
 			{
 				$listOrderPayment[$orderId] = array();
 			}
+
+			if (in_array($listOrders[$orderId]['STATUS_ID'], $allowStatusList))
+			{
+				$listOrders[$orderId]['IS_ALLOW_PAY'] = 'Y';
+			}
+			else
+			{
+				$listOrders[$orderId]['IS_ALLOW_PAY'] = 'N';
+			}
+
 			$this->dbResult['ORDERS'][] = array(
 				"ORDER" => $listOrders[$orderId],
 				"BASKET_ITEMS" => $listOrderBasket[$orderId],
@@ -1082,7 +1145,8 @@ class CBitrixPersonalOrderListComponent extends CBitrixComponent
 		{
 			$arResult["ORDERS"] = array();
 		}
-
+		$arResult['SORT_TYPE'] = $this->sortBy;
+		
 		$this->arResult = $arResult;
 	}
 

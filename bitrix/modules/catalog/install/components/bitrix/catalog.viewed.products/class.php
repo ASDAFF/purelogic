@@ -186,7 +186,8 @@ class CCatalogViewedProductsComponent extends CBitrixComponent
 		else
 		{
 			$APPLICATION->restartBuffer();
-			echo CUtil::PhpToJSObject(array('STATUS' => 'OK', 'MESSAGE' => ''));
+			header('Content-Type: application/json');
+			echo Main\Web\Json::encode(array('STATUS' => 'OK', 'MESSAGE' => ''));
 			die();
 		}
 	}
@@ -218,7 +219,8 @@ class CCatalogViewedProductsComponent extends CBitrixComponent
 		else
 		{
 			$APPLICATION->restartBuffer();
-			echo CUtil::PhpToJSObject(array('STATUS' => 'OK', 'MESSAGE' => Loc::getMessage("CVP_PRODUCT_ADDED")));
+			header('Content-Type: application/json');
+			echo Main\Web\Json::encode(array('STATUS' => 'OK', 'MESSAGE' => Loc::getMessage("CVP_PRODUCT_ADDED")));
 			die();
 		}
 	}
@@ -252,7 +254,8 @@ class CCatalogViewedProductsComponent extends CBitrixComponent
 		else
 		{
 			$APPLICATION->restartBuffer();
-			echo CUtil::PhpToJSObject(array('STATUS' => 'OK', 'MESSAGE' => Loc::getMessage("CVP_PRODUCT_SUBSCIBED")));
+			header('Content-Type: application/json');
+			echo Main\Web\Json::encode(array('STATUS' => 'OK', 'MESSAGE' => Loc::getMessage("CVP_PRODUCT_SUBSCIBED")));
 			die();
 		}
 	}
@@ -284,7 +287,8 @@ class CCatalogViewedProductsComponent extends CBitrixComponent
 			if ($this->isAjax())
 			{
 				$APPLICATION->restartBuffer();
-				echo CUtil::PhpToJSObject(array('STATUS' => 'ERROR', 'MESSAGE' => $e->getMessage()));
+				header('Content-Type: application/json');
+				echo Main\Web\Json::encode(array('STATUS' => 'ERROR', 'MESSAGE' => $e->getMessage()));
 				die();
 			}
 			else
@@ -497,10 +501,29 @@ class CCatalogViewedProductsComponent extends CBitrixComponent
 				if ($iBlockID <= 0)
 					continue;
 
-				if ($params[$name] != "" && $params[$name] != "-")
+				if (is_array($params[$name]))
 				{
-					$params['LABEL_PROP'][$iBlockID] = $params[$name];
+					$value = '';
+					foreach ($params[$name] as $rawValue)
+					{
+						if ($rawValue != '' && $rawValue != '-')
+						{
+							$value = $rawValue;
+							break;
+						}
+					}
 				}
+				else
+				{
+					$value = $params[$name];
+				}
+
+				if ($value != "" && $value != "-")
+				{
+					$params['LABEL_PROP'][$iBlockID] = $value;
+				}
+				unset($value);
+
 				unset($params[$arMatches[0]]);
 			} // Offer Group property
 			elseif (preg_match("/^OFFER_TREE_PROPS_(\d+)$/", $name, $arMatches))
@@ -759,7 +782,7 @@ class CCatalogViewedProductsComponent extends CBitrixComponent
 			$parentId = $this->productIdsMap[$prodId];
 
 			if (isset($this->items[$parentId])) // always
-				$tmpItems[$prodId] = $this->items[$parentId];
+				$tmpItems[$parentId] = $this->items[$parentId];
 		}
 
 		$this->items = $tmpItems;
@@ -843,13 +866,14 @@ class CCatalogViewedProductsComponent extends CBitrixComponent
 		{
 			// Catalog Groups
 			$cached['CATALOG_GROUP'] = array();
-			$catalogGroupIterator = CCatalogGroup::GetList(
-				array("SORT" => "ASC")
-			);
-			while ($catalogGroup = $catalogGroupIterator->fetch())
+			$catalogGroupList = CCatalogGroup::GetListArray();
+			if (!empty($catalogGroupList))
 			{
-				$cached['CATALOG_GROUP'][$catalogGroup['NAME']] = $catalogGroup;
+				foreach ($catalogGroupList as $catalogGroup)
+					$cached['CATALOG_GROUP'][$catalogGroup['NAME']] = $catalogGroup;
+				unset($catalogGroup);
 			}
+			unset($catalogGroupList);
 
 			// Catalog Prices
 			$cached['CATALOG_PRICE'] = CIBlockPriceTools::GetCatalogPrices(false, array_keys($cached['CATALOG_GROUP']));
@@ -876,14 +900,14 @@ class CCatalogViewedProductsComponent extends CBitrixComponent
 				$catalog['CATALOG_TYPE'] = $info['CATALOG_TYPE'];
 				$cached['CATALOG'][$catalog['IBLOCK_ID']] = $catalog;
 			}
+			unset($catalog, $catalogIterator);
 
 			// Measure list
 			$cached['MEASURE'] = array();
 			$measureIterator = CCatalogMeasure::getList(array("CODE" => "ASC"));
 			while ($measure = $measureIterator->fetch())
-			{
 				$cached['MEASURE'][$measure['ID']] = $measure;
-			}
+			unset($measure, $measureIterator);
 
 			// Default Measure
 			$cached['DEFAULT_MEASURE'] = CCatalogMeasure::getDefaultMeasure(true, true);
@@ -1182,7 +1206,7 @@ class CCatalogViewedProductsComponent extends CBitrixComponent
 
 	/**
 	 * set prices for all items
-	 * @return array currency list
+	 * @return void
 	 */
 	protected function setItemsPrices()
 	{
@@ -1250,13 +1274,12 @@ class CCatalogViewedProductsComponent extends CBitrixComponent
 				$intRatio = (int)$ratio['RATIO'];
 				$dblRatio = (float)$ratio['RATIO'];
 				$mxRatio = ($dblRatio > $intRatio ? $dblRatio : $intRatio);
-				if (CATALOG_VALUE_EPSILON > abs($mxRatio))
-					$mxRatio = 1;
-				elseif (0 > $mxRatio)
+				if ($mxRatio < CATALOG_VALUE_EPSILON)
 					$mxRatio = 1;
 				$this->items[$ratio['PRODUCT_ID']]['CATALOG_MEASURE_RATIO'] = $mxRatio;
 			}
 		}
+		unset($ratio, $ratioIterator);
 	}
 
 	/**
@@ -1465,7 +1488,8 @@ class CCatalogViewedProductsComponent extends CBitrixComponent
 			if ($this->isAjax())
 			{
 				$APPLICATION->restartBuffer();
-				echo CUtil::PhpToJSObject(array('STATUS' => 'ERROR', 'MESSAGE' => $e->getMessage()));
+				header('Content-Type: application/json');
+				echo Main\Web\Json::encode(array('STATUS' => 'ERROR', 'MESSAGE' => $e->getMessage()));
 				die();
 			}
 

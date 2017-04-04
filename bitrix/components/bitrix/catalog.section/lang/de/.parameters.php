@@ -117,4 +117,14 @@ $MESS["CP_BCS_HIDE_NOT_AVAILABLE_LAST"] = "zum Schluss anzeigen";
 $MESS["CP_BCS_HIDE_NOT_AVAILABLE_SHOW"] = "wie üblich anzeigen";
 $MESS["CP_BCS_HIDE_NOT_AVAILABLE_EXT2"] = "Produkte, die zum Kauf nicht verfügbar sind";
 $MESS["HIDE_NOT_AVAILABLE_TIP"] = "Ein Produkt, dessen Menge gleich oder mehr als Null ist, wird zum Kauf nicht verfügbar sein, wenn: 1) die Option der Lagerverwaltung für das Produkt aktiviert ist, und 2) nicht auf Lager verfügbare Elemente können nicht gekauft werden. Ein Produkt, welches Produktvariante(n) hat, ist dann verfügbar, wenn zumindest eine Produktvariante verfügbar ist.";
+$MESS["SORT_SETTINGS"] = "Einstellungen der Sortierung";
+$MESS["BIG_DATA_SETTINGS"] = "BigData Einstellungen";
+$MESS["ANALYTICS_SETTINGS"] = "Statistikeinstellungen";
+$MESS["CP_BCS_EMPTY"] = "nicht ausgewählt";
+$MESS["CP_BCS_HIDE_NOT_AVAILABLE_OFFERS"] = "Nicht verfügbare Produktvarianten";
+$MESS["CP_BCS_HIDE_NOT_AVAILABLE_OFFERS_HIDE"] = "nicht anzeigen";
+$MESS["CP_BCS_HIDE_NOT_AVAILABLE_OFFERS_SUBSCRIBE"] = "mit einer Abonnement-Option anzeigen";
+$MESS["CP_BCS_HIDE_NOT_AVAILABLE_OFFERS_SHOW"] = "alle anzeigen";
+$MESS["CP_BCS_COMPATIBLE_MODE"] = "Kompatibilitätsmodus aktivieren";
+$MESS["COMPATIBLE_MODE_TIP"] = "Diese Option ist erforderlich für Anpassung der Vorlagen, die erstellt wurden zur Nutzung mit dem Modul Informationsblöcke vor der Version 17.0.0. Es wird empfohlen, die Vorlage aufs neue Format zu übertragen. Nähere Informationen finden Sie in der Dokumentation.";
 ?>

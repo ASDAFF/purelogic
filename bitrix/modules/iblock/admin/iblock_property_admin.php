@@ -65,14 +65,17 @@ if($lAdmin->EditAction())
 	foreach($FIELDS as $ID => $arFields)
 	{
 		$DB->StartTransaction();
-		$ID = IntVal($ID);
+		$ID = (int)$ID;
 
 		if(!$lAdmin->IsUpdated($ID))
 			continue;
 
-		$arFields["USER_TYPE"] = false;
-		if (!isset($simpleTypeList[$arFields['PROPERTY_TYPE']]))
-			list($arFields["PROPERTY_TYPE"], $arFields["USER_TYPE"]) = explode(':', $arFields["PROPERTY_TYPE"], 2);
+		if (isset($arFields['PROPERTY_TYPE']))
+		{
+			$arFields["USER_TYPE"] = false;
+			if (!isset($simpleTypeList[$arFields['PROPERTY_TYPE']]))
+				list($arFields["PROPERTY_TYPE"], $arFields["USER_TYPE"]) = explode(':', $arFields["PROPERTY_TYPE"], 2);
+		}
 
 		$ibp = new CIBlockProperty;
 		if(!$ibp->Update($ID, $arFields))

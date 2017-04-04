@@ -1445,6 +1445,7 @@ if(!empty($message))
 		<?
 		function ShowGroupControl($controlName, $controlValues, $controlSelectedValues)
 		{
+			$controlName = htmlspecialcharsbx($controlName);
 			?>
 			<td>
 				<select multiple style="width:350px; height:300px;" id="<?=$controlName?>_EXISTS" ondblclick="GroupManager(true, '<?=$controlName?>');">

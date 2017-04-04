@@ -100,6 +100,11 @@ $data = array(
 			"SORT" => 1500,
 			'GROUP' => 'BUYER_PERSON'
 		),
+		"BUYER_PERSON_BANK_ACCOUNT" => array(
+			"NAME" => Loc::getMessage('SALE_HPS_SBERBANK_PAYER_ACCOUNT_DESC'),
+			"SORT" => 1550,
+			'GROUP' => 'BUYER_PERSON'
+		),
 		"PAYMENT_SHOULD_PAY" => array(
 			"NAME" => Loc::getMessage('SALE_HPS_SBERBANK_SUM_DESC'),
 			"SORT" => 1600,

@@ -3,6 +3,7 @@ $MESS["CRM_FF_LEAD"] = "Leads";
 $MESS["CRM_FF_CONTACT"] = "Contacts";
 $MESS["CRM_FF_COMPANY"] = "Companies";
 $MESS["CRM_FF_DEAL"] = "Deals";
+$MESS["CRM_FF_QUOTE"] = "Quotes";
 $MESS["CRM_FF_OK"] = "Select";
 $MESS["CRM_FF_CANCEL"] = "Cancel";
 $MESS["CRM_FF_CLOSE"] = "Close";

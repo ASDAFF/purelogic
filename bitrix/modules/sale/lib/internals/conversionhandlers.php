@@ -54,12 +54,12 @@ final class ConversionHandlers
 				'UNITS'     => $units,
 				'MODULE'    => 'sale',
 				'SORT'      => 1100,
-				'COUNTERS'  => array('conversion_visit_day', 'sale_payment_add_day', 'sale_payment_add', 'sale_payment_sum_add'),
+				'COUNTERS'  => array('conversion_visit_day', 'sale_payment_add_day', 'sale_payment_add', 'sale_payment_add_cmpfb', 'sale_payment_sum_add'),
 				'CALCULATE' => function (array $counters)
 				{
 					$denominator = $counters['conversion_visit_day'] ?: 0;
 					$numerator   = $counters['sale_payment_add_day'] ?: 0;
-					$quantity    = $counters['sale_payment_add'    ] ?: 0;
+					$quantity    = $counters['sale_payment_add']+$counters['sale_payment_add_cmpfb'] ?: 0;
 					$sum         = $counters['sale_payment_sum_add'] ?: 0;
 
 					return array(
@@ -79,13 +79,13 @@ final class ConversionHandlers
 				'UNITS'     => $units,
 				'MODULE'    => 'sale',
 				'SORT'      => 1200,
-				'COUNTERS'  => array('conversion_visit_day', 'sale_order_add_day', 'sale_order_add', 'sale_order_sum_add'),
+				'COUNTERS'  => array('conversion_visit_day', 'sale_order_add_day', 'sale_order_add', 'sale_order_add_cmpfb', 'sale_order_sum_add'),
 				'CALCULATE' => function (array $counters)
 				{
 					$denominator = $counters['conversion_visit_day'] ?: 0;
-					$numerator   = $counters['sale_order_add_day'  ] ?: 0;
-					$quantity    = $counters['sale_order_add'      ] ?: 0;
-					$sum         = $counters['sale_order_sum_add'  ] ?: 0;
+					$numerator   = $counters['sale_order_add_day'] ?: 0;
+					$quantity    = $counters['sale_order_add']+$counters['sale_order_add_cmpfb'] ?: 0;
+					$sum         = $counters['sale_order_sum_add'] ?: 0;
 
 					return array(
 						'DENOMINATOR' => $denominator,
@@ -104,13 +104,13 @@ final class ConversionHandlers
 				'UNITS'     => $units,
 				'MODULE'    => 'sale',
 				'SORT'      => 1300,
-				'COUNTERS'  => array('conversion_visit_day', 'sale_cart_add_day', 'sale_cart_add', 'sale_cart_sum_add'),
+				'COUNTERS'  => array('conversion_visit_day', 'sale_cart_add_day', 'sale_cart_add', 'sale_cart_add_cmpfb', 'sale_cart_sum_add'),
 				'CALCULATE' => function (array $counters)
 				{
 					$denominator = $counters['conversion_visit_day'] ?: 0;
-					$numerator   = $counters['sale_cart_add_day'   ] ?: 0;
-					$quantity    = $counters['sale_cart_add'       ] ?: 0;
-					$sum         = $counters['sale_cart_sum_add'   ] ?: 0;
+					$numerator   = $counters['sale_cart_add_day'] ?: 0;
+					$quantity    = $counters['sale_cart_add']+$counters['sale_cart_add_cmpfb'] ?: 0;
+					$sum         = $counters['sale_cart_sum_add'] ?: 0;
 
 					return array(
 						'DENOMINATOR' => $denominator,

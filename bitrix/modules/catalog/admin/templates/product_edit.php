@@ -1,6 +1,7 @@
 <?
 /** @global CUser $USER */
 /** @global array $arShowTabs */
+/** @global CMain $APPLICATION */
 use Bitrix\Main,
 	Bitrix\Currency,
 	Bitrix\Catalog;
@@ -315,6 +316,7 @@ function togglePriceType()
 	$tabControl1->Begin();
 
 	// Define boundaries
+	$usedRanges = false;
 	$arProductFilter = array("PRODUCT_ID" => $PRODUCT_ID);
 	if (!CBXFeatures::IsFeatureEnabled('CatMultiPrice'))
 	{
@@ -328,8 +330,14 @@ function togglePriceType()
 	);
 	while ($arPrice = $dbPrice->Fetch())
 	{
+		$arPrice['RAW_QUANTITY_FROM'] = $arPrice['QUANTITY_FROM'];
+		$arPrice['RAW_QUANTITY_TO'] = $arPrice['QUANTITY_TO'];
 		$arPrice['QUANTITY_FROM'] = (int)$arPrice['QUANTITY_FROM'];
 		$arPrice['QUANTITY_TO'] = (int)$arPrice['QUANTITY_TO'];
+		if ($arPrice['RAW_QUANTITY_FROM'] !== null && $arPrice['QUANTITY_FROM'] > 0)
+			$usedRanges = true;
+		if ($arPrice['RAW_QUANTITY_TO'] !== null && $arPrice['QUANTITY_TO'] > 0)
+			$usedRanges = true;
 		if ($arPrice["BASE"] == "Y")
 		{
 			$arPriceBoundaries[] = array(
@@ -389,7 +397,7 @@ function togglePriceType()
 		{
 			Main\Type\Collection::sortByColumn($arPriceBoundaries, array('FROM' => SORT_ASC));
 		}
-		else
+		elseif (!$usedRanges)
 		{
 			$arPriceBoundaries[0]['FROM'] = false;
 			$arPriceBoundaries[0]['TO'] = false;
@@ -399,7 +407,7 @@ function togglePriceType()
 // prices tab
 	$tabControl1->BeginNextTab();
 	$arCatPricesExist = array(); // attr for exist prices for range
-	$bUseExtendedPrice = $bVarsFromForm ? $price_useextform == 'Y' : count($arPriceBoundaries) > 1;
+	$bUseExtendedPrice = $bVarsFromForm ? $price_useextform == 'Y' : $usedRanges;
 	$str_CAT_VAT_ID = $bVarsFromForm ? $CAT_VAT_ID : ($arBaseProduct['VAT_ID'] == 0 ? $arMainCatalog['VAT_ID'] : $arBaseProduct['VAT_ID']);
 	$str_CAT_VAT_INCLUDED = $bVarsFromForm ? $CAT_VAT_INCLUDED : $arBaseProduct['VAT_INCLUDED'];
 	?>
@@ -2203,6 +2211,13 @@ if ('Y' == $arMainCatalog['SUBSCRIPTION']):
 	}
 	else
 	{
+		$showDiscountUrl = $bDiscount;
+		$discountUrl = '/bitrix/admin/cat_discount_edit.php?ID=';
+		if (Main\ModuleManager::isModuleInstalled('sale') && (string)Main\Config\Option::get('sale', 'use_sale_discount_only') == 'Y')
+		{
+			$showDiscountUrl = ($APPLICATION->GetGroupRight('sale') >= 'W');
+			$discountUrl = '/bitrix/admin/sale_discount_edit.php?ID=';
+		}
 		?><table border="0" cellspacing="0" cellpadding="0" class="internal" align="center" width="100%">
 		<tr class="heading">
 			<td>ID</td>
@@ -2210,7 +2225,7 @@ if ('Y' == $arMainCatalog['SUBSCRIPTION']):
 			<td><?echo GetMessage("C2IT_ACTIVITY")?></td>
 			<td><?echo GetMessage("C2IT_NAME")?></td>
 			<td><?echo GetMessage("C2IT_AMOUNT")?></td>
-			<? if ($bDiscount)
+			<? if ($showDiscountUrl)
 			{
 			?><td><?echo GetMessage("C2IT_ACTIONS")?></td><?
 			}
@@ -2241,11 +2256,11 @@ if ('Y' == $arMainCatalog['SUBSCRIPTION']):
 			?>
 			</td>
 			<?
-			if ($bDiscount)
+			if ($showDiscountUrl)
 			{
 			?>
 				<td style="text-align: center;">
-					<a href="/bitrix/admin/cat_discount_edit.php?ID=<? echo $arProductDiscounts["ID"] ?>&lang=<? echo LANGUAGE_ID; ?>#tb" target="_blank"><?echo GetMessage("C2IT_MODIFY")?></a>
+					<a href="<?=$discountUrl.$arProductDiscounts["ID"] ?>&lang=<?=LANGUAGE_ID; ?>" target="_blank"><?echo GetMessage("C2IT_MODIFY")?></a>
 				</td>
 			<?
 			}
@@ -2298,8 +2313,8 @@ if ('Y' == $arMainCatalog['SUBSCRIPTION']):
 		{
 			foreach ($storeIds as $store)
 			{
-				if (isset($_POST['AR_AMOUNT'][$store]))
-					$storeLink[$store]['PRODUCT_AMOUNT'] = htmlspecialcharsbx($_POST['AR_AMOUNT'][$store]);
+				if (isset($_POST['AR_AMOUNT'][$store]) && is_string($_POST['AR_AMOUNT'][$store]))
+					$storeLink[$store]['PRODUCT_AMOUNT'] = $_POST['AR_AMOUNT'][$store];
 			}
 			unset($store);
 		}
@@ -2331,9 +2346,9 @@ if ('Y' == $arMainCatalog['SUBSCRIPTION']):
 			?><tr>
 			<td style="text-align:center;"><?=$storeUrl; ?></td>
 			<td style="text-align:center;"><?=$storeId; ?></td>
-			<td style="text-align:center;"><?=$row['TITLE']; ?></td>
-			<td style="text-align:center;"><?=$address; ?></td>
-			<td style="text-align:center;"><input type="text" id="AR_AMOUNT_<?=$row['ID']; ?>" name="AR_AMOUNT[<?=$row['ID']?>]" size="12" value="<?=$row['PRODUCT_AMOUNT']; ?>" <? echo ((!$bStore || $bUseStoreControl) ? 'disabled readonly' : ''); ?>><?
+			<td style="text-align:center;"><?=htmlspecialcharsbx($row['TITLE']); ?></td>
+			<td style="text-align:center;"><?=htmlspecialcharsbx($address); ?></td>
+			<td style="text-align:center;"><input type="text" id="AR_AMOUNT_<?=$row['ID']; ?>" name="AR_AMOUNT[<?=$row['ID']?>]" size="12" value="<?=htmlspecialcharsbx($row['PRODUCT_AMOUNT']); ?>" <? echo ((!$bStore || $bUseStoreControl) ? 'disabled readonly' : ''); ?>><?
 			if ($bStore)
 			{
 				?><input type="hidden" name="AR_STORE_ID[<?=$row['ID']?>]" value="<?=$row['ID']?>"><?

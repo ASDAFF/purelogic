@@ -418,7 +418,7 @@ function updatePointPosition_<?echo $MAP_ID?>__n<?=$googleMapLastNumber?>_(obPoi
 	BX('point_<?echo $MAP_ID?>__n<?=$googleMapLastNumber?>_lon').value = obP ? obP[1] : '';
 }
 
-	BX.ready(setTimeout(BXWaitForMap_<?echo $MAP_ID?>__n<?=$googleMapLastNumber?>_, 1));
+   BX.ready(BXWaitForMap_<?echo $MAP_ID?>__n<?=$googleMapLastNumber?>_);
 
 var jsGoogleCESearch_<?echo $MAP_ID;?> = {
 	bInited: false,
@@ -642,7 +642,7 @@ var jsGoogleCESearch_<?echo $MAP_ID;?> = {
 
 	if ($arProperty['MULTIPLE'] == 'Y')
 		$googleMapLastNumber++;
-		
+
 	return $out;
 	}
 
@@ -1051,7 +1051,8 @@ function saveYandexKey(domain, input)
 		BX('point_<?echo $MAP_ID?>__n<?=$yandexMapLastNumber?>_lon').value = obPoint ? obPoint[1] : '';
 	}
 
-	BX.ready(setTimeout(BXWaitForMap_<?echo $MAP_ID?>__n<?=$yandexMapLastNumber?>_, 1));
+	BX.ready(BXWaitForMap_<?echo $MAP_ID?>__n<?=$yandexMapLastNumber?>_);
+
 	var jsYandexCESearch_<?echo $MAP_ID;?> = {
 
 		bInited: false,
@@ -1632,8 +1633,9 @@ function saveYandexKey(domain, input)
 		BX('point_<?echo $MAP_ID?>__n<?=$yandexMapLastNumber?>_lon').value = obPoint ? obPoint[1] : '';
 	}
 
-	BX.ready(setTimeout(BXWaitForMap_<?echo $MAP_ID?>__n<?=$yandexMapLastNumber?>_, 1));
-	var jsYandexCESearch_<?echo $MAP_ID;?> = {
+   BX.ready(BXWaitForMap_<?echo $MAP_ID?>__n<?=$yandexMapLastNumber?>_);
+
+   var jsYandexCESearch_<?echo $MAP_ID;?> = {
 
 		bInited: false,
 
@@ -1963,6 +1965,7 @@ class CVideoProperty
 	public static function BaseGetSettingsHTML($name, $val)
 	{
 		$arSkins = GetSkinsEx(CUserTypeVideo::GetSkinPath());
+		$name = htmlspecialcharsbx($name);
 		ob_start();
 ?>
 <tr><td colSpan="2">
@@ -2089,6 +2092,7 @@ jsUtils.loadJSFile("/bitrix/components/bitrix/player/js/prop_skin_selector.js", 
 		global $APPLICATION;
 		$id = str_replace(array("[","]",":"), "_", $name);
 		$path = $val["path"];
+		$name = htmlspecialcharsbx($name);
 
 		if (intval($val['width']) <= 0)
 			$val['width'] = intval($set['WIDTH']);
@@ -2475,7 +2479,7 @@ function ChangeOrLeaveFile<?= $id?>(bChange)
 	{
 		if (!is_array($val) || strlen($val["path"]) == 0)
 			return '';
-		return "<span style='white-space: nowrap;' title='".$val["path"]."'>".GetMessage("IBLOCK_PROP_VIDEO")." [".htmlspecialcharsex($val["path"])."]</span>";
+		return "<span style='white-space: nowrap;' title='".htmlspecialcharsbx($val["path"])."'>".GetMessage("IBLOCK_PROP_VIDEO")." [".htmlspecialcharsex($val["path"])."]</span>";
 	}
 
 	public static function BaseGetPublicHTML($set, $val)
@@ -2593,7 +2597,7 @@ if (!function_exists('getSkinsEx'))
 	function getSkinsFromDir($path) //http://jabber.bx/view.php?id=28856
 	{
 		$basePath = $_SERVER["DOCUMENT_ROOT"].Rel2Abs("/", $path);
-		$arSkinExt = array('swf', 'zip');
+		$arSkinExt = array('swf', 'zip', 'css');
 		$arPreviewExt = array('png', 'gif', 'jpg', 'jpeg');
 		$prExtCnt = count($arPreviewExt);
 		$arSkins = Array();
@@ -2668,7 +2672,13 @@ class CIBlockPropertyVideo extends CVideoProperty
 
 	function GetPublicViewHTML($arProperty, $value, $strHTMLControlName)
 	{
-		return CIBlockPropertyVideo::BaseGetPublicHTML($arProperty["USER_TYPE_SETTINGS"], $value["VALUE"]);
+		$pathExist = (isset($value['VALUE']['path']) && $value['VALUE']['path'] != '');
+		if (isset($strHTMLControlName['MODE']) && $strHTMLControlName['MODE'] == 'CSV_EXPORT')
+			return ($pathExist ? $value['VALUE']['path'] : '');
+		elseif (isset($strHTMLControlName['MODE']) && $strHTMLControlName['MODE'] == 'SIMPLE_TEXT')
+			return ($pathExist ? $value['VALUE']['path'] : '');
+		else
+			return CIBlockPropertyVideo::BaseGetPublicHTML($arProperty["USER_TYPE_SETTINGS"], $value["VALUE"]);
 	}
 
 	function ConvertFromDB($arProperty, $value)

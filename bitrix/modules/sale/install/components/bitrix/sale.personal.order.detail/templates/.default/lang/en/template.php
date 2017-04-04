@@ -79,4 +79,9 @@ $MESS["SPOD_TPL_GOOD"] = "product";
 $MESS["SPOD_TPL_GOODS"] = "products";
 $MESS["SPOD_TPL_TWO_GOODS"] = "product";
 $MESS["SPOD_TPL_SUMOF"] = "total";
+$MESS["SPOD_TPL_RESTRICTED_PAID"] = "Under review";
+$MESS["SOPD_TPL_RESTRICTED_PAID_MESSAGE"] = "<b>Notice:</b> the order can be paid after it has been verified by a sales representative";
+$MESS["SPOD_CHECK_TITLE"] = "Accounts";
+$MESS["SPOD_CHECK_NUM"] = "Account ##CHECK_NUMBER#";
+$MESS["SPOD_ORDER_DESC"] = "Order comments";
 ?>

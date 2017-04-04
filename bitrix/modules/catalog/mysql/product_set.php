@@ -296,7 +296,7 @@ class CCatalogProductSet extends CCatalogProductSetAll
 
 		if (!is_array($arProductID))
 			$arProductID = array($arProductID);
-		CatalogClearArray($arProductID, false);
+		Main\Type\Collection::normalizeArrayValuesByInt($arProductID);
 		if (empty($arProductID))
 			return false;
 		$intSetType = (int)$intSetType;

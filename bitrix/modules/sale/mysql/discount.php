@@ -1,4 +1,5 @@
 <?
+use Bitrix\Sale\Discount\Index;
 use Bitrix\Sale\Internals;
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/sale/general/discount.php');
@@ -42,6 +43,15 @@ class CSaleDiscount extends CAllSaleDiscount
 				self::updateDiscountHandlers($ID, $arFields['HANDLERS'], false);
 			if (isset($arFields['ENTITIES']))
 				Internals\DiscountEntitiesTable::updateByDiscount($ID, $arFields['ENTITIES'], false);
+
+			if(isset($arFields['CONDITIONS']) && is_string($arFields['CONDITIONS']))
+			{
+				if(Index\Manager::getInstance()->indexDiscount($arFields + array('ID' => $ID)))
+				{
+					Internals\DiscountTable::update($ID, array('HAS_INDEX' => 'Y'));
+				}
+			}
+
 			if(isset($arFields['ACTIONS']) && is_string($arFields['ACTIONS']))
 			{
 				$giftManager = \Bitrix\Sale\Discount\Gift\Manager::getInstance();
@@ -106,6 +116,15 @@ class CSaleDiscount extends CAllSaleDiscount
 			self::updateDiscountHandlers($ID, $arFields['HANDLERS'], true);
 		if (isset($arFields['ENTITIES']))
 			Internals\DiscountEntitiesTable::updateByDiscount($ID, $arFields['ENTITIES'], true);
+
+		if(isset($arFields['CONDITIONS']) && is_string($arFields['CONDITIONS']))
+		{
+			if(Index\Manager::getInstance()->indexDiscount($arFields + array('ID' => $ID)))
+			{
+				Internals\DiscountTable::update($ID, array('HAS_INDEX' => 'Y'));
+			}
+		}
+
 		if(isset($arFields['ACTIONS']) && is_string($arFields['ACTIONS']))
 		{
 			\Bitrix\Sale\Discount\Gift\RelatedDataTable::deleteByDiscount($ID);
@@ -171,6 +190,7 @@ class CSaleDiscount extends CAllSaleDiscount
 			"CREATED_BY" => array("FIELD" => "D.CREATED_BY", "TYPE" => "int"),
 			"PRIORITY" => array("FIELD" => "D.PRIORITY", "TYPE" => "int"),
 			"LAST_DISCOUNT" => array("FIELD" => "D.LAST_DISCOUNT", "TYPE" => "char"),
+			"LAST_LEVEL_DISCOUNT" => array("FIELD" => "D.LAST_LEVEL_DISCOUNT", "TYPE" => "char"),
 			"VERSION" => array("FIELD" => "D.VERSION", "TYPE" => "int"),
 			"CONDITIONS" => array("FIELD" => "D.CONDITIONS", "TYPE" => "string"),
 			"UNPACK" => array("FIELD" => "D.UNPACK", "TYPE" => "string"),
@@ -181,9 +201,9 @@ class CSaleDiscount extends CAllSaleDiscount
 		);
 
 		if (empty($arSelectFields))
-			$arSelectFields = array('ID','LID','SITE_ID','PRICE_FROM','PRICE_TO','CURRENCY','DISCOUNT_VALUE','DISCOUNT_TYPE','ACTIVE','SORT','ACTIVE_FROM','ACTIVE_TO','PRIORITY','LAST_DISCOUNT','VERSION','NAME');
+			$arSelectFields = array('ID','LID','SITE_ID','PRICE_FROM','PRICE_TO','CURRENCY','DISCOUNT_VALUE','DISCOUNT_TYPE','ACTIVE','SORT','ACTIVE_FROM','ACTIVE_TO','PRIORITY','LAST_DISCOUNT', 'LAST_LEVEL_DISCOUNT','VERSION','NAME');
 		elseif (is_array($arSelectFields) && in_array('*',$arSelectFields))
-			$arSelectFields = array('ID','LID','SITE_ID','PRICE_FROM','PRICE_TO','CURRENCY','DISCOUNT_VALUE','DISCOUNT_TYPE','ACTIVE','SORT','ACTIVE_FROM','ACTIVE_TO','PRIORITY','LAST_DISCOUNT','VERSION','NAME');
+			$arSelectFields = array('ID','LID','SITE_ID','PRICE_FROM','PRICE_TO','CURRENCY','DISCOUNT_VALUE','DISCOUNT_TYPE','ACTIVE','SORT','ACTIVE_FROM','ACTIVE_TO','PRIORITY','LAST_DISCOUNT', 'LAST_LEVEL_DISCOUNT','VERSION','NAME');
 
 		$arSqls = CSaleOrder::PrepareSql($arFields, $arOrder, $arFilter, $arGroupBy, $arSelectFields);
 

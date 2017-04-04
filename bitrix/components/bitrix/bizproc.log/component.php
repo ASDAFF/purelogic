@@ -150,7 +150,11 @@ if (array_key_exists("COMPONENT_VERSION", $arParams) && $arParams["COMPONENT_VER
 			$prefix = "";
 			if (!$arResult["AdminMode"])
 			{
-				if ($arTrack["TYPE"] != CBPTrackingType::Custom && $arTrack["TYPE"] != CBPTrackingType::FaultActivity && $arTrack["TYPE"] != CBPTrackingType::Report)
+				if ($arTrack["TYPE"] != CBPTrackingType::Custom
+					&& $arTrack["TYPE"] != CBPTrackingType::FaultActivity
+					&& $arTrack["TYPE"] != CBPTrackingType::Report
+					&& $arTrack["TYPE"] != CBPTrackingType::Error
+				)
 					continue;
 			}
 
@@ -180,7 +184,6 @@ if (array_key_exists("COMPONENT_VERSION", $arParams) && $arParams["COMPONENT_VER
 					break;
 				case 6:
 					$type = GetMessage("BPABL_TYPE_7");
-					$arTrack["ACTION_NOTE"] = htmlspecialcharsback($arTrack["ACTION_NOTE"]);
 					break;
 				default:
 					$type = GetMessage("BPABL_TYPE_6");

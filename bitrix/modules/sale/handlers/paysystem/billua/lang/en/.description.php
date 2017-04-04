@@ -1,2 +1,2 @@
 <?
-$MESS["SBLP_DTITLE"] = "Invoice (Ukrainian)";
+$MESS["SALE_HPS_BILL_UA_DTITLE"] = "Invoice (Ukrainian)";

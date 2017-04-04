@@ -194,12 +194,12 @@ class PropertyTable extends Main\Entity\DataManager
 			)),
 			'LINK_IBLOCK' => new Main\Entity\ReferenceField(
 				'LINK_IBLOCK',
-				'Bitrix\Iblock\Iblock',
+				'\Bitrix\Iblock\Iblock',
 				array('=this.LINK_IBLOCK_ID' => 'ref.ID')
 			),
 			'IBLOCK' => new Main\Entity\ReferenceField(
 				'IBLOCK',
-				'Bitrix\Iblock\Iblock',
+				'\Bitrix\Iblock\Iblock',
 				array('=this.IBLOCK_ID' => 'ref.ID')
 			),
 		);

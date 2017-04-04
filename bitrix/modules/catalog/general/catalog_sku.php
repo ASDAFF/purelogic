@@ -425,6 +425,14 @@ class CAllCatalogSku
 		return $result;
 	}
 
+	/**
+	 * @param int|array $productID
+	 * @param int $iblockID
+	 * @param array $skuFilter
+	 * @param array $fields
+	 * @param array $propertyFilter
+	 * @return array|bool
+	 */
 	public static function getOffersList($productID, $iblockID = 0, $skuFilter = array(), $fields = array(), $propertyFilter = array())
 	{
 		static $propertyCache = array();

@@ -18,7 +18,7 @@ $arParams["AVATAR_SIZE"] = ($arParams["AVATAR_SIZE"] > 0 ? $arParams["AVATAR_SIZ
 $arParams["NAME_TEMPLATE"] = (!!$_REQUEST["NAME_TEMPLATE"] ? $_REQUEST["NAME_TEMPLATE"] : CSite::GetNameFormat());
 $arParams["SHOW_LOGIN"] = ($_REQUEST["SHOW_LOGIN"] == "Y" ? "Y" : "N");
 $sign = (new \Bitrix\Main\Security\Sign\Signer());
-$arParams["SIGN"] = $sign->unsign($_REQUEST["sign"], "main.post.list");
+$arParams["SIGN"] = (is_string($_REQUEST["sign"]) ? $sign->unsign($_REQUEST["sign"], "main.post.list") : null);
 
 if (!is_array($_SESSION["UC_LAST_ACTIVITY"]))
 	$_SESSION["UC_LAST_ACTIVITY"] = array(
@@ -29,6 +29,7 @@ if (!is_array($_SESSION["UC_LAST_ACTIVITY"]))
 if ( check_bitrix_sessid() &&
 	$_REQUEST["MODE"] == "PUSH&PULL" &&
 	$GLOBALS["USER"]->IsAuthorized() &&
+	is_string($arParams["SIGN"]) &&
 	$arParams["SIGN"] == $_REQUEST["ENTITY_XML_ID"] &&
 	(
 		$_SESSION["UC_ACTIVITY"]["ENTITY_XML_ID"] != $_REQUEST["ENTITY_XML_ID"] ||

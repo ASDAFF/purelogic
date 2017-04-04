@@ -1219,8 +1219,13 @@ class EventCompatibility extends Sale\Compatible\Internals\EntityCompatibility
 		static::setDisableEvent(true);
 		foreach(GetModuleEvents("sale", static::EVENT_COMPATIBILITY_ON_BEFORE_ORDER_STATUS_CHANGE, true) as $oldEvent)
 		{
-			ExecuteModuleEventEx($oldEvent, array($order->getId(), $value));
+			if (ExecuteModuleEventEx($oldEvent, array($order->getId(), $value)) === false)
+			{
+				static::setDisableEvent(false);
+				return new Main\EventResult( Main\EventResult::ERROR, null, 'sale');
+			}
 		}
+
 		static::setDisableEvent(false);
 
 		return new Main\EventResult( Main\EventResult::SUCCESS, null, 'sale');

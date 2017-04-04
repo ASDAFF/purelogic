@@ -9,6 +9,7 @@
 namespace Bitrix\Sale;
 
 use Bitrix\Main\Entity;
+use Bitrix\Main\ObjectNotFoundException;
 use Bitrix\Sale;
 use Bitrix\Main\Localization\Loc;
 
@@ -407,6 +408,7 @@ class BasketPropertiesCollection
 
 	/**
 	 * @return Result
+	 * @throws ObjectNotFoundException
 	 */
 	public function verify()
 	{
@@ -418,14 +420,7 @@ class BasketPropertiesCollection
 			$r = $basketPropertyItem->verify();
 			if (!$r->isSuccess())
 			{
-				if ($r instanceof ResultWarning)
-				{
-					$result->addWarnings($r->getErrors());
-				}
-				else
-				{
-					$result->addErrors($r->getErrors());
-				}
+				$result->addErrors($r->getErrors());
 			}
 		}
 		return $result;

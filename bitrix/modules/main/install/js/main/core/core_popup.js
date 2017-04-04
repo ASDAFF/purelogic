@@ -86,6 +86,7 @@ BX.PopupWindow = function(uniquePopupId, bindElement, params)
 	this.overlay = null;
 	this.titleBar = null;
 	this.bindOptions = typeof(this.params.bindOptions) == "object" ? this.params.bindOptions : {};
+	this.autoHide = this.params.autoHide === true;
 	this.isAutoHideBinded = false;
 	this.closeByEsc = !!this.params.closeByEsc;
 	this.isCloseByEscBinded = false;
@@ -470,6 +471,44 @@ BX.PopupWindow.prototype.setClosingByEsc = function(enable)
 	}
 };
 
+BX.PopupWindow.prototype.setAutoHide = function(enable)
+{
+	enable = enable !== false;
+	if (enable)
+	{
+		this.autoHide = true;
+		if (this.isShown())
+		{
+			this.bindAutoHide();
+		}
+	}
+	else
+	{
+		this.autoHide = false;
+		this.unbindAutoHide();
+	}
+};
+
+BX.PopupWindow.prototype.bindAutoHide = function()
+{
+	if (!this.isAutoHideBinded)
+	{
+		this.isAutoHideBinded = true;
+		BX.bind(this.popupContainer, "click", this.cancelBubble);
+		BX.bind(document, "click", BX.proxy(this.close, this));
+	}
+};
+
+BX.PopupWindow.prototype.unbindAutoHide = function()
+{
+	if (this.isAutoHideBinded)
+	{
+		this.isAutoHideBinded = false;
+		BX.unbind(this.popupContainer, "click", this.cancelBubble);
+		BX.unbind(document, "click", BX.proxy(this.close, this));
+	}
+};
+
 BX.PopupWindow.prototype.setOverlay = function(params)
 {
 	if (this.overlay == null)
@@ -560,7 +599,6 @@ BX.PopupWindow.prototype.adjustOverlayZindex = function()
 	}
 };
 
-
 BX.PopupWindow.prototype.show = function()
 {
 	if (!this.firstShow)
@@ -583,15 +621,13 @@ BX.PopupWindow.prototype.show = function()
 		this.isCloseByEscBinded = true;
 	}
 
-	if (this.params.autoHide && !this.isAutoHideBinded)
+	if (this.autoHide && !this.isAutoHideBinded)
 	{
 		setTimeout(
 			BX.proxy(function() {
 				if (this.isShown())
 				{
-					this.isAutoHideBinded = true;
-					BX.bind(this.popupContainer, "click", this.cancelBubble);
-					BX.bind(document, "click", BX.proxy(this.close, this));
+					this.bindAutoHide();
 				}
 			}, this), 100
 		);
@@ -638,11 +674,9 @@ BX.PopupWindow.prototype.close = function(event)
 
 BX.PopupWindow.prototype._close = function()
 {
-	if (this.params.autoHide && this.isAutoHideBinded)
+	if (this.autoHide)
 	{
-		this.isAutoHideBinded = false;
-		BX.unbind(this.popupContainer, "click", this.cancelBubble);
-		BX.unbind(document, "click", BX.proxy(this.close, this));
+		this.unbindAutoHide();
 	}
 };
 
@@ -1174,17 +1208,16 @@ BX.PopupMenuWindow.prototype.__createPopup = function()
 	}
 
 	var popupWindow = new BX.PopupWindow("menu-popup-" + this.id, this.bindElement, {
-		closeByEsc : typeof(this.params.closeByEsc) != "undefined" ? this.params.closeByEsc: false,
-		bindOptions : typeof(this.params.bindOptions) == "object" ? this.params.bindOptions : {},
-		angle : typeof(this.params.angle) != "undefined" ? this.params.angle : false,
-		zIndex : this.params.zIndex ? this.params.zIndex : 0,
+		closeByEsc: typeof(this.params.closeByEsc) != "undefined" ? this.params.closeByEsc: false,
+		bindOptions: typeof(this.params.bindOptions) == "object" ? this.params.bindOptions : {},
+		angle: typeof(this.params.angle) != "undefined" ? this.params.angle : false,
+		zIndex: this.params.zIndex ? this.params.zIndex : 0,
 		overlay: typeof(this.params.overlay) == "object" ? this.params.overlay : null,
-		autoHide : typeof(this.params.autoHide) != "undefined" ? this.params.autoHide : true,
-		offsetTop : this.params.offsetTop ? this.params.offsetTop : 1,
-		offsetLeft : this.params.offsetLeft ? this.params.offsetLeft : 0,
-		
-		noAllPaddings : true,
-
+		autoHide: typeof(this.params.autoHide) != "undefined" ? this.params.autoHide : true,
+		offsetTop: this.params.offsetTop ? this.params.offsetTop : 1,
+		offsetLeft: this.params.offsetLeft ? this.params.offsetLeft : 0,
+		className: BX.type.isNotEmptyString(this.params.className) ? this.params.className : "",
+		noAllPaddings: true,
 		content : BX.create("div", { props : { className : "menu-popup" }, children: [
 			(this.itemsContainer = BX.create("div", { props : { className : "menu-popup-items" }, children: domItems}))
 		]})

@@ -792,7 +792,9 @@ if(is_array($arUserOptions))
 				}
 
 				if(intval($gadgetUserSettings["COLUMN"])<=0 || intval($gadgetUserSettings["COLUMN"])>=$arResult["COLS"])
-						$arUserOptions["GADGETS"][$gdid]["COLUMN"] = 0;
+				{
+					$gadgetUserSettings["COLUMN"] = 0;
+				}
 
 				$arGCol = &$arResult["GADGETS"][$gadgetUserSettings["COLUMN"]];
 
@@ -800,7 +802,7 @@ if(is_array($arUserOptions))
 				{
 					ksort($arGCol, SORT_NUMERIC);
 					$ks = array_keys($arGCol);
-					$arUserOptions["GADGETS"][$gdid]["ROW"] = $ks[count($ks)-1] + 1;
+					$gadgetUserSettings["ROW"] = $ks[count($ks)-1] + 1;
 				}
 
 				$arGadget["ID"] = $gdid;
@@ -813,7 +815,9 @@ if(is_array($arUserOptions))
 					&& array_key_exists("TITLE_STD", $arGadgetParams)
 					&& strlen($arGadgetParams["TITLE_STD"]) > 0
 				)
+				{
 					$arGadget["TITLE"] = htmlspecialcharsbx($arGadgetParams["TITLE_STD"]);
+				}
 
 				$arGadget["HIDE"] = $gadgetUserSettings["HIDE"];
 				if($arParams["PERMISSION"]>"R")
@@ -829,7 +833,9 @@ if(is_array($arUserOptions))
 				}
 			}
 			else
+			{
 				unset($arUserOptions["GADGETS"][$gdid]);
+			}
 		}
 	}
 

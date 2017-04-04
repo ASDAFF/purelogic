@@ -716,6 +716,9 @@ class CAllIBlockElement
 			case "IBLOCK_ID":
 				$arSqlSearch[] = CIBlock::FilterCreateEx("BE.".$key, $val, "number", $bFullJoinTmp, $cOperationType);
 				break;
+			case "IBLOCK_SECTION_ID":
+				$arSqlSearch[] = CIBlock::FilterCreateEx("BE.".$key, $val, "number", $bFullJoinTmp, $cOperationType);
+				break;
 			case "TIMESTAMP_X":
 			case "DATE_CREATE":
 			case "SHOW_COUNTER_START":
@@ -1229,7 +1232,7 @@ class CAllIBlockElement
 				elseif(strtoupper(substr($key, 0, 8)) == "CATALOG_" && CModule::IncludeModule("catalog"))
 				{
 					$res_catalog = CCatalogProduct::GetQueryBuildArrays(array(), array($orig_key => $val), array());
-					if(strlen($res_catalog["WHERE"]))
+					if($res_catalog["WHERE"] !== '')
 					{
 						$arSqlSearch[] = substr($res_catalog["WHERE"], 5); // " AND ".$res
 						$arAddWhereFields[$orig_key] = $val;
@@ -1710,7 +1713,7 @@ class CAllIBlockElement
 				else
 					$iElCnt = $arJoinProps["BE"][$db_prop["ID"]]["CNT"];
 
-				$arSqlOrder[$by[0]] = CIBLock::_Order(str_replace("#i#", $iElCnt, $arJoinEFields[$by[2]]), $order, "desc");
+				$arSqlOrder[$by[0]] = CIBlock::_Order(str_replace("#i#", $iElCnt, $arJoinEFields[$by[2]]), $order, "desc");
 			}
 			elseif(substr($by[2], 0, 9) == "PROPERTY_")
 			{
@@ -1748,15 +1751,15 @@ class CAllIBlockElement
 					}
 
 					if($db_jprop["PROPERTY_TYPE"]=="L" && $bSort)
-						$arSqlOrder["PROPERTY_".$by[1]."_".$by[2]] = CIBLock::_Order("JFPEN".$ijFpenCnt.".SORT", $order, "desc");
+						$arSqlOrder["PROPERTY_".$by[1]."_".$by[2]] = CIBlock::_Order("JFPEN".$ijFpenCnt.".SORT", $order, "desc");
 					elseif($db_jprop["PROPERTY_TYPE"]=="L")
-						$arSqlOrder["PROPERTY_".$by[1]."_".$by[2]] = CIBLock::_Order("JFPEN".$ijFpenCnt.".VALUE", $order, "desc");
+						$arSqlOrder["PROPERTY_".$by[1]."_".$by[2]] = CIBlock::_Order("JFPEN".$ijFpenCnt.".VALUE", $order, "desc");
 					elseif($db_jprop["VERSION"]==2 && $db_jprop["MULTIPLE"]=="N")
-						$arSqlOrder["PROPERTY_".$by[1]."_".$by[2]] = CIBLock::_Order("JFPS".$ijPropCnt.".PROPERTY_".$db_jprop["ORIG_ID"], $order, "desc");
+						$arSqlOrder["PROPERTY_".$by[1]."_".$by[2]] = CIBlock::_Order("JFPS".$ijPropCnt.".PROPERTY_".$db_jprop["ORIG_ID"], $order, "desc");
 					elseif($db_jprop["PROPERTY_TYPE"]=="N")
-						$arSqlOrder["PROPERTY_".$by[1]."_".$by[2]] = CIBLock::_Order("JFPV".$ijPropCnt.".VALUE_NUM", $order, "desc");
+						$arSqlOrder["PROPERTY_".$by[1]."_".$by[2]] = CIBlock::_Order("JFPV".$ijPropCnt.".VALUE_NUM", $order, "desc");
 					else
-						$arSqlOrder["PROPERTY_".$by[1]."_".$by[2]] = CIBLock::_Order("JFPV".$ijPropCnt.".VALUE", $order, "desc");
+						$arSqlOrder["PROPERTY_".$by[1]."_".$by[2]] = CIBlock::_Order("JFPV".$ijPropCnt.".VALUE", $order, "desc");
 
 				}
 			}
@@ -1764,15 +1767,15 @@ class CAllIBlockElement
 		else
 		{
 			if($db_prop["PROPERTY_TYPE"]=="L" && $bSort)
-				$arSqlOrder[$by] = CIBLock::_Order("FPEN".$iFpenCnt.".SORT", $order, "desc");
+				$arSqlOrder[$by] = CIBlock::_Order("FPEN".$iFpenCnt.".SORT", $order, "desc");
 			elseif($db_prop["PROPERTY_TYPE"]=="L")
-				$arSqlOrder[$by] = CIBLock::_Order("FPEN".$iFpenCnt.".VALUE", $order, "desc");
+				$arSqlOrder[$by] = CIBlock::_Order("FPEN".$iFpenCnt.".VALUE", $order, "desc");
 			elseif($db_prop["VERSION"]==2 && $db_prop["MULTIPLE"]=="N")
-				$arSqlOrder[$by] = CIBLock::_Order("FPS".$iPropCnt.".PROPERTY_".$db_prop["ORIG_ID"], $order, "desc");
+				$arSqlOrder[$by] = CIBlock::_Order("FPS".$iPropCnt.".PROPERTY_".$db_prop["ORIG_ID"], $order, "desc");
 			elseif($db_prop["PROPERTY_TYPE"]=="N")
-				$arSqlOrder[$by] = CIBLock::_Order("FPV".$iPropCnt.".VALUE_NUM", $order, "desc");
+				$arSqlOrder[$by] = CIBlock::_Order("FPV".$iPropCnt.".VALUE_NUM", $order, "desc");
 			else
-				$arSqlOrder[$by] = CIBLock::_Order("FPV".$iPropCnt.".VALUE", $order, "desc");
+				$arSqlOrder[$by] = CIBlock::_Order("FPV".$iPropCnt.".VALUE", $order, "desc");
 		}
 
 		//Pass join "commands" up there
@@ -2724,7 +2727,7 @@ class CAllIBlockElement
 				{
 					$by = "ID";
 					if(!array_key_exists($by, $arSqlOrder))
-						$arSqlOrder[$by] = CIBLock::_Order("BE.ID", $order, "desc");
+						$arSqlOrder[$by] = CIBlock::_Order("BE.ID", $order, "desc");
 				}
 
 				//Check if have to add select field in order to correctly sort
@@ -2807,7 +2810,17 @@ class CAllIBlockElement
 				"CATALOG_TYPE" => true,
 				"CATALOG_MEASURE" => true,
 				"CATALOG_AVAILABLE" => true,
-				"CATALOG_BUNDLE" => true
+				"CATALOG_BUNDLE" => true,
+				"CATALOG_QUANTITY_TRACE" => true,
+				"CATALOG_QUANTITY_TRACE_ORIG" => true,
+				"CATALOG_CAN_BUY_ZERO" => true,
+				"CATALOG_CAN_BUY_ZERO_ORIG" => true,
+				"CATALOG_WIDTH" => true,
+				"CATALOG_HEIGHT" => true,
+				"CATALOG_LENGTH" => true,
+				"CATALOG_VAT_ID" => true,
+				"CATALOG_SUBSCRIBE" => true,
+				"CATALOG_SUBSCRIBE_ORIG" => true
 			);
 			$bStar = false;
 			foreach($arSelectFields as $key=>$val)
@@ -3147,7 +3160,7 @@ class CAllIBlockElement
 					$arFields["PREVIEW_PICTURE"]["tmp_name"] = $tmp_name;
 				}
 
-				CIBLock::FilterPicture($arFields["PREVIEW_PICTURE"]["tmp_name"], array(
+				CIBlock::FilterPicture($arFields["PREVIEW_PICTURE"]["tmp_name"], array(
 					"name" => "watermark",
 					"position" => $arDef["WATERMARK_FILE_POSITION"],
 					"type" => "file",
@@ -3178,7 +3191,7 @@ class CAllIBlockElement
 					$arFields["PREVIEW_PICTURE"]["tmp_name"] = $tmp_name;
 				}
 
-				CIBLock::FilterPicture($arFields["PREVIEW_PICTURE"]["tmp_name"], array(
+				CIBlock::FilterPicture($arFields["PREVIEW_PICTURE"]["tmp_name"], array(
 					"name" => "watermark",
 					"position" => $arDef["WATERMARK_TEXT_POSITION"],
 					"type" => "text",
@@ -3231,7 +3244,7 @@ class CAllIBlockElement
 					$arFields["DETAIL_PICTURE"]["tmp_name"] = $tmp_name;
 				}
 
-				CIBLock::FilterPicture($arFields["DETAIL_PICTURE"]["tmp_name"], array(
+				CIBlock::FilterPicture($arFields["DETAIL_PICTURE"]["tmp_name"], array(
 					"name" => "watermark",
 					"position" => $arDef["WATERMARK_FILE_POSITION"],
 					"type" => "file",
@@ -3262,7 +3275,7 @@ class CAllIBlockElement
 					$arFields["DETAIL_PICTURE"]["tmp_name"] = $tmp_name;
 				}
 
-				CIBLock::FilterPicture($arFields["DETAIL_PICTURE"]["tmp_name"], array(
+				CIBlock::FilterPicture($arFields["DETAIL_PICTURE"]["tmp_name"], array(
 					"name" => "watermark",
 					"position" => $arDef["WATERMARK_TEXT_POSITION"],
 					"type" => "text",
@@ -3812,7 +3825,7 @@ class CAllIBlockElement
 				$VERSION = CIBlockElement::GetIBVersion($zr["IBLOCK_ID"]);
 				$db_res = CIBlockElement::GetProperty($zr["IBLOCK_ID"], $zr["ID"], "sort", "asc", array("PROPERTY_TYPE"=>"F"));
 
-				$arIBlockFields = CIBLock::GetArrayByID($zr["IBLOCK_ID"], "FIELDS");
+				$arIBlockFields = CIBlock::GetArrayByID($zr["IBLOCK_ID"], "FIELDS");
 				if(
 					IntVal($zr["WF_PARENT_ELEMENT_ID"])<=0
 					&& $arIBlockFields["LOG_ELEMENT_DELETE"]["IS_REQUIRED"] == "Y"
@@ -5277,7 +5290,7 @@ class CAllIBlockElement
 					LEFT JOIN b_iblock_element_property BEP ON BEP.IBLOCK_ELEMENT_ID = BE.ID ".(!empty($propertyID) ? "AND BEP.IBLOCK_PROPERTY_ID IN (".implode(', ', $propertyID).")" : "").
 				"WHERE 1=1 ".$element->sWhere."
 				ORDER BY
-					BEP.IBLOCK_ELEMENT_ID
+					BEP.IBLOCK_ELEMENT_ID, BEP.IBLOCK_PROPERTY_ID, BEP.ID
 			";
 		$rs = new CIBlockPropertyResult($DB->Query($strSql));
 		$rs->setIBlock($IBLOCK_ID, $propertyID);
@@ -5770,7 +5783,7 @@ class CAllIBlockElement
 				break;
 			case "NAME":
 				if(strlen($val) > 0)
-					$strSqlSearch .= "AND ".CIBLock::_Upper("BP.NAME")." LIKE ".CIBlock::_Upper("'".$DB->ForSql($val)."'")."\n";
+					$strSqlSearch .= "AND ".CIBlock::_Upper("BP.NAME")." LIKE ".CIBlock::_Upper("'".$DB->ForSql($val)."'")."\n";
 				break;
 			case "ID":
 				if(is_array($val))
@@ -5787,7 +5800,7 @@ class CAllIBlockElement
 				break;
 			case "CODE":
 				if(strlen($val) > 0)
-					$strSqlSearch .= "AND ".CIBLock::_Upper("BP.CODE")." LIKE ".CIBLock::_Upper("'".$DB->ForSql($val)."'")."\n";
+					$strSqlSearch .= "AND ".CIBlock::_Upper("BP.CODE")." LIKE ".CIBlock::_Upper("'".$DB->ForSql($val)."'")."\n";
 				break;
 			case "EMPTY":
 				if(strlen($val) > 0)

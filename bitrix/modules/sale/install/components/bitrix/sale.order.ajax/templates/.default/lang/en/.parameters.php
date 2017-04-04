@@ -131,4 +131,10 @@ You previously shopped with us and we remember you, so we have taken the liberty
 Check the order information thoroughly and edit your order if required. Once you see everything is good, click \"#ORDER_BUTTON#\".
 ";
 $MESS["SERVICES_IMAGES_SCALING_TIP"] = "This also affects logos of payment and delivery systems, and pick-up locations.";
+$MESS["USE_ENHANCED_ECOMMERCE"] = "Submit e-commerce data to Google";
+$MESS["USE_ENHANCED_ECOMMERCE_TIP"] = "This requires Google Analytics Enhanced Ecommerce options to be configured";
+$MESS["DATA_LAYER_NAME"] = "Data container name";
+$MESS["BRAND_PROPERTY"] = "Property containing product brand name";
+$MESS["PAY_SYSTEM_PAYABLE_ERROR_TEXT"] = "Notification text to show when order cannot be paid";
+$MESS["PAY_SYSTEM_PAYABLE_ERROR_DEFAULT"] = "You'll be able to pay for the order after we verify that the items you have ordered are in stock. Once your order is fulfilled, you'll receive an email with payment instructions. You'll be able to complete the purchase inside your customer account.";
 ?>

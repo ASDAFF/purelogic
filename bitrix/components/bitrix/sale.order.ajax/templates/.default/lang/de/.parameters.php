@@ -131,4 +131,10 @@ Sie haben bei uns früher eingekauft, und wir können uns an Sie erinnern, desha
 Überprüfen Sie bitte die Bestellinformationen und ändern Sie diese, wenn erforderlich. Wenn alles stimmt, klicken Sie auf \"#ORDER_BUTTON#\".
 ";
 $MESS["SERVICES_IMAGES_SCALING_TIP"] = "Das schließt auch Logos der Liefer- und Zahlungssysteme sowie Abholstandorte ein.";
+$MESS["USE_ENHANCED_ECOMMERCE"] = "E-commerce Daten an Google senden";
+$MESS["USE_ENHANCED_ECOMMERCE_TIP"] = "Die Optionen von Google Analytics Enhanced Ecommerce müssen dafür konfiguriert werden";
+$MESS["DATA_LAYER_NAME"] = "Name des Datencontainers";
+$MESS["BRAND_PROPERTY"] = "Eigenschaft, die den Namen der Handelsmarke enthält";
+$MESS["PAY_SYSTEM_PAYABLE_ERROR_TEXT"] = "Benachrichtigungstext, der angezeigt wird, wenn die Bestellung nicht bezahlt werden kann";
+$MESS["PAY_SYSTEM_PAYABLE_ERROR_DEFAULT"] = "Sie werden die Bestellung bezahlen können, nachdem wir feststellen, dass die von Ihnen bestellte Produkte am Lager sind. Wird Ihre Bestellung erfüllt, erhalten Sie eine E-Mail mit Zahlungsanweisungen. Sie werden dann die Bestellung innerhalb Ihres Accounts abschließen können.";
 ?>

@@ -16,6 +16,7 @@ $MESS["SALE_HPS_SBERBANK_PAYER_VILLAGE_DESC"] = "Поселок плательщ
 $MESS["SALE_HPS_SBERBANK_PAYER_STREET_DESC"] = "Улица плательщика";
 $MESS["SALE_HPS_SBERBANK_PAYER_REGION_DESC"] = "Регион плательщика";
 $MESS["SALE_HPS_SBERBANK_PAYER_CITY_DESC"] = "Город плательщика";
+$MESS["SALE_HPS_SBERBANK_PAYER_ACCOUNT_DESC"] = "Номер лицевого счета плательщика";
 $MESS["SALE_HPS_SBERBANK_PAYER_ADDRESS_FACT_DESC"] = "Адрес плательщика";
 $MESS["SALE_HPS_SBERBANK_SUM_DESC"] = "Сумма к оплате";
 $MESS["SALE_HPS_SBERBANK_CURRENCY_DESC"] = "Валюта";

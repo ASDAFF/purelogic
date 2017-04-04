@@ -18,5 +18,6 @@ $MESS["JQOUTE_AUTHOR_WRITES"] = "пишет";
 $MESS["B_B_PC_COM_ERROR"] = "Ошибка:";
 $MESS["MPL_HAVE_WRITTEN"] = "написал:";
 $MESS["MPL_SAFE_EDIT"] = "Вы пишете сообщение. Сбросить изменения?";
-
+$MESS["MPL_ERROR_OCCURRED"] = "Произошла ошибка";
+$MESS["MPL_CLOSE"] = "Закрыть";
 ?>

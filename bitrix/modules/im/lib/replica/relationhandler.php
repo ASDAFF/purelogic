@@ -123,6 +123,7 @@ class RelationHandler extends \Bitrix\Replica\Client\BaseHandler
 						\CPullStack::AddByUser($relation['USER_ID'], Array(
 							'module_id' => 'im',
 							'command' => 'readMessageApponent',
+							'expiry' => 3600,
 							'params' => Array(
 								'chatId' => intval($newRecord['CHAT_ID']),
 								'userId' => intval($newRecord['USER_ID']),

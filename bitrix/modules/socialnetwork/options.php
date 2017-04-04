@@ -263,10 +263,6 @@ if ($bIntranet)
 	$arAllOptionsUsersBlocks["tasks"][] = array("default_tasks_operation_create_tasks_user", GetMessage("SONET_TASKS_OPERATION_CREATE_TASKS_USER"), SONET_RELATIONS_TYPE_AUTHORIZED, Array("select_user"));
 	$arAllOptionsUsersBlocks["tasks"][] = array("default_tasks_operation_edit_tasks_user", GetMessage("SONET_TASKS_OPERATION_EDIT_TASKS_USER"), SONET_RELATIONS_TYPE_NONE, Array("select_user"));
 	$arAllOptionsUsersBlocks["tasks"][] = array("default_tasks_operation_delete_tasks_user", GetMessage("SONET_TASKS_OPERATION_DELETE_TASKS_USER"), SONET_RELATIONS_TYPE_NONE, Array("select_user"));
-
-	if (COption::GetOptionString("intranet", "use_tasks_2_0", "N") != "Y")
-		$arAllOptionsUsersBlocks["tasks"][] = array("default_tasks_operation_modify_folders_user", GetMessage("SONET_TASKS_OPERATION_MODIFY_FOLDERS_USER"), SONET_RELATIONS_TYPE_NONE, Array("select_user"));
-
 	$arAllOptionsUsersBlocks["tasks"][] = array("default_tasks_operation_modify_common_views_user", GetMessage("SONET_TASKS_OPERATION_MODIFY_COMMON_VIEWS_USER"), SONET_RELATIONS_TYPE_NONE, Array("select_user"));
 }
 
@@ -346,10 +342,6 @@ if ($bIntranet)
 	$arAllOptionsGroupsBlocks["tasks"][] = array("default_tasks_operation_create_tasks_group", GetMessage("SONET_TASKS_OPERATION_CREATE_TASKS_GROUP"), SONET_ROLES_USER, Array("select_group"));
 	$arAllOptionsGroupsBlocks["tasks"][] = array("default_tasks_operation_edit_tasks_group", GetMessage("SONET_TASKS_OPERATION_EDIT_TASKS_GROUP"), SONET_ROLES_MODERATOR, Array("select_group"));
 	$arAllOptionsGroupsBlocks["tasks"][] = array("default_tasks_operation_delete_tasks_group", GetMessage("SONET_TASKS_OPERATION_DELETE_TASKS_GROUP"), SONET_ROLES_MODERATOR, Array("select_group"));
-
-	if (COption::GetOptionString("intranet", "use_tasks_2_0", "N") != "Y")
-		$arAllOptionsGroupsBlocks["tasks"][] = array("default_tasks_operation_modify_folders_group", GetMessage("SONET_TASKS_OPERATION_MODIFY_FOLDERS_GROUP"), SONET_ROLES_MODERATOR, Array("select_group"));
-
 	$arAllOptionsGroupsBlocks["tasks"][] = array("default_tasks_operation_modify_common_views_group", GetMessage("SONET_TASKS_OPERATION_MODIFY_COMMON_VIEWS_GROUP"), SONET_ROLES_MODERATOR, Array("select_group"));
 	$arAllOptionsGroupsBlocks["tasks"][] = array("default_tasks_create_default", GetMessage("SONET_FUNCTIONALITY_CREATE_DEFAULT"), "Y", Array("checkbox"));
 }

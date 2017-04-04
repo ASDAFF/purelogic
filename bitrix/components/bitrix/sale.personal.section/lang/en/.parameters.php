@@ -51,4 +51,13 @@ $MESS["SPS_USE_AJAX_LOCATIONS"] = "Use extended location selector";
 $MESS["SPS_ICON_OF_CUSTOM_PAGE"] = "FontAwesome class name";
 $MESS["SPS_COMPATIBLE_LOCATION_MODE"] = "Get locations list for legacy template versions";
 $MESS["SPS_SHOW_CUSTOM_PAGE"] = "Add custom page";
+$MESS["SPS_PATH_TO_CUSTOM_PAGE"] = "Path to custom page";
+$MESS["SPS_ALLOW_INNER"] = "Enable payment using internal account";
+$MESS["SPS_ONLY_INNER_FULL"] = "Allow only the full amount of order to be paid using internal account";
+$MESS["SPS_ORDER_LIST_SORT_STATUS"] = "Status";
+$MESS["SPS_ORDER_LIST_SORT_ACCOUNT_NUMBER"] = "Order #";
+$MESS["SPS_ORDER_LIST_SORT_ID"] = "Order ID";
+$MESS["SPS_ORDER_LIST_SORT_DATE_CREATE"] = "Created on";
+$MESS["SPS_ORDER_LIST_SORT_PRICE"] = "Order total";
+$MESS["SPS_ORDER_LIST_DEFAULT_SORT"] = "Order sorting";
 ?>

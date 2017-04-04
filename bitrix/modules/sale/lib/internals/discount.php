@@ -11,7 +11,9 @@ use Bitrix\Main;
 use Bitrix\Main\Application;
 use Bitrix\Main\Entity\Event;
 use Bitrix\Main\Localization\Loc;
+use Bitrix\Sale\Discount\Actions;
 use Bitrix\Sale\Discount\Gift;
+use Bitrix\Sale\Discount\Index;
 
 Loc::loadMessages(__FILE__);
 
@@ -46,7 +48,12 @@ Loc::loadMessages(__FILE__);
  * <li> ACTIONS text optional
  * <li> ACTIONS_LIST text optional
  * <li> APPLICATION text optional
+ * <li> PREDICTION_TEXT text optional
+ * <li> PREDICTIONS text optional
+ * <li> PREDICTIONS_APP text optional
  * <li> USE_COUPONS bool optional default 'N'
+ * <li> USE_INDEX bool optional default 'N'
+ * <li> PRESET_ID string optional
  * <li> EXECUTE_MODULE string(50) mandatory default 'all'
  * <li> CREATED_BY_USER reference to {@link \Bitrix\Main\UserTable}
  * <li> MODIFIED_BY_USER reference to {@link \Bitrix\Main\UserTable}
@@ -150,6 +157,10 @@ class DiscountTable extends Main\Entity\DataManager
 				'default_value' => 'Y',
 				'title' => Loc::getMessage('DISCOUNT_ENTITY_LAST_DISCOUNT_FIELD')
 			)),
+			'LAST_LEVEL_DISCOUNT' => new Main\Entity\BooleanField('LAST_LEVEL_DISCOUNT', array(
+				'values' => array('N', 'Y'),
+				'default_value' => 'N',
+			)),
 			'VERSION' => new Main\Entity\EnumField('VERSION', array(
 				'values' => array(self::VERSION_OLD, self::VERSION_NEW, self::VERSION_15),
 				'default_value' => self::VERSION_15,
@@ -169,6 +180,13 @@ class DiscountTable extends Main\Entity\DataManager
 			)),
 			'ACTIONS' => new Main\Entity\ExpressionField('ACTIONS', '%s', 'ACTIONS_LIST'),
 			'APPLICATION' => new Main\Entity\TextField('APPLICATION', array()),
+			'PREDICTION_TEXT' => new Main\Entity\TextField('PREDICTION_TEXT', array()),
+			'PREDICTIONS_APP' => new Main\Entity\TextField('PREDICTIONS_APP', array()),
+			'PREDICTIONS_LIST' => new Main\Entity\TextField('PREDICTIONS_LIST', array(
+				'serialized' => true,
+				'column_name' => 'PREDICTIONS',
+			)),
+			'PREDICTIONS' => new Main\Entity\ExpressionField('PREDICTIONS', '%s', 'PREDICTIONS_LIST'),
 			'USE_COUPONS' => new Main\Entity\BooleanField('USE_COUPONS', array(
 				'values' => array('N', 'Y'),
 				'default_value' => 'N',
@@ -178,6 +196,18 @@ class DiscountTable extends Main\Entity\DataManager
 				'validation' => array(__CLASS__, 'validateExecuteModule'),
 				'title' => Loc::getMessage('DISCOUNT_ENTITY_EXECUTE_MODULE_FIELD')
 			)),
+			'HAS_INDEX' => new Main\Entity\BooleanField('HAS_INDEX', array(
+				'values' => array('N', 'Y'),
+				'default_value' => 'N',
+			)),
+			'PRESET_ID' => new Main\Entity\StringField('PRESET_ID', array(
+				'validation' => array(__CLASS__, 'validatePresetId'),
+			)),
+			'SHORT_DESCRIPTION_STRUCTURE' => new Main\Entity\TextField('SHORT_DESCRIPTION_STRUCTURE', array(
+				'serialized' => true,
+				'column_name' => 'SHORT_DESCRIPTION',
+			)),
+			'SHORT_DESCRIPTION' => new Main\Entity\ExpressionField('SHORT_DESCRIPTION', '%s', 'SHORT_DESCRIPTION_STRUCTURE'),
 			'CREATED_BY_USER' => new Main\Entity\ReferenceField(
 				'CREATED_BY_USER',
 				'Bitrix\Main\User',
@@ -273,6 +303,18 @@ class DiscountTable extends Main\Entity\DataManager
 	}
 
 	/**
+	 * Returns validators for PRESET_ID field.
+	 *
+	 * @return array
+	 */
+	public static function validatePresetId()
+	{
+		return array(
+			new Main\Entity\Validator\Length(null, 255),
+		);
+	}
+
+	/**
 	 * Default onBeforeAdd handler. Absolutely necessary.
 	 *
 	 * @param Main\Entity\Event $event		Event object.
@@ -291,6 +333,7 @@ class DiscountTable extends Main\Entity\DataManager
 			$modifyFieldList['CURRENCY'] = SiteCurrencyTable::getSiteCurrency($data['LID']);
 		self::setUserID($modifyFieldList, $data, array('CREATED_BY', 'MODIFIED_BY'));
 		self::setTimestamp($modifyFieldList, $data, array('DATE_CREATE', 'TIMESTAMP_X'));
+		self::setShortDescription($modifyFieldList, $data);
 
 		self::copyOldFields($modifyFieldList, $data);
 		$result->unsetField('CONDITIONS');
@@ -320,6 +363,14 @@ class DiscountTable extends Main\Entity\DataManager
 				$giftManager->enableExistenceDiscountsWithGift();
 			}
 		}
+
+		if(
+			isset($fields['CONDITIONS_LIST']) &&
+			Index\Manager::getInstance()->indexDiscount($fields + array('ID' => $event->getParameter('id')))
+		)
+		{
+			static::update($event->getParameter('id'), array('HAS_INDEX' => 'Y'));
+		}
 	}
 
 	/**
@@ -336,6 +387,7 @@ class DiscountTable extends Main\Entity\DataManager
 		$modifyFieldList = array();
 		self::setUserID($modifyFieldList, $data, array('MODIFIED_BY'));
 		self::setTimestamp($modifyFieldList, $data, array('TIMESTAMP_X'));
+		self::setShortDescription($modifyFieldList, $data);
 
 		self::copyOldFields($modifyFieldList, $data);
 		$result->unsetField('CONDITIONS');
@@ -370,7 +422,14 @@ class DiscountTable extends Main\Entity\DataManager
 				$giftManager->enableExistenceDiscountsWithGift();
 			}
 		}
-		unset($data, $id);
+
+		if(
+			isset($fields['CONDITIONS_LIST']) &&
+			Index\Manager::getInstance()->indexDiscount($fields + array('ID' => $event->getParameter('id')))
+		)
+		{
+			static::update($event->getParameter('id'), array('HAS_INDEX' => 'Y'));
+		}
 	}
 
 	/**
@@ -413,6 +472,7 @@ class DiscountTable extends Main\Entity\DataManager
 			self::$deleteCoupons = false;
 		}
 		Gift\RelatedDataTable::deleteByDiscount($id);
+		Index\Manager::getInstance()->dropIndex($id);
 
 		unset($id);
 	}
@@ -492,6 +552,22 @@ class DiscountTable extends Main\Entity\DataManager
 				$result[$oneKey] = $currentUserID;
 		}
 		unset($oneKey);
+	}
+
+	protected static function setShortDescription(&$result, array $data)
+	{
+		if(!empty($data['SHORT_DESCRIPTION_STRUCTURE']) || empty($data['ACTIONS']))
+		{
+			return;
+		}
+
+		$actionConfiguration = Actions::getActionConfiguration($data);
+		if(!$actionConfiguration)
+		{
+			return;
+		}
+
+		$result['SHORT_DESCRIPTION_STRUCTURE'] = $actionConfiguration;
 	}
 
 	/**

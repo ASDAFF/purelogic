@@ -1752,7 +1752,7 @@ class CAllBlog
 		return false;
 	}
 	
-	function SendPing($blogName, $blogUrl, $blogXml = "")
+	public static function SendPing($blogName, $blogUrl, $blogXml = "")
 	{
 		global $APPLICATION;
 

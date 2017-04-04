@@ -15,7 +15,8 @@ use Bitrix\Main,
 	Bitrix\Sale,
 	Bitrix\Iblock,
 	Bitrix\Main\Data,
-	Bitrix\Sale\Location;
+	Bitrix\Sale\Location,
+	Bitrix\Sale\Cashbox\CheckManager;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
@@ -181,6 +182,24 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 	{
 		global $USER, $APPLICATION;
 
+		$context = \Bitrix\Main\Context::getCurrent();
+		$request = $context->getRequest();
+
+		if ($access = $request->get('access'))
+		{
+			$this->loadOrder(urldecode(urldecode($this->arParams["ID"])));
+			if (
+				$this->order &&
+				$this->order->getHash() === $request->get('access') &&
+				\Bitrix\Sale\Helpers\Order::isAllowGuestView($this->order)
+			)
+			{
+				$this->requestData['hash'] = $request->get('access');
+				$this->arParams['GUEST_MODE'] = 'Y';
+				return;
+			}
+		}
+
 		if (!$USER->IsAuthorized())
 		{
 			$msg = Localization\Loc::getMessage("SPOD_ACCESS_DENIED");
@@ -204,7 +223,7 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 	public function onPrepareComponentParams($arParams)
 	{
 		global $APPLICATION;
-
+		$rr = $this->request;
 		$this->tryParseInt($arParams["CACHE_TIME"], 3600, true);
 
 		$arParams['CACHE_GROUPS'] = (isset($arParams['CACHE_GROUPS']) && $arParams['CACHE_GROUPS'] == 'N' ? 'N' : 'Y');
@@ -232,6 +251,22 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 			$arParams['RESAMPLE_TYPE'] = BX_RESIZE_IMAGE_PROPORTIONAL;
 
 		$this->tryParseBoolean($arParams['AUTH_FORM_IN_TEMPLATE']);
+
+
+		if (empty($params['ALLOW_INNER']))
+		{
+			$params['ALLOW_INNER'] = "N";
+		}
+
+		if (empty($params['ONLY_INNER_FULL']))
+		{
+			$params['ONLY_INNER_FULL'] = "Y";
+		}
+
+		if (!CBXFeatures::IsFeatureEnabled('SaleAccounts'))
+		{
+			$params['ALLOW_INNER'] = "N";
+		}
 
 		return $arParams;
 	}
@@ -326,10 +361,7 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 	 */
 	protected function doCaseOrderIdNotSet()
 	{
-		global $APPLICATION;
-
-		if ($this->arParams["PATH_TO_LIST"] != htmlspecialcharsbx($APPLICATION->GetCurPage()))
-			LocalRedirect($this->arParams["PATH_TO_LIST"]);
+		LocalRedirect($this->arParams["PATH_TO_LIST"]);
 	}
 
 	/**
@@ -485,8 +517,6 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 				}
 			}
 
-			$this->dbResult['PRODUCT_SUM'] += $basketValues["PRICE"] * $basketValues['QUANTITY'];
-			
 			$basketValues['FORMATED_SUM'] = SaleFormatCurrency($basketValues["PRICE"] * $basketValues['QUANTITY'], $basketValues["CURRENCY"]);
 
 			$basket[$basketValues['ID']] = $basketValues;
@@ -519,15 +549,13 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 				if ($arItem['PARENT'])
 				{
 					$arElementIds[] = $arItem['PARENT']["ID"];
-					$arSku2Parent[$arItem["PRODUCT_ID"]] = $arItem['PARENT']["ID"];
+					$arSku2Parent[$arItem["PRODUCT_ID"]] = (int)$arItem['PARENT']["ID"];
 
-					$arParents[$arItem["PRODUCT_ID"]]["PRODUCT_ID"] = $arItem['PARENT']["ID"];
-					$arParents[$arItem["PRODUCT_ID"]]["IBLOCK_ID"] = $arItem['PARENT']["IBLOCK_ID"];
+					$arParents[$arItem["PRODUCT_ID"]]["PRODUCT_ID"] = (int)$arItem['PARENT']["ID"];
+					$arParents[$arItem["PRODUCT_ID"]]["IBLOCK_ID"] = (int)$arItem['PARENT']["IBLOCK_ID"];
 				}
-				else
-				{
-					$arElementIds[] = $arItem["PRODUCT_ID"];
-				}
+
+				$arElementIds[] = (int)$arItem["PRODUCT_ID"];
 			}
 
 			// fetching iblock props
@@ -646,31 +674,19 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 
 		$productDataList = array();
 
-		$result = Iblock\ElementTable::getList(
+		$productDataRow = \CIBlockElement::GetList(
+			array("SORT" => "ASC"),
 			array(
-				'filter' => array("=ID" => array_unique($elementIdList)),
-				'select' => $select
-			)
+				"ID" => $elementIdList
+			),
+			false,
+			false,
+			$select
 		);
 
-		while ($element = $result->fetch())
+		while ($product = $productDataRow->GetNext())
 		{
-			$id = $element["ID"];
-			foreach ($element as $key => $value)
-			{
-				if (is_array($productDataList[$id])
-					&& array_key_exists($key, $productDataList[$id])
-					&& !is_array($productDataList[$id][$key])
-					&& !in_array($value, explode(", ", $productDataList[$id][$key]))
-				) // if we have multiple property value
-				{
-					$productDataList[$id][$key] .= ", ".$value;
-				}
-				elseif (empty($productDataList[$id][$key]))
-				{
-					$productDataList[$id][$key] = $value;
-				}
-			}
+			$productDataList[$product['ID']] = $product;
 		}
 
 		return $productDataList;
@@ -974,9 +990,15 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 
 		$props = array();
 		$enumList = array();
+		$groupList = array();
 
 		$order = $this->order;
 		$propertyCollection = $order->getPropertyCollection();
+		$groupData = $propertyCollection->getGroups();
+		foreach ($groupData as $group)
+		{
+			$groupList[$group['ID']] = $group;
+		}
 
 		/**@var Bitrix\Sale\PropertyValue*/
 		foreach ($propertyCollection as $property)
@@ -987,6 +1009,13 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 			{
 				/**@var Bitrix\Sale\PropertyValue $property */
 				$propertyList = array_merge($property->getFieldValues(), $property->getProperty());
+
+				$propertyList['GROUP_NAME'] = $groupList[$propertyList['PROPS_GROUP_ID']]['NAME'];
+				$propertyList['GROUP_SORT'] = $groupList[$propertyList['PROPS_GROUP_ID']]['SORT'];
+
+				/** For compatibility*/
+				$propertyList['PROP_ID'] = $propertyList['ORDER_PROPS_ID'];
+				$propertyList['PROP_SORT'] = $propertyList['SORT'];
 
 				if ($propertyList["ACTIVE"] == "Y" && $propertyList["UTIL"] == "N")
 				{
@@ -1013,19 +1042,18 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 						}
 						elseif ($propertyList["TYPE"] === "LOCATION")
 						{
+							$location = '';
 							foreach ($propertyList["VALUE"] as $locationElement)
 							{
-								$propertyList["VALUE"] = $propertyList["VALUE"].Location\Admin\LocationHelper::getLocationStringByCode($locationElement["VALUE"])."<br/>";
+								$location = $location.Location\Admin\LocationHelper::getLocationStringByCode($locationElement)."<br/>";
 							}
+							$propertyList["VALUE"] = $location;
 						}
 						elseif ($propertyList["TYPE"] === 'ENUM')
 						{
 							if (gettype($propertyList["VALUE"]) === "array")
 							{
-								foreach ($propertyList["VALUE"] as $enumElement)
-								{
-									$enumList[] = $propertyList["OPTIONS"][$enumElement["VALUE"]];
-								}
+								$enumList = $propertyList["VALUE"];
 							}
 							else
 							{
@@ -1063,6 +1091,23 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 		$cached["ORDER_PROPS"] = $props;
 	}
 
+	protected function loadOrder($id)
+	{
+		if ($this->options['USE_ACCOUNT_NUMBER'])
+		{
+			$this->order = Sale\Order::loadByAccountNumber($id);
+		}
+
+		if ($this->order)
+		{
+			$this->requestData["ID"] = $this->order->getId();
+		}
+		else
+		{
+			$this->order = Sale\Order::load($id);
+		}
+	}
+
 	/**
 	 * Perform reading main data from database, no cache is used for it
 	 * @throws Main\SystemException
@@ -1070,25 +1115,19 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 	 */
 	protected function obtainDataOrder()
 	{
-		if ($this->options['USE_ACCOUNT_NUMBER'])
-		{
-			$this->order = Sale\Order::loadByAccountNumber($this->requestData["ID"]);
-		}
-
-		if ($this->order)
-		{
-
-			$this->requestData["ID"] = $this->order->getId();
-		}
-		else
-		{
-			$this->order = Sale\Order::load($this->requestData["ID"]);
-		}
+		global $USER;
 
 		if (!($this->order))
 		{
+			$this->loadOrder($this->requestData["ID"]);
+		}
+
+		if (!($this->order) || ($this->order->getUserId() !== $USER->GetID() && empty($this->requestData['hash'])))
+		{
 			$this->doCaseOrderIdNotSet();
 		}
+
+		$this->requestData["ID"] = $this->order->getId();
 
 		$orderValues = $this->order->getFieldValues();
 
@@ -1141,6 +1180,7 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 		$orderValues['SHIPMENT'] = $shipmentOrder;
 
 		$paymentOrder = array();
+
 		$paymentCollection = $this->order->getPaymentCollection();
 
 		/** @var \Bitrix\Sale\Payment $payment*/
@@ -1148,10 +1188,13 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 		{
 			$paymentFields = $payment->getFieldValues();
 			$paymentFields['PAY_SYSTEM_NAME'] = htmlspecialcharsbx($paymentFields['PAY_SYSTEM_NAME']);
-			$paymentOrder[] = $paymentFields;
+			$paymentFields['CHECK_DATA'] = CheckManager::getCheckInfo($payment);
+			$paymentOrder[$paymentFields['ID']] = $paymentFields;
 		}
-
+		
 		$orderValues['PAYMENT'] = $paymentOrder;
+
+		$orderValues['IS_ALLOW_PAY'] = $this->order->isAllowPay() ? 'Y' : 'N';
 
 		$this->dbResult = $orderValues;
 	}
@@ -1212,7 +1255,7 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 				$payment["PAY_SYSTEM"]['NAME'] = htmlspecialcharsbx($payment["PAY_SYSTEM"]['NAME']);
 				$payment["PAY_SYSTEM"]["SRC_LOGOTIP"] = CFile::GetPath($payment["PAY_SYSTEM"]['LOGOTIP']);
 			}
-			if ($payment["PAID"] != "Y" && $this->dbResult["CANCELED"] != "Y")
+			if ($payment["PAID"] != "Y" && $this->dbResult["CANCELED"] != "Y" &&  $this->dbResult["ALLOW_PAY"] != "N")
 			{
 				$payment['BUFFERED_OUTPUT'] = '';
 				$payment['ERROR'] = '';
@@ -1223,6 +1266,10 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 					if ($service->getField("NEW_WINDOW") == "Y")
 					{
 						$payment["PAY_SYSTEM"]["PSA_ACTION_FILE"] = htmlspecialcharsbx($this->arParams["PATH_TO_PAYMENT"]).'?ORDER_ID='.urlencode(urlencode($this->dbResult["ACCOUNT_NUMBER"])).'&PAYMENT_ID='.$payment['ID'];
+						if (!empty($this->requestData['hash']))
+						{
+							$payment["PAY_SYSTEM"]["PSA_ACTION_FILE"] .= '&HASH='.htmlspecialcharsbx($this->requestData['hash']);
+						}
 					}
 					else
 					{
@@ -1238,20 +1285,23 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 							$payment["PAY_SYSTEM"]["PSA_ACTION_FILE"] = $pathToAction;
 						}
 
-						/** @var \Bitrix\Sale\PaymentCollection $paymentCollection */
-						$paymentCollection =  $this->order->getPaymentCollection();
-
-						if ($paymentCollection)
+						if ($payment["PAY_SYSTEM"]["NEW_WINDOW"] !== 'Y')
 						{
-							/** @var \Bitrix\Sale\Payment $paymentItem */
-							$paymentItem = $paymentCollection->getItemById($payment['ID']);
-							if ($paymentItem)
+							/** @var \Bitrix\Sale\PaymentCollection $paymentCollection */
+							$paymentCollection =  $this->order->getPaymentCollection();
+
+							if ($paymentCollection)
 							{
-								$initResult = $service->initiatePay($paymentItem, null, Sale\PaySystem\BaseServiceHandler::STRING);
-								if ($initResult->isSuccess())
-									$payment['BUFFERED_OUTPUT'] = $initResult->getTemplate();
-								else
-									$payment['ERROR'] = implode('\n', $initResult->getErrorMessages());
+								/** @var \Bitrix\Sale\Payment $paymentItem */
+								$paymentItem = $paymentCollection->getItemById($payment['ID']);
+								if ($paymentItem)
+								{
+									$initResult = $service->initiatePay($paymentItem, null, Sale\PaySystem\BaseServiceHandler::STRING);
+									if ($initResult->isSuccess())
+										$payment['BUFFERED_OUTPUT'] = $initResult->getTemplate();
+									else
+										$payment['ERROR'] = implode('\n', $initResult->getErrorMessages());
+								}
 							}
 						}
 					}
@@ -1314,7 +1364,7 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 				// Save statuses for Filter form
 				$cachedData['STATUS'] = array();
 
-				$listStatusNames = Sale\OrderStatus::getAllStatusesNames();
+				$listStatusNames = Sale\OrderStatus::getAllStatusesNames(LANGUAGE_ID);
 
 				foreach($listStatusNames as $key => $data)
 				{
@@ -1422,6 +1472,28 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 		unset($shipment);
 	}
 
+
+	/**
+	 * Function aggregates basket's data from basket items
+	 *
+	 * @return array
+	 */
+	protected function obtainDataBasket()
+	{
+		$this->dbResult["WEIGHT_UNIT"] = $this->options['WEIGHT_UNIT'];
+		$this->dbResult["WEIGHT_KOEF"] = $this->options['WEIGHT_K'];
+
+		if (self::isNonemptyArray($this->dbResult['BASKET']))
+		{
+			foreach ($this->dbResult['BASKET'] as &$arItem)
+			{
+				$this->dbResult['PRODUCT_SUM'] += $arItem["PRICE"] * $arItem['QUANTITY'];
+				$arItem["QUANTITY"] = doubleval($arItem["QUANTITY"]);
+				$this->dbResult["ORDER_WEIGHT"] += $arItem["WEIGHT"] * $arItem["QUANTITY"];
+			}
+		}
+	}
+
 	protected function obtainData()
 	{
 		// Do not reorder calls without a strong need.
@@ -1436,19 +1508,8 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 
 		// it depends on data taken from obtainDataCached(), so do not relocate
 		$this->obtainDataPaySystem();
+		$this->obtainDataBasket();
 		$this->obtainDataShipmentBasket();
-
-		$arResult =& $this->dbResult;
-
-		$arResult["WEIGHT_UNIT"] = $this->options['WEIGHT_UNIT'];
-		$arResult["WEIGHT_KOEF"] = $this->options['WEIGHT_K'];
-
-		if(self::isNonemptyArray($arResult['BASKET']))
-			foreach($arResult['BASKET'] as &$arItem)
-			{
-				$arItem["QUANTITY"] = doubleval($arItem["QUANTITY"]);
-				$arResult["ORDER_WEIGHT"] += $arItem["WEIGHT"] * $arItem["QUANTITY"];
-			}
 	}
 
 	/**
@@ -1565,7 +1626,7 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 	{
 		$arResult =& $this->arResult;
 
-		$deliveryStatusList = Sale\DeliveryStatus::getAllStatusesNames();
+		$deliveryStatusList = Sale\DeliveryStatus::getAllStatusesNames(LANGUAGE_ID);
 
 		foreach ($arResult['SHIPMENT'] as &$shipment)
 		{
@@ -1718,8 +1779,8 @@ class CBitrixPersonalOrderDetailComponent extends CBitrixComponent
 			$this->setFrameMode(false);
 			$this->checkRequiredModules();
 
-			$this->checkAuthorized();
 			$this->loadOptions();
+			$this->checkAuthorized();
 			$this->processRequest();
 
 			$this->obtainData();

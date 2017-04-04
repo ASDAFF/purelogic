@@ -598,7 +598,10 @@ if(!empty($arBlog) && $arBlog["ACTIVE"] == "Y")
 												$arCopyPostUpdate["CATEGORY_ID"] = implode(",", $arCopyCat);
 
 											if($_POST["move2blogcopy"] == "Y")
+											{
 												$arCopyPostUpdate["NUM_COMMENTS"] = 0;
+												$arCopyPostUpdate["NUM_COMMENTS_ALL"] = 0;
+											}
 
 											if(!empty($arCopyPostUpdate))
 											{

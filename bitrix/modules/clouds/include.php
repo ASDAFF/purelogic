@@ -24,6 +24,7 @@ CModule::AddAutoloadClasses(
 		"CCloudStorageService_Selectel" =>  "classes/general/storage_service_selectel.php",
 		"CCloudStorageUpload" => "classes/general/storage_upload.php",
 		"CCloudSecurityService_AmazonS3" => "classes/general/security_service_s3.php",
+		"CCloudTempFile" => "classes/general/temp_file.php",
 	)
 );
 ?>

@@ -34,8 +34,8 @@ class YandexCert
 	 */
 	static private function generate($paySystemId, $personTypeId)
 	{
-		$shopId = self::getSid($paySystemId, $personTypeId);
-		self::$cn = "/business/bx-cn-yandex-".$shopId;
+		$companyName = BusinessValue::get('YANDEX_CN', 'PAYSYSTEM_'.$paySystemId, $personTypeId);
+		self::$cn = "/business/".$companyName;
 
 		$config = array(
 			"digest_alg" => "sha1",
@@ -70,7 +70,7 @@ class YandexCert
 		}
 		self::$sign = $sign;
 
-		//Save csr, pkey, sign
+		$shopId = self::getSid($paySystemId, $personTypeId);
 		$dbRes = YandexSettingsTable::getById($shopId);
 		if ($dbRes->fetch())
 			YandexSettingsTable::update($shopId, array('SIGN' => self::$sign, 'CSR' => self::$csr, 'PKEY' => self::$pkey, 'CERT' => ''));

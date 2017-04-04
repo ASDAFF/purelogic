@@ -9,7 +9,8 @@ class CCatalogIBlockParameters
 	public static function GetCatalogSortFields()
 	{
 		return array(
-			'CATALOG_AVAILABLE' => Loc::getMessage('IBLOCK_SORT_FIELDS_CATALOG_AVAILABLE_EXT')
+			'CATALOG_AVAILABLE' => Loc::getMessage('IBLOCK_SORT_FIELDS_CATALOG_AVAILABLE_EXT'),
+			//'CATALOG_WEIGHT' => Loc::getMessage('IBLOCK_SORT_FIELDS_CATALOG_WEIGHT')
 		);
 	}
 

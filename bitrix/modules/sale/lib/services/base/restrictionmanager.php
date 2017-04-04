@@ -4,8 +4,8 @@ namespace Bitrix\Sale\Services\Base;
 use Bitrix\Main\ArgumentNullException;
 use Bitrix\Main\Event;
 use Bitrix\Main\Loader;
+use Bitrix\Sale\Internals\Entity;
 use Bitrix\Sale\Internals\ServiceRestrictionTable;
-use Bitrix\Sale\Internals\CollectableEntity;
 use Bitrix\Main\NotImplementedException;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\EventResult;
@@ -25,6 +25,7 @@ class RestrictionManager
 	const SERVICE_TYPE_SHIPMENT = 0;
 	const SERVICE_TYPE_PAYMENT = 1;
 	const SERVICE_TYPE_COMPANY = 2;
+	const SERVICE_TYPE_CASHBOX = 3;
 
 	protected static function init()
 	{
@@ -32,9 +33,7 @@ class RestrictionManager
 			return;
 
 		$classes = static::getBuildInRestrictions();
-
 		Loader::registerAutoLoadClasses('sale', $classes);
-
 		$event = new Event('sale', static::getEventName());
 		$event->send();
 		$resultList = $event->getResults();
@@ -88,12 +87,12 @@ class RestrictionManager
 
 	/**
 	 * @param $serviceId
-	 * @param CollectableEntity $entity
+	 * @param Entity $entity
 	 * @param int $mode
 	 * @return int
 	 * @throws SystemException
 	 */
-	public static function checkService($serviceId, CollectableEntity $entity, $mode = self::MODE_CLIENT)
+	public static function checkService($serviceId, Entity $entity, $mode = self::MODE_CLIENT)
 	{
 		if(intval($serviceId) <= 0)
 			return self::SEVERITY_NONE;

@@ -145,4 +145,3 @@ if ($existShow || $existDelete)
 	}
 	Collection::sortByColumn($arResult['ALL_OFFER_PROPERTIES'], array('SORT' => SORT_ASC, 'ID' => SORT_ASC));
 }
-?>

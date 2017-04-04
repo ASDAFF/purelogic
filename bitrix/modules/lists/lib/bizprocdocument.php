@@ -5,7 +5,7 @@ use Bitrix\Main\Localization\Loc;
 
 Loc::loadMessages(__FILE__);
 
-if (!Loader::includeModule('bizproc'))
+if (!Loader::includeModule('bizproc') || !Loader::includeModule('iblock'))
 {
 	return;
 }
@@ -620,13 +620,6 @@ class BizprocDocument extends CIBlockDocument
 			}
 		}
 
-		$keys = array_keys($result);
-		foreach ($keys as $k)
-		{
-			$result[$k]["BaseType"] = $documentFieldTypes[$result[$k]["Type"]]["BaseType"];
-			$result[$k]["Complex"] = $documentFieldTypes[$result[$k]["Type"]]["Complex"];
-		}
-
 		$list = new CList($iblockId);
 		$fields = $list->getFields();
 		foreach($fields as $fieldId => $field)
@@ -668,6 +661,13 @@ class BizprocDocument extends CIBlockDocument
 					$result[$fieldId]["col_count"] = $field["COL_COUNT"];
 				}
 			}
+		}
+
+		$keys = array_keys($result);
+		foreach ($keys as $k)
+		{
+			$result[$k]["BaseType"] = $documentFieldTypes[$result[$k]["Type"]]["BaseType"];
+			$result[$k]["Complex"] = $documentFieldTypes[$result[$k]["Type"]]["Complex"];
 		}
 
 		return $result;
@@ -1994,6 +1994,7 @@ class BizprocDocument extends CIBlockDocument
 									'autoResize' => true,
 									'autoResizeOffset' => 40,
 									'saveOnBlur' => true,
+									'actionUrl' => '/bitrix/tools/html_editor_action.php',
 									'controlsMap' => array(
 										array('id' => 'Bold',  'compact' => true, 'sort' => 80),
 										array('id' => 'Italic',  'compact' => true, 'sort' => 90),

@@ -1454,7 +1454,7 @@ class ProductSearchComponent extends \CBitrixComponent
 
 	protected function getIblockList()
 	{
-		if ($this->iblockList===null)
+		if ($this->iblockList === null)
 		{
 			$this->iblockList = array();
 			$ids = array();
@@ -1488,7 +1488,7 @@ class ProductSearchComponent extends \CBitrixComponent
 			}
 			unset($catalog, $catalogIterator);
 
-			if ($ids)
+			if (!empty($ids))
 			{
 				$filter = array("ID" => $ids, 'ACTIVE' => 'Y');
 				if ($this->checkPermissions)
@@ -1503,19 +1503,37 @@ class ProductSearchComponent extends \CBitrixComponent
 
 				while ($row = $res->Fetch())
 					$this->iblockList[$row['ID']] = $row;
+				unset($row, $res);
 
-				if (sizeof($ids) > 1)
+				if (count($this->iblockList) > 1)
 				{
 					$siteTable = new \Bitrix\Iblock\IblockSiteTable();
 					$siteResult = $siteTable->getList(array(
-						'select' => array('IBLOCK_ID', 'SITE.NAME'),
-						'filter' => array('IBLOCK_ID' => $ids)
+						'select' => array('IBLOCK_ID', 'SITE_NAME' => 'SITE.NAME', 'SITE_ID', 'SITE_SORT' => 'SITE.SORT'),
+						'filter' => array('@IBLOCK_ID' => array_keys($this->iblockList)),
+						'order' => array('SITE_SORT' => 'ASC')
 					));
-					while($row = $siteResult->fetch())
+					while ($row = $siteResult->fetch())
 					{
-						if (isset($this->iblockList[$row['IBLOCK_ID']]))
-							$this->iblockList[$row['IBLOCK_ID']]['SITE_NAME'] = $row['IBLOCK_IBLOCK_SITE_SITE_NAME'];
+						$iblockId = $row['IBLOCK_ID'];
+						if (!isset($this->iblockList[$iblockId]))
+							continue;
+						if (!isset($this->iblockList[$iblockId]['SITE_LIST']))
+							$this->iblockList[$iblockId]['SITE_LIST'] = array();
+						$this->iblockList[$iblockId]['SITE_LIST'][] = $row['SITE_NAME'].' ('.$row['SITE_ID'].')';
+						unset($iblockId);
 					}
+					unset($row, $siteResult);
+					foreach (array_keys($this->iblockList) as $index)
+					{
+						$this->iblockList[$index]['SITE_NAME'] = '';
+						if (isset($this->iblockList[$index]['SITE_LIST']))
+						{
+							$this->iblockList[$index]['SITE_NAME'] = implode(' | ', $this->iblockList[$index]['SITE_LIST']);
+							unset($this->iblockList[$index]['SITE_LIST']);
+						}
+					}
+					unset($index);
 				}
 			}
 

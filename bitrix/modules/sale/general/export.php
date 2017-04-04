@@ -12,6 +12,7 @@ class CSaleExport
 {
 	const DEFAULT_VERSION = 2.05;
 	const PARTIAL_VERSION = 2.1;
+	const CONTAINER_VERSION = 3;
 
 	const LAST_ORDER_PREFIX = 'LAST_ORDER_ID';
 
@@ -86,6 +87,22 @@ class CSaleExport
 	{
 		return doubleval(str_replace(" ", "", str_replace(",", ".", (!empty(self::$versionSchema) ? self::$versionSchema : self::DEFAULT_VERSION))));
 	}
+
+	/**
+	 * @return int|null
+	 */
+	public static function getCashBoxOneCId()
+    {
+		static $cashBoxOneCId = null;
+
+		if($cashBoxOneCId === null)
+        {
+			$cashBoxOneCId = \Bitrix\Sale\Cashbox\Cashbox1C::getId();
+        }
+
+        return $cashBoxOneCId;
+    }
+
 	function isExportFromCRM($arOptions)
 	{
 		return (isset($arOptions["EXPORT_FROM_CRM"]) && $arOptions["EXPORT_FROM_CRM"] === "Y");
@@ -620,6 +637,7 @@ class CSaleExport
 				"REASON_CANCELED",
 				"REASON_MARKED",
 				"ORDER_ID",
+                "TRACKING_NUMBER"
 			);
 
 		$ShipmentParams['filter']['ORDER_ID'] = $arOrder['ID'];
@@ -817,17 +835,26 @@ class CSaleExport
 
 			$xmlResult['BasketItems'] = $basketItems['outputXML'];
 			$xmlResult['SaleProperties'] = self::getXmlSaleProperties($arOrder, $arShipment, $arPayment, $agent, $agentParams, $bExportFromCrm);
+			$xmlResult['RekvProperties'] = self::getXmlRekvProperties($agent, $agentParams);
 
 
+			if(self::getVersionSchema() >= self::CONTAINER_VERSION)
+            {
+				echo '<'.CSaleExport::getTagName("SALE_EXPORT_CONTAINER").'>';
+            }
 
 			self::OutputXmlDocument('Order', $xmlResult, $arOrder);
 
-
 			if(self::getVersionSchema() >= self::PARTIAL_VERSION)
 			{
-				self::OutputXmlDocumentsByType('Payment',$xmlResult,$arOrder, $arPayment);
-				self::OutputXmlDocumentsByType('Shipment',$xmlResult,$arOrder, $arShipment);
+				self::OutputXmlDocumentsByType('Payment',$xmlResult, $arOrder, $arPayment);
+				self::OutputXmlDocumentsByType('Shipment',$xmlResult, $arOrder, $arShipment);
 				self::OutputXmlDocumentRemove('Shipment',$arOrder);
+			}
+
+			if(self::getVersionSchema() >= self::CONTAINER_VERSION)
+			{
+				echo '</'.CSaleExport::getTagName("SALE_EXPORT_CONTAINER").'>';
 			}
 
 			if (self::$crmMode)
@@ -1249,8 +1276,6 @@ class CSaleExport
 			$arShipment = $arShipment[0];
 			$arPayment = $arPayment[0];
 		}
-        //$arShipment["DATE_ALLOW_DELIVERY"]
-
 
 		?><<?=CSaleExport::getTagName("SALE_EXPORT_PROPERTIES_VALUES")?>><?
 		if(strlen($arOrder["DATE_PAYED"])>0)
@@ -1380,21 +1405,7 @@ class CSaleExport
 			}
 			self::OutputXmlSiteName($arOrder);
 
-			if(!empty($agent["REKV"]))
-			{
-				foreach($agent["REKV"] as $k => $v)
-				{
-					if(strlen($agentParams[$k]["NAME"]) > 0 && strlen($v) > 0)
-					{
-						?>
-						<<?=CSaleExport::getTagName("SALE_EXPORT_PROPERTY_VALUE")?>>
-							<<?=CSaleExport::getTagName("SALE_EXPORT_ITEM_NAME")?>><?=htmlspecialcharsbx($agentParams[$k]["NAME"])?></<?=CSaleExport::getTagName("SALE_EXPORT_ITEM_NAME")?>>
-							<<?=CSaleExport::getTagName("SALE_EXPORT_VALUE")?>><?=htmlspecialcharsbx($v)?></<?=CSaleExport::getTagName("SALE_EXPORT_VALUE")?>>
-						</<?=CSaleExport::getTagName("SALE_EXPORT_PROPERTY_VALUE")?>>
-						<?
-					}
-				}
-			}
+			self::OutputXmlRekvProperties($agent, $agentParams);
 
 			self::OutputXmlDeliveryAddress();
 
@@ -1404,6 +1415,35 @@ class CSaleExport
 	$bufer = ob_get_clean();
 	return $bufer;
 }
+
+    function getXmlRekvProperties($agent, $agentParams)
+    {
+		ob_start();
+		self::OutputXmlRekvProperties($agent, $agentParams);
+		$bufer = ob_get_clean();
+		return $bufer;
+    }
+
+    function OutputXmlRekvProperties($agent, $agentParams)
+    {
+		if(!empty($agent["REKV"]))
+		{
+			foreach($agent["REKV"] as $k => $v)
+			{
+				if(strlen($agentParams[$k]["NAME"]) > 0 && strlen($v) > 0)
+				{
+					?>
+                    <<?=CSaleExport::getTagName("SALE_EXPORT_PROPERTY_VALUE")?>>
+                    <<?=CSaleExport::getTagName("SALE_EXPORT_ITEM_NAME")?>><?=htmlspecialcharsbx($agentParams[$k]["NAME"])?></<?=CSaleExport::getTagName("SALE_EXPORT_ITEM_NAME")?>>
+                    <<?=CSaleExport::getTagName("SALE_EXPORT_VALUE")?>><?=htmlspecialcharsbx($v)?></<?=CSaleExport::getTagName("SALE_EXPORT_VALUE")?>>
+                    </<?=CSaleExport::getTagName("SALE_EXPORT_PROPERTY_VALUE")?>>
+					<?
+				}
+			}
+		}
+    }
+
+
 	function getXmlContragents($arOrder = array(), $arProp = array(), $agent = array(), $arOptions = array())
 	{
 		ob_start();
@@ -1613,7 +1653,40 @@ class CSaleExport
 		<?	switch($typeDocument)
 			{
 				case 'Payment':
+
+					$checkData = false;
+				    $cashBoxOneCId = self::getCashBoxOneCId();
+					if(isset($cashBoxOneCId) && $cashBoxOneCId>0)
+                    {
+                        $checks = \Bitrix\Sale\Cashbox\CheckManager::getPrintableChecks(array($cashBoxOneCId), array($document['ORDER_ID']));
+						foreach($checks as $checkId=>$check)
+                        {
+							if($check['PAYMENT_ID']==$document["ID"])
+                            {
+								$checkData = $check;
+                                break;
+                            }
+                        }
+                    }
 		?>
+        <?
+             if($checkData)
+             {
+        ?>
+                 <<?=CSaleExport::getTagName("SALE_EXPORT_CASHBOX_CHECKS")?>>
+                    <<?=CSaleExport::getTagName("SALE_EXPORT_CASHBOX_CHECK")?>>
+                        <<?=CSaleExport::getTagName("SALE_EXPORT_ID")?>><?=($checkData['ID'])?></<?=CSaleExport::getTagName("SALE_EXPORT_ID")?>>
+                        <<?=CSaleExport::getTagName("SALE_EXPORT_PROP_VALUES")?>>
+                            <<?=CSaleExport::getTagName("SALE_EXPORT_PROP_VALUE")?>>
+                                <<?=CSaleExport::getTagName("SALE_EXPORT_ID")?>>PRINT_CHECK</<?=CSaleExport::getTagName("SALE_EXPORT_ID")?>>
+                                <<?=CSaleExport::getTagName("SALE_EXPORT_VALUE")?>>true</<?=CSaleExport::getTagName("SALE_EXPORT_VALUE")?>>
+                            </<?=CSaleExport::getTagName("SALE_EXPORT_PROP_VALUE")?>>
+                        </<?=CSaleExport::getTagName("SALE_EXPORT_PROP_VALUES")?>>
+                    </<?=CSaleExport::getTagName("SALE_EXPORT_CASHBOX_CHECK")?>>
+                 </<?=CSaleExport::getTagName("SALE_EXPORT_CASHBOX_CHECKS")?>>
+        <?
+             }
+        ?>
 		<<?=CSaleExport::getTagName("SALE_EXPORT_PROPERTIES_VALUES")?>>
 			<<?=CSaleExport::getTagName("SALE_EXPORT_PROPERTY_VALUE")?>>
 				<<?=CSaleExport::getTagName("SALE_EXPORT_ITEM_NAME")?>><?=CSaleExport::getTagName("SALE_EXPORT_DATE_PAID")?></<?=CSaleExport::getTagName("SALE_EXPORT_ITEM_NAME")?>>
@@ -1644,6 +1717,7 @@ class CSaleExport
 				<<?=CSaleExport::getTagName("SALE_EXPORT_VALUE")?>><?=$document["PAY_RETURN_COMMENT"]?></<?=CSaleExport::getTagName("SALE_EXPORT_VALUE")?>>
 			</<?=CSaleExport::getTagName("SALE_EXPORT_PROPERTY_VALUE")?>>
 			<?self::OutputXmlSiteName($document);?>
+            <?if(isset($xmlResult['RekvProperties']) && strlen($xmlResult['RekvProperties'])>0) echo $xmlResult['RekvProperties'];?>
 		</<?=CSaleExport::getTagName("SALE_EXPORT_PROPERTIES_VALUES")?>>
 			<?	break;
 
@@ -1711,8 +1785,13 @@ class CSaleExport
 				<<?=CSaleExport::getTagName("SALE_EXPORT_ITEM_NAME")?>><?=CSaleExport::getTagName("SALE_EXPORT_REASON_MARKED")?></<?=CSaleExport::getTagName("SALE_EXPORT_ITEM_NAME")?>>
 				<<?=CSaleExport::getTagName("SALE_EXPORT_VALUE")?>><?=$document["REASON_MARKED"]?></<?=CSaleExport::getTagName("SALE_EXPORT_VALUE")?>>
 			</<?=CSaleExport::getTagName("SALE_EXPORT_PROPERTY_VALUE")?>>
+            <<?=CSaleExport::getTagName("SALE_EXPORT_PROPERTY_VALUE")?>>
+                <<?=CSaleExport::getTagName("SALE_EXPORT_ITEM_NAME")?>><?=CSaleExport::getTagName("SALE_EXPORT_TRACKING_NUMBER")?></<?=CSaleExport::getTagName("SALE_EXPORT_ITEM_NAME")?>>
+                <<?=CSaleExport::getTagName("SALE_EXPORT_VALUE")?>><?=$document["TRACKING_NUMBER"]?></<?=CSaleExport::getTagName("SALE_EXPORT_VALUE")?>>
+            </<?=CSaleExport::getTagName("SALE_EXPORT_PROPERTY_VALUE")?>>
 			<?self::OutputXmlSiteName($document);?>
 			<?self::OutputXmlDeliveryAddress();?>
+			<?if(isset($xmlResult['RekvProperties']) && strlen($xmlResult['RekvProperties'])>0) echo $xmlResult['RekvProperties'];?>
 	</<?=CSaleExport::getTagName("SALE_EXPORT_PROPERTIES_VALUES")?>>
 			<?
 				break;
@@ -2265,6 +2344,18 @@ class CSaleExport
 			'BUYER_COMPANY_OKFC'         => 'OKFC'          ,
 			'BUYER_COMPANY_OKPO'         => 'OKPO'          ,
 			'BUYER_COMPANY_BANK_ACCOUNT' => 'ACCOUNT_NUMBER',
+			'BUYER_COMPANY_BANK_NAME'    => 'B_NAME',
+			'BUYER_COMPANY_BANK_BIK'     => 'B_BIK',
+			'BUYER_COMPANY_BANK_ADDRESS_FULL' => 'B_ADDRESS_FULL',
+			'BUYER_COMPANY_BANK_INDEX'   => 'B_INDEX',
+			'BUYER_COMPANY_BANK_COUNTRY' => 'B_COUNTRY',
+			'BUYER_COMPANY_BANK_REGION'  => 'B_REGION',
+			'BUYER_COMPANY_BANK_STATE'   => 'B_STATE',
+			'BUYER_COMPANY_BANK_TOWN'    => 'B_TOWN',
+			'BUYER_COMPANY_BANK_CITY'    => 'B_CITY',
+			'BUYER_COMPANY_BANK_STREET'  => 'B_STREET',
+			'BUYER_COMPANY_BANK_BUILDING' => 'B_BUILDING',
+			'BUYER_COMPANY_BANK_HOUSE'   => 'B_HOUSE',
 			'BUYER_COMPANY_F_ADDRESS_FULL'=> 'F_ADDRESS_FULL',
 			'BUYER_COMPANY_F_INDEX'		 => 'F_INDEX'		,
 			'BUYER_COMPANY_F_COUNTRY'	 => 'F_COUNTRY'		,
@@ -2555,7 +2646,7 @@ class CSaleExport
 	{
 		$allPersonTypes = BusinessValue::getPersonTypes(true);
 
-		Bitrix\Main\Application::getConnection()->query('DELETE FROM b_sale_bizval_code_1C');
+		Bitrix\Main\Application::getConnection()->query('DELETE FROM b_sale_bizval_code_1c');
 
 		$result = Bitrix\Main\Application::getConnection()->query('SELECT * FROM b_sale_export');
 

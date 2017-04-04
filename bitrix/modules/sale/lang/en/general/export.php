@@ -156,5 +156,11 @@ $MESS["SALE_EXPORT_DELIVERY_ID"] = "Delivery ID";
 $MESS["SALE_EXPORT_DELIVERY"] = "Delivery";
 $MESS["SALE_EXPORT_DELIVERY_DATE_CANCEL"] = "Canceled on";
 $MESS["SALE_EXPORT_REASON_MARKED"] = "Fulfillment error";
+$MESS["SALE_EXPORT_TRACKING_NUMBER"] = "Tracking number";
 $MESS["SALE_EXPORT_REASON_MARKED_BASKET_PROPERTY"] = "Order export error. There are duplicate item numbers in basket export results. Error code - ";
+$MESS["SALE_EXPORT_CONTAINER"] = "Container";
+$MESS["SALE_EXPORT_PROP_VALUES"] = "PropertyValues";
+$MESS["SALE_EXPORT_PROP_VALUE"] = "PropertyValues";
+$MESS["SALE_EXPORT_CASHBOX_CHECKS"] = "ReceiptInfo";
+$MESS["SALE_EXPORT_CASHBOX_CHECK"] = "ReceiptInfo";
 ?>

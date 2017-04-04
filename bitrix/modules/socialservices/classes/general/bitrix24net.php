@@ -131,20 +131,7 @@ class CSocServBitrix24Net extends CSocServAuth
 
 			if($this->getEntityOAuth()->GetAccessToken($redirect_uri) !== false)
 			{
-				$lastAuth = $this->getEntityOAuth()->getLastAuth();
-
-				if(is_array($lastAuth) && $lastAuth['profile'] > 0 && !isset($_REQUEST['checkword']))
-				{
-					$arB24NetUser = array(
-						'ID' => $lastAuth['user_id'],
-						'PROFILE_ID' => $lastAuth['profile'],
-					);
-				}
-				else
-				{
-					$arB24NetUser = $this->getEntityOAuth()->GetCurrentUser();
-				}
-
+				$arB24NetUser = $this->getEntityOAuth()->GetCurrentUser();
 				if($arB24NetUser)
 				{
 					$authError = true;
@@ -306,6 +293,7 @@ class CSocServBitrix24Net extends CSocServAuth
 </script>
 <?
 
+		\CMain::FinalActions();
 		die();
 	}
 

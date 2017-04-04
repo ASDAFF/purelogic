@@ -25,7 +25,7 @@
 	font-size: 14px;
 	height: 26px;
 	margin: 0 0 9px;
-	padding: 13px 12px 14px 17px;
+	padding: 13px 12px 14px 22px;
 	position: relative;
 }
 
@@ -870,6 +870,10 @@
 	z-index: 140;
 }
 
+.feed-new-message-informer-place.feed-new-message-informer-place-hidden {
+	display: none;
+}
+
 .feed-new-message-inform-wrap {
 	text-align: center;
 }
@@ -933,10 +937,10 @@
 }
 
 .feed-new-message-inf-wrap {
-	background-color: #eef2f4;
+	background-color: #ffffff;
 	display: none;
 	overflow: hidden;
-	height: 129px;
+	height: 230px;
 }
 .feed-new-message-inf-wrap.feed-new-message-inf-wrap-first {
 	height: 40px;
@@ -1085,12 +1089,19 @@
 	min-height: 87px;
 	position: relative;
 }
+.feed-post-block.feed-post-block-deleted {
+	padding-bottom: 0;
+}
 
 .feed-post-cont-wrap {
 	margin-bottom: 3px;
 	overflow: hidden;
 	padding: 22px 18px 0 85px;
 	position: relative;
+
+	/* To avoid browser zoom glitch */
+	width: 100%;
+	box-sizing: border-box;
 }
 
 .feed-post-block-new .feed-post-cont-wrap {
@@ -1583,7 +1594,8 @@ span.feed-add-post-destination-new:hover {
 	min-height: 14px;
 }
 
-.start-page .feed-post-informers {
+.start-page .feed-post-informers,
+.crm-feed-wrap .feed-post-informers {
 	margin-left: -85px;
 	padding-left: 85px;
 }
@@ -2274,7 +2286,7 @@ span.feed-add-post-destination-new:hover {
 }
 
 .bxcal-att-popup-avatar {
-	background: url("images/log/live_feed_sprite_6.png") no-repeat -62px -170px #535c6a;
+	background: url("images/log/live_feed_sprite_6.png?3") no-repeat -62px -170px #535c6a;
 	display: block;
 	float: left;
 	border-radius: 50%;
@@ -3237,7 +3249,7 @@ table.forum-spoiler {
 }
 
 table.forum-spoiler td {
-	background: none repeat 0 0 #fff !important;
+	/*background: none repeat 0 0 #fff !important;*/
 	color: #6a6a6a;
 	padding: 0.9em 2em;
 }
@@ -3897,6 +3909,12 @@ table.crm-feed-info-table tr .crm-feed-info-right-cell {
 	color: #848787;
 	display: block;
 	font-size: 12px;
+}
+
+a.crm-feed-client-company:hover {
+	color: #848787!important;
+	text-decoration: none!important;
+	border-bottom: 1px solid transparent!important;
 }
 
 .crm-feed-client-block .crm-feed-user-avatar {

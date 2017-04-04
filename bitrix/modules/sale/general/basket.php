@@ -1,4 +1,5 @@
 <?
+use Bitrix\Main\Event;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Sale;
 use Bitrix\Sale\DiscountCouponsManager;
@@ -1983,6 +1984,8 @@ class CAllSaleBasket
 		if ($fuserID <= 0)
 			return false;
 
+		$isOrderConverted = \Bitrix\Main\Config\Option::get("main", "~sale_converted_15", 'N') == 'Y';
+
 		$arOrder = array();
 
 		if (empty($arOrder))
@@ -2000,6 +2003,7 @@ class CAllSaleBasket
 		}
 		$boolRecurring = $arOrder['RECURRING_ID'] > 0;
 
+		$basketFound = false;
 		$needSaveCoupons = false;
 		$dbBasketList = CSaleBasket::GetList(
 			array("PRICE" => "DESC"),
@@ -2106,6 +2110,14 @@ class CAllSaleBasket
 
 				if (!empty($arFields))
 				{
+					if ($isOrderConverted)
+					{
+						$basketFound = true;
+						if (!\Bitrix\Sale\Compatible\DiscountCompatibility::isInited())
+							\Bitrix\Sale\Compatible\DiscountCompatibility::init();
+						if (\Bitrix\Sale\Compatible\DiscountCompatibility::usedByClient())
+							\Bitrix\Sale\Compatible\DiscountCompatibility::setRepeatSave(true);
+					}
 					if (CSaleBasket::Update($arBasket["ID"], $arFields))
 					{
 						$_SESSION["SALE_BASKET_NUM_PRODUCTS"][SITE_ID]--;
@@ -2113,6 +2125,12 @@ class CAllSaleBasket
 				}
 			}
 		}//end of while
+
+		if ($isOrderConverted && $basketFound)
+		{
+			if (\Bitrix\Sale\Compatible\DiscountCompatibility::usedByClient())
+				\Bitrix\Sale\Compatible\DiscountCompatibility::setRepeatSave(false);
+		}
 
 		if ($_SESSION["SALE_BASKET_NUM_PRODUCTS"][SITE_ID] < 0)
 			$_SESSION["SALE_BASKET_NUM_PRODUCTS"][SITE_ID] = 0;
@@ -3177,6 +3195,9 @@ class CAllSaleBasket
 				}
 				Sale\BasketComponentHelper::updateFUserBasket($TO_FUSER_ID, SITE_ID);
 				Sale\BasketComponentHelper::updateFUserBasket($FROM_FUSER_ID, SITE_ID);
+
+				Sale\Discount\RuntimeCache\FuserCache::getInstance()->clean();
+
 				return true;
 			}
 		}
@@ -3319,12 +3340,13 @@ class CAllSaleBasket
 		$result = new Sale\Result();
 
 		/** @var Sale\Basket $basket */
-		if ($basket = Sale\Basket::loadItemsForFUser($fuserID, $siteID))
+		$basket = Sale\Basket::loadItemsForFUser($fuserID, $siteID);
+		if ($basket->count() > 0)
 		{
 			if (!Sale\Compatible\DiscountCompatibility::isInited())
 				Sale\Compatible\DiscountCompatibility::init();
 
-			$select = array("PRICE", "COUPONS");
+			$select = array("PRICE", 'QUANTITY', "COUPONS");
 			$basket->refreshData($select);
 			$warnings = array();
 
@@ -3504,7 +3526,10 @@ class CAllSaleUser
 				array("NAME" => Loc::getMessage("SU_ANONYMOUS_USER_NAME")),
 				SITE_ID,
 				$arErrors,
-				array("ACTIVE" => "N")
+				array(
+					'ACTIVE' => 'N',
+					'EXTERNAL_AUTH_ID' => 'saleanonymous',
+				)
 			);
 
 			if ($anonUserID > 0)
@@ -3705,7 +3730,7 @@ class CAllSaleUser
 				}
 				else
 				{
-						if ($USER && $USER->IsAuthorized())
+					if ($USER && $USER->IsAuthorized())
 					{
 						$ID = CSaleUser::getFUserCode();
 					}

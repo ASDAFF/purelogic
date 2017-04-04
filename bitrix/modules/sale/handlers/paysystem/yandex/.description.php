@@ -13,6 +13,7 @@ $description = array(
 $data = array(
 	'NAME' => Loc::getMessage('SALE_HPS_YANDEX'),
 	'SORT' => 500,
+	'DOMAIN' => 'BOX',
 	'CODES' => array(
 		"YANDEX_SHOP_ID" => array(
 			"NAME" => Loc::getMessage("SALE_HPS_YANDEX_SHOP_ID"),
@@ -30,6 +31,12 @@ $data = array(
 			"NAME" => Loc::getMessage("SALE_HPS_YANDEX_SHOP_KEY"),
 			"DESCRIPTION" => Loc::getMessage("SALE_HPS_YANDEX_SHOP_KEY_DESC"),
 			'SORT' => 300,
+			'GROUP' => 'CONNECT_SETTINGS_YANDEX',
+		),
+		"YANDEX_CN" => array(
+			"NAME" => Loc::getMessage("SALE_HPS_YANDEX_CN"),
+			"DESCRIPTION" => Loc::getMessage("SALE_HPS_YANDEX_CN_DESC"),
+			'SORT' => 350,
 			'GROUP' => 'CONNECT_SETTINGS_YANDEX',
 		),
 		"PAYMENT_ID" => array(

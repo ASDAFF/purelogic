@@ -1,6 +1,4 @@
 ;(function(window){
-
-	//
 	window.EditEventManager = function(config)
 	{
 		this.config = config;
@@ -87,7 +85,6 @@
 			this.pPlannerTitle = BX('event-planner-block-title' + this.id);
 			this.pPlannerLinkWrap = BX('event-planner-expand-link-wrap' + this.id);
 			BX.bind(this.pPlannerBlock, 'click', BX.proxy(this.ExpandPlanner, this));
-
 			this.pPlannerProposeLink = BX('event-planner-propose-link' + this.id);
 			BX.bind(this.pPlannerProposeLink, 'click', BX.proxy(this.ProposeTime, this));
 
@@ -324,6 +321,13 @@
 
 		OnSubmit: function(e)
 		{
+			if (!this.CheckUserAccessibility())
+			{
+				alert(this.config.message.EC_BUSY_ALERT);
+				setBlogPostFormSubmitted(false);
+				return BX.PreventDefault(e);
+			}
+
 			// Check Meeting and Video Meeting rooms accessibility
 			if (this.Loc && this.Loc.NEW && this.Loc.NEW.substr(0, 5) == 'ECMR_' && !this.bLocationChecked && window.setBlogPostFormSubmitted)
 			{
@@ -367,6 +371,32 @@
 				);
 				return BX.PreventDefault(e);
 			}
+			else if (this.Loc && this.Loc.NEW != undefined && !this.bLocationChecked)
+			{
+				BX('event-location' + this.id).value = this.Loc.NEW;
+			}
+		},
+
+		CheckUserAccessibility: function()
+		{
+			var i, res = true;
+			if (this.plannerData)
+			{
+				for (i in this.plannerData.entries)
+				{
+					if (this.plannerData.entries.hasOwnProperty(i) &&
+						this.plannerData.entries[i].id &&
+						this.plannerData.entries[i].status != 'h' &&
+						this.plannerData.entries[i].strictStatus &&
+						!this.plannerData.entries[i].currentStatus
+					)
+					{
+						res = false;
+						break;
+					}
+				}
+			}
+			return res;
 		},
 
 		HandleEvent: function(oEvent)
@@ -897,6 +927,8 @@
 			if (!params || typeof params !== 'object')
 				params = {};
 
+			this.plannerData = params.data;
+
 			var
 				fromDate, toDate,
 				fullDay = this.pFullDay.checked,
@@ -995,7 +1027,7 @@
 					else
 					{
 						// Event duration in hours
-						duration = Math.round((toDate.getTime() - fromDate.getTime()) / 3600000);
+						//duration = Math.round((toDate.getTime() - fromDate.getTime()) / 3600000);
 
 						if (compactMode)
 						{

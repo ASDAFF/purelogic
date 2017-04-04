@@ -599,7 +599,7 @@ class Bot
 		return true;
 	}
 
-	public static function startWriting(array $bot, $dialogId)
+	public static function startWriting(array $bot, $dialogId, $userName = '')
 	{
 		$botId = $bot['BOT_ID'];
 		$moduleId = isset($bot['MODULE_ID'])? $bot['MODULE_ID']: '';
@@ -621,7 +621,7 @@ class Bot
 		if (strlen($appId) > 0 && $bots[$botId]['APP_ID'] != $appId)
 			return false;
 
-		\CIMMessenger::StartWriting($dialogId, $botId);
+		\CIMMessenger::StartWriting($dialogId, $botId, $userName);
 
 		return true;
 	}
@@ -746,7 +746,7 @@ class Bot
 		if ($messageId <= 0)
 			return false;
 
-		$message = \CIMMessenger::CheckPossibilityUpdateMessage($messageId, $botId);
+		$message = \CIMMessenger::CheckPossibilityUpdateMessage(IM_CHECK_UPDATE, $messageId, $botId);
 		if (!$message)
 			return false;
 

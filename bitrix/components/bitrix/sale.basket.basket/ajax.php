@@ -103,7 +103,7 @@ if (isset($_POST[$action_var]) && strlen($_POST[$action_var]) > 0)
 			unset($elementIterator);
 			if (!empty($element))
 			{
-				$sku = CCatalogSKU::GetInfoByOfferIBlock($element['IBLOCK_ID']);
+				$sku = CCatalogSku::GetInfoByOfferIBlock($element['IBLOCK_ID']);
 				if (!empty($sku))
 				{
 					$propertyIterator = CIBlockElement::GetProperty(
@@ -252,7 +252,6 @@ if (isset($_POST[$action_var]) && strlen($_POST[$action_var]) > 0)
 					$basket->offersProps = $strOffersProps;
 
 					$basket->quantityFloat = (isset($_POST["quantity_float"]) && $_POST["quantity_float"] == "Y") ? "Y" : "N";
-					$basket->countDiscount4AllQuantity = (isset($_POST["count_discount_4_all_quantity"]) && $_POST["count_discount_4_all_quantity"] == "Y") ? "Y" : "N";
 					$basket->priceVatShowValue = (isset($_POST["price_vat_show_value"]) && $_POST["price_vat_show_value"] == "Y") ? "Y" : "N";
 					$basket->hideCoupon = (isset($_POST["hide_coupon"]) && $_POST["hide_coupon"] == "Y") ? "Y" : "N";
 					$basket->usePrepayment = (isset($_POST["use_prepayment"]) && $_POST["use_prepayment"] == "Y") ? "Y" : "N";
@@ -294,7 +293,6 @@ if (isset($_POST[$action_var]) && strlen($_POST[$action_var]) > 0)
 		$basket->offersProps = $strOffersProps;
 
 		$basket->quantityFloat = (isset($_POST["quantity_float"]) && $_POST["quantity_float"] == "Y") ? "Y" : "N";
-		$basket->countDiscount4AllQuantity = (isset($_POST["count_discount_4_all_quantity"]) && $_POST["count_discount_4_all_quantity"] == "Y") ? "Y" : "N";
 		$basket->priceVatShowValue = (isset($_POST["price_vat_show_value"]) && $_POST["price_vat_show_value"] == "Y") ? "Y" : "N";
 		$basket->hideCoupon = (isset($_POST["hide_coupon"]) && $_POST["hide_coupon"] == "Y") ? "Y" : "N";
 		$basket->usePrepayment = (isset($_POST["use_prepayment"]) && $_POST["use_prepayment"] == "Y") ? "Y" : "N";
@@ -317,7 +315,7 @@ if (isset($_POST[$action_var]) && strlen($_POST[$action_var]) > 0)
 			if(!empty($arRes['BASKET_DATA']['FULL_DISCOUNT_LIST']))
 			{
 				global $USER;
-				$userId = $USER instanceof CAllUser? $USER->getId() : null;
+				$userId = $USER instanceof CUser? $USER->GetID() : null;
 				$giftManager = \Bitrix\Sale\Discount\Gift\Manager::getInstance()->setUserId($userId);
 
 				\Bitrix\Sale\Compatible\DiscountCompatibility::stopUsageCompatible();
@@ -343,5 +341,5 @@ $arRes["PARAMS"]["QUANTITY_FLOAT"] = (isset($_POST["quantity_float"]) && $_POST[
 
 $APPLICATION->RestartBuffer();
 header('Content-Type: application/json; charset='.LANG_CHARSET);
-echo CUtil::PhpToJSObject($arRes);
+echo \Bitrix\Main\Web\Json::encode($arRes);
 die();

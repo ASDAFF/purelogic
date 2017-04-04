@@ -96,6 +96,8 @@ $addWidthStyle = IsAmPmMode() ? ' ampm-width' : '';
 <input id="event-id<?=$id?>" type="hidden" value="0" name="id"/>
 <input id="event-month<?=$id?>" type="hidden" value="0" name="month"/>
 <input id="event-year<?=$id?>" type="hidden" value="0" name="year"/>
+<input id="event-current-date-from<?=$id?>" type="hidden" name="current_date_from" value="0"/>
+<input id="event-rec-edit-mode<?=$id?>" type="hidden" name="rec_edit_mode" value="0"/>
 <div id="bxec_edit_ed_<?=$id?>" class="bxec-popup">
 	<div style="width: 750px; height: 1px;"></div>
 	<div class="popup-window-tabs" id="<?=$id?>_edit_tabs">
@@ -248,7 +250,7 @@ $addWidthStyle = IsAmPmMode() ? ' ampm-width' : '';
 						"InputVideo",
 						"Table", "Justify", "InsertOrderedList",
 						"InsertUnorderedList",
-						"Source", "MentionUser", "Spoiler"
+						"Source", "MentionUser"
 					),
 					"BUTTONS" => IsModuleInstalled('disk') ? Array(
 						"UploadFile",

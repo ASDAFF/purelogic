@@ -100,4 +100,5 @@ $MESS["IBLOCK_UPPER_LEVEL"] = "Верхний уровень";
 $MESS["IBLOCK_FIELD_STATUS"] = "Статус";
 $MESS["IBEL_E_MAIN_IBLOCK_SECTION_ID"] = "Основной раздел";
 $MESS["IBLOCK_LINKED_ELEMENT_TITLE"] = "Перейти в административный раздел";
+$MESS["IBLOCK_FIELD_HINT_XML_ID"] = "Для уже существующих элементов обязателен. При создании можно не указывать. В этом случае после создания внешний код будет содержать ID элемента";
 ?>

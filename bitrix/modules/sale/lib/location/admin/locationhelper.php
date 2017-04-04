@@ -603,6 +603,20 @@ final class LocationHelper extends NameHelper
 		return \Bitrix\Sale\Location\ExternalTable::getList($parameters);
 	}
 
+	public static function getZipByLocation($locationCode, $parameters = array())
+	{
+		if(strlen($locationCode) <= 0)
+			return '';
+
+		if(!is_array($parameters))
+			$parameters = array();
+
+		$parameters['filter']['=SERVICE.CODE'] = 'ZIP';
+		$parameters['filter']['=LOCATION.CODE'] = $locationCode;
+
+		return \Bitrix\Sale\Location\ExternalTable::getList($parameters);
+	}
+
 	public static function checkLocationMigrated()
 	{
 		return Main\Config\Option::get('sale', 'sale_locationpro_migrated', '') == 'Y';

@@ -9,7 +9,6 @@ namespace Bitrix\Seo;
 
 use Bitrix\Main\Entity;
 use Bitrix\Main\SiteTable;
-use Bitrix\Main\Text\Converter;
 
 class SitemapIblockTable extends Entity\DataManager
 {
@@ -108,7 +107,7 @@ WHERE SITEMAP_ID='".intval($sitemapId)."'
 					'IBLOCK_CODE' => 'IBLOCK.CODE', 'IBLOCK_XML_ID' => 'IBLOCK.XML_ID',
 					'DETAIL_PAGE_URL' => 'IBLOCK.DETAIL_PAGE_URL',
 					'SECTION_PAGE_URL' => 'IBLOCK.SECTION_PAGE_URL',
-				)
+				),
 			));
 
 			while($res = $dbRes->fetch())
@@ -283,13 +282,21 @@ class SitemapIblock
 							$fields,
 							$element ? SitemapIblockTable::TYPE_ELEMENT : SitemapIblockTable::TYPE_SECTION
 						);
-
-						if(count($sitemaps) > 0)
+						
+						if (count($sitemaps) > 0)
 						{
+//							URL from $fields may be incorrect, if using #SERVER_NAME# template in iblock URL-template
+//							And we must generate true URL
+							$dbIblock = \CIBlock::GetByID($fields['IBLOCK_ID']);
+							$iblock = $dbIblock->GetNext();
+							$url = $element
+								? $iblock['~DETAIL_PAGE_URL']
+								: $iblock['~SECTION_PAGE_URL'];
+							$url = self::prepareUrlToReplace($url);
+							$url = \CIBlock::replaceDetailUrl($url, $fields, false, $element ? 'E' : 'S');
+							
 							self::$beforeActions[$name][intval($element)][$ID] = array(
-								'URL' => $element
-									? $fields['~DETAIL_PAGE_URL']
-									: $fields['~SECTION_PAGE_URL'],
+								'URL' => $url,
 								'FIELDS' => $fields,
 								'SITEMAPS' => $sitemaps,
 							);
@@ -369,7 +376,9 @@ class SitemapIblock
 	protected static function actionUpdate($data, $element)
 	{
 		$fields = $data['FIELDS'];
-		foreach($data['SITEMAPS'] as $sitemap)
+		$siteDirs = self::createSiteDirs();
+		
+		foreach ($data['SITEMAPS'] as $sitemap)
 		{
 			$fileName = str_replace(
 				array('#IBLOCK_ID#', '#IBLOCK_CODE#', '#IBLOCK_XML_ID#'),
@@ -387,36 +396,52 @@ class SitemapIblock
 			}
 
 			$newFields = $dbRes->fetch();
-
+			$newFields['LANG_DIR'] = $siteDirs[$sitemap['SITE_ID']];
+//			use just date(). it is not true, but because we use BEFORE event, we cant use real lastmod date, only previous value
+			$date = date('d.m.Y H:i:s');
+			
+			$url = $element ? $sitemap['DETAIL_PAGE_URL'] : $sitemap['SECTION_PAGE_URL'];
+			$urlType = $element ? 'E' : 'S';
+			//remove or replace SERVER_NAME
+			$url = self::prepareUrlToReplace($url, $sitemap['SITE_ID']);
 			$rule = array(
-				'url' => $element
-					? \CIBlock::replaceDetailUrl($sitemap['DETAIL_PAGE_URL'], $newFields, false, "E")
-					: \CIBlock::replaceDetailUrl($sitemap['SECTION_PAGE_URL'], $newFields, false, "S"),
-				'lastmod' => MakeTimeStamp($fields['TIMESTAMP_X'])
+				'url' => \CIBlock::replaceDetailUrl($url, $newFields, false, $urlType),
+				'lastmod' => MakeTimeStamp($date),
 			);
-
+			
 			$sitemapFile = new SitemapFile($fileName, $sitemap);
-			$sitemapFile->removeEntry($data['URL']);
+//			try remove entry from original file, to not create temp files to all parts
+// 			name may was changed in removeEntry
+			$fileName = $sitemapFile->removeEntry($data['URL']);
 
-			if($newFields["ACTIVE"] !== "N")
+//			write changes to temp file to preserve collisions
+			$sitemapRuntimeId = $sitemap['SITE_ID'] . '-' . uniqid();
+			$sitemapRuntimeId .= isset($fields['ID']) ? '-' . $fields['ID'] . '-' : '';
+			$sitemapRuntimeFile = new SitemapRuntime($sitemapRuntimeId, $fileName, $sitemap);
+
+//			processing
+			if ($newFields["ACTIVE"] !== "N")
 			{
-				$sitemapFile->appendIblockEntry($rule['url'], $rule['lastmod']);
+				$sitemapRuntimeFile->appendIblockEntry($rule['url'], $rule['lastmod'], $sitemapFile);
 			}
-
+			
+			if ($sitemapRuntimeFile->isNotEmpty() && $sitemapRuntimeFile->isCurrentPartNotEmpty())
+				$sitemapRuntimeFile->finish();
+			else
+				$sitemapRuntimeFile->delete();
+			
 			$sitemapIndex = new SitemapIndex($sitemap['SITEMAP_FILE'], $sitemap);
-			$sitemapIndex->appendIndexEntry($sitemapFile);
-
-			if($sitemap['ROBOTS'] == 'Y')
+			$sitemapIndex->appendIndexEntry($sitemapRuntimeFile);
+			
+			if ($sitemap['ROBOTS'] == 'Y')
 			{
 				$robotsFile = new RobotsFile($sitemap['SITE_ID']);
 				$robotsFile->addRule(
 					array(RobotsFile::SITEMAP_RULE, $sitemapIndex->getUrl())
 				);
 			}
-
-			unset($sitemapFile);
-			unset($sitemapIndex);
-			unset($robotsFile);
+			
+			unset($sitemapRuntimeFile, $sitemapIndex, $robotsFile);
 		}
 	}
 
@@ -428,7 +453,7 @@ class SitemapIblock
 	protected static function actionDelete($data)
 	{
 		$fields = $data['FIELDS'];
-		foreach($data['SITEMAPS'] as $sitemap)
+		foreach ($data['SITEMAPS'] as $sitemap)
 		{
 			$fileName = str_replace(
 				array('#IBLOCK_ID#', '#IBLOCK_CODE#', '#IBLOCK_XML_ID#'),
@@ -468,11 +493,13 @@ class SitemapIblock
 					'IBLOCK_ID' => $fields['IBLOCK_ID'],
 					'GLOBAL_ACTIVE' => 'Y'
 				);
-
-				$dbRes = \CIBlockSection::getList(array(), $filter, false, array('ID'));
-				while($ar = $dbRes->fetch())
+				
+				$dbRes = \CIBlockSection::getList(array(), $filter, false, array('ID', 'IBLOCK_TYPE_ID', 'IBLOCK_CODE'));
+				while ($ar = $dbRes->fetch())
 				{
 					$newSections[] = $ar['ID'];
+					$iblockTypeId = $ar['IBLOCK_TYPE_ID'] ? $ar['IBLOCK_TYPE_ID'] : null;
+					$iblockCode = $ar['IBLOCK_CODE'] ? $ar['IBLOCK_CODE'] : null;
 				}
 
 				if(count($newSections) <= 0)
@@ -486,14 +513,31 @@ class SitemapIblock
 		}
 		elseif($name == 'ADDSECTION')
 		{
-			$dbRes = \CIBlockSection::getList(array(), array('ID' => $fields['ID'], 'GLOBAL_ACTIVE' => 'Y'), false, array('ID'));
-			if(!$dbRes->fetch())
+			$dbRes = \CIBlockSection::getList(
+				array(),
+				array('ID' => $fields['ID'], 'GLOBAL_ACTIVE' => 'Y'),
+				false,
+				array('ID', 'IBLOCK_TYPE_ID', 'IBLOCK_CODE')
+			);
+			
+			$inactiveBranch = true;
+			while ($ar = $dbRes->fetch())
+			{
+				$iblockTypeId = $ar['IBLOCK_TYPE_ID'] ? $ar['IBLOCK_TYPE_ID'] : null;
+				$iblockCode = $ar['IBLOCK_CODE'] ? $ar['IBLOCK_CODE'] : null;
+				$inactiveBranch = false;
+			}
+			
+			if ($inactiveBranch)
 			{
 				// section is added to inactive branch
 				return;
 			}
 		}
-
+		
+		$fields['IBLOCK_TYPE_ID'] = $iblockTypeId;
+		$fields['IBLOCK_CODE'] = $iblockCode;
+		
 		$sitemaps = SitemapIblockTable::getByIblock(
 			$fields,
 			$name == 'ADDSECTION' ? SitemapIblockTable::TYPE_SECTION : SitemapIblockTable::TYPE_ELEMENT
@@ -508,22 +552,19 @@ class SitemapIblock
 
 		if(count($sitemaps) > 0)
 		{
-			$siteDirs = array();
-			$dbSite = SiteTable::getList(array('select' => array('LID', 'DIR')));
-			while($site = $dbSite->fetch())
-			{
-				$siteDirs[$site['LID']] = $site['DIR'];
-			}
-
-			foreach($sitemaps as $sitemap)
+			$siteDirs = self::createSiteDirs();
+			
+			foreach ($sitemaps as $sitemap)
 			{
 				$fields['LANG_DIR'] = $siteDirs[$sitemap['SITE_ID']];
-
+				
+				$url = $name == 'ADDSECTION' ? $sitemap['SECTION_PAGE_URL'] : $sitemap['DETAIL_PAGE_URL'];
+				$urlType = $name == 'ADDSECTION' ? 'S' : 'E';
+//				remove or replace SERVER_NAME
+				$url = self::prepareUrlToReplace($url, $sitemap['SITE_ID']);
 				$rule = array(
-					'url' => $name == 'ADDSECTION'
-						? \CIBlock::replaceDetailUrl($sitemaps[0]['SECTION_PAGE_URL'], $fields, false, "S")
-						: \CIBlock::replaceDetailUrl($sitemaps[0]['DETAIL_PAGE_URL'], $fields, false, "E"),
-					'lastmod' => MakeTimeStamp($fields['TIMESTAMP_X'])
+					'url' => \CIBlock::replaceDetailUrl($url, $fields, false, $urlType),
+					'lastmod' => MakeTimeStamp($fields['TIMESTAMP_X']),
 				);
 
 				$fileName = str_replace(
@@ -533,19 +574,79 @@ class SitemapIblock
 				);
 
 				$sitemapFile = new SitemapFile($fileName, $sitemap);
-				$sitemapFile->appendIblockEntry($rule['url'], $rule['lastmod']);
 
+//				write changes to temp file to preserve collisions
+				$sitemapRuntimeId = $sitemap['SITE_ID'] . '-' . uniqid();
+				$sitemapRuntimeId .= isset($fields['ID']) ? '-' . $fields['ID'] . '-' : '';
+				$sitemapRuntimeFile = new SitemapRuntime($sitemapRuntimeId, $fileName, $sitemap);
+
+//				processing
+				$sitemapRuntimeFile->appendIblockEntry($rule['url'], $rule['lastmod'], $sitemapFile);
+				if ($sitemapRuntimeFile->isNotEmpty() && $sitemapRuntimeFile->isCurrentPartNotEmpty())
+					$sitemapRuntimeFile->finish();
+				else
+					$sitemapRuntimeFile->delete();
+				
 				$sitemapIndex = new SitemapIndex($sitemap['SITEMAP_FILE'], $sitemap);
-				$sitemapIndex->appendIndexEntry($sitemapFile);
-
-				if($sitemap['ROBOTS'] == 'Y')
+				$sitemapIndex->appendIndexEntry($sitemapRuntimeFile);
+				
+				if ($sitemap['ROBOTS'] == 'Y')
 				{
 					$robotsFile = new RobotsFile($sitemap['SITE_ID']);
 					$robotsFile->addRule(
 						array(RobotsFile::SITEMAP_RULE, $sitemapIndex->getUrl())
 					);
 				}
+				
+				unset($sitemapRuntimeFile, $robotsFile, $sitemapIndex);
 			}
 		}
+	}
+	
+	
+	private static function createSiteDirs()
+	{
+		$siteDirs = array();
+		$dbSite = SiteTable::getList(array('select' => array('LID', 'DIR', 'SERVER_NAME')));
+		while ($site = $dbSite->fetch())
+		{
+			$siteDirs[$site['LID']] = $site['DIR'];
+		}
+		
+		return $siteDirs;
+	}
+	
+	
+	/**
+	 * Replace some parts of URL-template, then not correct processing in replaceDetailUrl.
+	 *
+	 * @param string $url - String of URL-template.
+	 * @param null $siteId - In NULL - #SERVER_NAME# will not replaced.
+	 * @return mixed|string
+	 */
+	public static function prepareUrlToReplace($url, $siteId = NULL)
+	{
+//		REMOVE PROTOCOL - we put them later, based on user settings
+		$url = str_replace('http://', '', $url);
+		$url = str_replace('https://', '', $url);
+
+//		REMOVE SERVER_NAME from start position, because we put server_url later
+		if (substr($url, 0, strlen('#SERVER_NAME#')) == '#SERVER_NAME#')
+			$url = substr($url, strlen('#SERVER_NAME#'));
+
+//		get correct SERVER_URL
+		if ($siteId)
+		{
+			$filter = array('=LID' => $siteId);
+			$dbSite = SiteTable::getList(array(
+				'filter' => $filter,
+				'select' => array('LID', 'DIR', 'SERVER_NAME'),
+			));
+			$currentSite = $dbSite->fetch();
+			$serverName = $currentSite['SERVER_NAME'];
+			$url = str_replace('#SERVER_NAME#', $serverName, $url);
+		}
+		
+		return $url;
 	}
 }

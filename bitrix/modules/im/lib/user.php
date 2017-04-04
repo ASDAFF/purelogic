@@ -121,11 +121,41 @@ class User
 	/**
 	 * @return string
 	 */
+	public function getWebsite()
+	{
+		$fields = $this->getFields();
+
+		return $fields? $fields['website']: '';
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getEmail()
+	{
+		$fields = $this->getFields();
+
+		return $fields? $fields['email']: '';
+	}
+	
+	/**
+	 * @return string
+	 */
 	public function getColor()
 	{
 		$fields = $this->getFields();
 
 		return $fields? $fields['color']: '';
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTzOffset()
+	{
+		$fields = $this->getFields();
+
+		return $fields? $fields['tzOffset']: '';
 	}
 
 	/**
@@ -136,6 +166,16 @@ class User
 		$fields = $this->getFields();
 
 		return $fields? (bool)$fields['extranet']: null;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function isActive()
+	{
+		$fields = $this->getFields();
+
+		return $fields? (bool)$fields['active']: null;
 	}
 
 	/**
@@ -197,7 +237,8 @@ class User
 		{
 			$userData = \CIMContactList::GetUserData(Array(
 				'ID' => self::getId(),
-				'PHONES' => 'Y'
+				'PHONES' => 'Y',
+				'EXTRA_FIELDS' => 'Y'
 			));
 			if (isset($userData['users'][self::getId()]))
 			{
@@ -240,11 +281,14 @@ class User
 		{
 			$recordFile = \CFile::SaveFile($recordFile, 'botcontroller');
 		}
-
-		\Bitrix\Im\Model\ExternalAvatarTable::add(Array(
-			'LINK_MD5' => md5($avatarUrl),
-			'AVATAR_ID' => intval($recordFile)
-		));
+		
+		if ($recordFile > 0)
+		{
+			\Bitrix\Im\Model\ExternalAvatarTable::add(Array(
+				'LINK_MD5' => md5($avatarUrl),
+				'AVATAR_ID' => intval($recordFile)
+			));
+		}
 
 		return $recordFile;
 	}

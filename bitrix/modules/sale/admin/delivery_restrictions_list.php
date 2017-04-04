@@ -158,6 +158,8 @@ namespace Bitrix\Sale\Delivery\AdminPage\DeliveryRestrictions
 
 		if(!empty($restrictionsMenu))
 		{
+			sortByColumn($restrictionsMenu, array("TEXT" => SORT_ASC));
+
 			$aContext[] = array(
 				"TEXT" => Loc::getMessage("SALE_RDL_BUT_ADD_NEW"),
 				"TITLE" => Loc::getMessage("SALE_RDL_BUT_ADD_NEW"),

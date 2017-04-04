@@ -1,7 +1,9 @@
 <?
 /** @global CMain $APPLICATION */
+/**	@global CUser $USER */
 use Bitrix\Main,
-	Bitrix\Highloadblock as HL;
+	Bitrix\Highloadblock as HL,
+	Bitrix\Currency;
 
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_before.php");
 IncludeModuleLangFile(__FILE__);
@@ -375,6 +377,14 @@ if(!$bReadOnly && check_bitrix_sessid())
 		);
 		if (!$useStoreControl)
 			$productData['QUANTITY'] = $_POST['IB_SEG_QUANTITY'];
+		if ($USER->CanDoOperation('catalog_purchas_info') && !$useStoreControl)
+		{
+			if (!empty($_POST['IB_SEG_PURCHASING_CURRENCY']) && $_POST['IB_SEG_PURCHASING_PRICE'] !== '')
+			{
+				$productData['PURCHASING_PRICE'] = $_POST['IB_SEG_PURCHASING_PRICE'];
+				$productData['PURCHASING_CURRENCY'] = $_POST['IB_SEG_PURCHASING_CURRENCY'];
+			}
+		}
 
 		foreach($arCombinationResult as $arPropertySaveValues)
 		{
@@ -747,7 +757,7 @@ else
 				?><input type="text" style="width: 120px; margin-right: 10px" class="adm-input" name="IB_SEG_QUANTITY">
 				<? echo GetMessage('IB_SEG_MEASURE');
 			}
-			?> <span class="adm-select-wrap" style="vertical-align: top;"><select name="IB_SEG_MEASURE" class="adm-select" style="width: 169px;"><?
+			?> <span class="adm-select-wrap" style="vertical-align: middle !important;"><select name="IB_SEG_MEASURE" class="adm-select" style="width: 169px;"><?
 			$measureIterator = CCatalogMeasure::getList(
 				array(), array(), false, false, array("ID", "CODE", "MEASURE_TITLE", "SYMBOL_INTL", "IS_DEFAULT")
 			);
@@ -762,7 +772,7 @@ else
 		<tr>
 			<td class="adm-detail-content-cell-l"><?echo GetMessage("IB_SEG_VAT")?>:</td>
 			<td class="adm-detail-content-cell-r">
-				<span class="adm-select-wrap">
+				<span class="adm-select-wrap" style="vertical-align: middle !important;">
 				<?
 					$arVATRef = CatalogGetVATArray(array(), true);
 					echo SelectBoxFromArray('IB_SEG_VAT_ID', $arVATRef, '', "", ($bReadOnly ? "disabled readonly" : '').'class="adm-select" style="width: 169px;"');
@@ -773,11 +783,35 @@ else
 		<tr>
 			<td class="adm-detail-content-cell-l"><?echo GetMessage("IB_SEG_VAT_INCLUDED")?></td>
 			<td class="adm-detail-content-cell-r">
-				<input type="hidden" name="IB_SEG_VAT_INCLUDED" id="IB_SEG_VAT_INCLUDED_N" value="N">
-				<input class="adm-designed-checkbox" type="checkbox" name="IB_SEG_VAT_INCLUDED" id="IB_SEG_VAT_INCLUDED" value="Y" />
+				<input type="hidden" name="IB_SEG_VAT_INCLUDED" id="IB_SEG_VAT_INCLUDED_N" value="N"><?
+				$vatInclude = ((string)Main\Config\Option::get('catalog', 'default_product_vat_included') == 'Y');
+				?><input class="adm-designed-checkbox" type="checkbox" name="IB_SEG_VAT_INCLUDED" id="IB_SEG_VAT_INCLUDED" value="Y"<?=($vatInclude ? ' checked' : '');?>>
 				<label class="adm-designed-checkbox-label" for="IB_SEG_VAT_INCLUDED"></label>
 			</td>
 		</tr>
+		<?
+		if ($USER->CanDoOperation('catalog_purchas_info') && !$useStoreControl)
+		{
+		?>
+		<tr>
+			<td class="adm-detail-content-cell-l"><? echo GetMessage("IB_SEG_PURCHASING_PRICE") ?></td>
+			<td class="adm-detail-content-cell-r">
+				<input type="text" name="IB_SEG_PURCHASING_PRICE" value="">
+				<span class="adm-select-wrap" style="vertical-align: middle !important;"><select name="IB_SEG_PURCHASING_CURRENCY" class="adm-select" style="width: 169px;">
+				<option value=""><?=htmlspecialcharsbx(GetMessage('IB_SEG_EMPTY_VALUE'))?></option>
+				<?
+				foreach (Currency\CurrencyManager::getCurrencyList() as $id => $title)
+				{
+					?><option value="<?=$id; ?>"><?=htmlspecialcharsbx($title); ?></option><?
+				}
+				unset($id, $title);
+				?>
+				</select></span>
+			</td>
+		</tr>
+		<?
+		}
+		?>
 		<tr>
 			<td class="adm-detail-content-cell-l"><?= GetMessage("IB_SEG_PRICE_SHORT") ?>:</td>
 			<td class="adm-detail-content-cell-r">

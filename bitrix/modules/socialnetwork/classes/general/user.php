@@ -45,7 +45,9 @@ class CAllSocNetUser
 	{
 		$rsUser = CUser::GetByID($arFields["ID"]);
 		if ($arUser = $rsUser->Fetch())
+		{
 			define("GLOBAL_ACTIVE_VALUE", $arUser["ACTIVE"]);
+		}
 	}
 
 	public static function OnAfterUserAdd(&$arFields)
@@ -56,23 +58,41 @@ class CAllSocNetUser
 	public static function OnAfterUserLogout(&$arParams)
 	{
 		if (array_key_exists("SONET_ADMIN", $_SESSION))
+		{
 			unset($_SESSION["SONET_ADMIN"]);
+		}
 	}
 
 	public static function OnAfterUserUpdate(&$arFields)
 	{
-		if (array_key_exists("ACTIVE", $arFields) && defined("GLOBAL_ACTIVE_VALUE") && GLOBAL_ACTIVE_VALUE != $arFields["ACTIVE"]):
-
+		if (
+			array_key_exists("ACTIVE", $arFields)
+			&& defined("GLOBAL_ACTIVE_VALUE")
+			&& GLOBAL_ACTIVE_VALUE != $arFields["ACTIVE"]
+		)
+		{
 			$arGroups = array();
-			$dbResult = CSocNetUserToGroup::GetList(array(), array("USER_ID" => $arFields["ID"]), false, false, array("GROUP_ID"));
+			$dbResult = CSocNetUserToGroup::GetList(
+				array(),
+				array(
+					"USER_ID" => $arFields["ID"]
+				),
+				false,
+				false,
+				array("GROUP_ID")
+			);
 			while ($arResult = $dbResult->Fetch())
+			{
 				$arGroups[] = $arResult["GROUP_ID"];
+			}
 
 			$cnt = count($arGroups);
 			for ($i = 0; $i < $cnt; $i++)
+			{
 				CSocNetGroup::SetStat($arGroups[$i]);
+			}
 
-		endif;
+		}
 	}
 	
 	public static function OnBeforeProlog()
@@ -94,7 +114,7 @@ class CAllSocNetUser
 			return false;
 		}
 
-		$bIM = (CModule::IncludeModule("im"));
+		$bIM = CModule::IncludeModule("im");
 
 		$dbRelation = CSocNetUserToGroup::GetList(
 			array(), 
@@ -669,3 +689,4 @@ class CAllSocNetUser
 		return false;
 	}
 }
+?>

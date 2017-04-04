@@ -227,7 +227,7 @@ function __runsnips()
 			}
 		},
 
-		OnTemplateChanged: function(templateId)
+		OnTemplateChanged: function()
 		{
 			this.ReloadList(false);
 		}
@@ -275,7 +275,7 @@ function __runsnips()
 	{
 		var _this = this;
 
-		var arItems = [
+		return [
 			{
 				text : BX.message('BXEdAddSnippet'),
 				title : BX.message('BXEdAddSnippet'),
@@ -306,8 +306,7 @@ function __runsnips()
 					BX.PopupMenu.destroy(_this.uniqueId + "_menu");
 				}
 			}
-		]
-		return arItems;
+		];
 	};
 
 	SnippetsControl.prototype.HandleElementEx = function(wrap, dd, params)
@@ -450,34 +449,6 @@ function __runsnips()
 		}));
 		this.arTabs[0].cont.appendChild(pBaseTbl);
 
-		//r.className = 'bxhtmled-add-row';
-		//c1.className = 'bxhtmled-left-c';
-
-
-		//BX.bind(this.pCatSelect, "change", BX.proxy(this.ChangeCat, this));
-
-		// Additional params
-		// Site templatesnippet_remove_category
-//		r = addRow(pAddTbl, {label: BX.message('BXEdSnipSiteTemplate') + ':', id: this.id + '-template'});
-//		this.pTemplate = r.rightCell.appendChild(BX.create('SELECT', {props:
-//		{
-//			id: this.id + '-template'
-//		}}));
-
-		// File name
-//		r = addRow(pAddTbl, {label: BX.message('BXEdSnipFileName') + ':', id: this.id + '-file-name'});
-//		this.pFileName = r.rightCell.appendChild(BX.create('INPUT', {props:
-//			{
-//				type: 'text',
-//				id: this.id + '-file-name'
-//			},
-//			style: {
-//				width: '150px',
-//				textAlign: 'right'
-//			}
-//		}));
-//		r.rightCell.appendChild(document.createTextNode(' .snp'));
-
 		// Category
 		r = addRow(pAddTbl, {label: BX.message('BXEdSnipCategory') + ':', id: this.id + '-category'});
 		this.pCatSelect = r.rightCell.appendChild(BX.create('SELECT', {
@@ -586,33 +557,6 @@ function __runsnips()
 			this.pCatSelect.options.add(new Option(name, plainList[i].key, false, false));
 		}
 	};
-
-	EditSnippetDialog.prototype.ChangeCat = function(changeFileName)
-	{
-		var
-			defFilename = '',
-			path = this.pCatSelect.value;
-
-//		changeFileName = changeFileName !== false;
-//		if (path == '')
-//		{
-//			defFilename = this.editor.snippets.GetList().rootDefaultFilename;
-//		}
-//		else
-//		{
-//			var section = this.editor.snippetsTaskbar.treeSectionIndex[path];
-//			if (section && section.sect  && section.sect.section)
-//			{
-//				defFilename = section.sect.section.default_name;
-//			}
-//		}
-//
-//		if (changeFileName && defFilename)
-//		{
-//			this.pFileName.value = defFilename;
-//		}
-	};
-
 
 	function SnippetsCategoryDialog(editor, params)
 	{

@@ -582,8 +582,7 @@ class OrderDiscountManager
 				$resultData['APPLY_BLOCKS'][$blockCounter] = array(
 					'BASKET' => array(),
 					'BASKET_ROUND' => array(),
-					'ORDER' => array(),
-					'ORDER_ROUND' => array()
+					'ORDER' => array()
 				);
 
 			if ($rule['MODULE_ID'] == 'sale')
@@ -754,7 +753,6 @@ class OrderDiscountManager
 					'BASKET' => array(),
 					'BASKET_ROUND' => array(),
 					'ORDER' => array(),
-					'ORDER_ROUND' => array()
 				);
 			$index = ($data['ORDER_ROUND'] == 'Y' ? 'ORDER_ROUND' : 'BASKET_ROUND');
 			$basketCode = static::getBasketCodeByRule($data, $translate, $basketList);

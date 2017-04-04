@@ -166,7 +166,16 @@ Class socialnetwork extends CModule
 		RegisterModuleDependences("main", "OnAfterSetUserGroup", "socialnetwork", "CSocNetUser", "DeleteUserAdminCache");
 		RegisterModuleDependences("main", "OnAfterSetGroupRight", "socialnetwork", "CSocNetUser", "DeleteUserAdminCache");
 		RegisterModuleDependences("main", "OnAfterDelGroupRight", "socialnetwork", "CSocNetUser", "DeleteUserAdminCache");
-		RegisterModuleDependences('mail', 'onReplyReceivedLOG_ENTRY', 'socialnetwork', '\Bitrix\Socialnetwork\Internals\MailHandler', 'handleReplyReceivedLogEntry');
+
+		RegisterModuleDependences("main", "OnAfterUserAdd", "socialnetwork", "\\Bitrix\\Socialnetwork\\Item\\UserToGroup", "onAfterUserAdd");
+		RegisterModuleDependences("main", "OnAfterUserUpdate", "socialnetwork", "\\Bitrix\\Socialnetwork\\Item\\UserToGroup", "onAfterUserUpdate");
+		RegisterModuleDependences("iblock", "OnBeforeIBlockSectionUpdate", "socialnetwork", "\\Bitrix\\Socialnetwork\\Item\\Workgroup", "OnBeforeIBlockSectionUpdate");
+		RegisterModuleDependences("iblock", "OnAfterIBlockSectionUpdate", "socialnetwork", "\\Bitrix\\Socialnetwork\\Item\\Workgroup", "onAfterIBlockSectionUpdate");
+		RegisterModuleDependences("iblock", "onBeforeIBlockSectionDelete", "socialnetwork", "\\Bitrix\\Socialnetwork\\Item\\Workgroup", "onBeforeIBlockSectionDelete");
+		RegisterModuleDependences("iblock", "OnAfterIBlockSectionDelete", "socialnetwork", "\\Bitrix\\Socialnetwork\\Item\\Workgroup", "onAfterIBlockSectionDelete");
+
+		$eventManager = \Bitrix\Main\EventManager::getInstance();
+		$eventManager->registerEventHandler('mail', 'onReplyReceivedLOG_ENTRY', 'socialnetwork', '\Bitrix\Socialnetwork\Internals\MailHandler', 'handleReplyReceivedLogEntry');
 
 		CAgent::AddAgent("CSocNetMessages::SendEventAgent();", "socialnetwork", "N", 600);
 
@@ -355,7 +364,15 @@ Class socialnetwork extends CModule
 		UnRegisterModuleDependences("main", "OnAfterSetUserGroup", "socialnetwork", "CSocNetUser", "DeleteUserAdminCache");
 		UnRegisterModuleDependences("main", "OnAfterSetGroupRight", "socialnetwork", "CSocNetUser", "DeleteUserAdminCache");
 		UnRegisterModuleDependences("main", "OnAfterDelGroupRight", "socialnetwork", "CSocNetUser", "DeleteUserAdminCache");
-		UnRegisterModuleDependences('mail', 'onReplyReceivedLOG_ENTRY', 'socialnetwork', '\Bitrix\Socialnetwork\Internals\MailHandler', 'handleReplyReceivedLogEntry');
+		UnRegisterModuleDependences("main", "OnAfterUserAdd", "socialnetwork", "\\Bitrix\\Socialnetwork\\Item\\UserToGroup", "onAfterUserAdd");
+		UnRegisterModuleDependences("main", "OnAfterUserUpdate", "socialnetwork", "\\Bitrix\\Socialnetwork\\Item\\UserToGroup", "onAfterUserUpdate");
+		UnRegisterModuleDependences("iblock", "OnBeforeIBlockSectionUpdate", "socialnetwork", "\\Bitrix\\Socialnetwork\\Item\\Workgroup", "OnBeforeIBlockSectionUpdate");
+		UnRegisterModuleDependences("iblock", "OnAfterIBlockSectionUpdate", "socialnetwork", "\\Bitrix\\Socialnetwork\\Item\\Workgroup", "onAfterIBlockSectionUpdate");
+		UnRegisterModuleDependences("iblock", "onBeforeIBlockSectionDelete", "socialnetwork", "\\Bitrix\\Socialnetwork\\Item\\Workgroup", "onBeforeIBlockSectionDelete");
+		UnRegisterModuleDependences("iblock", "OnAfterIBlockSectionDelete", "socialnetwork", "\\Bitrix\\Socialnetwork\\Item\\Workgroup", "onAfterIBlockSectionDelete");
+
+		$eventManager = \Bitrix\Main\EventManager::getInstance();
+		$eventManager->unregisterEventHandler('mail', 'onReplyReceivedLOG_ENTRY', 'socialnetwork', '\Bitrix\Socialnetwork\Internals\MailHandler', 'handleReplyReceivedLogEntry');
 
 		UnRegisterModule("socialnetwork");
 		return true;
@@ -366,7 +383,7 @@ Class socialnetwork extends CModule
 		global $APPLICATION, $USER_FIELD_MANAGER;
 		$errors = null;
 
-		$id = (empty($id) ? "all" : (in_array($id, array("all", "webdav", "disk", "vote"/*, "blog"*/)) ? $id : false));
+		$id = (empty($id) ? "all" : (in_array($id, array("all", "webdav", "disk", "vote", "intranet"/*, "blog"*/)) ? $id : false));
 		if (!!$id)
 		{
 			$USER_FIELD_MANAGER->CleanCache();
@@ -429,6 +446,11 @@ Class socialnetwork extends CModule
 				$errors = self::installDiskUserFields();
 			}
 
+			if($id == 'all' || $id == 'intranet')
+			{
+				$errors = self::installIntranetUserFields();
+			}
+
 			if (IsModuleInstalled("webdav"))
 			{
 				$arFields[] = array(
@@ -459,8 +481,6 @@ Class socialnetwork extends CModule
 
 			if (IsModuleInstalled("vote"))
 			{
-				AddEventHandler("main", "OnUserTypeBuildList", array("CUserTypeVote", "GetUserTypeDescription"));
-				require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/vote/classes/general/usertypevote.php");
 				$arFields[] = array(
 					"USER_TYPE_ID" => "vote",
 					"ENTITY_ID" => "BLOG_POST",
@@ -472,7 +492,7 @@ Class socialnetwork extends CModule
 						"CHANNEL_SYMBOLIC_NAME" => "UF_BLOG_POST_VOTE",
 						"CHANNEL_USE_CAPTCHA" => "N",
 						"NOTIFY" => (IsModuleInstalled("im") ? "I" : "N"),
-						"UNIQUE" => 13,
+						"UNIQUE" => 8,
 						"UNIQUE_IP_DELAY" => array(
 							"DELAY" => "10",
 							"DELAY_TYPE" => "D"
@@ -583,6 +603,95 @@ Class socialnetwork extends CModule
 					"EDIT_IN_LIST" => "Y",
 					"IS_SEARCHABLE" => ($prop["USER_TYPE_ID"] == "disk_file" ? "Y" : "N")
 				), false);
+
+				if (false == $intID && ($strEx = $APPLICATION->getException()))
+				{
+					$errors[] = $strEx->getString();
+				}
+			}
+		}
+
+		return $errors;
+	}
+
+	public static function installIntranetUserFields()
+	{
+		global $APPLICATION, $DB;
+		$errors = null;
+
+		if(!IsModuleInstalled('intranet'))
+		{
+			return null;
+		}
+
+		if(!CModule::IncludeModule('iblock'))
+		{
+			return null;
+		}
+
+		$iblockId = false;
+
+		$res = $DB->Query("select ID from b_iblock where CODE='departments' AND IBLOCK_TYPE_ID='structure'", true);
+		if (
+			($ar = $res->Fetch())
+			&& intval($ar['ID']) > 0
+		)
+		{
+			$iblockId = $ar['ID'];
+		}
+
+		if(intval($iblockId) <= 0)
+		{
+			return null;
+		}
+
+		$arUFSettings = array(
+			'DISPLAY' => 'LIST',
+			'LIST_HEIGHT' => '8',
+			'IBLOCK_ID' => $iblockId,
+			'ACTIVE_FILTER' => 'Y'
+		);
+
+		$props = array(
+			array(
+				"ENTITY_ID" => "SONET_GROUP",
+				"FIELD_NAME" => "UF_SG_DEPT",
+				"USER_TYPE_ID" => "iblock_section",
+				"MULTIPLE" => "Y",
+				"SETTINGS" => $arUFSettings
+			)
+		);
+		$uf = new CUserTypeEntity;
+		foreach ($props as $prop)
+		{
+			$rsData = CUserTypeEntity::getList(array("ID" => "ASC"), array("ENTITY_ID" => $prop["ENTITY_ID"], "FIELD_NAME" => $prop["FIELD_NAME"]));
+			if (!($rsData && ($arRes = $rsData->Fetch())))
+			{
+				$arUFFields = array(
+					"ENTITY_ID" => $prop["ENTITY_ID"],
+					"FIELD_NAME" => $prop["FIELD_NAME"],
+					"XML_ID" => $prop["FIELD_NAME"],
+					"USER_TYPE_ID" => $prop["USER_TYPE_ID"],
+					"SORT" => 100,
+					"MULTIPLE" => $prop["MULTIPLE"],
+					"MANDATORY" => "N",
+					"SHOW_FILTER" => "N",
+					"SHOW_IN_LIST" => "N",
+					"EDIT_IN_LIST" => "Y",
+					"IS_SEARCHABLE" => "N",
+					"SETTINGS" => $prop["SETTINGS"],
+				);
+
+				$dbLangs = CLanguage::GetList(($b = ""), ($o = ""), array("ACTIVE" => "Y"));
+				while ($arLang = $dbLangs->Fetch())
+				{
+					$messages = IncludeModuleLangFile($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/socialnetwork/install/index.php", $arLang["LID"], true);
+					$arUFFields["EDIT_FORM_LABEL"][$arLang["LID"]] = $messages["SONET_".$prop["FIELD_NAME"]."_EDIT_FORM_LABEL"];
+					$arUFFields["LIST_COLUMN_LABEL"][$arLang["LID"]] = $messages["SONET_".$prop["FIELD_NAME"]."_LIST_COLUMN_LABEL"];
+					$arUFFields["LIST_FILTER_LABEL"][$arLang["LID"]] = $messages["SONET_".$prop["FIELD_NAME"]."_LIST_FILTER_LABEL"];
+				}
+
+				$intID = $uf->add($arUFFields, false);
 
 				if (false == $intID && ($strEx = $APPLICATION->getException()))
 				{

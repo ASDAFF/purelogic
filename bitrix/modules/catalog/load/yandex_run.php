@@ -127,7 +127,7 @@ function yandex_get_value($arOffer, $param, $PROPERTY, $arProperties, $arUserTyp
 
 		$value = '';
 		$description = '';
-		switch ($arProperty['PROPERTY_TYPE'])
+		switch ($arProperties[$PROPERTY]['PROPERTY_TYPE'])
 		{
 			case 'USER_TYPE':
 				if ($arProperty['MULTIPLE'] == 'Y')
@@ -990,9 +990,9 @@ if (empty($arRunErrors))
 					$strTmpOff .=
 						"<description>".
 						yandex_text2xml(TruncateText(
-							($arAcc["PREVIEW_TEXT_TYPE"]=="html"?
+							($arAcc["PREVIEW_TEXT_TYPE"] =="html"?
 							strip_tags(preg_replace_callback("'&[^;]*;'", "yandex_replace_special", $arAcc["~PREVIEW_TEXT"])) : preg_replace_callback("'&[^;]*;'", "yandex_replace_special", $arAcc["~PREVIEW_TEXT"])),
-							255), true).
+							3000), true).
 						"</description>\n";
 					break;
 				case 'param':
@@ -1198,7 +1198,7 @@ if (empty($arRunErrors))
 			$arItem['YANDEX_DESCR'] = yandex_text2xml(TruncateText(
 							($arItem["PREVIEW_TEXT_TYPE"]=="html"?
 							strip_tags(preg_replace_callback("'&[^;]*;'", "yandex_replace_special", $arItem["~PREVIEW_TEXT"])) : preg_replace_callback("'&[^;]*;'", "yandex_replace_special", $arItem["~PREVIEW_TEXT"])),
-							255), true);
+							3000), true);
 
 			if ($arItem['CATALOG_TYPE'] == Catalog\ProductTable::TYPE_SKU)
 			{
@@ -1410,7 +1410,7 @@ if (empty($arRunErrors))
 										$strOfferYandex .= yandex_text2xml(TruncateText(
 											($arOfferItem["PREVIEW_TEXT_TYPE"] == "html" ?
 												strip_tags(preg_replace_callback("'&[^;]*;'", "yandex_replace_special", $arOfferItem["~PREVIEW_TEXT"])) : $arOfferItem["~PREVIEW_TEXT"]),
-											255),
+											3000),
 											true);
 									}
 									$strOfferYandex .= "</description>\n";
@@ -1630,7 +1630,7 @@ if (empty($arRunErrors))
 										$strOfferYandex .= yandex_text2xml(TruncateText(
 											($arOfferItem["PREVIEW_TEXT_TYPE"] == "html" ?
 												strip_tags(preg_replace_callback("'&[^;]*;'", "yandex_replace_special", $arOfferItem["~PREVIEW_TEXT"])) : preg_replace_callback("'&[^;]*;'", "yandex_replace_special", $arOfferItem["~PREVIEW_TEXT"])),
-											255),
+											3000),
 											true);
 									}
 									$strOfferYandex .= "</description>\n";
@@ -1826,7 +1826,7 @@ if (empty($arRunErrors))
 							yandex_text2xml(TruncateText(
 								($arItem["PREVIEW_TEXT_TYPE"]=="html"?
 								strip_tags(preg_replace_callback("'&[^;]*;'", "yandex_replace_special", $arItem["~PREVIEW_TEXT"])) : preg_replace_callback("'&[^;]*;'", "yandex_replace_special", $arItem["~PREVIEW_TEXT"])),
-								255), true).
+								3000), true).
 							"</description>\n";
 						break;
 					case 'param':

@@ -196,7 +196,12 @@ else
 				{
 					$dbResult = CBPTrackingService::GetList(
 						array("ID" => "ASC"),
-						array("WORKFLOW_ID" => $ID, "TYPE" => array(CBPTrackingType::Report, CBPTrackingType::Custom, CBPTrackingType::FaultActivity)),
+						array("WORKFLOW_ID" => $ID, "TYPE" => array(
+							CBPTrackingType::Report,
+							CBPTrackingType::Custom,
+							CBPTrackingType::FaultActivity,
+							CBPTrackingType::Error
+						)),
 						false,
 						false,
 						array("ID", "MODIFIED", "ACTION_NOTE")

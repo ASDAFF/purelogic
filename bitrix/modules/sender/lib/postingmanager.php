@@ -302,6 +302,9 @@ class PostingManager
 		}
 
 
+		$params['FIELDS']['SUBJECT'] = htmlspecialcharsbx(strip_tags(
+			static::$currentMailingChainFields['MESSAGE']['SUBJECT']
+		));
 		// prepare params for send email
 		$messageParams = array(
 			'EVENT' => static::$currentMailingChainFields['EVENT'],

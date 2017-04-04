@@ -286,9 +286,14 @@ if ($USER->CanDoOperation('catalog_price'))
 				}
 				unset($currentRatio, $ratioIterator, $ratioFilter);
 				if ($newRatio)
+				{
+					$arMeasureRatio['IS_DEFAULT'] = 'Y';
 					CCatalogMeasureRatio::add($arMeasureRatio);
+				}
 				else
+				{
 					CCatalogMeasureRatio::update($currentRatioID, $arMeasureRatio);
+				}
 				unset($currentRatioID, $newRatio, $arMeasureRatio);
 
 				$intCountBasePrice = count($arCatalogBasePrices);

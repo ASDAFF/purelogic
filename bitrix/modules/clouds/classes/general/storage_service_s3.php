@@ -761,6 +761,11 @@ class CCloudStorageService_AmazonS3 extends CCloudStorageService
 		{
 			return true;
 		}
+		elseif ($this->status == 400 && strpos($this->result, 'ExpiredToken') !== false)
+		{
+			$this->tokenHasExpired = true;
+			return false;
+		}
 		elseif($this->status == 403)
 		{
 			AddMessage2Log($this);
@@ -864,6 +869,11 @@ class CCloudStorageService_AmazonS3 extends CCloudStorageService
 
 				break;
 			}
+			elseif ($this->status == 400 && strpos($this->result, 'ExpiredToken') !== false)
+			{
+				$this->tokenHasExpired = true;
+				return false;
+			}
 			else
 			{
 				return false;
@@ -932,7 +942,7 @@ class CCloudStorageService_AmazonS3 extends CCloudStorageService
 		return 5*1024*1024; //5MB
 	}
 
-	function UploadPart($arBucket, &$NS, $data)
+	function UploadPartNo($arBucket, &$NS, $data, $part_no)
 	{
 		$filePath = '/'.trim($NS["filePath"], '/');
 		if($arBucket["PREFIX"])
@@ -948,19 +958,24 @@ class CCloudStorageService_AmazonS3 extends CCloudStorageService
 			'PUT',
 			$arBucket["BUCKET"],
 			$filePath,
-			'?partNumber='.(count($NS["Parts"])+1).'&uploadId='.urlencode($NS["UploadId"]),
+			'?partNumber='.($part_no + 1).'&uploadId='.urlencode($NS["UploadId"]),
 			$data
 		);
 
 		if($this->status == 200 && is_array($this->headers) && isset($this->headers["ETag"]))
 		{
-			$NS["Parts"][] = $this->headers["ETag"];
+			$NS["Parts"][$part_no] = $this->headers["ETag"];
 			return true;
 		}
 		else
 		{
 			return false;
 		}
+	}
+
+	function UploadPart($arBucket, &$NS, $data)
+	{
+		return $this->UploadPartNo($arBucket, $NS, $data, count($NS["Parts"]));
 	}
 
 	function CompleteMultipartUpload($arBucket, &$NS)
@@ -973,9 +988,12 @@ class CCloudStorageService_AmazonS3 extends CCloudStorageService
 		}
 		$filePath = CCloudUtil::URLEncode($filePath, "UTF-8");
 
+		ksort($NS["Parts"]);
 		$data = "";
 		foreach($NS["Parts"] as $PartNumber => $ETag)
+		{
 			$data .= "<Part><PartNumber>".($PartNumber+1)."</PartNumber><ETag>".$ETag."</ETag></Part>\n";
+		}
 
 		$this->SetLocation($arBucket["LOCATION"]);
 		$this->SendRequest(

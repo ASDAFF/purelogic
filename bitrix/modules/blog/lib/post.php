@@ -28,6 +28,19 @@ class PostTable extends Entity\DataManager
 				'primary' => true,
 				'autocomplete' => true,
 			),
+			'BLOG_ID' => array(
+				'data_type' => 'integer'
+			),
+			'AUTHOR_ID' => array(
+				'data_type' => 'integer'
+			),
+			'CODE' => array(
+				'data_type' => 'string'
+			),
+			'MICRO' => array(
+				'data_type' => 'string',
+				'values' => array('N','Y')
+			),
 			'DATE_CREATE' => array(
 				'data_type' => 'datetime'
 			),
@@ -37,6 +50,48 @@ class PostTable extends Entity\DataManager
 			'PUBLISH_STATUS' => array(
 				'data_type' => 'string',
 				'values' => array(BLOG_PUBLISH_STATUS_DRAFT, BLOG_PUBLISH_STATUS_READY, BLOG_PUBLISH_STATUS_PUBLISH)
+			),
+			'ENABLE_COMMENTS' => array(
+				'data_type' => 'string',
+				'values' => array('N','Y')
+			),
+			'NUM_COMMENTS' => array(
+				'data_type' => 'integer'
+			),
+			'NUM_COMMENTS_ALL' => array(
+				'data_type' => 'integer'
+			),
+			'VIEWS' => array(
+				'data_type' => 'integer'
+			),
+			'HAS_SOCNET_ALL' => array(
+				'data_type' => 'string',
+				'values' => array('N','Y')
+			),
+			'HAS_TAGS' => array(
+				'data_type' => 'string',
+				'values' => array('N','Y')
+			),
+			'HAS_IMAGES' => array(
+				'data_type' => 'string',
+				'values' => array('N','Y')
+			),
+			'HAS_PROPS' => array(
+				'data_type' => 'string',
+				'values' => array('N','Y')
+			),
+			'HAS_COMMENT_IMAGES' => array(
+				'data_type' => 'string',
+				'values' => array('N','Y')
+			),
+			'TITLE' => array(
+				'data_type' => 'string',
+			),
+			'DETAIL_TEXT' => array(
+				'data_type' => 'text',
+			),
+			'CATEGORY_ID' => array(
+				'data_type' => 'string',
 			),
 		);
 

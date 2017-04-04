@@ -1468,7 +1468,7 @@ $tabControl->BeginNextTab();
 
 function _MLGetTypeHTML($type = array())
 {
-	$name = "ML_TYPE[".$type["id"]."]";
+	$name = htmlspecialcharsbx("ML_TYPE[".$type["id"]."]");
 	ob_start();
 ?>
 <div class="bx-ml-type"  id="type_cont_<?= $type["id"]?>">
@@ -1477,14 +1477,12 @@ function _MLGetTypeHTML($type = array())
 		<input type="hidden" name="<?= $name."[NEW]"?>" value="Y" />
 	<?endif;?>
 
-	<? /* <input id="type_real_name_inp_<?= $type["id"]?>" type="hidden" name="<?= $name."[NAME]"?>" value="<?= $type["name"]?>" />  */?>
 	<input type="hidden" name="<?= $name."[SYS]"?>" value="<?= $type["system"] ? "Y" : "N"?>" />
 
 	<? if($type["system"]):?>
 		<div><?= htmlspecialcharsex($type["name"])?></div>
 	<? else:?>
 		<div id="type_name_<?= $type["id"]?>" class="bx-ml-editable"><?= htmlspecialcharsex($type["name"])?></div>
-		<? /*<input id="type_name_inp_<?= $type["id"]?>" type="text" size="30" value="<?= $type["name"]?>" style="display: none;" /> */ ?>
 	<?endif;?>
 
 	<? if($type["code"] != "image" || !$type["system"]):?>

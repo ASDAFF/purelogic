@@ -137,6 +137,32 @@ CREATE TABLE b_bp_rest_activity (
 	RETURN_PROPERTIES text NULL,
 	DOCUMENT_TYPE text NULL,
 	FILTER text NULL,
+	IS_ROBOT char(1) NOT NULL default 'N',
 	primary key (ID),
 	unique ix_bp_ra_ic(INTERNAL_CODE)
+);
+
+CREATE TABLE b_bp_scheduler_event (
+	ID int NOT NULL auto_increment,
+	WORKFLOW_ID varchar(32) NOT NULL,
+	HANDLER varchar(128) NOT NULL,
+	EVENT_MODULE VARCHAR(32) NOT NULL,
+	EVENT_TYPE VARCHAR(100) NOT NULL,
+	ENTITY_ID VARCHAR(100) NULL,
+	primary key (ID),
+	index ix_b_bp_se_1(EVENT_MODULE, EVENT_TYPE),
+	index ix_b_bp_se_2(EVENT_MODULE, EVENT_TYPE, ENTITY_ID),
+	index ix_b_bp_se_3(WORKFLOW_ID)
+);
+
+CREATE TABLE b_bp_rest_provider (
+	ID int NOT NULL auto_increment,
+	APP_ID varchar(128) NOT NULL,
+	APP_NAME text NULL,
+	CODE varchar(128) NOT NULL,
+	TYPE varchar(30) NOT NULL,
+	HANDLER varchar(1000) NOT NULL,
+	NAME text NULL,
+	DESCRIPTION text NULL,
+	primary key (ID)
 );

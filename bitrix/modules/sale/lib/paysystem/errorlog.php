@@ -16,7 +16,7 @@ class ErrorLog
 	 */
 	public static function add(array $fields)
 	{
-		self::prepareParams($fields);
+		$fields = self::prepareParams($fields);
 
 		if (self::DEBUG_MODE)
 			self::addToFile($fields);

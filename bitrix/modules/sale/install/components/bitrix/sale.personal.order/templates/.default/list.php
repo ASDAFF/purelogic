@@ -14,10 +14,12 @@ $arChildParams = array(
 	"NAV_TEMPLATE" => $arParams["NAV_TEMPLATE"],
 	"ACTIVE_DATE_FORMAT" => $arParams["ACTIVE_DATE_FORMAT"],
 	"HISTORIC_STATUSES" => $arParams["HISTORIC_STATUSES"],
-
+	"ALLOW_INNER" => $arParams["ALLOW_INNER"],
+	"ONLY_INNER_FULL" => $arParams["ONLY_INNER_FULL"],
 	"CACHE_TYPE" => $arParams["CACHE_TYPE"],
 	"CACHE_TIME" => $arParams["CACHE_TIME"],
 	"CACHE_GROUPS" => $arParams["CACHE_GROUPS"],
+	"DEFAULT_SORT" => $arParams["ORDER_DEFAULT_SORT"],
 );
 
 foreach ($arParams as $key => $val)

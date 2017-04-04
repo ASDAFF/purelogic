@@ -1,10 +1,11 @@
 ;
 (function ()
 {
-
+	/**
+	 * @requires module:mobileapp
+	 * @module mobilelib
+	 */
 	if (window.BXMobileApp) return;
-
-
 
 	var syncApiObject = function (objectName){
 		this.objectName = objectName;
@@ -68,6 +69,11 @@
 
 	window.BXMobileApp =
 	{
+		eventAddLog:{},
+		debug:false,
+		supportNativeEvents:function(){
+			return app.enableInVersion(17);
+		},
 		apiVersion: (typeof appVersion != "undefined"? appVersion : 1),
 		//platform: platform,
 		cordovaVersion: "3.6.3",
@@ -268,8 +274,7 @@
 
 				if (typeof(params.data) == 'object')
 				{
-					app.onCustomEvent("onPageParamsChangedLegacy", {url: params.url, data: params.data});
-					BX.onCustomEvent("onPageParamsChangedLegacy", [{url: params.url, data: params.data}]);
+					BXMobileApp.onCustomEvent("onPageParamsChangedLegacy", {url: params.url, data: params.data}, true, true);
 				}
 
 				return true;
@@ -281,6 +286,18 @@
 			loadPageModal: function (params)
 			{
 				app.showModalDialog(params)
+			},
+			/**
+			 * Set white list for allowed urls which can be opened inside the app.
+			 * Use semicolon as separator.
+			 * Example1: "*.mydomain.ru;*mydomain2.ru"
+			 * Example2: "https*"
+			 * Example2: "*" (wild card)
+			 * @param whiteListString
+			 */
+			setWhiteList: function(whiteListString)
+			{
+				_pageNavigator.getFunc("setWhiteList")(whiteListString);
 			},
 			/**
 			 * @private
@@ -388,16 +405,24 @@
 			 * Subscribes to the event
 			 * @param eventName
 			 */
+			list:[],
 			subscribe: function (eventName)
 			{
+				this.list.push(eventName);
 				app.exec("subscribeEvent", {eventName: eventName});
 			},
 			/**
-			 * Unsubscribes from the event
+			 * Unsubscribe from the event
 			 * @param eventName
 			 */
 			unsubscribe: function (eventName)
 			{
+				var index;
+				if (index = this.list.indexOf(eventName) >= 0)
+				{
+					delete this.list[index];
+				}
+
 				app.exec("unsubscribeEvent", {eventName: eventName});
 			},
 			/**
@@ -409,8 +434,10 @@
 			 */
 			post: function (eventName, params)
 			{
-				if (app.enableInVersion(16))
+				if (app.enableInVersion(17))
 				{
+					if (typeof(params) == "object")
+						params = JSON.stringify(params);
 					app.exec("fireEvent", {
 						eventName: eventName,
 						params: params
@@ -421,18 +448,75 @@
 
 				return false;
 			},
-			addEventListener: function (eventName, listener)
+			addEventListener: function (eventObject, eventName, listener)
 			{
-				BXMobileApp.Events.subscribe(eventName);
-				BX.addCustomEvent(eventName, listener);
+				BXMobileApp.addCustomEvent(eventObject, eventName,listener)
 			}
 		},
-		onCustomEvent: function (eventName, params, useNativeSubscription)
+		/**
+		 *
+		 * @param {string} eventName - the event name
+		 * @param  params - parameters which will be passed to event handler
+		 * @param {boolean} [useNativeSubscription] - use native subscription. <b>false</b> by default
+		 * @param {boolean} [fireSelf] - the event will be fired on this page. <b>false</b> false by default
+		 */
+		onCustomEvent: function (eventName, params, useNativeSubscription, fireSelf)
 		{
-			if (!useNativeSubscription || !BXMobileApp.Events.post(eventName, params))
+			var oldVersion = true;
+			if(this.supportNativeEvents() && useNativeSubscription)
+			{
+				oldVersion = false;
+				BXMobileApp.Events.post(eventName, params);
+
+				if(fireSelf)
+				{
+					BX.onCustomEvent(eventName, BX.type.isArray(params)? params:[params])
+				}
+			}
+			else
 			{
 				app.onCustomEvent(eventName, params, false, false)
 			}
+
+			if(BXMobileApp.debug)
+				console.log("Fire event"+(oldVersion ?" (old)":""), eventName, location.href);
+
+		},
+
+		addCustomEvent: function (eventObject, eventName, listener)
+		{
+			/* shift parameters for short version */
+			if (BX.type.isString(eventObject))
+			{
+				listener = eventName;
+				eventName = eventObject;
+				eventObject = window;
+			}
+
+			if(BXMobileApp.debug)
+			{
+				if(typeof BXMobileApp.eventAddLog[eventName] == "undefined")
+				{
+					BXMobileApp.eventAddLog[eventName] = [];
+				}
+
+				BXMobileApp.eventAddLog[eventName].push(function getStackTrace(){
+					var obj = {};
+					if(Error && Error["captureStackTrace"])
+					{
+						Error.captureStackTrace(obj, getStackTrace);
+						return {stack: obj.stack, eventObject:eventObject, listener: listener};
+					}
+					return {eventObject: eventObject, listener: listener};
+				}());
+
+				BX.addCustomEvent(eventName,function(){
+					console.log("Event has been caught", eventName);
+				});
+			}
+
+			BXMobileApp.Events.subscribe(eventName);
+			BX.addCustomEvent(eventObject, eventName, listener);
 		}
 
 	};
@@ -514,8 +598,12 @@
 
 	/**
 	 * Menu class
+	 * @param params - the set of options
+	 * @config {array} items - array of menu items
+	 * @config {bool} useNavigationBarColor - color of navigation bar will be apply
+	 * as a background color for the page menu. false by default
+	 *
 	 * @param id
-	 * @param params
 	 * @constructor
 	 */
 	BXMobileApp.UI.Menu = function (params, id)
@@ -523,7 +611,7 @@
 		this.items = params.items;
 		this.type = BXMobileApp.UI.types.MENU;
 		BXMobileApp.UI.Menu.superclass.constructor.apply(this, [id, params]);
-		app.menuCreate({items: this.items});
+		app.menuCreate({items: this.items, useNavigationBarColor: params["useNavigationBarColor"]});
 	};
 	BXMobileApp.TOOLS.extend(BXMobileApp.UI.Menu, BXMobileApp.UI.Element);
 
@@ -764,6 +852,9 @@
 		close: function (params)
 		{
 			app.closeController(params)
+		},
+		closeModalDialog:function(){
+			app.exec("closeModalDialog");
 		},
 		captureKeyboardEvents: function (enable)
 		{
@@ -1157,6 +1248,70 @@
 		}
 
 	};
+
+
+	//websocket override
+
+	window.__origWebSocket = WebSocket;
+	var websocketPlugin = window.websocketPlugin = new BXCordovaPlugin("WebSocketCordovaPlugin");
+	window.websocketPlugin.open = function(){
+		this.exec("open");
+	};
+	window.websocketPlugin.close = function(code, message){
+		this.exec("close",{code: code, reason:message});
+	};
+	window.websocketPlugin.init = function(config){
+		this.exec("init", config);
+	};
+
+	if(typeof BXMobileAppContext != "undefined" && BXMobileAppContext["useNativeWebSocket"])
+	{
+		window.WebSocket = function(server)
+		{
+			this.open =  BX.proxy(websocketPlugin.open, websocketPlugin);
+			this.close =  BX.proxy(websocketPlugin.close, websocketPlugin);
+
+			var onSocketClosed = BX.proxy(function (data)
+			{
+				if(typeof this.onclose == "function")
+				{
+					this.onclose(data);
+				}
+			}, this);
+
+			var onSocketOpened = BX.proxy(function (data)
+			{
+				if(typeof this.onopen == "function")
+				{
+					this.onopen(data);
+				}
+			},this);
+
+			var onSocketMessage = BX.proxy(function (data)
+			{
+				if(typeof this.onmessage == "function")
+				{
+					this.onmessage(data);
+				}
+			},this);
+			var onSocketError = BX.proxy(function (data)
+			{
+				if(typeof this.onerror == "function")
+				{
+					this.onerror(data);
+				}
+			},this);
+
+
+			websocketPlugin.init({
+				server:server,
+				onmessage:onSocketMessage,
+				onclose:onSocketClosed,
+				onopen:onSocketOpened,
+				onerror:onSocketError
+			});
+		};
+	}
 
 	//Short aliases
 

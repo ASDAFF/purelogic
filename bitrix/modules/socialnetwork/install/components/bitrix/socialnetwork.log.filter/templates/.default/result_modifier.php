@@ -42,7 +42,9 @@ if ($arResult["MODE"] == "AJAX")
 			"ALLOW_EMAIL_INVITATION" => (IsModuleInstalled('mail') && IsModuleInstalled('intranet'))
 		)),
 		"LAST" => array(),
-		"ITEMS" => array()
+		"ITEMS" => array(
+			"USERS" => array()
+		)
 	);
 
 	CSocNetLogDestination::fillLastDestination($arResult["CREATED_BY_DEST"]["SORT"], $arResult["CREATED_BY_DEST"]["LAST"]);

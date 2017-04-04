@@ -8,4 +8,6 @@ $MESS["SOPC_EMPTY_PAY_SYSTEM_LIST"] = "Es gibt keine Zahlungssysteme";
 $MESS["SOPC_TITLE"] = "Guthaben aufladen";
 $MESS["SOPC_INVALID_TOKEN"] = "Ungültiger Sicherheitstoken";
 $MESS["SALE_ACCESS_DENIED"] = "Loggen Sie sich bitte ein, um den Nutzer-Account anzuzeigen.";
+$MESS["SOPC_ERROR_INNER_PAY_SYSTEM_RESTRICTED"] = "Fehler des Zahlungssystems. Zahlung über internes Konto wurde verweigert.";
+$MESS["SOPC_LOW_BALANCE"] = "Guthaben auf internem Konto ist nicht ausreichend";
 ?>

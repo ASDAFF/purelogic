@@ -410,10 +410,6 @@ BX.saleOrderAjax = { // bad solution, actually, a singleton at the page
 			return;
 		}
 
-		var loader;
-		if (!(loader = BX.Sale.OrderAjaxComponent.startLoader()))
-			return;
-
 		var ctx = this;
 
 		BX.ajax({
@@ -428,8 +424,6 @@ BX.saleOrderAjax = { // bad solution, actually, a singleton at the page
 			data: {'ACT': 'GET_LOC_BY_ZIP', 'ZIP': value},
 			//cache: true,
 			onsuccess: function(result){
-				BX.Sale.OrderAjaxComponent.endLoader(loader);
-
 				if(result.result)
 				{
 					ctx.indexCache[value] = result.data.ID;
@@ -440,7 +434,6 @@ BX.saleOrderAjax = { // bad solution, actually, a singleton at the page
 
 			},
 			onfailure: function(type, e){
-				BX.Sale.OrderAjaxComponent.endLoader(loader);
 				// on error do nothing
 			}
 

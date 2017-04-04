@@ -112,6 +112,10 @@ class Configurable extends Base
 		);
 
 		$result->setPeriodDescription($this->getPeriodText());
+		$result->setPeriodFrom($this->config["MAIN"]["PERIOD"]["FROM"]);
+		$result->setPeriodTo($this->config["MAIN"]["PERIOD"]["TO"]);
+		$result->setPeriodType($this->config["MAIN"]["PERIOD"]["TYPE"]);
+
 		return $result;
 	}
 

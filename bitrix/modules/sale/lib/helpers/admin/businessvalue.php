@@ -373,6 +373,9 @@ final class BusinessValueControl
 
 						foreach ($codes as $codeKey => $code)
 						{
+							if ($codeKey === 'USER_COLUMNS')
+								continue;
+
 							$consumerKey = $code['CONSUMER_KEY'];
 							$consumer = $consumers[$consumerKey];
 
@@ -1072,7 +1075,7 @@ final class BusinessValueControl
 				}
 			}
 
-			$personProviderValueInput[$personTypeId][''] = array('TYPE' => 'STRING', 'SIZE' => 30, 'DISABLED' => true); // for filter only
+			$personProviderValueInput[$personTypeId][''] = array('TYPE' => 'STRING', 'SIZE' => 30); // for filter only
 
 			if ($providerOptions)
 			{

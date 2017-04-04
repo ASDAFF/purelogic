@@ -156,5 +156,11 @@ $MESS["SALE_EXPORT_DELIVERY_ID"] = "Метод доставки ИД";
 $MESS["SALE_EXPORT_DELIVERY"] = "Метод доставки";
 $MESS["SALE_EXPORT_DELIVERY_DATE_CANCEL"] = "Дата отмены";
 $MESS["SALE_EXPORT_REASON_MARKED"] = "Ошибка отгрузки";
+$MESS["SALE_EXPORT_TRACKING_NUMBER"] = "Идентификатор отправления";
 $MESS["SALE_EXPORT_REASON_MARKED_BASKET_PROPERTY"] = "Ошибка выгрузки заказа. Для табличной части заказа выгружены одинаковые номера позиций в корзине. Код ошибки - ";
+$MESS["SALE_EXPORT_CONTAINER"] = "Контейнер";
+$MESS["SALE_EXPORT_PROP_VALUES"] = "ЗначенияСвойств";
+$MESS["SALE_EXPORT_PROP_VALUE"] = "ЗначенияСвойства";
+$MESS["SALE_EXPORT_CASHBOX_CHECKS"] = "ИнформацияОЧеках";
+$MESS["SALE_EXPORT_CASHBOX_CHECK"] = "ИнформацияОЧеке";
 ?>

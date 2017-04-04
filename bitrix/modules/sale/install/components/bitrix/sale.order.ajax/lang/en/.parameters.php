@@ -49,4 +49,14 @@ $MESS["SOA_ERROR_MESSAGE_SETTINGS1"] = "Notification messages";
 $MESS["SOA_COMPATIBLE_MODE1"] = "Use compatibility mode for legacy template";
 $MESS["COMPATIBLE_MODE_TIP"] = "Enable this option if you are using a template from previous module versions";
 $MESS["SOA_USE_PRELOAD"] = "Auto fill payment and delivery details forms using previous order data";
+$MESS["SOA_SHOW_NOT_CALCULATED_DELIVERIES"] = "Delivery services that failed to calculate correctly";
+$MESS["SOA_SHOW_NOT_CALCULATED_DELIVERIES_N"] = "don't show";
+$MESS["SOA_SHOW_NOT_CALCULATED_DELIVERIES_L"] = "move to the bottom";
+$MESS["SOA_SHOW_NOT_CALCULATED_DELIVERIES_Y"] = "show as usual";
+$MESS["SHOW_NOT_CALCULATED_DELIVERIES_TIP"] = "Enable the \"Pre-calculate deliveries that have external access to services\" option to sort deliveries of this type.";
+$MESS["SOA_ACTION_VARIABLE"] = "Variable containing the action";
+$MESS["ACTION_VARIABLE_TIP"] = "Specifies the name of a variable that contains the action identifier: processOrder, showOrder etc. Default value: <i>action</i>.";
+$MESS["SOA_ALLOW_APPEND_ORDER"] = "Allow binding new order to existing user account";
+$MESS["ALLOW_APPEND_ORDER_TIP"] = "If a user with the specified e-mail already exists, the new order will be attached to the existing account.
+If the option is unchecked, the user already exists error will pop up.";
 ?>

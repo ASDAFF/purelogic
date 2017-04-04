@@ -889,7 +889,7 @@ class CAllIBlock
 		foreach(GetModuleEvents("iblock", "OnAfterIBlockAdd", true)  as $arEvent)
 			ExecuteModuleEventEx($arEvent, array(&$arFields));
 
-		if(defined("BX_COMP_MANAGED_CACHE"))
+		if(defined("BX_COMP_MANAGED_CACHE") && self::isEnabledClearTagCache())
 			$CACHE_MANAGER->ClearByTag("iblock_id_new");
 
 		return $Result;
@@ -2551,16 +2551,20 @@ REQ
 	{
 		static $arIBlockCache = array();
 		static $arElementCache = array();
+		static $arSectionCache = array();
+		static $catalogIncluded = null;
 
 		$product_url = "";
 		$OF_ELEMENT_ID = (int)$OF_ELEMENT_ID;
 		$OF_IBLOCK_ID = (int)$OF_IBLOCK_ID;
+		if ($catalogIncluded === null)
+			$catalogIncluded = Loader::includeModule('catalog');
 
 		if(
 			$arrType === "E"
 			&& $OF_IBLOCK_ID > 0
 			&& $OF_ELEMENT_ID > 0
-			&& Loader::includeModule('catalog')
+			&& $catalogIncluded
 		)
 		{
 			if (!isset($arIBlockCache[$OF_IBLOCK_ID]))
@@ -2572,7 +2576,7 @@ REQ
 
 			if (is_array($arIBlockCache[$OF_IBLOCK_ID]))
 			{
-				if(!array_key_exists($OF_ELEMENT_ID, $arElementCache))
+				if(!isset($arElementCache[$OF_ELEMENT_ID]))
 				{
 					$OF_PROP_ID = $arIBlockCache[$OF_IBLOCK_ID]["SKU_PROPERTY_ID"];
 					$rsOffer = CIBlockElement::GetList(
@@ -2594,14 +2598,31 @@ REQ
 					if($arOffer = $rsOffer->Fetch())
 					{
 						$arOffer["PROPERTY_".$OF_PROP_ID."_IBLOCK_SECTION_CODE"] = '';
-						if (intval($arOffer["PROPERTY_".$OF_PROP_ID."_IBLOCK_SECTION_ID"]) > 0)
+						$sectionId = (int)$arOffer["PROPERTY_".$OF_PROP_ID."_IBLOCK_SECTION_ID"];
+						if ($sectionId > 0)
 						{
-							$rsSections = CIBlockSection::GetByID($arOffer["PROPERTY_".$OF_PROP_ID."_IBLOCK_SECTION_ID"]);
-							if ($arSection = $rsSections->Fetch())
+							if (!isset($arSectionCache[$sectionId]))
 							{
-								$arOffer["PROPERTY_".$OF_PROP_ID."_IBLOCK_SECTION_CODE"] = $arSection['CODE'];
+								$arSectionCache[$sectionId] = array(
+									'ID' => $sectionId,
+									'CODE' => ''
+								);
+								$rsSections = CIBlockSection::GetList(
+									array(),
+									array('ID' => $sectionId),
+									false,
+									array('ID', 'IBLOCK_ID', 'CODE')
+								);
+								if ($arSection = $rsSections->Fetch())
+								{
+									$arSectionCache[$sectionId]['CODE'] = $arSection['CODE'];
+								}
+								unset($arSection);
+								unset($rsSections);
 							}
+							$arOffer["PROPERTY_".$OF_PROP_ID."_IBLOCK_SECTION_CODE"] = $arSectionCache[$sectionId]['CODE'];
 						}
+						unset($sectionId);
 
 						$arElementCache[$OF_ELEMENT_ID] = array(
 							"LANG_DIR" => $arOffer["LANG_DIR"],
@@ -3348,7 +3369,7 @@ REQ
 		}
 	}
 
-	function _Order($by, $order, $default_order, $nullable = true)
+	public static function _Order($by, $order, $default_order, $nullable = true)
 	{
 		static $arOrder = array(
 			"nulls,asc"  => array(true,  "asc" ),
@@ -3601,7 +3622,7 @@ REQ
 		return array_sum($arDate) == 0;
 	}
 
-	function _Upper($str)
+	public static function _Upper($str)
 	{
 		return $str;
 	}
@@ -3611,7 +3632,7 @@ REQ
 		return false;
 	}
 
-	function _NotEmpty($column)
+	public static function _NotEmpty($column)
 	{
 		return "";
 	}
@@ -3722,9 +3743,20 @@ REQ
 			$absPath = $io->CombinePath($_SERVER["DOCUMENT_ROOT"], $normPath);
 			if ($io->ValidatePathString($absPath) && $io->FileExists($absPath))
 			{
-				$perm = $APPLICATION->GetFileAccessPermission($normPath);
-				if ($perm >= "W")
-					$result = CFile::MakeFileArray($io->GetPhysicalName($absPath));
+				$physicalName = $io->GetPhysicalName($absPath);
+				$uploadDir = $io->GetPhysicalName(preg_replace("#[\\\\\\/]+#", "/", $_SERVER['DOCUMENT_ROOT'].'/'.(COption::GetOptionString('main', 'upload_dir', 'upload')).'/'));
+				if (strpos($physicalName, $uploadDir) === 0)
+				{
+					$result = CFile::MakeFileArray($physicalName);
+				}
+				else
+				{
+					$perm = $APPLICATION->GetFileAccessPermission($normPath);
+					if ($perm >= "W")
+					{
+						$result = CFile::MakeFileArray($physicalName);
+					}
+				}
 			}
 		}
 
@@ -3755,7 +3787,7 @@ REQ
 			$io = CBXVirtualIo::GetInstance();
 			$absPath = $io->CombinePath("/", $file_array["tmp_name"]);
 			$tmpPath = CTempFile::GetAbsoluteRoot()."/";
-			if (strpos($absPath, $tmpPath) === 0)
+			if (strpos($absPath, $tmpPath) === 0 || (($absPath = ltrim($absPath, "/")) && strpos($absPath, $tmpPath) === 0))
 			{
 				$result = $file_array;
 				$result["tmp_name"] = $absPath;
@@ -3768,9 +3800,10 @@ REQ
 		{
 			$io = CBXVirtualIo::GetInstance();
 			$normPath = $io->CombinePath("/", $file_array["tmp_name"]);
-			$absPath = $io->CombinePath($_SERVER["DOCUMENT_ROOT"], $normPath);
+			$absPath = $io->CombinePath(CTempFile::GetAbsoluteRoot(), $normPath);
 			$tmpPath = CTempFile::GetAbsoluteRoot()."/";
-			if (strpos($absPath, $tmpPath) === 0)
+			if (strpos($absPath, $tmpPath) === 0 && $io->FileExists($absPath) ||
+				($absPath = $io->CombinePath($_SERVER["DOCUMENT_ROOT"], $normPath)) && strpos($absPath, $tmpPath) === 0)
 			{
 				$result = $file_array;
 				$result["tmp_name"] = $absPath;

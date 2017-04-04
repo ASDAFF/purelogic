@@ -43,6 +43,51 @@ if (check_bitrix_sessid())
 		$searchResults = array();
 
 		if (
+			isset($_POST['ADDITIONAL_SEARCH'])
+			&& $_POST['ADDITIONAL_SEARCH'] == 'Y'
+		)
+		{
+			$searchResults["USERS"] = array();
+			if (
+				isset($_POST['NETWORK_SEARCH'])
+				&& $_POST['NETWORK_SEARCH'] == 'Y'
+				&& \Bitrix\Main\Loader::includeModule('socialservices')
+			)
+			{
+				$network = new \Bitrix\Socialservices\Network();
+				if ($network->isEnabled())
+				{
+					$result = $network->searchUser($search);
+					if ($result)
+					{
+						foreach ($result as $user)
+						{
+							$user = \CSocNetLogDestination::formatNetworkUser($user, array(
+								"NAME_TEMPLATE" => $nameTemplate,
+							));
+							$searchResults["USERS"][$user['id']] = $user;
+						}
+
+						$userList = \Bitrix\Main\UserTable::getList(array(
+							"select" => array("ID", "XML_ID"),
+							"filter" => array(
+								"=EXTERNAL_AUTH_ID" => "replica",
+								"=XML_ID" => array_keys($searchResults["USERS"]),
+							),
+						));
+						while ($user = $userList->fetch())
+						{
+							unset($searchResults["USERS"][$user["XML_ID"]]);
+						}
+					}
+				}
+			}
+
+			echo CUtil::PhpToJsObject($searchResults);
+			return;
+		}
+
+		if (
 			!isset($_POST['USER_SEARCH'])
 			|| $_POST['USER_SEARCH'] != 'N'
 		)
@@ -51,7 +96,7 @@ if (check_bitrix_sessid())
 				array(
 					"SEARCH" => $search,
 					"NAME_TEMPLATE" => $nameTemplate,
-					"SELF" => true,
+					"SELF" => (!isset($_POST['SELF']) || $_POST['SELF'] != 'N'),
 					"EMPLOYEES_ONLY" => (isset($_POST['EXTRANET_SEARCH']) && $_POST['EXTRANET_SEARCH'] == "I"),
 					"EXTRANET_ONLY" => (isset($_POST['EXTRANET_SEARCH']) && $_POST['EXTRANET_SEARCH'] == "E"),
 					"DEPARTAMENT_ID" => (
@@ -61,7 +106,8 @@ if (check_bitrix_sessid())
 						: false
 					),
 					"EMAIL_USERS" => (isset($_POST['EMAIL_USERS']) && $_POST['EMAIL_USERS'] == 'Y'),
-					"CRMEMAIL_USERS" => (isset($_POST['CRMEMAIL']) && $_POST['CRMEMAIL'] == 'Y')
+					"CRMEMAIL_USERS" => (isset($_POST['CRMEMAIL']) && $_POST['CRMEMAIL'] == 'Y'),
+					"NETWORK_SEARCH" => (isset($_POST['NETWORK_SEARCH']) && $_POST['NETWORK_SEARCH'] == 'Y'),
 				),
 				$searchModified
 			);
@@ -81,7 +127,7 @@ if (check_bitrix_sessid())
 					array(
 						"SEARCH" => $searchConverted,
 						"NAME_TEMPLATE" => $nameTemplate,
-						"SELF" => true,
+						"SELF" => (!isset($_POST['SELF']) || $_POST['SELF'] != 'N'),
 						"EMPLOYEES_ONLY" => (isset($_POST['EXTRANET_SEARCH']) && $_POST['EXTRANET_SEARCH'] == "I"),
 						"EXTRANET_ONLY" => (isset($_POST['EXTRANET_SEARCH']) && $_POST['EXTRANET_SEARCH'] == "E"),
 						"DEPARTAMENT_ID" => (
@@ -245,7 +291,7 @@ if (check_bitrix_sessid())
 
 					if (!empty($arContact['PHOTO']) && intval($arContact['PHOTO']) > 0)
 					{
-						$arImg = CFile::ResizeImageGet($arContact['PHOTO'], array('width' => 30, 'height' => 30), BX_RESIZE_IMAGE_EXACT);
+						$arImg = CFile::ResizeImageGet($arContact['PHOTO'], array('width' => 100, 'height' => 100), BX_RESIZE_IMAGE_EXACT);
 						$arContacts['CRMCONTACT'.$arContact['ID']]['avatar'] = $arImg['src'];
 					}
 				}
@@ -284,7 +330,7 @@ if (check_bitrix_sessid())
 
 					if (!empty($arCompany['LOGO']) && intval($arCompany['LOGO']) > 0)
 					{
-						$arImg = CFile::ResizeImageGet($arCompany['LOGO'], array('width' => 30, 'height' => 30), BX_RESIZE_IMAGE_EXACT);
+						$arImg = CFile::ResizeImageGet($arCompany['LOGO'], array('width' => 100, 'height' => 100), BX_RESIZE_IMAGE_EXACT);
 						$arCompanies['CRMCOMPANY'.$arCompany['ID']]['avatar'] = $arImg['src'];
 					}
 				}

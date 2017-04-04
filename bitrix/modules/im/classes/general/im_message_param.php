@@ -233,8 +233,6 @@ class CIMMessageParam
 		foreach ($params as $mid => $param)
 		{
 			$arMessages[$mid]['params'] = $param;
-			if (isset($arMessages[$mid]['params']['URL_ID']))
-				unset($arMessages[$mid]['params']['URL_ID']);
 		}
 		$arMessages = CIMMessageLink::prepareShow($arMessages, $params);
 		$arPullMessage['params'] = CIMMessenger::PrepareParamsForPull($arMessages[$messageId]['params']);
@@ -277,7 +275,7 @@ class CIMMessageParam
 		return true;
 	}
 
-	public static function Get($messageId, $params = false)
+	public static function Get($messageId, $paramName = false)
 	{
 		$arResult = array();
 		if (is_array($messageId))
@@ -308,9 +306,9 @@ class CIMMessageParam
 		$filter = array(
 			'=MESSAGE_ID' => $messageId,
 		);
-		if ($params && strlen($params) > 0)
+		if ($paramName && strlen($paramName) > 0)
 		{
-			$filter['=PARAM_NAME'] = $params;
+			$filter['=PARAM_NAME'] = $paramName;
 		}
 		$messageParameters = IM\Model\MessageParamTable::getList(array(
 			'select' => array('ID', 'MESSAGE_ID', 'PARAM_NAME', 'PARAM_VALUE', 'PARAM_JSON'),
@@ -346,6 +344,11 @@ class CIMMessageParam
 		else
 		{
 			$arResult = self::PrepareValues($arResult[$messageId]);
+		}
+		
+		if ($paramName)
+		{
+			$arResult = isset($arResult[$paramName])? $arResult[$paramName]: null; 
 		}
 
 		return $arResult;
@@ -411,6 +414,24 @@ class CIMMessageParam
 					$arValues[$key] = $arDefault[$key];
 				}
 			}
+			else if ($key == 'CONNECTOR_MID')
+			{
+				if (is_array($value) && !empty($value))
+				{
+					foreach ($value as $k => $v)
+					{
+						$arValues[$key][$k] = $v;
+					}
+				}
+				else if (!is_array($value) && strlen($value) > 0)
+				{
+					$arValues[$key] = $value;
+				}
+				else
+				{
+					$arValues[$key] = $arDefault[$key];
+				}
+			}
 			else if ($key == 'ATTACH')
 			{
 				if (isset($value))
@@ -422,7 +443,11 @@ class CIMMessageParam
 					$arValues[$key] = $arDefault[$key];
 				}
 			}
-			else if ($key == 'CLASS' || $key == 'CONNECTOR_MID')
+			else if ($key == 'CLASS')
+			{
+				$arValues[$key] = isset($value[0])? $value[0]: '';
+			}
+			else if ($key == 'CONNECTOR_MID')
 			{
 				$arValues[$key] = $value;
 			}
@@ -479,6 +504,7 @@ class CIMMessageParam
 			'ATTACH' => Array(),
 			'KEYBOARD' => 'N',
 			'KEYBOARD_UID' => 0,
+			'CONNECTOR_MID' => Array(),
 			'IS_DELETED' => 'N',
 			'IS_EDITED' => 'N',
 			'CAN_ANSWER' => 'N',
@@ -636,7 +662,7 @@ class CIMMessageParamAttach
 			return false;
 
 		$sanitizer = new CBXSanitizer();
-		$sanitizer->SetLevel(CBXSanitizer::SECURE_LEVEL_MIDDLE);
+		$sanitizer->SetLevel(CBXSanitizer::SECURE_LEVEL_LOW);
 		$sanitizer->ApplyHtmlSpecChars(false);
 
 		$html = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $html);
@@ -697,6 +723,10 @@ class CIMMessageParamAttach
 			if (isset($grid['WIDTH']) && intval($grid['WIDTH']) > 0)
 			{
 				$result['WIDTH'] = intval($grid['WIDTH']);
+			}
+			if (isset($grid['HEIGHT']) && intval($grid['HEIGHT']) > 0)
+			{
+				$result['HEIGHT'] = intval($grid['HEIGHT']);
 			}
 			if (isset($grid['USER_ID']) && intval($grid['USER_ID']) > 0)
 			{
@@ -789,7 +819,7 @@ class CIMMessageParamAttach
 		return true;
 	}
 
-	public function AddDelimiter($params)
+	public function AddDelimiter($params = Array())
 	{
 		$add = Array();
 

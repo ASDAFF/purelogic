@@ -1538,7 +1538,7 @@ class CIBlockDocument
 			"file" => array("Name" => GetMessage("BPCGHLP_PROP_FILE"), "BaseType" => "file"),
 		);
 
-		$ignoredTypes = array('map_yandex');
+		$ignoredTypes = array('map_yandex', 'directory', 'SectionAuto', 'SKU', 'EAutocomplete');
 
 		//TODO: remove class_exists, add version_control
 		if (class_exists('\Bitrix\Bizproc\BaseType\InternalSelect'))
@@ -1558,6 +1558,12 @@ class CIBlockDocument
 			}
 
 			$t = $ar["PROPERTY_TYPE"].":".$ar["USER_TYPE"];
+
+			if($t == "S:ECrm")
+			{
+				$t = "E:ECrm";
+			}
+
 			if (COption::GetOptionString("bizproc", "SkipNonPublicCustomTypes", "N") == "Y"
 				&& !array_key_exists("GetPublicEditHTML", $ar) || $t == "S:UserID" || $t == "S:DateTime" || $t == "S:Date")
 				continue;
@@ -1583,6 +1589,12 @@ class CIBlockDocument
 			{
 				$arResult[$t]["BaseType"] = "int";
 				$arResult[$t]['typeClass'] = '\Bitrix\Iblock\BizprocType\UserTypePropertyDiskFile';
+			}
+			elseif($t == 'E:ECrm')
+			{
+				$arResult[$t]["BaseType"] = "string";
+				$arResult[$t]["Complex"] = true;
+				$arResult[$t]['typeClass'] = '\Bitrix\Iblock\BizprocType\ECrm';
 			}
 		}
 
@@ -1833,13 +1845,22 @@ class CIBlockDocument
 					{
 						foreach($value as $file)
 						{
-							$files[] = CFile::MakeFileArray($file);
+							$makeFileArray = CFile::MakeFileArray($file);
+							if($makeFileArray)
+								$files[] = $makeFileArray;
 						}
 					}
 					else
-						$files[] = CFile::MakeFileArray($value);
+					{
+						$makeFileArray = CFile::MakeFileArray($value);
+						if($makeFileArray)
+							$files[] = $makeFileArray;
+					}
 				}
-				$arFields[$key] = $files;
+				if($files)
+					$arFields[$key] = $files;
+				else
+					$arFields[$key] = array(array('del' => 'Y'));
 			}
 			elseif($arDocumentFields[$key]["Type"] == "S:DiskFile")
 			{
