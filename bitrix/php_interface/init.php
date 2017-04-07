@@ -46,4 +46,30 @@ class SectionUpdate
     }
 }
 
+
+// регистрируем обработчик
+AddEventHandler("iblock", "OnBeforeIBlockElementUpdate", Array("ElementUpdate", "OnBeforeIBlockElementUpdateHandler"));
+
+class ElementUpdate
+{
+    // создаем обработчик события "OnBeforeIBlockElementUpdate"
+    function OnBeforeIBlockElementUpdateHandler(&$arFields)
+    {
+        if($arFields["ID"]){
+
+            $db_props = CIBlockElement::GetProperty($arFields['IBLOCK_ID'], $arFields['ID'], array("sort" => "asc"), Array("CODE"=>"SAYT_SORTIROVKA"));
+            if($ar_props = $db_props->Fetch()){
+                    $el = new CIBlockElement;
+                    $arLoadProductArray = Array(
+                        "SORT" => $ar_props['VALUE']
+                    );
+
+                    $PRODUCT_ID = $arFields["ID"];  // изменяем элемент с кодом (ID) 2
+                    $el->Update($PRODUCT_ID, $arLoadProductArray);
+
+            }
+        }
+    }
+}
+
 ?>
