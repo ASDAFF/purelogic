@@ -34,15 +34,7 @@ class SectionUpdate
 {
     function OnBeforeIBlockSectionUpdateHandler(&$arFields)
     {
-        $bs = new CIBlockSection;
-        $arPICTURE["MODULE_ID"] = "iblock";
-        $arFields = Array("SORT" => $arFields['UF_SORTIROVKA']);
-
-        if($arFields['ID'] > 0)
-        {
-            $bs->Update($arFields['ID'], $arFields);
-        }
-
+        $arFields['SORT'] = $arFields['UF_SORTIROVKA'];
     }
 }
 
@@ -59,14 +51,7 @@ class ElementUpdate
 
             $db_props = CIBlockElement::GetProperty($arFields['IBLOCK_ID'], $arFields['ID'], array("sort" => "asc"), Array("CODE"=>"SAYT_SORTIROVKA"));
             if($ar_props = $db_props->Fetch()){
-                    $el = new CIBlockElement;
-                    $arLoadProductArray = Array(
-                        "SORT" => $ar_props['VALUE']
-                    );
-
-                    $PRODUCT_ID = $arFields["ID"];  // изменяем элемент с кодом (ID) 2
-                 //   $el->Update($PRODUCT_ID, $arLoadProductArray);
-
+                $arFields['SORT'] = $ar_props['VALUE'];
             }
         }
     }
