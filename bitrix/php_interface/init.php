@@ -65,7 +65,7 @@ class ElementUpdate
                     );
 
                     $PRODUCT_ID = $arFields["ID"];  // изменяем элемент с кодом (ID) 2
-                    $el->Update($PRODUCT_ID, $arLoadProductArray);
+                 //   $el->Update($PRODUCT_ID, $arLoadProductArray);
 
             }
         }
