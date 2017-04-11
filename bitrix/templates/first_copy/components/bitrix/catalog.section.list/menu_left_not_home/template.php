@@ -44,7 +44,14 @@ $strSectionEdit = CIBlock::GetArrayByID($arParams["IBLOCK_ID"], "SECTION_EDIT");
 $strSectionDelete = CIBlock::GetArrayByID($arParams["IBLOCK_ID"], "SECTION_DELETE");
 $arSectionDeleteParams = array("CONFIRM" => GetMessage('CT_BCSL_ELEMENT_DELETE_CONFIRM'));
 
-?><div class="<? echo $arCurView['CONT']; ?>"><?
+
+?>
+<div class="for_left_b">
+	<div class="togle_wr hidden-lg hidden-md">
+		<a class="menu-toggle main_menu hidden-lg hidden-md" href="#"><span>Menu</span></a>
+		<p>Все категории</p>
+	</div>
+<div class="<? echo $arCurView['CONT']; ?>"><?
 
 if (0 < $arResult["SECTIONS_COUNT"])
 {
@@ -66,7 +73,6 @@ if (0 < $arResult["SECTIONS_COUNT"])
 				if($arSection["DEPTH_LEVEL"]==1){?>
 				
 				<li data-id="uli_<?=$arSection["ID"];?>">
-
 					<span style="background-image: url(<?=$oneImgSrctionIco?>)"></span>
 					<div class="text-name-section" <? if(strlen($arSection['NAME']) > 16){?>style="padding:0px"<?}?>><?=$arSection['NAME']?></div>
 				</li>
@@ -225,4 +231,6 @@ jQuery('.lftnnv.section_leftnav > ul > li').each(function(){
 			margin-left: 187px;
 		}
 	</style>
+</div>
+
 </div>

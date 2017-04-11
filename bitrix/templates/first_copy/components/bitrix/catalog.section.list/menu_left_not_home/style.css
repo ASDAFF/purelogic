@@ -51,3 +51,8 @@
 .new_left_menu>li:hover>.text-name-section{
     color:#fff;
 }
+.for_left_b{
+    width: 180px;
+    position: absolute;
+    left: -180px;
+}

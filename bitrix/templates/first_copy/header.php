@@ -551,14 +551,11 @@ $dir = $APPLICATION->GetCurDir();
 <? if ($APPLICATION->GetCurPage(false) !== '/catalog/'&&$APPLICATION->GetCurPage(false) !== '/services/'&&$APPLICATION->GetCurPage(false) !== '/'&&$APPLICATION->GetCurPage()!=="/vhod/registration.php"&&!CSite::InDir('/personal/')): ?> 
 <?if (!defined('ERROR_404') || ERROR_404 != 'Y') {?>
 <section class="main_katalog catalog_categories_wr">
-<div class="container">
+<div class="container" style="position: relative">
 <?if(!$_GET["q"]){?>
 <div class="row">
-			<div class="col-md-2 for_left_b">
-			<div class="togle_wr hidden-lg hidden-md"> 
-		<a class="menu-toggle main_menu hidden-lg hidden-md" href="#"><span>Menu</span></a>
-		<p>Все категории</p>
-	</div>
+
+
 			<?$APPLICATION->IncludeComponent(
 	"bitrix:catalog.section.list", 
 	"menu_left_not_home", 
@@ -613,9 +610,9 @@ $dir = $APPLICATION->GetCurDir();
 	false
 ); */
 					?>
-</div>
 
-<div class="col-md-10 ">
+
+<div class="col-md-12 ">
 
 		<div class="col-md-12 padding_0 breadcrumb-height">
 				<?$APPLICATION->IncludeComponent(
