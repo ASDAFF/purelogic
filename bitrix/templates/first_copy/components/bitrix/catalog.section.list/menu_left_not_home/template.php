@@ -49,7 +49,7 @@ $arSectionDeleteParams = array("CONFIRM" => GetMessage('CT_BCSL_ELEMENT_DELETE_C
 <div class="for_left_b">
 	<div class="togle_wr hidden-lg hidden-md">
 		<a class="menu-toggle main_menu hidden-lg hidden-md" href="#"><span>Menu</span></a>
-		<p>Все категории</p>
+		<p>Р’СЃРµ РєР°С‚РµРіРѕСЂРёРё</p>
 	</div>
 <div class="<? echo $arCurView['CONT']; ?>"><?
 
