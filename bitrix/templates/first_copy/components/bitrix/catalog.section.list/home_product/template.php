@@ -73,10 +73,10 @@ foreach($arResult['SECTIONS'] as $s){
 
 
 
-              <? if (!($i % 4) and $i != 0){print '</div><div class="line"></div>';}?>
-              <? if (!($i % 4)){print '<div class="row">';}?>
+              <? if (!($i % 3) and $i != 0){print '</div><div class="line"></div>';}?>
+              <? if (!($i % 3)){print '<div class="row">';}?>
 
-                    <div class="col-md-3">
+                    <div class="col-md-4">
 
                         <ul id="pics-<?=$arResult["ID"]?>-<?=$k;?>">
                             <? foreach($arResult['MORE_PHOTO'] as $img){?>

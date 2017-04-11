@@ -680,7 +680,7 @@ footer::before{
 }
 .social_icon li a{
 	
-	font-size: 30px;
+	font-size: 20px;
 	border: 1px solid #5a5a5a;
 	color: #FFF;
 	padding: 8px 15px;
@@ -697,8 +697,8 @@ footer::before{
     display: inline-block;
     padding: 0px 1px;
     margin-top: -10px;
-    width: 60px;
-    height: 56px;
+    width: 55px;
+    height: 44px;
     padding: 11px;
     position: relative;
 }
@@ -707,7 +707,7 @@ footer::before{
     display: inline-block;
     width: 100%;
     background-size: contain;
-    height: 30px;
+    height: 20px;
     background-position: center;
     background-repeat: no-repeat;
 
@@ -717,14 +717,14 @@ footer::before{
 }
  
 .social_icon li .vk{
-    font-size: 0;
-    display: inline-block;
-    padding: 0px 1px;
-    margin-top: -10px;
-    width: 60px;
-    height: 56px;
-    padding: 11px;
-    position: relative;
+	font-size: 0;
+	display: inline-block;
+	padding: 0px 1px;
+	margin-top: -10px;
+	width: 55px;
+	height: 44px;
+	padding: 11px;
+	position: relative;
     
 }
 .vk_icon{
@@ -732,7 +732,7 @@ footer::before{
     display: inline-block;
     width: 100%;
     background-size: contain;
-    height: 30px;
+    height: 20px;
     background-position: center;
     background-repeat: no-repeat;
 
