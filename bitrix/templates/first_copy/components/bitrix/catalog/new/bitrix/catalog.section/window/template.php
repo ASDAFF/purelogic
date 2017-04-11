@@ -57,30 +57,39 @@ foreach ($arResult['ITEMS'] as $arItem) {
 				<h4><a href="<?=$arItem['DETAIL_PAGE_URL'] ?>"><?=$arItem['NAME'] ?> </a></h4>
 			</div>
 
+			<div class="price-element-product"><?=number_format($price['PRICE'],0,'',' ')?> <?if($price['CURRENCY'] == 'RUB'){?><span class="green">₽</span><?}else{ print $price['CURRENCY'];}?></div>
+
+			<form action="" method="get" class="add_in_card">
+				<input type="text" name="quantity" value="1">
+				<input type="submit" value="">
+				<input name="action" type="hidden" value="ADD2BASKET">
+				<input type="hidden" name="id" value="<?= $arItem["ID"]; ?>">
+			</form>
+
 			<div class="btn-product-docs-element">
 				<?
-					$arPropBtn = array();
-					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_CHERTEZH"]["VALUE"],'Чертёж');
-					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_VIDEO"]["VALUE"],'Видео');
-					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_INSTRUKTSIYA"]["VALUE"],'Инструкция');
-					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_DRAYVER"]["VALUE"],'Драйвер');
-					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_DLINYREZA"]["VALUE"],'Длины реза');
-					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_PO"]["VALUE"],'ПО');
-					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_3DMODEL"]["VALUE"],'3D-модель');
-					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_ARKHIVPO"]["VALUE"],'Архив ПО');
-					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_DEMOVERSIYA"]["VALUE"],'Демо-версия');
-					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOUSTANOVKE"]["VALUE"],'Руководство по установке');
-					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPONASTROYKE"]["VALUE"],'Руководство по настройке');
-					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOEKSPL"]["VALUE"],'Руководство по эксплуатации');
-					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_POLEZAYAINFORMATSIYA"]["VALUE"],'Полезная информация');
-					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_USERMANUAL"]["VALUE"],'User Manual');
-					$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_INSTALLATIONGUIDE"]["VALUE"],'Installation Guide');
-					$arPropBtnEnd = array();
-					foreach($arPropBtn as $v){
-						if(strlen($v[0]) >= 1){
-							$arPropBtnEnd[] = array($v[0],$v[1]);
-						}
+				$arPropBtn = array();
+				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_CHERTEZH"]["VALUE"],'Чертёж');
+				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_VIDEO"]["VALUE"],'Видео');
+				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_INSTRUKTSIYA"]["VALUE"],'Инструкция');
+				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_DRAYVER"]["VALUE"],'Драйвер');
+				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_DLINYREZA"]["VALUE"],'Длины реза');
+				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_PO"]["VALUE"],'ПО');
+				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_3DMODEL"]["VALUE"],'3D-модель');
+				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_ARKHIVPO"]["VALUE"],'Архив ПО');
+				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_DEMOVERSIYA"]["VALUE"],'Демо-версия');
+				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOUSTANOVKE"]["VALUE"],'Руководство по установке');
+				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPONASTROYKE"]["VALUE"],'Руководство по настройке');
+				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOEKSPL"]["VALUE"],'Руководство по эксплуатации');
+				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_POLEZAYAINFORMATSIYA"]["VALUE"],'Полезная информация');
+				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_USERMANUAL"]["VALUE"],'User Manual');
+				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_INSTALLATIONGUIDE"]["VALUE"],'Installation Guide');
+				$arPropBtnEnd = array();
+				foreach($arPropBtn as $v){
+					if(strlen($v[0]) >= 1){
+						$arPropBtnEnd[] = array($v[0],$v[1]);
 					}
+				}
 
 
 				?>
@@ -91,23 +100,23 @@ foreach ($arResult['ITEMS'] as $arItem) {
 						<tr>
 							<td>
 								<? if(isset($oneProp[0])):?>
-								<div class="button-user-prop">
-									<a href="<?=$oneProp[0] ?>"><?=$oneProp[1]?></a>
-								</div>
+									<div class="button-user-prop">
+										<a href="<?=$oneProp[0] ?>"><?=$oneProp[1]?></a>
+									</div>
 								<? endif; ?>
 							</td>
 							<td>
 								<? if(isset($arPropBtnEnd[0])):?>
-								<div class="button-user-prop toggle">
-									<a href="#">Еще <span class="">▼</span></a>
-								</div>
+									<div class="button-user-prop toggle">
+										<a href="#">Еще <span class="">▼</span></a>
+									</div>
 								<? endif; ?>
 							</td>
 						</tr>
 					</table>
 					<ul>
 						<? foreach($arPropBtnEnd as $p){ ?>
-						<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
+							<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
 						<?}?>
 					</ul>
 				<?}else{?>
@@ -118,9 +127,9 @@ foreach ($arResult['ITEMS'] as $arItem) {
 							<tr>
 								<td>
 									<? if(isset($arPropBtnEnd[0][0])):?>
-									<div class="button-user-prop">
-										<a href="<?=$arPropBtnEnd[0][0]?>"><?=$arPropBtnEnd[0][1]?></a>
-									</div>
+										<div class="button-user-prop">
+											<a href="<?=$arPropBtnEnd[0][0]?>"><?=$arPropBtnEnd[0][1]?></a>
+										</div>
 									<? endif; ?>
 								</td>
 								<td></td>
@@ -128,9 +137,9 @@ foreach ($arResult['ITEMS'] as $arItem) {
 							<tr>
 								<td>
 									<? if(isset($arPropBtnEnd[1][0])):?>
-									<div class="button-user-prop">
-										<a href="<?=$arPropBtnEnd[1][0]?>"><?=$arPropBtnEnd[1][1]?></a>
-									</div>
+										<div class="button-user-prop">
+											<a href="<?=$arPropBtnEnd[1][0]?>"><?=$arPropBtnEnd[1][1]?></a>
+										</div>
 									<? endif; ?>
 								</td>
 								<td></td>
@@ -144,57 +153,49 @@ foreach ($arResult['ITEMS'] as $arItem) {
 						unset($arPropBtnEnd[1]);
 						unset($arPropBtnEnd[2]);
 						?>
-				<table>
-					<tr>
-					<td>
-						<? if(isset($output[0][0])):?>
-						<div class="button-user-prop">
-						<a href="<?=$output[0][0]?>"><?=$output[0][1]?></a>
-						</div>
-						<? endif; ?>
-					</td>
-					<td>
-						<? if(isset($output[1][0])):?>
-						<div class="button-user-prop">
-						<a href="<?=$output[1][0]?>"><?=$output[1][1]?></a>
-						</div>
-						<? endif; ?>
-					</td>
-					</tr>
-					<tr>
-					<td>
-						<? if(isset($output[2][0])):?>
-						<div class="button-user-prop">
-						<a href="<?=$output[2][0]?>"><?=$output[2][1]?></a>
-						</div>
-						<? endif; ?>
-					</td>
-					<td>
-						<? if(isset($arPropBtnEnd[3])):?>
-						<div class="button-user-prop toggle">
-						<a href="#">Еще <span class="">▼</span></a>
-						</div>
-						<? endif; ?>
-					</td>
-					</tr>
-				</table>
-				<ul>
-					<? foreach($arPropBtnEnd as $p){ ?>
-						<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
-					<?}?>
-				</ul>
+						<table>
+							<tr>
+								<td>
+									<? if(isset($output[0][0])):?>
+										<div class="button-user-prop">
+											<a href="<?=$output[0][0]?>"><?=$output[0][1]?></a>
+										</div>
+									<? endif; ?>
+								</td>
+								<td>
+									<? if(isset($output[1][0])):?>
+										<div class="button-user-prop">
+											<a href="<?=$output[1][0]?>"><?=$output[1][1]?></a>
+										</div>
+									<? endif; ?>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<? if(isset($output[2][0])):?>
+										<div class="button-user-prop">
+											<a href="<?=$output[2][0]?>"><?=$output[2][1]?></a>
+										</div>
+									<? endif; ?>
+								</td>
+								<td>
+									<? if(isset($arPropBtnEnd[3])):?>
+										<div class="button-user-prop toggle">
+											<a href="#">Еще <span class="">▼</span></a>
+										</div>
+									<? endif; ?>
+								</td>
+							</tr>
+						</table>
+						<ul>
+							<? foreach($arPropBtnEnd as $p){ ?>
+								<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
+							<?}?>
+						</ul>
 					<?}?>
 				<?}?>
 
 			</div>
-			<div class="price-element-product"><?=number_format($price['PRICE'],0,'',' ')?> <?if($price['CURRENCY'] == 'RUB'){?><span class="green">₽</span><?}else{ print $price['CURRENCY'];}?></div>
-
-			<form action="" method="get" class="add_in_card">
-				<input type="text" name="quantity" value="1">
-				<input type="submit" value="">
-				<input name="action" type="hidden" value="ADD2BASKET">
-				<input type="hidden" name="id" value="<?= $arItem["ID"]; ?>">
-			</form>
 
 			<div class="clear"></div>
 

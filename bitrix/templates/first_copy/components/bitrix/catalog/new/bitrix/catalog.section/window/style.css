@@ -105,6 +105,7 @@
 
 .btn-product-docs-element{
     position: relative;
+    margin-bottom: 10px;
 }
 
 .btn-product-docs-element > ul{
@@ -127,7 +128,6 @@
 
 .add_in_card{
     position: relative;
-    margin-bottom: 10px;
     margin-left: 2px;
 }
 .add_in_card input[type="submit"]{
