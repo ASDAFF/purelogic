@@ -326,7 +326,7 @@ header {
     margin-top: 15px;
     display: inline-block;
     float: left;
-    margin-right: 30px;
+    margin-right: 20px;
 	margin-left:0px;
 }
 .select_language .wSelect-theme-classic.wSelect {
@@ -377,7 +377,7 @@ header {
 .main_logo_menu  ul{margin:0px; padding:0px;}
 .main_logo {
     margin-top: 70px;
-    z-index: 109;
+    z-index: 20;
     width: 100%;
     position: absolute;
     min-height: 40px;

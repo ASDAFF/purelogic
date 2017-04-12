@@ -307,8 +307,8 @@ $(this).append($("#"+$(this).attr("data-id")));
 						<div class="korzina">
 						<div id="cucuca">
 							<?$APPLICATION->IncludeComponent(
-	"bitrix:sale.basket.basket.line", 
-	"new", 
+	"bitrix:sale.basket.basket.line",
+	"new",
 	array(
 		"PATH_TO_BASKET" => SITE_DIR."cart/",
 		"PATH_TO_PERSONAL" => SITE_DIR."personal/",

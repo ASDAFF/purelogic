@@ -568,20 +568,20 @@ $(".obr_zvon_a").click(function() {
 
 //korzina
 $("form.add_in_card").submit(function(e) {
-var msg   = $(this).serialize();
 		$.ajax({
 			type: "GET",
-			url: "",
+			url: "/ajax/add2basket.php",
 			data: $(this).serialize()
 		}).done(function(data) {
-		$("#cucuca").html($(data).find("#cucuca").html());
-	
+		$(".cnea").text($('.cnea',data).text());
+		$(".korzina_price").text($('.korzina_price',data).text());
 			  $(".korzina_podskazka").slideToggle();
 			  $('html, body').animate({scrollTop: 0},500);
 		});
 		e.preventDefault();
 		return false;
-	});
+});
+
 $(".add_to_group").click(function(e){
 e.preventDefault();
 

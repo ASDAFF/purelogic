@@ -564,7 +564,8 @@ header{
     background-color: #cfcfd0;
     height: 60px;
     z-index: 20;
-    bottom: -72px;
+    bottom: -80px;
+	left: -45px;
     padding: 10px;
     display: none;
 }

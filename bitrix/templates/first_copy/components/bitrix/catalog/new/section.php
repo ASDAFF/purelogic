@@ -225,7 +225,8 @@ while ($arSect = $rsSect->GetNext())
 
 <div class="clear"></div>
 </div>
-<?$intSectionID = $APPLICATION->IncludeComponent(
+<?
+$intSectionID = $APPLICATION->IncludeComponent(
 	"bitrix:catalog.section",
 	$_SESSION["template"],
 	array(
@@ -323,6 +324,7 @@ while ($arSect = $rsSect->GetNext())
 	),
 	$component
 );?><?
+die();
 $GLOBALS['CATALOG_CURRENT_SECTION_ID'] = $intSectionID;
 unset($basketAction);
 if ($verticalGrid)
