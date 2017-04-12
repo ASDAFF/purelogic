@@ -40,13 +40,13 @@ foreach ($arResult['ITEMS'] as $arItem) {
 			<?
 			if(empty($arItem['PREVIEW_PICTURE']['SRC'])){$arItem['PREVIEW_PICTURE']['SRC'] = SITE_TEMPLATE_PATH.'/img/no_photo.png';} ?>
 			<a href="<?=$arItem['PREVIEW_PICTURE']['SRC']?>" class="image fancybox-one" data-fancybox-group="thumb<?=$arItem['ID']?>">
-				<img style="max-width: 165px;margin-top:10px;" src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>">
+				<img style="max-width: 165px;margin-top:10px;" src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>" alt="<?=$arItem['NAME'] ?>">
 			</a>
 
 			<?
 			foreach($arItem["PROPERTIES"]["MORE_PHOTO"]["VALUE"] as $img) {
 				?>
-				<a href="<?=CFile::GetPath($img)?>" class="image fancybox-thumbs" data-fancybox-group="thumb<?=$arItem['ID']?>" style="display: none">
+				<a href="<?=CFile::GetPath($img)?>" data-alt="<?=$arItem['NAME'] ?>" class="image fancybox-thumbs" data-fancybox-group="thumb<?=$arItem['ID']?>" style="display: none">
 					<img src="<?=CFile::GetPath($img);?>">
 				</a>
 			<?}?>
@@ -249,7 +249,15 @@ foreach ($arResult['ITEMS'] as $arItem) {
 				closeBtn  : true,
 				arrows    : true,
 				nextClick : true,
-
+				beforeShow: function () {
+					var imgAlt = $(this.element).find("img").attr("alt");
+					var dataAlt = $(this.element).data("alt");
+					if (imgAlt) {
+						$(".fancybox-image").attr("alt", imgAlt);
+					} else if (dataAlt) {
+						$(".fancybox-image").attr("alt", dataAlt);
+					}
+				},
 				helpers : {
 					thumbs : {
 						width  : 50,

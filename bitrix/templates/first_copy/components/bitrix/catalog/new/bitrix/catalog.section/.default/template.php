@@ -45,10 +45,10 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 				<? endif; ?>
 			</div>
 			<a href="<?=$oneImgSrction?>" class="image fancybox-one" data-fancybox-group="thumb<?=$arSection['ID']?>">
-			<img src="<?=$oneImgSrction;?>">
+			<img src="<?=$oneImgSrction;?>" alt="<?=$arSection['UF_PAPKA_ZAGOLOVOK']?>">
 			</a>
 			<? foreach($arImgSection as $img):?>
-			<a href="/kartinki_dlya_razdelov/<?=$img?>" class="image fancybox-thumbs" data-fancybox-group="thumb<?=$arSection['ID']?>" style="display: none">
+			<a href="/kartinki_dlya_razdelov/<?=$img?>" data-alt="<?=$arSection['UF_PAPKA_ZAGOLOVOK'] ?>" class="image fancybox-thumbs" data-fancybox-group="thumb<?=$arSection['ID']?>" style="display: none">
 				<img src="/kartinki_dlya_razdelov/<?=$img;?>">
 			</a>
 			<?endforeach;?>
@@ -178,6 +178,15 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 				closeBtn  : true,
 				arrows    : true,
 				nextClick : true,
+				beforeShow: function () {
+					var imgAlt = $(this.element).find("img").attr("alt");
+					var dataAlt = $(this.element).data("alt");
+					if (imgAlt) {
+						$(".fancybox-image").attr("alt", imgAlt);
+					} else if (dataAlt) {
+						$(".fancybox-image").attr("alt", dataAlt);
+					}
+				},
 
 				helpers : {
 					thumbs : {
@@ -218,13 +227,13 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 					</div>
 
 					<a href="<?=$arItem['PREVIEW_PICTURE']['SRC']?>" class="image fancybox-one" data-fancybox-group="thumb<?=$arItem['ID']?>">
-						<img src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>">
+						<img src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>" alt="<?=$arItem['NAME'] ?>">
 					</a>
 
 					<?
 					foreach($arItem["PROPERTIES"]["MORE_PHOTO"]["VALUE"] as $img) {
 						?>
-						<a href="<?=CFile::GetPath($img)?>" class="image fancybox-thumbs" data-fancybox-group="thumb<?=$arItem['ID']?>" style="display: none">
+						<a href="<?=CFile::GetPath($img)?>" data-alt="<?=$arItem['NAME'] ?>" class="image fancybox-thumbs" data-fancybox-group="thumb<?=$arItem['ID']?>" style="display: none">
 							<img src="<?=CFile::GetPath($img);?>">
 						</a>
 					<?}?>
@@ -347,7 +356,15 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 					closeBtn  : true,
 					arrows    : true,
 					nextClick : true,
-
+					beforeShow: function () {
+						var imgAlt = $(this.element).find("img").attr("alt");
+						var dataAlt = $(this.element).data("alt");
+						if (imgAlt) {
+							$(".fancybox-image").attr("alt", imgAlt);
+						} else if (dataAlt) {
+							$(".fancybox-image").attr("alt", dataAlt);
+						}
+					},
 					helpers : {
 						thumbs : {
 							width  : 50,
