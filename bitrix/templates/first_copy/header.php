@@ -82,6 +82,19 @@ $(this).append($("#"+$(this).attr("data-id")));
     });
 });
 </script>
+
+	<?if(preg_match('/catalog/',$APPLICATION->GetCurPage(),$preg)):?>
+	<link rel="stylesheet" type="text/css" href="/js/YouTube_PopUp-master/YouTubePopUp.css">
+	<script type="text/javascript" src="/js/YouTube_PopUp-master/YouTubePopUp.jquery.js"></script>
+	<script type="text/javascript">
+		jQuery(function(){
+			jQuery("a[href^='https://www.youtube.com']").YouTubePopUp();
+			jQuery("a[href^='https://youtu.be']").YouTubePopUp();
+		});
+	</script>
+	<?endif;?>
+
+
 	<link rel="shortcut icon" href="/img/favicon/favicon.png" type="image/x-icon">
 	
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
