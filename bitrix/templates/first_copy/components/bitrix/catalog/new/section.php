@@ -324,7 +324,6 @@ $intSectionID = $APPLICATION->IncludeComponent(
 	),
 	$component
 );?><?
-die();
 $GLOBALS['CATALOG_CURRENT_SECTION_ID'] = $intSectionID;
 unset($basketAction);
 if ($verticalGrid)

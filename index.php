@@ -390,7 +390,8 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 	<!--</div>
 </div>
  </section> -->
-<!-- станок Чпу --> <? /* <section class="novosti_slider"> 
+<!-- станок Чпу -->
+<? /* <section class="novosti_slider">
               <div class="container">
               <h2>Новое видео</h2>
               <?$APPLICATION->IncludeComponent(
@@ -451,4 +452,6 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
               )
               );?>
               </div>
-              </section> */ ?><? require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>
+              </section> */ ?>
+
+<? require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>
