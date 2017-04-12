@@ -573,6 +573,7 @@ $("form.add_in_card").submit(function(e) {
 			url: "/ajax/add2basket.php",
 			data: $(this).serialize()
 		}).done(function(data) {
+            console.log(data);
 		$(".cnea").text($('.cnea',data).text());
 		$(".korzina_price").text($('.korzina_price',data).text());
 			  $(".korzina_podskazka").slideToggle();
