@@ -129,7 +129,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 
 				<? if(isset($arPropBtnEnd[2])):?>
 					<div class="prod-btn-docs hover">
-						<a href="#" class="toggle">Еще <span class="">▼</span></a>
+						<a href="#" class="toggle">Ещё <span class="">▼</span></a>
 						<ul>
 							<? foreach($arPropBtnEnd as $p){ ?>
 								<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
@@ -316,20 +316,20 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_DLINYREZA"]["VALUE"],'Длины реза');
 							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_PO"]["VALUE"],'ПО');
 							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_3DMODEL"]["VALUE"],'3D-модель');
-							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_ARKHIVPO"]["VALUE"],'Архив ПО');
-							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_DEMOVERSIYA"]["VALUE"],'Демо-версия');
-							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOUSTANOVKE"]["VALUE"],'Руководство по установке');
-							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPONASTROYKE"]["VALUE"],'Руководство по настройке');
-							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOEKSPL"]["VALUE"],'Руководство по эксплуатации');
-							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_POLEZAYAINFORMATSIYA"]["VALUE"],'Полезная информация');
-							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_USERMANUAL"]["VALUE"],'User Manual');
-							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_INSTALLATIONGUIDE"]["VALUE"],'Installation Guide');
-							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOPODKLYUCHENIYU"]["VALUE"],'Руководство по подключению');
-							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOSBORKE"]["VALUE"],'Руководство по сборке');
+							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_ARKHIVPO"]["VALUE"],'Архив ПО',2);
+							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_DEMOVERSIYA"]["VALUE"],'Демо-версия',2);
+							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOUSTANOVKE"]["VALUE"],'Руководство по установке',2);
+							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPONASTROYKE"]["VALUE"],'Руководство по настройке',2);
+							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOEKSPL"]["VALUE"],'Руководство по эксплуатации',2);
+							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_POLEZAYAINFORMATSIYA"]["VALUE"],'Полезная информация',2);
+							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_USERMANUAL"]["VALUE"],'User Manual',2);
+							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_INSTALLATIONGUIDE"]["VALUE"],'Installation Guide',2);
+							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOPODKLYUCHENIYU"]["VALUE"],'Руководство по подключению',2);
+							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOSBORKE"]["VALUE"],'Руководство по сборке',2);
 							$arPropBtnEnd = array();
 							foreach($arPropBtn as $v){
 								if(strlen($v[0]) >= 1){
-									$arPropBtnEnd[] = array($v[0],$v[1]);
+									$arPropBtnEnd[] = array($v[0],$v[1],$v[2]);
 								}
 							}
 
@@ -359,7 +359,9 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 
 							$output = array_slice($arPropBtnEnd, 0, 3);
 							unset($arPropBtnEnd[0]);
-							unset($arPropBtnEnd[1]);
+							if(isset($output[1][0]) and !isset($output[1][2])) {
+								unset($arPropBtnEnd[1]);
+							}
 							?>
 							<? if(isset($output[0][0])):?>
 							<div class="prod-btn-docs">
@@ -367,7 +369,8 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 							</div>
 							<? endif; ?>
 
-							<? if(isset($output[1][0])):?>
+
+							<? if(isset($output[1][0]) and !isset($output[1][2])):?>
 							<div class="prod-btn-docs">
 							<a href="<?=$output[1][0]?>"><?=$output[1][1]?></a>
 							</div>
@@ -375,7 +378,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 
 							<? if(isset($arPropBtnEnd[2])):?>
 							<div class="prod-btn-docs hover">
-							<a href="#" class="toggle">Еще <span class="">▼</span></a>
+							<a href="#" class="toggle">Ещё <span class="">▼</span></a>
 								<ul>
 									<? foreach($arPropBtnEnd as $p){ ?>
 										<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>

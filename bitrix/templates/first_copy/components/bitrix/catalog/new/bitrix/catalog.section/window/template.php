@@ -140,7 +140,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 							<td class="hover-tab">
 								<? if(isset($arPropBtnEnd[0])):?>
 									<div class="button-user-prop toggle">
-										<a href="#">Еще <span class="">▼</span></a>
+										<a href="#">Ещё <span class="">▼</span></a>
 									</div>
 									<ul>
 										<? foreach($arPropBtnEnd as $p){ ?>
@@ -214,7 +214,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 								<td class="hover-tab">
 									<? if(isset($arPropBtnEnd[3])):?>
 										<div class="button-user-prop toggle">
-											<a href="#">Еще <span class="">▼</span></a>
+											<a href="#">Ещё <span class="">▼</span></a>
 										</div>
 										<ul>
 											<? foreach($arPropBtnEnd as $p){ ?>
