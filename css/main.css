@@ -2064,7 +2064,8 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
 .tovar_wr p>span{
 	font-weight: 500;
 }
-.tovar_wr .btn-product-docs > a{
+.tovar_wr .btn-product-docs .prod-btn-docs > a{
+	display: block;
 	width: 147px;
 	font-size: 15px;
 	padding: 2px 0;
@@ -2072,26 +2073,26 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
 	text-align: center;
 	color: #000;
 }
-.tovar_wr .btn-product-docs > a:hover{
+.tovar_wr .btn-product-docs .prod-btn-docs > a:hover{
 	background-color: #94b82f;
 	color: #fff;
 }
-.tovar_wr .btn-product-docs > a.open{
+.tovar_wr .btn-product-docs .prod-btn-docs > a.open{
 	background-color: #94b82f;
 	color: #fff;
 }
-.tovar_wr .btn-product-docs > a.toggle{
+.tovar_wr .btn-product-docs .prod-btn-docs > a.toggle{
 	position: relative;
 	padding-right: 20px;
 }
-.tovar_wr .btn-product-docs > a.toggle > span{
+.tovar_wr .btn-product-docs .prod-btn-docs > a.toggle > span{
 	position: absolute;
 	right: 0px;
 	border-left: 1px solid #DADADA;
 	top: 0;
 	padding: 2px 7px;
 }
-.tovar_wr .btn-product-docs > a.other-btn-product-docs:hover{
+.tovar_wr .btn-product-docs .prod-btn-docs > a.other-btn-product-docs:hover{
 	background-color: #fff;
 	color: #7d7d7d;
 	font-size: 15px;

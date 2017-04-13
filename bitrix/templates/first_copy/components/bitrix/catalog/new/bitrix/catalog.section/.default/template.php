@@ -83,30 +83,62 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 						$arPropBtnEnd[] = array($v[0],$v[1]);
 					}
 				}
+
+
+				if(
+					empty($arSection["UF_SAYT_CHERTEG"]) and
+					empty($arSection["UF_SAYT_VIDEO"]) and
+					empty($arSection["UF_SAYT_INSTR"]) and
+					empty($arSection["UF_DRAIVER"]) and
+					empty($arSection["UF_DLINREZA"]) and
+					empty($arSection["UF_SAYT_PO"]) and
+					empty($arSection["UF_3DMODEL"])
+				){
+					?>
+
+
+					<div class="prod-btn-docs hover">
+						<a href="#" class="toggle">Загрузки <span class="">▼</span></a>
+						<ul>
+							<? foreach($arPropBtnEnd as $p){ ?>
+								<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
+							<?}?>
+						</ul>
+					</div>
+
+					<?
+				}else{
+
+
 				$output = array_slice($arPropBtnEnd, 0, 2);
 				unset($arPropBtnEnd[0]);
 				unset($arPropBtnEnd[1]);
 
 				?>
-
 				<? if(isset($output[0][0])):?>
-				<a href="<?=$output[0][0]?>"><?=$output[0][1]?></a>
+					<div class="prod-btn-docs">
+						<a href="<?=$output[0][0]?>"><?=$output[0][1]?></a>
+					</div>
 				<? endif; ?>
 
 				<? if(isset($output[1][0])):?>
-				<a href="<?=$output[1][0]?>"><?=$output[1][1]?></a>
+					<div class="prod-btn-docs">
+						<a href="<?=$output[1][0]?>"><?=$output[1][1]?></a>
+					</div>
 				<? endif; ?>
 
 				<? if(isset($arPropBtnEnd[2])):?>
-				<a href="#" class="toggle">Еще <span class="">▼</span></a>
+					<div class="prod-btn-docs hover">
+						<a href="#" class="toggle">Еще <span class="">▼</span></a>
+						<ul>
+							<? foreach($arPropBtnEnd as $p){ ?>
+								<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
+							<?}?>
+						</ul>
+					</div>
 				<? endif; ?>
 
-					<ul>
-						<? foreach($arPropBtnEnd as $p){ ?>
-							<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
-						<?}?>
-					</ul>
-
+			<?}?>
 			</div>
 
 			<div class="preview-text"><?=$arSection['UF_SAYT_PAPKA_OPIS']?></div>
@@ -143,6 +175,19 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 	<script>
 		$(function(){
 
+			$('.prod-btn-docs.hover').mouseenter(function(){
+				$('.toggle',this).addClass('open');
+				$('span',this).text('▲');
+				$('ul',this).css('display','block');
+			});
+			$('.prod-btn-docs.hover').mouseleave(function(){
+				$('.toggle',this).removeClass('open');
+				$('span',this).text('▼');
+				$('ul',this).css('display','none');
+			});
+
+			/*
+
 			$('.btn-product-docs .toggle').click(function(){
 				var link = $(this);
 				var rod = $(this).parent();
@@ -157,6 +202,8 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 				});
 				return false;
 			});
+
+			*/
 
 			$('.preview-text').readmore({
 				speed: 75,
@@ -277,6 +324,8 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_POLEZAYAINFORMATSIYA"]["VALUE"],'Полезная информация');
 							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_USERMANUAL"]["VALUE"],'User Manual');
 							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_INSTALLATIONGUIDE"]["VALUE"],'Installation Guide');
+							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOPODKLYUCHENIYU"]["VALUE"],'Руководство по подключению');
+							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOSBORKE"]["VALUE"],'Руководство по сборке');
 							$arPropBtnEnd = array();
 							foreach($arPropBtn as $v){
 								if(strlen($v[0]) >= 1){
@@ -284,26 +333,61 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 								}
 							}
 
+							if(
+							empty($arItem["PROPERTIES"]["SAYT_CHERTEZH"]["VALUE"]) and
+							empty($arItem["PROPERTIES"]["SAYT_VIDEO"]["VALUE"]) and
+							empty($arItem["PROPERTIES"]["SAYT_INSTRUKTSIYA"]["VALUE"]) and
+							empty($arItem["PROPERTIES"]["SAYT_DRAYVER"]["VALUE"]) and
+							empty($arItem["PROPERTIES"]["SAYT_DLINYREZA"]["VALUE"]) and
+							empty($arItem["PROPERTIES"]["SAYT_PO"]["VALUE"]) and
+							empty($arItem["PROPERTIES"]["SAYT_3DMODEL"]["VALUE"])
+							){
+								?>
+
+
+							<div class="prod-btn-docs hover">
+								<a href="#" class="toggle">Загрузки <span class="">▼</span></a>
+								<ul>
+									<? foreach($arPropBtnEnd as $p){ ?>
+										<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
+									<?}?>
+								</ul>
+							</div>
+
+								<?
+							}else{
+
 							$output = array_slice($arPropBtnEnd, 0, 3);
 							unset($arPropBtnEnd[0]);
 							unset($arPropBtnEnd[1]);
 							?>
 							<? if(isset($output[0][0])):?>
+							<div class="prod-btn-docs">
 							<a href="<?=$output[0][0]?>"><?=$output[0][1]?></a>
+							</div>
 							<? endif; ?>
 
 							<? if(isset($output[1][0])):?>
+							<div class="prod-btn-docs">
 							<a href="<?=$output[1][0]?>"><?=$output[1][1]?></a>
+							</div>
 							<? endif; ?>
 
 							<? if(isset($arPropBtnEnd[2])):?>
+							<div class="prod-btn-docs hover">
 							<a href="#" class="toggle">Еще <span class="">▼</span></a>
+								<ul>
+									<? foreach($arPropBtnEnd as $p){ ?>
+										<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
+									<?}?>
+								</ul>
+							</div>
 							<? endif; ?>
-							<ul>
-								<? foreach($arPropBtnEnd as $p){ ?>
-									<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
-								<?}?>
-							</ul>
+
+
+
+							<?}?>
+							<div class="clear"></div>
 						</div>
 					</div>
 
@@ -321,6 +405,17 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 		<script>
 			$(function(){
 
+				$('.prod-btn-docs.hover').mouseenter(function(){
+					$('.toggle',this).addClass('open');
+					$('span',this).text('▲');
+					$('ul',this).css('display','block');
+				});
+				$('.prod-btn-docs.hover').mouseleave(function(){
+					$('.toggle',this).removeClass('open');
+					$('span',this).text('▼');
+					$('ul',this).css('display','none');
+				});
+				/*
 				$('.btn-product-docs .toggle').click(function(){
 					var link = $(this);
 					var rod = $(this).parent();
@@ -335,6 +430,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 					});
 					return false;
 				});
+				*/
 
 				$('.preview-text').readmore({
 					speed: 75,

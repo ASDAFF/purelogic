@@ -3,12 +3,10 @@
     border-top: 2px solid #A6A6A6;
 }
 .btn-product-docs{
-    position: relative;
-    display: flex;
     margin-bottom: 10px;
 }
 
-.tovar_wr .btn-product-docs > a{
+.tovar_wr .btn-product-docs .hover-box > a{
     margin-right: 10px;
 }
 .tovar_wr h4 > a{
@@ -236,16 +234,17 @@ h5 a:hover{
     max-width: 165px;
 }
 
-.btn-product-docs > ul{
+.btn-product-docs .prod-btn-docs > ul{
     display: none;
     position: absolute;
-    right: 10px;
-    top: 29px;
+    right: 0px;
+    top: 24px;
     background-color: #8FBA40;
     width: 278px;
     border-bottom: 1px solid #4a5d13;
     padding: 5px;
     z-index: 10;
+    border-top: 3px solid #fff;
 }
 
 .btn-product-docs.default > ul{
@@ -253,9 +252,23 @@ h5 a:hover{
     right: 0px;
 }
 
-.btn-product-docs > ul > li > a{
+.btn-product-docs .prod-btn-docs > ul > li > a{
     color: #fff;
 }
-.btn-product-docs > ul > li > a:hover{
+.btn-product-docs .prod-btn-docs > ul > li > a:hover{
     color: #000;
 }
+
+.btn-product-docs .prod-btn-docs{
+    float: left;
+    margin-left: 5px;
+}
+
+.btn-product-docs .prod-btn-docs.hover{
+    position: relative;
+}
+
+.btn-product-docs.default .prod-btn-docs{
+    margin-bottom: 10px;
+}
+

@@ -74,7 +74,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_INSTRUKTSIYA"]["VALUE"],'Инструкция');
 				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_DRAYVER"]["VALUE"],'Драйвер');
 				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_DLINYREZA"]["VALUE"],'Длины реза');
-				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_PO"]["VALUE"],'ПО');
+				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_PO"]["VALUE"],'ПО',1);
 				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_3DMODEL"]["VALUE"],'3D-модель');
 				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_ARKHIVPO"]["VALUE"],'Архив ПО');
 				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_DEMOVERSIYA"]["VALUE"],'Демо-версия');
@@ -84,6 +84,8 @@ foreach ($arResult['ITEMS'] as $arItem) {
 				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_POLEZAYAINFORMATSIYA"]["VALUE"],'Полезная информация');
 				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_USERMANUAL"]["VALUE"],'User Manual');
 				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_INSTALLATIONGUIDE"]["VALUE"],'Installation Guide');
+				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOPODKLYUCHENIYU"]["VALUE"],'Руководство по подключению');
+				$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOSBORKE"]["VALUE"],'Руководство по сборке');
 				$arPropBtnEnd = array();
 				foreach($arPropBtn as $v){
 					if(strlen($v[0]) >= 1){
@@ -91,8 +93,38 @@ foreach ($arResult['ITEMS'] as $arItem) {
 					}
 				}
 
+				if(
+					empty($arItem["PROPERTIES"]["SAYT_CHERTEZH"]["VALUE"]) and
+					empty($arItem["PROPERTIES"]["SAYT_VIDEO"]["VALUE"]) and
+					empty($arItem["PROPERTIES"]["SAYT_INSTRUKTSIYA"]["VALUE"]) and
+					empty($arItem["PROPERTIES"]["SAYT_DRAYVER"]["VALUE"]) and
+					empty($arItem["PROPERTIES"]["SAYT_DLINYREZA"]["VALUE"]) and
+					empty($arItem["PROPERTIES"]["SAYT_PO"]["VALUE"]) and
+					empty($arItem["PROPERTIES"]["SAYT_3DMODEL"]["VALUE"])
+				){
 
 				?>
+
+					<table>
+						<tr>
+							<td></td>
+							<td class="hover-tab">
+								<? if(isset($arPropBtnEnd[0])):?>
+									<div class="button-user-prop toggle">
+										<a href="#">Загрузки <span class="">▼</span></a>
+									</div>
+									<ul>
+										<? foreach($arPropBtnEnd as $p){ ?>
+											<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
+										<?}?>
+									</ul>
+								<? endif; ?>
+							</td>
+						</tr>
+					</table>
+
+				<? }else{ ?>
+
 				<? if(strlen($arItem['NAME']) >= 35){
 					$oneProp = array_shift($arPropBtnEnd);
 					?>
@@ -105,20 +137,21 @@ foreach ($arResult['ITEMS'] as $arItem) {
 									</div>
 								<? endif; ?>
 							</td>
-							<td>
+							<td class="hover-tab">
 								<? if(isset($arPropBtnEnd[0])):?>
 									<div class="button-user-prop toggle">
 										<a href="#">Еще <span class="">▼</span></a>
 									</div>
+									<ul>
+										<? foreach($arPropBtnEnd as $p){ ?>
+											<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
+										<?}?>
+									</ul>
 								<? endif; ?>
 							</td>
 						</tr>
 					</table>
-					<ul>
-						<? foreach($arPropBtnEnd as $p){ ?>
-							<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
-						<?}?>
-					</ul>
+
 				<?}else{?>
 
 					<? if(count($arPropBtnEnd) == 2){ ?>
@@ -178,22 +211,24 @@ foreach ($arResult['ITEMS'] as $arItem) {
 										</div>
 									<? endif; ?>
 								</td>
-								<td>
+								<td class="hover-tab">
 									<? if(isset($arPropBtnEnd[3])):?>
 										<div class="button-user-prop toggle">
 											<a href="#">Еще <span class="">▼</span></a>
 										</div>
+										<ul>
+											<? foreach($arPropBtnEnd as $p){ ?>
+												<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
+											<?}?>
+										</ul>
 									<? endif; ?>
 								</td>
 							</tr>
 						</table>
-						<ul>
-							<? foreach($arPropBtnEnd as $p){ ?>
-								<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
-							<?}?>
-						</ul>
+
 					<?}?>
 				<?}?>
+			<?}?>
 
 			</div>
 
@@ -214,7 +249,18 @@ foreach ($arResult['ITEMS'] as $arItem) {
 </div>
 	<script>
 		$(function(){
-			$('.btn-product-docs-element .toggle').click(function(){
+			$('.hover-tab').mouseenter(function(){
+				$('.toggle',this).addClass('open');
+				$('span',this).text('▲');
+				$('ul',this).css('display','block');
+			});
+			$('.hover-tab').mouseleave(function(){
+				$('.toggle',this).removeClass('open');
+				$('span',this).text('▼');
+				$('ul',this).css('display','none');
+			});
+			/*
+			$('.btn-product-docs-element .toggle').mouseenter(function(){
 				var link = $('a',this);
 				var div = $(this);
 				var rod = $(this).parent().parent().parent().parent().parent();
@@ -229,6 +275,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 				});
 				return false;
 			});
+			*/
 
 			$('.preview-text').readmore({
 				speed: 75,
