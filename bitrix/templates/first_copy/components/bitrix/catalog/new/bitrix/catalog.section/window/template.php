@@ -57,14 +57,29 @@ foreach ($arResult['ITEMS'] as $arItem) {
 				<h4><a href="<?=$arItem['DETAIL_PAGE_URL'] ?>"><?=$arItem['NAME'] ?> </a></h4>
 			</div>
 
-			<div class="price-element-product"><?=number_format($price['PRICE'],0,'',' ')?> <?if($price['CURRENCY'] == 'RUB'){?><span class="green">₽</span><?}else{ print $price['CURRENCY'];}?></div>
+			<table>
+				<tr>
+					<td>
+						<div class="price-element-product">
+							<?=number_format($price['PRICE'],0,'',' ')?> <?if($price['CURRENCY'] == 'RUB'){?>
+								<span class="green">₽</span>
+							<?}else{ print $price['CURRENCY'];}?>
+						</div>
+					</td>
+					<td>
+						<form action="" method="get" class="add_in_card">
+							<input type="text" name="quantity" value="1">
+							<input type="submit" value="">
+							<input name="action" type="hidden" value="ADD2BASKET">
+							<input type="hidden" name="id" value="<?= $arItem["ID"]; ?>">
+						</form>
+					</td>
+				</tr>
+			</table>
 
-			<form action="" method="get" class="add_in_card">
-				<input type="text" name="quantity" value="1">
-				<input type="submit" value="">
-				<input name="action" type="hidden" value="ADD2BASKET">
-				<input type="hidden" name="id" value="<?= $arItem["ID"]; ?>">
-			</form>
+
+
+
 
 			<div class="btn-product-docs-element">
 				<?

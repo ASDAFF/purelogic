@@ -1,10 +1,12 @@
 .price-element-product{
+    width: 147px;
     font-weight: bold;
     color: #4E4E4E;
     font-size: 20px;
     margin-left: 3px;
     margin-top: 1px;
     margin-bottom: 2px;
+    text-align: center;
 }
 .col-md-6.element .add_in_card{
     position: absolute;
@@ -129,8 +131,9 @@
 
 
 .add_in_card{
+    width: 147px;
     position: relative;
-    margin-left: 2px;
+    margin-left: 3px;
 }
 .add_in_card input[type="submit"]{
     width: 47px!important;
