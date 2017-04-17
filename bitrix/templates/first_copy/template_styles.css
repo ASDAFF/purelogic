@@ -78,14 +78,8 @@ footer {
     white-space: nowrap;
 }
 
-p.korzina_price.hidden-xs.hidden-sm {
-    max-width: 122px;
-    white-space: nowrap;
-    font-weight: 400;
-    position: absolute;
-    top: 22px;
-    left: 15px;
-}
+
+
 .shkala {
     width: 32px;
     height: 210px;
@@ -289,20 +283,7 @@ header {
     display: inline-block;
     margin-top: 20px;
 }
-.icon_korzina {
-    width: 25px;
-    height: 25px;
-    /* background-color: #94b82f; */
-    margin-top: 22px;
-	}
-.korzina p {
-    float: left;
-    margin: 0;
-    display: inline-block;
-    font-size: 15px;
-    margin-top: 24px;
-    color: #fff;
-}
+
 .icon_phone_header_number{
     color: #94b82f;
     font-size: 15px;
@@ -320,15 +301,8 @@ header {
     font-weight: 400;
 }
 .cnea{color:#94b82f !important;}
-.user_head {
-    font-size: 26px;
-    color: #333;
-    margin-top: 15px;
-    display: inline-block;
-    float: left;
-    margin-right: 20px;
-	margin-left:0px;
-}
+
+
 .select_language .wSelect-theme-classic.wSelect {
     color: #fff;
     font-size: 15px;
@@ -350,7 +324,7 @@ header {
 .main_logo .main_logo_menu{margin-top:0px}
 .main_logo .main_logo_menu li a {
     color: #fff;
-    font-size: 20px;
+    font-size: 17px;
     display: block;
     margin-right: 40px;
     font-weight: 100;
@@ -1336,11 +1310,8 @@ h1.name_article {
 .in_index_slider .img{width:528px;}
 .logo{width:200px;}
 .header_phone span:nth-child(2){font-size:16px;}
-.korzina p {
-    font-size: 15px;
-    line-height: 27px;
-    color: #fff;
-}
+
+
 .main_logo .main_logo_menu li a{
     font-size: 25px;
     margin-right: 25px;

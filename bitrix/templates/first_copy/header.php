@@ -316,31 +316,31 @@ $(this).append($("#"+$(this).attr("data-id")));
 	                        </div>
 
 
-					<div class="col-md-4 col-lg-3 col-sm-2 col-xs-3">
+					<div class="col-md-5 col-lg-5 col-sm-2 col-xs-3">
 						<div class="korzina">
 						<div id="cucuca">
 							<?$APPLICATION->IncludeComponent(
-	"bitrix:sale.basket.basket.line",
-	"new",
-	array(
-		"PATH_TO_BASKET" => SITE_DIR."cart/",
-		"PATH_TO_PERSONAL" => SITE_DIR."personal/",
-		"SHOW_PERSONAL_LINK" => "N",
-		"SHOW_NUM_PRODUCTS" => "Y",
-		"SHOW_TOTAL_PRICE" => "Y",
-		"SHOW_PRODUCTS" => "N",
-		"POSITION_FIXED" => "N",
-		"SHOW_AUTHOR" => "N",
-		"PATH_TO_REGISTER" => SITE_DIR."login/",
-		"PATH_TO_PROFILE" => SITE_DIR."personal/",
-		"COMPONENT_TEMPLATE" => "new",
-		"PATH_TO_ORDER" => SITE_DIR."personal/order/make/",
-		"SHOW_EMPTY_VALUES" => "Y",
-		"HIDE_ON_BASKET_PAGES" => "N"
-	),
-	false
-);?>
-</div>
+								"bitrix:sale.basket.basket.line",
+								"new",
+								array(
+									"PATH_TO_BASKET" => SITE_DIR."cart/",
+									"PATH_TO_PERSONAL" => SITE_DIR."personal/",
+									"SHOW_PERSONAL_LINK" => "N",
+									"SHOW_NUM_PRODUCTS" => "Y",
+									"SHOW_TOTAL_PRICE" => "Y",
+									"SHOW_PRODUCTS" => "N",
+									"POSITION_FIXED" => "N",
+									"SHOW_AUTHOR" => "N",
+									"PATH_TO_REGISTER" => SITE_DIR."login/",
+									"PATH_TO_PROFILE" => SITE_DIR."personal/",
+									"COMPONENT_TEMPLATE" => "new",
+									"PATH_TO_ORDER" => SITE_DIR."personal/order/make/",
+									"SHOW_EMPTY_VALUES" => "Y",
+									"HIDE_ON_BASKET_PAGES" => "N"
+								),
+								false
+							);?>
+							</div>
 						
 							<div class="korzina_podskazka">
 								<p>Товар добавлен</p>
@@ -348,30 +348,19 @@ $(this).append($("#"+$(this).attr("data-id")));
 							</div>		
 						</div>
 					</div>
-					<div class="col-md-4 col-lg-3 col-sm-8 col-xs-6  paddrght0">
+					<div class="col-md-1 col-lg-1 col-sm-8 col-xs-6" style="text-align: right;padding: 20px 0">
 						<?global $USER;
 						global $APPLICATION;
-$dir = $APPLICATION->GetCurDir();
-			//$languages=array("/en/","/ua/");			
+						$dir = $APPLICATION->GetCurDir();
+						//$languages=array("/en/","/ua/");
 						?>
 						<?if(in_array(substr($dir, 0, 4),$languages)){
 						$not_rus=true;?>
-	
-	<?}?><a href="#" class="hidden-xs user_head"><img src="/img/icon/voskl.png" alt=""></a>
-							<a href="<?/*if ($USER->IsAuthorized()) {?>/personal/<?}else{?>#<?}*/?>#" class="hidden-xs user_head"><img src="/img/icon/person.png" alt=""></a>
-							<div class="select_language">
-								<select id="demo" class="lang_choice" tabindex="1">
-							        <option <?if(!$not_rus){?>selected<?}?> <?if($not_rus){?>value="<?=str_replace(substr($dir, 0, 4),"/",$dir);?>"<?}?>>ru</option> 
-<?foreach($languages as $lng){?>
- <option <?if(substr($dir, 0, 4)==$lng){?>selected<?}else{ if($not_rus){?>value="<?=str_replace(substr($dir, 0, 4),$lng,$dir);?>"<?}else{?>value="<?=substr($lng, 0, 3).$dir;?>"<?}?><?}?>   ><?=str_replace("/","",$lng);?></option>
-<?}?>							       
-								  
-							       
-							      
-							                   
-							    </select>
-							</div>
-					
+						<?}?>
+
+						<a href="<?/*if ($USER->IsAuthorized()) {?>/personal/<?}else{?>#<?}*/?>#" class="hidden-xs user_head">
+							<img src="/img/icon/person.png" alt="">
+						</a>
 					</div>
 				</div>	
 				

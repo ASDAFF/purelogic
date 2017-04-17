@@ -591,6 +591,7 @@ header{
 }
 
 .icon_korzina{
+	margin-top: 20px;
 	width: 24px;
 	height: 23px;
 	background-image: url(../img/icon/korzina.png);
@@ -604,26 +605,18 @@ header{
 	float: left;
     margin: 0;
     display: inline-block;
-    font-size: 16px;
-    margin-top: 2px;
-    color: #333;
+    font-size: 15px;
+	margin-top: 24px;
+	color: #fff;
 }
+
+
 .korzina p:nth-child(3){
-	font-weight: 500;
-	margin-left: 3px;
+	font-weight: 400;
+	margin-left: 4px;
 }
-.user_head{
-	font-size: 26px;
-    color: #333;
-    margin-top: 4px;
-    display: inline-block;
-    float: left;
-    margin-right: 14px;
-    margin-left: 25px;
-}
-.user_head:hover{
-	color: #fff!important;
-}
+
+
 /*======================================FO0TER=====================================*/
 footer{
 	position: relative;
