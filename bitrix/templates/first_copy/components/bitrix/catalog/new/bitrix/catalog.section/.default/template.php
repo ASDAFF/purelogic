@@ -139,6 +139,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 				<? endif; ?>
 
 			<?}?>
+			<div class="clear"></div>
 			</div>
 
 			<div class="preview-text"><?=$arSection['UF_SAYT_PAPKA_OPIS']?></div>
@@ -152,7 +153,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 					$price = $db_res_p->Fetch();
 				?>
 					<div class="box-product-gr">
-						<h5><a href="<?=$element['DETAIL_PAGE_URL']?>"><?=$element['NAME']?></a></h5>
+						<h5><a href="<?=$element['DETAIL_PAGE_URL']?>"><?=$element['PROPERTIES']['CML2_ARTICLE']['VALUE']?></a></h5>
 						<p><?=$element['DETAIL_TEXT']?></p>
 						<div class="box-product-price"><?=number_format($price['PRICE'],0,'',' ')?> <?if($price['CURRENCY'] == 'RUB'){?><span class="green">₽</span><?}else{ print $price['CURRENCY'];}?></div>
 						<form action="" method="get" class="add_in_card">
