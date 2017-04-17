@@ -348,7 +348,7 @@ $(this).append($("#"+$(this).attr("data-id")));
 							</div>		
 						</div>
 					</div>
-					<div class="col-md-1 col-lg-1 col-sm-8 col-xs-6" style="text-align: right;padding: 20px 0">
+					<div class="col-md-1 col-lg-1 col-sm-8 col-xs-6" style="text-align: right;padding: 20px 5px">
 						<?global $USER;
 						global $APPLICATION;
 						$dir = $APPLICATION->GetCurDir();
