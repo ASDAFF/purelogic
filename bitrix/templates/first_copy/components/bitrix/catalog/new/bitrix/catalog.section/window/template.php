@@ -169,7 +169,16 @@ foreach ($arResult['ITEMS'] as $arItem) {
 
 				<?}else{?>
 
-					<? if(count($arPropBtnEnd) == 2){ ?>
+					<? if(
+							count($arPropBtnEnd) == 2 and
+							!empty($arItem["PROPERTIES"]["SAYT_CHERTEZH"]["VALUE"]) or
+							!empty($arItem["PROPERTIES"]["SAYT_VIDEO"]["VALUE"]) or
+							!empty($arItem["PROPERTIES"]["SAYT_INSTRUKTSIYA"]["VALUE"]) or
+							!empty($arItem["PROPERTIES"]["SAYT_DRAYVER"]["VALUE"]) or
+							!empty($arItem["PROPERTIES"]["SAYT_DLINYREZA"]["VALUE"]) or
+							!empty($arItem["PROPERTIES"]["SAYT_PO"]["VALUE"]) or
+							!empty($arItem["PROPERTIES"]["SAYT_3DMODEL"]["VALUE"])
+						){ ?>
 
 						<table>
 							<tr>
@@ -180,17 +189,16 @@ foreach ($arResult['ITEMS'] as $arItem) {
 										</div>
 									<? endif; ?>
 								</td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>
+								<td class="hover-tab">
 									<? if(isset($arPropBtnEnd[1][0])):?>
-										<div class="button-user-prop">
-											<a href="<?=$arPropBtnEnd[1][0]?>"><?=$arPropBtnEnd[1][1]?></a>
+										<div class="button-user-prop toggle">
+											<a href="#">Ещё <span class="">▼</span></a>
 										</div>
+										<ul>
+											<li><a href="<?=$arPropBtnEnd[1][0]?>"><?=$arPropBtnEnd[1][1]?></a></li>
+										</ul>
 									<? endif; ?>
 								</td>
-								<td></td>
 							</tr>
 						</table>
 
