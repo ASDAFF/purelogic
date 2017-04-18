@@ -55,7 +55,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 		</div>
 		<div class="col-md-10 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;padding-bottom: 15px;">
 			<div class="head-product-box">
-				<h4><a href="#"><?=$arSection['UF_PAPKA_ZAGOLOVOK']?></a></h4>
+				<h4><a href="javascript:void(0);"><?=$arSection['UF_PAPKA_ZAGOLOVOK']?></a></h4>
 			</div>
 			<div class="btn-product-docs default">
 				<?
@@ -153,7 +153,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 					$price = $db_res_p->Fetch();
 				?>
 					<div class="box-product-gr">
-						<h5><a href="<?=$element['DETAIL_PAGE_URL']?>"><?=$element['PROPERTIES']['CML2_ARTICLE']['VALUE']?></a></h5>
+						<h5><a href="javascript:void(0);"><?=$element['PROPERTIES']['CML2_ARTICLE']['VALUE']?></a></h5>
 						<p><?=$element['DETAIL_TEXT']?></p>
 						<div class="box-product-price"><?=number_format($price['PRICE'],0,'',' ')?> <?if($price['CURRENCY'] == 'RUB'){?><span class="green">₽</span><?}else{ print $price['CURRENCY'];}?></div>
 						<form action="" method="get" class="add_in_card">
@@ -290,7 +290,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 				<div class="col-md-10 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;">
 					<div class="col-md-6">
 						<div class="head-product-box">
-							<h4><a href="<?=$arItem['DETAIL_PAGE_URL'] ?>"><?=$arItem['NAME'] ?></a></h4>
+							<h4><a href="javascript:void(0);"><?=$arItem['NAME'] ?></a></h4>
 						</div>
 						<div class="col-md-6 padding_0">
 							<div class="price-element-product"><?=number_format($price['PRICE'],0,'',' ')?> <?if($price['CURRENCY'] == 'RUB'){?><span class="green">₽</span><?}else{ print $price['CURRENCY'];}?></div>
