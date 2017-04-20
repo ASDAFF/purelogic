@@ -200,10 +200,22 @@ while ($arSect = $rsSect->GetNext())
 		}
 	}
 }
+$arFilterNow = array('IBLOCK_ID' => $arParams["IBLOCK_ID"],'ID' => $arResult["VARIABLES"]['SECTION_ID'],'GLOBAL_ACTIVE'=>'Y');
+$rsSectNow = CIBlockSection::GetList(array($by=>$order),$arFilterNow,false,array("UF_SAYT_PAPKA_TIP"));
+while ($arSectNow = $rsSectNow->GetNext()){
+	 $type_site_now = $arSectNow['UF_SAYT_PAPKA_TIP'];
+}
+
+if(empty($type_site_now)){
+	if(empty($_GET["template"])) {
+		$_SESSION["template"] = "site_null";
+	}
+}
+
 ?>
 
 <div class="plitka"><div class="pltk <?if($_SESSION["template"]=="window"){?>current<?}?>">
-<? if($type_two != 2){ ?>
+<? if($type_two != 2 and !empty($type_two)){ ?>
 	<form method="get" action="">
 		<input name="template" type="hidden" value="window">
 		<button class="for_image">
@@ -213,7 +225,7 @@ while ($arSect = $rsSect->GetNext())
 <? } ?>
 </div>
 	<div class="pltk <?if($_SESSION["template"]==""){?>current<?}?>">
-<? if($type_two != 2){ ?>
+<? if($type_two != 2 and !empty($type_two)){ ?>
 		<form method="get" action="">
 			<input name="template" type="hidden" value="normal">
 			<button class="for_image">
