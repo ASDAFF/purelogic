@@ -68,14 +68,11 @@ if (0 < $arResult["SECTIONS_COUNT"])
 				if($arSection["DEPTH_LEVEL"]==1){?>
 				
 				<li data-id="uli_<?=$arSection["ID"];?>">
-					<span>
-						<div style="background-image: url(<?=$oneImgSrctionIco?>)" class="background-icon-menu"></div>
-						<div style="background-image: url(<?=$oneImgSrctionHover?>)" class="background-icon-menu uf-menu-pic-hover"></div>
-					</span>
 					<a href="<?=$arSection["SECTION_PAGE_URL"];?>">
 						<span class="object">
-							<span class="img"></span>
+							<img src="<?=$oneImgSrctionIco?>">
 							<span class="txt"><?=$arSection["NAME"];?></span>
+							<span class="arrow">&#8250;</span>
 						</span>
 					</a>
 
