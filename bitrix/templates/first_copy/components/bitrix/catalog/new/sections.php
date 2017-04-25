@@ -24,7 +24,8 @@ $this->setFrameMode(true);
 		"IBLOCK_ID" => $arParams["IBLOCK_ID"],
 		"SECTION_USER_FIELDS" => array(
 			0 => "",
-			1 => "UF_VERTICAL_POS"
+			1 => "UF_VERTICAL_POS",
+			2 => "UF_SAYT_PAPKA_TIP"
 		),
 		"CACHE_TYPE" => $arParams["CACHE_TYPE"],
 		"CACHE_TIME" => $arParams["CACHE_TIME"],
