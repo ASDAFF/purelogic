@@ -54,94 +54,63 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 			<?endforeach;?>
 		</div>
 		<div class="col-md-10 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;padding-bottom: 15px;">
-			<div class="head-product-box">
-				<h4><a href="javascript:void(0);"><?=$arSection['UF_PAPKA_ZAGOLOVOK']?></a></h4>
+			<div class="col-md-6">
+				<div class="head-product-box">
+					<h4><a href="javascript:void(0);"><?=$arSection['UF_PAPKA_ZAGOLOVOK']?></a></h4>
+				</div>
 			</div>
-			<div class="btn-product-docs default">
-				<?
-				$arPropBtn = array();
-				$arPropBtn[] = array($arSection['UF_SAYT_CHERTEG'],'Чертёж');
-				$arPropBtn[] = array($arSection['UF_SAYT_VIDEO'],'Видео');
-				$arPropBtn[] = array($arSection['UF_SAYT_INSTR'],'Инструкция');
-				$arPropBtn[] = array($arSection['UF_DRAIVER'],'Драйвер');
-				$arPropBtn[] = array($arSection['UF_DLINREZA'],'Длины реза');
-				$arPropBtn[] = array($arSection['UF_SAYT_PO'],'ПО');
-				$arPropBtn[] = array($arSection['UF_3DMODEL'],'3D-модель');
-				$arPropBtn[] = array($arSection['UF_ARHIVPO'],'Архив ПО');
-				$arPropBtn[] = array($arSection['UF_DEMOVERSIA'],'Демо-версия');
-				$arPropBtn[] = array($arSection['UF_RUK_PO_USTANOVKE'],'Руководство по установке');
-				$arPropBtn[] = array($arSection['UF_RUK_PO_NASTROIKE'],'Руководство по настройке');
-				$arPropBtn[] = array($arSection['UF_RUK_PO_EKSPUATACI'],'Руководство по эксплуатации');
-				$arPropBtn[] = array($arSection['UF_SAYT_POLEZNAYINF'],'Полезная информация');
-				$arPropBtn[] = array($arSection['UF_USERMANUAL'],'User Manual');
-				$arPropBtn[] = array($arSection['UF_INSTALLATIONGUIDE'],'Installation Guide');
-				$arPropBtn[] = array($arSection['UF_RUK_PO_PODKL'],'Руководство по подключению');
-				$arPropBtn[] = array($arSection['UF_RUK_PO_SBORKE'],'Руководство по сборке');
-				$arPropBtnEnd = array();
-				foreach($arPropBtn as $v){
-					if(strlen($v[0]) >= 1){
-						$arPropBtnEnd[] = array($v[0],$v[1]);
+
+			<div class="col-md-6 padding_0">
+				<div class="btn-product-docs default">
+					<?
+					$arPropBtn = array();
+					$arPropBtn[] = array($arSection['UF_SAYT_CHERTEG'],'Чертёж');
+					$arPropBtn[] = array($arSection['UF_SAYT_VIDEO'],'Видео');
+					$arPropBtn[] = array($arSection['UF_SAYT_INSTR'],'Инструкция');
+					$arPropBtn[] = array($arSection['UF_DRAIVER'],'Драйвер');
+					$arPropBtn[] = array($arSection['UF_DLINREZA'],'Длины реза');
+					$arPropBtn[] = array($arSection['UF_SAYT_PO'],'ПО');
+					$arPropBtn[] = array($arSection['UF_3DMODEL'],'3D-модель');
+					$arPropBtn[] = array($arSection['UF_ARHIVPO'],'Архив ПО');
+					$arPropBtn[] = array($arSection['UF_DEMOVERSIA'],'Демо-версия');
+					$arPropBtn[] = array($arSection['UF_RUK_PO_USTANOVKE'],'Руководство по установке');
+					$arPropBtn[] = array($arSection['UF_RUK_PO_NASTROIKE'],'Руководство по настройке');
+					$arPropBtn[] = array($arSection['UF_RUK_PO_EKSPUATACI'],'Руководство по эксплуатации');
+					$arPropBtn[] = array($arSection['UF_SAYT_POLEZNAYINF'],'Полезная информация');
+					$arPropBtn[] = array($arSection['UF_USERMANUAL'],'User Manual');
+					$arPropBtn[] = array($arSection['UF_INSTALLATIONGUIDE'],'Installation Guide');
+					$arPropBtn[] = array($arSection['UF_RUK_PO_PODKL'],'Руководство по подключению');
+					$arPropBtn[] = array($arSection['UF_RUK_PO_SBORKE'],'Руководство по сборке');
+					$arPropBtnEnd = array();
+					foreach($arPropBtn as $v){
+						if(strlen($v[0]) >= 1){
+							$arPropBtnEnd[] = array($v[0],$v[1]);
+						}
 					}
-				}
-
-
-				if(
-					empty($arSection["UF_SAYT_CHERTEG"]) and
-					empty($arSection["UF_SAYT_VIDEO"]) and
-					empty($arSection["UF_SAYT_INSTR"]) and
-					empty($arSection["UF_DRAIVER"]) and
-					empty($arSection["UF_DLINREZA"]) and
-					empty($arSection["UF_SAYT_PO"]) and
-					empty($arSection["UF_3DMODEL"])
-				){
+					$oneProp = array_shift($arPropBtnEnd);
 					?>
 
-
-					<div class="prod-btn-docs hover">
-						<a href="#" class="toggle">Загрузки <span class="">▼</span></a>
-						<ul>
-							<? foreach($arPropBtnEnd as $p){ ?>
-								<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
-							<?}?>
-						</ul>
-					</div>
-
-					<?
-				}else{
+					<? if(isset($oneProp[0])):?>
+						<div class="prod-btn-docs">
+							<a href="<?=$oneProp[0]?>"><?=$oneProp[1]?></a>
+						</div>
+					<? endif; ?>
 
 
-				$output = array_slice($arPropBtnEnd, 0, 2);
-				unset($arPropBtnEnd[0]);
-				unset($arPropBtnEnd[1]);
+					<? if(isset($arPropBtnEnd[0])):?>
+						<div class="prod-btn-docs hover">
+							<a href="#" class="toggle">Ещё <span class="">▼</span></a>
+							<ul>
+								<? foreach($arPropBtnEnd as $p){ ?>
+									<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
+								<?}?>
+							</ul>
+						</div>
+					<? endif; ?>
 
-				?>
-				<? if(isset($output[0][0])):?>
-					<div class="prod-btn-docs">
-						<a href="<?=$output[0][0]?>"><?=$output[0][1]?></a>
-					</div>
-				<? endif; ?>
-
-				<? if(isset($output[1][0])):?>
-					<div class="prod-btn-docs">
-						<a href="<?=$output[1][0]?>"><?=$output[1][1]?></a>
-					</div>
-				<? endif; ?>
-
-				<? if(isset($arPropBtnEnd[2])):?>
-					<div class="prod-btn-docs hover">
-						<a href="#" class="toggle">Ещё <span class="">▼</span></a>
-						<ul>
-							<? foreach($arPropBtnEnd as $p){ ?>
-								<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
-							<?}?>
-						</ul>
-					</div>
-				<? endif; ?>
-
-			<?}?>
-			<div class="clear"></div>
+				<div class="clear"></div>
+				</div>
 			</div>
-
 			<div class="preview-text"><?=$arSection['UF_SAYT_PAPKA_OPIS']?></div>
 
 		</div>
@@ -333,51 +302,16 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 									$arPropBtnEnd[] = array($v[0],$v[1],$v[2]);
 								}
 							}
-
-							if(
-							empty($arItem["PROPERTIES"]["SAYT_CHERTEZH"]["VALUE"]) and
-							empty($arItem["PROPERTIES"]["SAYT_VIDEO"]["VALUE"]) and
-							empty($arItem["PROPERTIES"]["SAYT_INSTRUKTSIYA"]["VALUE"]) and
-							empty($arItem["PROPERTIES"]["SAYT_DRAYVER"]["VALUE"]) and
-							empty($arItem["PROPERTIES"]["SAYT_DLINYREZA"]["VALUE"]) and
-							empty($arItem["PROPERTIES"]["SAYT_PO"]["VALUE"]) and
-							empty($arItem["PROPERTIES"]["SAYT_3DMODEL"]["VALUE"])
-							){
-								?>
-
-
-							<div class="prod-btn-docs hover">
-								<a href="#" class="toggle">Загрузки <span class="">▼</span></a>
-								<ul>
-									<? foreach($arPropBtnEnd as $p){ ?>
-										<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
-									<?}?>
-								</ul>
-							</div>
-
-								<?
-							}else{
-
-							$output = array_slice($arPropBtnEnd, 0, 3);
-							unset($arPropBtnEnd[0]);
-							if(isset($output[1][0]) and !isset($output[1][2])) {
-								unset($arPropBtnEnd[1]);
-							}
+							$oneProp = array_shift($arPropBtnEnd);
 							?>
-							<? if(isset($output[0][0])):?>
+
+							<? if(isset($oneProp[0])):?>
 							<div class="prod-btn-docs">
-							<a href="<?=$output[0][0]?>"><?=$output[0][1]?></a>
+							<a href="<?=$oneProp[0]?>"><?=$oneProp[1]?></a>
 							</div>
 							<? endif; ?>
 
-
-							<? if(isset($output[1][0]) and !isset($output[1][2])):?>
-							<div class="prod-btn-docs">
-							<a href="<?=$output[1][0]?>"><?=$output[1][1]?></a>
-							</div>
-							<? endif; ?>
-
-							<? if(isset($arPropBtnEnd[2])):?>
+							<? if(isset($arPropBtnEnd[0])):?>
 							<div class="prod-btn-docs hover">
 							<a href="#" class="toggle">Ещё <span class="">▼</span></a>
 								<ul>
@@ -388,9 +322,6 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 							</div>
 							<? endif; ?>
 
-
-
-							<?}?>
 							<div class="clear"></div>
 						</div>
 					</div>

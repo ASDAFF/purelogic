@@ -1747,12 +1747,18 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
   content: normal;
 }
 .name_section{
+	font-family: 'DINPro Medium';
 	width: 100%;
-    text-align: left;
-    margin: 14px 0;
+    text-align: center;
+    margin: 17px 0;
     display: inline-block;
-    font-size: 33px;
-    font-weight: 400;
+    font-size: 25px;
+}
+.bx_sitemap p{
+	margin: 0px;
+	font-family: 'DINPro Light';
+	font-size: 13px;
+	line-height: 1.35;
 }
 
 

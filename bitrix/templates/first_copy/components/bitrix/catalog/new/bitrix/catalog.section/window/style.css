@@ -89,9 +89,17 @@
 
 .tovar_wr h4 > a {
     color: #323232;
+    font-size: 15px;
+    font-family: 'DINPro Medium';
 }
 .tovar_wr h4 > a:hover {
     color: #8FBC3F;
+}
+
+.preview-text {
+    font-size: 13px;
+    font-family: 'DINPro Light';
+    line-height: 1.35;
 }
 
 .icons-product-box img{

@@ -107,42 +107,9 @@ foreach ($arResult['ITEMS'] as $arItem) {
 						$arPropBtnEnd[] = array($v[0],$v[1]);
 					}
 				}
-
-				if(
-					empty($arItem["PROPERTIES"]["SAYT_CHERTEZH"]["VALUE"]) and
-					empty($arItem["PROPERTIES"]["SAYT_VIDEO"]["VALUE"]) and
-					empty($arItem["PROPERTIES"]["SAYT_INSTRUKTSIYA"]["VALUE"]) and
-					empty($arItem["PROPERTIES"]["SAYT_DRAYVER"]["VALUE"]) and
-					empty($arItem["PROPERTIES"]["SAYT_DLINYREZA"]["VALUE"]) and
-					empty($arItem["PROPERTIES"]["SAYT_PO"]["VALUE"]) and
-					empty($arItem["PROPERTIES"]["SAYT_3DMODEL"]["VALUE"])
-				){
-
+				$oneProp = array_shift($arPropBtnEnd);
 				?>
 
-					<table>
-						<tr>
-							<td></td>
-							<td class="hover-tab">
-								<? if(isset($arPropBtnEnd[0])):?>
-									<div class="button-user-prop toggle">
-										<a href="#">Загрузки <span class="">▼</span></a>
-									</div>
-									<ul>
-										<? foreach($arPropBtnEnd as $p){ ?>
-											<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
-										<?}?>
-									</ul>
-								<? endif; ?>
-							</td>
-						</tr>
-					</table>
-
-				<? }else{ ?>
-
-				<? if(strlen($arItem['NAME']) >= 35){
-					$oneProp = array_shift($arPropBtnEnd);
-					?>
 					<table>
 						<tr>
 							<td>
@@ -166,92 +133,6 @@ foreach ($arResult['ITEMS'] as $arItem) {
 							</td>
 						</tr>
 					</table>
-
-				<?}else{?>
-
-					<? if(
-							count($arPropBtnEnd) == 2 and
-							!empty($arItem["PROPERTIES"]["SAYT_CHERTEZH"]["VALUE"]) or
-							!empty($arItem["PROPERTIES"]["SAYT_VIDEO"]["VALUE"]) or
-							!empty($arItem["PROPERTIES"]["SAYT_INSTRUKTSIYA"]["VALUE"]) or
-							!empty($arItem["PROPERTIES"]["SAYT_DRAYVER"]["VALUE"]) or
-							!empty($arItem["PROPERTIES"]["SAYT_DLINYREZA"]["VALUE"]) or
-							!empty($arItem["PROPERTIES"]["SAYT_PO"]["VALUE"]) or
-							!empty($arItem["PROPERTIES"]["SAYT_3DMODEL"]["VALUE"])
-						){ ?>
-
-						<table>
-							<tr>
-								<td>
-									<? if(isset($arPropBtnEnd[0][0])):?>
-										<div class="button-user-prop">
-											<a href="<?=$arPropBtnEnd[0][0]?>"><?=$arPropBtnEnd[0][1]?></a>
-										</div>
-									<? endif; ?>
-								</td>
-								<td class="hover-tab">
-									<? if(isset($arPropBtnEnd[1][0])):?>
-										<div class="button-user-prop toggle">
-											<a href="#">Ещё <span class="">▼</span></a>
-										</div>
-										<ul>
-											<li><a href="<?=$arPropBtnEnd[1][0]?>"><?=$arPropBtnEnd[1][1]?></a></li>
-										</ul>
-									<? endif; ?>
-								</td>
-							</tr>
-						</table>
-
-					<?}else{
-
-						$output = array_slice($arPropBtnEnd, 0, 3);
-						unset($arPropBtnEnd[0]);
-						unset($arPropBtnEnd[1]);
-						unset($arPropBtnEnd[2]);
-						?>
-						<table>
-							<tr>
-								<td>
-									<? if(isset($output[0][0])):?>
-										<div class="button-user-prop">
-											<a href="<?=$output[0][0]?>"><?=$output[0][1]?></a>
-										</div>
-									<? endif; ?>
-								</td>
-								<td>
-									<? if(isset($output[1][0])):?>
-										<div class="button-user-prop">
-											<a href="<?=$output[1][0]?>"><?=$output[1][1]?></a>
-										</div>
-									<? endif; ?>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<? if(isset($output[2][0])):?>
-										<div class="button-user-prop">
-											<a href="<?=$output[2][0]?>"><?=$output[2][1]?></a>
-										</div>
-									<? endif; ?>
-								</td>
-								<td class="hover-tab">
-									<? if(isset($arPropBtnEnd[3])):?>
-										<div class="button-user-prop toggle">
-											<a href="#">Ещё <span class="">▼</span></a>
-										</div>
-										<ul>
-											<? foreach($arPropBtnEnd as $p){ ?>
-												<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
-											<?}?>
-										</ul>
-									<? endif; ?>
-								</td>
-							</tr>
-						</table>
-
-					<?}?>
-				<?}?>
-			<?}?>
 
 			</div>
 

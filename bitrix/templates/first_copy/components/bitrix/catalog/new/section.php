@@ -210,12 +210,16 @@ if(empty($type_site_now)){
 	if(empty($_GET["template"])) {
 		$_SESSION["template"] = "site_null";
 	}
+}else{
+	if(empty($_GET["template"]) and $type_two != 2) {
+		$_SESSION["template"] = "window";
+	}
 }
 
 ?>
 
 <div class="plitka"><div class="pltk <?if($_SESSION["template"]=="window"){?>current<?}?>">
-<? if($type_two != 2 and !empty($type_two)){ ?>
+<? if($type_two != 2 and !empty($type_site_now)){ ?>
 	<form method="get" action="">
 		<input name="template" type="hidden" value="window">
 		<button class="for_image">
@@ -225,7 +229,7 @@ if(empty($type_site_now)){
 <? } ?>
 </div>
 	<div class="pltk <?if($_SESSION["template"]==""){?>current<?}?>">
-<? if($type_two != 2 and !empty($type_two)){ ?>
+<? if($type_two != 2 and !empty($type_site_now)){ ?>
 		<form method="get" action="">
 			<input name="template" type="hidden" value="normal">
 			<button class="for_image">

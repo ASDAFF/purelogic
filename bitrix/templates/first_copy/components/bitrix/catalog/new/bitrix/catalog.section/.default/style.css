@@ -11,6 +11,13 @@
 }
 .tovar_wr h4 > a{
     color: #323232;
+    font-size: 15px;
+    font-family: 'DINPro Medium';
+}
+.preview-text{
+    font-size: 13px;
+    font-family: 'DINPro Light';
+    line-height: 1.35;
 }
 
 .col-md-9{
@@ -222,7 +229,8 @@ h5 a:hover{
 }
 
 .col-md-6 > .btn-product-docs{
-    margin-top: 25px;
+    margin-top: 22px;
+    margin-left: 90px;
 }
 
 .col-md-6 > .price-element-product{
@@ -239,7 +247,7 @@ h5 a:hover{
     right: 0px;
     top: 24px;
     background-color: #8FBA40;
-    width: 278px;
+    width: 299px;
     border-bottom: 1px solid #4a5d13;
     padding: 5px;
     z-index: 10;
