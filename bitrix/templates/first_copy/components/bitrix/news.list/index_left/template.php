@@ -71,7 +71,7 @@ $this->setFrameMode(true);
 				if (data.length > 0) {
 
 					$.each(data, function(index, data){
-						$(".news_left .mCSB_container").append("<div class='scroll-box'><div class='media'><div class='media-left'><a href='"+ data.url +"'><img class='media-object mCS_img_loaded' src='"+ data.img +"'></a></div><div class='media-body'><span class='scroll-text-date'>"+ data.data +"</span><p class='scroll-text'><a href='"+ data.url +"'>"+ data.text +"</a></p></div></div></div>");
+						$(".news_left .mCSB_container").append("<div class='scroll-box'><div class='media'><div class='media-body'><span class='scroll-text-date'>"+ data.data +"</span><p class='scroll-text'><a href='"+ data.url +"'>"+ data.text +"</a></p></div></div></div>");
 					});
 
 					inProgress(false);
