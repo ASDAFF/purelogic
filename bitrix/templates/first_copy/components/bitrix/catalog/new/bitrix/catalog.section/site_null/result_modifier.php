@@ -470,12 +470,12 @@ if (!empty($arResult['ITEMS']))
 
 
 
-	$arFilter = array('IBLOCK_ID' => $arResult['IBLOCK_ID'],'>LEFT_MARGIN' => $arResult['LEFT_MARGIN'],'<RIGHT_MARGIN' => $arResult['RIGHT_MARGIN'],'>DEPTH_LEVEL' => $arResult['DEPTH_LEVEL'],'GLOBAL_ACTIVE'=>'Y');
-	$rsSect = CIBlockSection::GetList(array("UF_SORTIROVKA"=>"ASC","SORT"=>"ASC"),$arFilter,false,array("UF_*"));
+$arFilter = array('IBLOCK_ID' => $arResult['IBLOCK_ID'],'SECTION_ID' => $arResult['ID'],'GLOBAL_ACTIVE'=>'Y');
+$rsSect = CIBlockSection::GetList(array("UF_SORTIROVKA"=>"ASC","SORT"=>"ASC"),$arFilter,false,array("UF_*"));
 	$section_inc = 0;
 	while ($arSect = $rsSect->GetNext())
 	{
-		if($arSect['UF_SAYT_PAPKA_TIP'] == 1){
+		if($arSect['UF_SAYT_PAPKA_TIP'] == 1 or empty($arSect['UF_SAYT_PAPKA_TIP'])){
 			$arResult['ITEMS_SECTION'][] = $arSect;
 			$section_inc++;
 		}
