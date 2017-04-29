@@ -1759,6 +1759,7 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
 	font-family: 'DINPro Light';
 	font-size: 13px;
 	line-height: 1.35;
+	color: black;
 }
 
 
@@ -2058,7 +2059,8 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
 
 .tovar_wr p{
 	    margin: 8px 0;
-    font-weight: 200;
+   		font-weight: 200;
+		font-size: 13px;
 }
 .tovar_wr p>span{
 	font-weight: 500;

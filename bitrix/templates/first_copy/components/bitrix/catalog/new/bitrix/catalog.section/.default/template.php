@@ -54,7 +54,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 			<?endforeach;?>
 		</div>
 		<div class="col-md-10 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;padding-bottom: 15px;">
-			<div class="col-md-6">
+			<div class="col-md-6 padding_0">
 				<div class="head-product-box">
 					<h4><a href="javascript:void(0);"><?=$arSection['UF_PAPKA_ZAGOLOVOK']?></a></h4>
 				</div>
