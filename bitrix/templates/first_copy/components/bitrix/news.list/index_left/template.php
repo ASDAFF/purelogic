@@ -20,11 +20,13 @@ $this->setFrameMode(true);
 			<div class="scroll-box">
 
 			<div class="media">
+				<!--
 				<div class="media-left">
-					<a href="<?=$arItem['DETAIL_PAGE_URL']?>">
-						<img alt="64x64" class="media-object" src="<?=$arItem['PREVIEW_PICTURE']['SRC'];?>" data-holder-rendered="true">
+					<a href="<?//$arItem['DETAIL_PAGE_URL']?>">
+						<img alt="64x64" class="media-object" src="<?//$arItem['PREVIEW_PICTURE']['SRC'];?>" data-holder-rendered="true">
 					</a>
 				</div>
+				-->
 
 				<div class="media-body">
 						<span class="scroll-text-date"><?=$arItem['DATE_ACTIVE_FROM'];?></span>
