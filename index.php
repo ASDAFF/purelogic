@@ -48,7 +48,7 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"DISPLAY_BOTTOM_PAGER" => "N",
 		"DISPLAY_DATE" => "Y",
 		"DISPLAY_NAME" => "Y",
-		"DISPLAY_PICTURE" => "Y",
+		"DISPLAY_PICTURE" => "N",
 		"DISPLAY_PREVIEW_TEXT" => "Y",
 		"DISPLAY_TOP_PAGER" => "N",
 		"FIELD_CODE" => array(0=>"NAME",1=>"PREVIEW_PICTURE",2=>"DATE_ACTIVE_FROM",3=>"",),
@@ -184,7 +184,7 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"DISPLAY_BOTTOM_PAGER" => "N",
 		"DISPLAY_DATE" => "N",
 		"DISPLAY_NAME" => "Y",
-		"DISPLAY_PICTURE" => "Y",
+		"DISPLAY_PICTURE" => "N",
 		"DISPLAY_PREVIEW_TEXT" => "Y",
 		"DISPLAY_TOP_PAGER" => "N",
 		"FIELD_CODE" => array(0=>"",1=>"",),
@@ -238,7 +238,7 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 					"DISPLAY_BOTTOM_PAGER" => "Y",    // Выводить под списком
 					"DISPLAY_DATE" => "Y",    // Выводить дату элемента
 					"DISPLAY_NAME" => "Y",    // Выводить название элемента
-					"DISPLAY_PICTURE" => "Y",    // Выводить изображение для анонса
+					"DISPLAY_PICTURE" => "N",    // Выводить изображение для анонса
 					"DISPLAY_PREVIEW_TEXT" => "Y",    // Выводить текст анонса
 					"DISPLAY_TOP_PAGER" => "N",    // Выводить над списком
 					"FIELD_CODE" => array(    // Поля
@@ -304,7 +304,7 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 	)
 );?> <section class="about_main">
 		<div class="h2-about-home">
-			Группа компаний PureLogic R&D 
+			 Группа компаний PureLogic R&amp;D
 		</div>
 		<div class="green-bg">
 			 <?$APPLICATION->IncludeComponent(
@@ -452,6 +452,4 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
               )
               );?>
               </div>
-              </section> */ ?>
-
-<? require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>
+              </section> */ ?><? require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>
