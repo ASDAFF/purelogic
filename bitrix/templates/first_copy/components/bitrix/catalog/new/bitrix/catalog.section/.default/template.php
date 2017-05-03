@@ -142,6 +142,38 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 	}
 	?>
 
+	<? if(!empty($arResult['UF_BUY_WITH_ORDER'])): ?>
+	<div class="section-buy">
+		<h1>С этим товаром покупают</h1>
+		<?
+		$arSectionId = explode(';',$arResult['UF_BUY_WITH_ORDER']);
+		foreach($arSectionId as $id){
+			$arFilter = array('IBLOCK_ID' => $arResult['IBLOCK_ID'],'ID' => $id,'GLOBAL_ACTIVE'=>'Y');
+			$rsSect = CIBlockSection::GetList(array("UF_SORTIROVKA"=>"ASC","SORT"=>"ASC"),$arFilter,false,array("UF_KARTINKI"));
+			if($arSect = $rsSect->GetNext()){
+				$arImgSection = explode(';',$arSect['UF_KARTINKI']);
+				foreach($arImgSection as $key => $img){
+					if(preg_match('/min.jpg/',$img)){
+						$oneImgSrction = '/kartinki_dlya_razdelov/' . $img;
+						unset($arImgSection[$key]);
+					}
+					if(empty($img)){unset($arImgSection[$key]);}
+				}
+		?>
+		<div class="item-section">
+			<div class="col-md-3">
+				<a href="<?=$arSect['SECTION_PAGE_URL'];?>">
+					<img src="<?=$oneImgSrction?>">
+					<p><?=$arSect['NAME']?></p>
+				</a>
+			</div>
+		</div>
+			<?}?>
+		<?}?>
+
+	</div>
+	<? endif; ?>
+
 	<script>
 		$(function(){
 
@@ -337,6 +369,39 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 			<?
 		}
 		?>
+
+		<? if(!empty($arResult['UF_BUY_WITH_ORDER'])): ?>
+			<div class="section-buy">
+				<h1>С этим товаром покупают</h1>
+				<?
+				$arSectionId = explode(';',$arResult['UF_BUY_WITH_ORDER']);
+				foreach($arSectionId as $id){
+					$arFilter = array('IBLOCK_ID' => $arResult['IBLOCK_ID'],'ID' => $id,'GLOBAL_ACTIVE'=>'Y');
+					$rsSect = CIBlockSection::GetList(array("UF_SORTIROVKA"=>"ASC","SORT"=>"ASC"),$arFilter,false,array("UF_KARTINKI"));
+					if($arSect = $rsSect->GetNext()){
+						$arImgSection = explode(';',$arSect['UF_KARTINKI']);
+						foreach($arImgSection as $key => $img){
+							if(preg_match('/min.jpg/',$img)){
+								$oneImgSrction = '/kartinki_dlya_razdelov/' . $img;
+								unset($arImgSection[$key]);
+							}
+							if(empty($img)){unset($arImgSection[$key]);}
+						}
+						?>
+						<div class="item-section">
+							<div class="col-md-3">
+								<a href="<?=$arSect['SECTION_PAGE_URL'];?>">
+									<img src="<?=$oneImgSrction?>">
+									<p><?=$arSect['NAME']?></p>
+								</a>
+							</div>
+						</div>
+					<?}?>
+				<?}?>
+
+			</div>
+		<? endif; ?>
+
 		<script>
 			$(function(){
 
