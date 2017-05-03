@@ -28,9 +28,9 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"VIEW_MODE" => "LIST"
 	)
 );?> <?$APPLICATION->IncludeComponent(
-	"bitrix:news.list",
-	"index_left",
-	Array(
+	"bitrix:news.list", 
+	"index_left", 
+	array(
 		"ACTIVE_DATE_FORMAT" => "d.m.Y",
 		"ADD_SECTIONS_CHAIN" => "N",
 		"AJAX_MODE" => "N",
@@ -48,10 +48,15 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"DISPLAY_BOTTOM_PAGER" => "N",
 		"DISPLAY_DATE" => "Y",
 		"DISPLAY_NAME" => "Y",
-		"DISPLAY_PICTURE" => "Y",
+		"DISPLAY_PICTURE" => "N",
 		"DISPLAY_PREVIEW_TEXT" => "Y",
 		"DISPLAY_TOP_PAGER" => "N",
-		"FIELD_CODE" => array(0=>"NAME",1=>"PREVIEW_PICTURE",2=>"DATE_ACTIVE_FROM",3=>"",),
+		"FIELD_CODE" => array(
+			0 => "NAME",
+			1 => "PREVIEW_PICTURE",
+			2 => "DATE_ACTIVE_FROM",
+			3 => "",
+		),
 		"FILTER_NAME" => "",
 		"HIDE_LINK_WHEN_NO_DETAIL" => "N",
 		"IBLOCK_ID" => "14",
@@ -70,7 +75,10 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"PARENT_SECTION" => "",
 		"PARENT_SECTION_CODE" => "",
 		"PREVIEW_TRUNCATE_LEN" => "",
-		"PROPERTY_CODE" => array(0=>"",1=>"",),
+		"PROPERTY_CODE" => array(
+			0 => "",
+			1 => "",
+		),
 		"SET_BROWSER_TITLE" => "N",
 		"SET_LAST_MODIFIED" => "N",
 		"SET_META_DESCRIPTION" => "N",
@@ -81,8 +89,11 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"SORT_BY1" => "ACTIVE_FROM",
 		"SORT_BY2" => "ID",
 		"SORT_ORDER1" => "DESC",
-		"SORT_ORDER2" => "ASC"
-	)
+		"SORT_ORDER2" => "ASC",
+		"COMPOSITE_FRAME_MODE" => "A",
+		"COMPOSITE_FRAME_TYPE" => "AUTO"
+	),
+	false
 );?> <!-- При адаптиве меню --> <?
 		/*
 		$APPLICATION->IncludeComponent(

@@ -463,6 +463,12 @@ if (!empty($arResult['ITEMS']))
 		}
 	}
 }
+$arFilter = array('IBLOCK_ID' => $arResult['IBLOCK_ID'],'ID' => $arResult['ID'],'GLOBAL_ACTIVE'=>'Y');
+$rsSect = CIBlockSection::GetList(array("UF_SORTIROVKA"=>"ASC","SORT"=>"ASC"),$arFilter,false,array("UF_BUY_WITH_ORDER"));
+if($arSect = $rsSect->GetNext())
+{
+	$arResult['UF_BUY_WITH_ORDER'] = $arSect['UF_BUY_WITH_ORDER'];
+}
 
 
 

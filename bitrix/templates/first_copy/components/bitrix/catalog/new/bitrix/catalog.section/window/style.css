@@ -164,3 +164,18 @@
     right: 0px;
     height: 23px;
 }
+
+.item-section{
+    text-align: center;
+}
+.section-buy{
+    display: block;
+    margin-left: 20px;
+}
+.section-buy h1{
+    border-bottom: 1px solid black;
+    padding: 10px;
+    margin-bottom: 30px;
+    font-family: 'DINPro Medium';
+    font-size: 25px;
+}
