@@ -148,7 +148,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 		<?
 		$arSectionId = explode(';',$arResult['UF_BUY_WITH_ORDER']);
 		foreach($arSectionId as $id){
-			$arFilter = array('IBLOCK_ID' => $arResult['IBLOCK_ID'],'ID' => $id,'GLOBAL_ACTIVE'=>'Y');
+			$arFilter = array('IBLOCK_ID' => $arResult['IBLOCK_ID'],'XML_ID' => $id,'GLOBAL_ACTIVE'=>'Y');
 			$rsSect = CIBlockSection::GetList(array("UF_SORTIROVKA"=>"ASC","SORT"=>"ASC"),$arFilter,false,array("UF_KARTINKI"));
 			if($arSect = $rsSect->GetNext()){
 				$arImgSection = explode(';',$arSect['UF_KARTINKI']);
@@ -376,7 +376,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 				<?
 				$arSectionId = explode(';',$arResult['UF_BUY_WITH_ORDER']);
 				foreach($arSectionId as $id){
-					$arFilter = array('IBLOCK_ID' => $arResult['IBLOCK_ID'],'ID' => $id,'GLOBAL_ACTIVE'=>'Y');
+					$arFilter = array('IBLOCK_ID' => $arResult['IBLOCK_ID'],'XML_ID' => $id,'GLOBAL_ACTIVE'=>'Y');
 					$rsSect = CIBlockSection::GetList(array("UF_SORTIROVKA"=>"ASC","SORT"=>"ASC"),$arFilter,false,array("UF_KARTINKI"));
 					if($arSect = $rsSect->GetNext()){
 						$arImgSection = explode(';',$arSect['UF_KARTINKI']);
