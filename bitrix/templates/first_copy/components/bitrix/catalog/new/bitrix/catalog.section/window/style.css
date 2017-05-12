@@ -120,7 +120,7 @@
 
 .btn-product-docs-element ul{
     display: none;
-    width: 298px;
+    width: 147px;
     background-color: #8FBA40;
     color: #fff;
     padding: 5px;
@@ -128,6 +128,9 @@
     border-bottom: 1px solid #4a5d13;
     position: absolute;
     z-index: 20;
+}
+.btn-product-docs-element ul > li{
+    text-align: right;
 }
 .btn-product-docs-element ul li a{
     color: #fff!important;

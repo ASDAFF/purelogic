@@ -247,11 +247,14 @@ h5 a:hover{
     right: 0px;
     top: 24px;
     background-color: #8FBA40;
-    width: 299px;
+    width: 147px;
     border-bottom: 1px solid #4a5d13;
     padding: 5px;
     z-index: 10;
     border-top: 3px solid #fff;
+}
+.btn-product-docs .prod-btn-docs > ul > li{
+    text-align: right;
 }
 
 .btn-product-docs.default > ul{

@@ -73,14 +73,14 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 					$arPropBtn[] = array($arSection['UF_3DMODEL'],'3D-модель');
 					$arPropBtn[] = array($arSection['UF_ARHIVPO'],'Архив ПО');
 					$arPropBtn[] = array($arSection['UF_DEMOVERSIA'],'Демо-версия');
-					$arPropBtn[] = array($arSection['UF_RUK_PO_USTANOVKE'],'Руководство по установке');
-					$arPropBtn[] = array($arSection['UF_RUK_PO_NASTROIKE'],'Руководство по настройке');
-					$arPropBtn[] = array($arSection['UF_RUK_PO_EKSPUATACI'],'Руководство по эксплуатации');
-					$arPropBtn[] = array($arSection['UF_SAYT_POLEZNAYINF'],'Полезная информация');
+					$arPropBtn[] = array($arSection['UF_RUK_PO_USTANOVKE'],'Установка');
+					$arPropBtn[] = array($arSection['UF_RUK_PO_NASTROIKE'],'Настройка');
+					$arPropBtn[] = array($arSection['UF_RUK_PO_EKSPUATACI'],'Эксплуатация');
+					$arPropBtn[] = array($arSection['UF_SAYT_POLEZNAYINF'],'Информация');
 					$arPropBtn[] = array($arSection['UF_USERMANUAL'],'User Manual');
 					$arPropBtn[] = array($arSection['UF_INSTALLATIONGUIDE'],'Installation Guide');
-					$arPropBtn[] = array($arSection['UF_RUK_PO_PODKL'],'Руководство по подключению');
-					$arPropBtn[] = array($arSection['UF_RUK_PO_SBORKE'],'Руководство по сборке');
+					$arPropBtn[] = array($arSection['UF_RUK_PO_PODKL'],'Подключение');
+					$arPropBtn[] = array($arSection['UF_RUK_PO_SBORKE'],'Сборка');
 					$arPropBtnEnd = array();
 					foreach($arPropBtn as $v){
 						if(strlen($v[0]) >= 1){
@@ -99,7 +99,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 
 					<? if(isset($arPropBtnEnd[0])):?>
 						<div class="prod-btn-docs hover">
-							<a href="#" class="toggle">Ещё <span class="">▼</span></a>
+							<a href="#" class="toggle">ЗАГРУЗКИ <span class="">▼</span></a>
 							<ul>
 								<? foreach($arPropBtnEnd as $p){ ?>
 									<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
@@ -320,14 +320,14 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_3DMODEL"]["VALUE"],'3D-модель');
 							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_ARKHIVPO"]["VALUE"],'Архив ПО',2);
 							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_DEMOVERSIYA"]["VALUE"],'Демо-версия',2);
-							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOUSTANOVKE"]["VALUE"],'Руководство по установке',2);
-							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPONASTROYKE"]["VALUE"],'Руководство по настройке',2);
-							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOEKSPL"]["VALUE"],'Руководство по эксплуатации',2);
-							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_POLEZAYAINFORMATSIYA"]["VALUE"],'Полезная информация',2);
+							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOUSTANOVKE"]["VALUE"],'Установка',2);
+							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPONASTROYKE"]["VALUE"],'Настройка',2);
+							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOEKSPL"]["VALUE"],'Эксплуатация',2);
+							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_POLEZAYAINFORMATSIYA"]["VALUE"],'Информация',2);
 							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_USERMANUAL"]["VALUE"],'User Manual',2);
 							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_INSTALLATIONGUIDE"]["VALUE"],'Installation Guide',2);
-							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOPODKLYUCHENIYU"]["VALUE"],'Руководство по подключению',2);
-							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOSBORKE"]["VALUE"],'Руководство по сборке',2);
+							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOPODKLYUCHENIYU"]["VALUE"],'Подключение',2);
+							$arPropBtn[] = array($arItem["PROPERTIES"]["SAYT_RUKOVODSTVOPOSBORKE"]["VALUE"],'Сборка',2);
 							$arPropBtnEnd = array();
 							foreach($arPropBtn as $v){
 								if(strlen($v[0]) >= 1){
@@ -345,7 +345,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 
 							<? if(isset($arPropBtnEnd[0])):?>
 							<div class="prod-btn-docs hover">
-							<a href="#" class="toggle">Ещё <span class="">▼</span></a>
+							<a href="#" class="toggle">ЗАГРУЗКИ <span class="">▼</span></a>
 								<ul>
 									<? foreach($arPropBtnEnd as $p){ ?>
 										<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
