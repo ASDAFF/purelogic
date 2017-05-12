@@ -2,8 +2,8 @@
     margin: -5px 0px 0px -25px;
     position: absolute;
     background: #fff;
-    height: 35px;
-    width: 35px;
+    height: 29px;
+    width: 29px;
     border-radius: 3em;
     background-repeat: no-repeat;
     background-size: contain;
@@ -35,7 +35,6 @@
 }
 
 .new_left_menu>li:hover>span{
-    background: #8FBC3E;
     z-index: 9999;
     background-size: contain;
     background-repeat: no-repeat;
@@ -45,7 +44,8 @@
     cursor: pointer;
     width: 140px;
     text-align: right;
-    padding: 8px 0px;
+    padding: 6px 0px;
+    font-size: 13px;
 }
 
 .new_left_menu>li:hover>.text-name-section{

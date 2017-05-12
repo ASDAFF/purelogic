@@ -74,7 +74,7 @@ if (0 < $arResult["SECTIONS_COUNT"])
 				
 				<li data-id="uli_<?=$arSection["ID"];?>">
 					<span style="background-image: url(<?=$oneImgSrctionIco?>)"></span>
-					<div class="text-name-section" <? if(strlen($arSection['NAME']) > 16){?>style="padding:0px"<?}?>><?=$arSection['NAME']?></div>
+					<div class="text-name-section"><?=$arSection['NAME']?></div>
 				</li>
 				<?}}?>
 </ul><?}?>
@@ -219,7 +219,7 @@ jQuery('.lftnnv.section_leftnav > ul > li').each(function(){
 	<style>
 		.for_left_b .new_left_menu>li {
 			width: 100%;
-			height: 40px;
+			height: 30px;
 		}
 		.new_left_menu>li>span {
 			margin: 0px;
