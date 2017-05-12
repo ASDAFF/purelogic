@@ -221,9 +221,6 @@ jQuery('.lftnnv.section_leftnav > ul > li').each(function(){
 			width: 100%;
 			height: 30px;
 		}
-		.new_left_menu>li>span {
-			margin: 0px;
-		}
 		.for_left_b .new_left_menu:hover > li{
 			background: transparent;
 		}

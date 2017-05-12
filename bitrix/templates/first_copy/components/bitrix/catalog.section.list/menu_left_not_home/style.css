@@ -1,11 +1,9 @@
 .new_left_menu>li>span{
-    margin: -5px 0px 0px -25px;
+    margin: -4px 0px 0px -25px;
     position: absolute;
     height: 29px;
     width: 29px;
-    border-radius: 3em;
     background-repeat: no-repeat;
-    background-size: contain;
     right: 0px;
 }
 
@@ -35,7 +33,6 @@
 
 .new_left_menu>li:hover>span{
     z-index: 9999;
-    background-size: contain;
     background-repeat: no-repeat;
 }
 
