@@ -225,11 +225,11 @@
 <section class="nugniy_tovar">
 	<div class="container">
 		<div class="row">
-			<div class="col-md-7">
+			<div class="col-md-6">
 			<?$APPLICATION->IncludeComponent("bitrix:main.include", "", array("AREA_FILE_SHOW" => "file", "PATH" => SITE_DIR."include/nenashli.php"), false);?>
 				
 			</div>
-			<div class="col-md-5 f-catch">
+			<div class="col-md-6 f-catch">
 					<?$APPLICATION->IncludeComponent(
 	"bitrix:form.result.new",
 	"",

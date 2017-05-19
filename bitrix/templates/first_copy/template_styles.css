@@ -423,13 +423,16 @@ header {
     height: 38px;
 }
 .nugniy_tovar input[name="captcha_word"] {
-    width: 90px !important;
+    width: 112px !important;
 }
 .nugniy_tovar .f-catch img {
     height: 30px;
     margin-bottom: 3px;
     float: right;
-    width: 90px;
+    width: 112px;
+}
+.nugniy_tovar .col-md-6{
+    padding: 0px 5px !important;
 }
 .novosti_slider{height:390px !important;}
 .slider_novosti{height:auto;}
