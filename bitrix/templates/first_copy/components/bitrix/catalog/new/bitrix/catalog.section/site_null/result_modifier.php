@@ -465,10 +465,13 @@ if (!empty($arResult['ITEMS']))
 }
 
 
-
-
-
-
+$arFilter = array('IBLOCK_ID' => $arResult['IBLOCK_ID'],'ID' => $arResult['ID'],'GLOBAL_ACTIVE'=>'Y');
+$rsSect = CIBlockSection::GetList(array("UF_SORTIROVKA"=>"ASC","SORT"=>"ASC"),$arFilter,false,array("UF_OPTIM_TITLE","UF_OPTIM_DESC"));
+while ($arSect = $rsSect->GetNext())
+{
+	$arResult['UF_OPTIM_TITLE'] = $arSect['UF_OPTIM_TITLE'];
+	$arResult['UF_OPTIM_DESC'] = $arSect['UF_OPTIM_DESC'];
+}
 
 $arFilter = array('IBLOCK_ID' => $arResult['IBLOCK_ID'],'SECTION_ID' => $arResult['ID'],'GLOBAL_ACTIVE'=>'Y');
 $rsSect = CIBlockSection::GetList(array("UF_SORTIROVKA"=>"ASC","SORT"=>"ASC"),$arFilter,false,array("UF_*"));

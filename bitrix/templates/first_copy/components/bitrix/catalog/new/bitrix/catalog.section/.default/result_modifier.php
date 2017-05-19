@@ -471,6 +471,12 @@ if($arSect = $rsSect->GetNext())
 }
 
 
+$uf_arresult = CIBlockSection::GetList(Array(), Array("IBLOCK_ID" => $arResult["IBLOCK_ID"], "ID" => $arResult['ID']), false, array('UF_OPTIM_DESC','UF_OPTIM_TITLE'));
+if($uf_value = $uf_arresult->GetNext()) {
+
+	$arResult['UF_OPTIM_TITLE'] = $uf_value['UF_OPTIM_TITLE'];
+	$arResult['UF_OPTIM_DESC'] = $uf_value['UF_OPTIM_DESC'];
+}
 
 
 

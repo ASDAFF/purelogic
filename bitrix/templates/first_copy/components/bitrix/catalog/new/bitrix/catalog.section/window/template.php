@@ -11,6 +11,16 @@
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
+?>
+<?if(!empty($arResult['UF_OPTIM_TITLE'])):?>
+	<div class="col-md-12">
+		<div class="title-optim" onclick="window.location.hash='#text-optim'">
+			<img src="/img/q.png">
+			<h1><?=$arResult['UF_OPTIM_TITLE'];?></h1>
+		</div>
+	</div>
+<?endif;?>
+<?
 
 if (!empty($arResult['ITEMS'])) {
 ?>
@@ -152,6 +162,17 @@ foreach ($arResult['ITEMS'] as $arItem) {
 	?>
 </div>
 
+	<? if(!empty($arResult['UF_OPTIM_DESC'])): ?>
+
+		<div class="col-md-12" id="text-optim" style="margin-bottom: 20px">
+			<h1 style="font-family: 'DINPro light';"><?=$arResult['UF_OPTIM_TITLE']?></h1>
+			<div class="text-optim">
+				<span><?=$arResult['UF_OPTIM_DESC']?></span>
+			</div>
+		</div>
+
+	<?endif;?>
+
 	<? if(!empty($arResult['UF_BUY_WITH_ORDER'])): ?>
 		<div class="section-buy">
 			<h1>С этим товаром покупают</h1>
@@ -218,6 +239,13 @@ foreach ($arResult['ITEMS'] as $arItem) {
 			$('.preview-text').readmore({
 				speed: 75,
 				maxHeight: 70,
+				moreLink: '<a href="#" style="color:#7BB3E8">[Показать полностью]</a>',
+				lessLink: '<a href="#" style="color:#7BB3E8">[Скрыть текст]</a>'
+			});
+
+			$('.text-optim > span').readmore({
+				speed: 75,
+				maxHeight: 60,
 				moreLink: '<a href="#" style="color:#7BB3E8">[Показать полностью]</a>',
 				lessLink: '<a href="#" style="color:#7BB3E8">[Скрыть текст]</a>'
 			});

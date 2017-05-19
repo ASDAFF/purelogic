@@ -7,3 +7,20 @@
     height: 201px;
     margin-right: 25px;
 }
+
+.text-optim{
+    background: #DDEBC2;
+    padding: 10px;
+    border: 1px solid #DADADA;
+    font-size: 13px;
+    font-family: 'DINPro Light';
+    color: black;
+}
+
+.title-optim img{
+    vertical-align: sub;
+}
+.title-optim h1{
+    display: inline-block;
+    font-family: 'DINPro light';
+}

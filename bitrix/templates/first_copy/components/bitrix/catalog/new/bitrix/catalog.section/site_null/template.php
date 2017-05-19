@@ -33,7 +33,36 @@ $this->setFrameMode(true);
 	</div>
 
 	<?
+
 	}
 	?>
 
 </div>
+
+<? if(!empty($arResult['UF_OPTIM_TITLE'])): ?>
+<div class="col-md-12">
+	<div class="title-optim">
+		<img src="/img/q.png">
+		<h1><?=$arResult['UF_OPTIM_TITLE']?></h1>
+	</div>
+</div>
+<? endif; ?>
+<? if(!empty($arResult['UF_OPTIM_DESC'])): ?>
+<div class="col-md-12">
+	<div class="text-optim">
+		<span><?=$arResult['UF_OPTIM_DESC']?></span>
+	</div>
+</div>
+<? endif; ?>
+<script>
+	$(function(){
+
+		$('.text-optim > span').readmore({
+			speed: 75,
+			maxHeight: 60,
+			moreLink: '<a href="#" style="color:#7BB3E8">[Показать полностью]</a>',
+			lessLink: '<a href="#" style="color:#7BB3E8">[Скрыть текст]</a>'
+		});
+
+	});
+</script>
