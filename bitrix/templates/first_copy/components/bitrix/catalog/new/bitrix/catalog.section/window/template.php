@@ -64,7 +64,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 		<div class="col-md-8 col-sm-12" style="padding-right: 0px;">
 
 			<div class="head-product-box">
-				<h4><a href="javascript:void(0);"><?=$arItem['NAME'] ?> </a></h4>
+				<h4><a href="javascript:void(0);"><?=$arItem['PROPERTIES']['SAYT_NAIMENOVANIEDLYASAYTA'] ?> </a></h4>
 			</div>
 
 			<table>
