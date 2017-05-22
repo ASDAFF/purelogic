@@ -318,7 +318,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 				<div class="col-md-10 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;">
 					<div class="col-md-6">
 						<div class="head-product-box">
-							<h4><a href="javascript:void(0);"><?=$arItem['PROPERTIES']['SAYT_NAIMENOVANIEDLYASAYTA']  ?></a></h4>
+							<h4><a href="javascript:void(0);"><?=$arItem['PROPERTIES']['SAYT_NAIMENOVANIEDLYASAYTA']['VALUE']  ?></a></h4>
 						</div>
 						<div class="col-md-6 padding_0">
 							<div class="price-element-product"><?=number_format($price['PRICE'],0,'',' ')?> <?if($price['CURRENCY'] == 'RUB'){?><span class="green">₽</span><?}else{ print $price['CURRENCY'];}?></div>
