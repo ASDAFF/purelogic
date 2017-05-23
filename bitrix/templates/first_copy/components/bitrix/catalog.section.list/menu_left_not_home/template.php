@@ -118,7 +118,7 @@ if (0 < $arResult["SECTIONS_COUNT"])
 			echo "\n",str_repeat("\t", $CURRENT_DEPTH-$TOP_DEPTH),"</li>";
 		}
 
-		$count = $arParams["COUNT_ELEMENTS"] && $arSection["ELEMENT_CNT"] ? "&nbsp;(".$arSection["ELEMENT_CNT"].")" : "";
+		$count = '';//$arParams["COUNT_ELEMENTS"] && $arSection["ELEMENT_CNT"] ? "&nbsp;(".$arSection["ELEMENT_CNT"].")" : "";
 
 		if ($_REQUEST['SECTION_ID']==$arSection['ID'])
 		{
