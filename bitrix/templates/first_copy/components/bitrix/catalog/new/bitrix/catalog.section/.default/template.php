@@ -37,21 +37,23 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 	<div class="tovar_wr" id="bx_3966226736_37864">
 		<div class="col-md-2  col-sm-6 col-xs-12  padding-left_0 padding-right-null">
 			<div class="icons-product-box">
-				<? if($arSection['UF_NOVINKA'] == 1): ?>
-				<img src="<?=SITE_TEMPLATE_PATH?>/img/icon1.png">
-				<? endif; ?>
+				<!--
+				<?// if($arSection['UF_NOVINKA'] == 1): ?>
+				<img src="<?//=SITE_TEMPLATE_PATH?>/img/icon1.png">
+				<?// endif; ?>
 
-				<? if($arSection['UF_BESP_DOSTAVKA'] == 1): ?>
-				<img src="<?=SITE_TEMPLATE_PATH?>/img/icon2.png">
-				<? endif; ?>
+				<?// if($arSection['UF_BESP_DOSTAVKA'] == 1): ?>
+				<img src="<?//=SITE_TEMPLATE_PATH?>/img/icon2.png">
+				<?// endif; ?>
 
-				<? if($arSection['UF_REKOMENDUEM'] == 1): ?>
-				<img src="<?=SITE_TEMPLATE_PATH?>/img/icon3.png">
-				<? endif; ?>
+				<?// if($arSection['UF_REKOMENDUEM'] == 1): ?>
+				<img src="<?//=SITE_TEMPLATE_PATH?>/img/icon3.png">
+				<?// endif; ?>
 
-				<? if($arSection['UF_AKCIONTOVAR'] == 1): ?>
-				<img src="<?=SITE_TEMPLATE_PATH?>/img/icon4.png">
-				<? endif; ?>
+				<?// if($arSection['UF_AKCIONTOVAR'] == 1): ?>
+				<img src="<?//=SITE_TEMPLATE_PATH?>/img/icon4.png">
+				<?// endif; ?>
+				-->
 			</div>
 			<a href="<?=$oneImgSrction?>" class="image fancybox-one" data-fancybox-group="thumb<?=$arSection['ID']?>">
 			<img src="<?=$oneImgSrction;?>" alt="<?=$arSection['UF_PAPKA_ZAGOLOVOK']?>">
@@ -288,18 +290,20 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 			<div class="tovar_wr" id="bx_3966226736_37864" style="margin-bottom: 50px;">
 				<div class="col-md-2  col-sm-6 col-xs-12  padding-left_0 element" style="position: relative;">
 					<div class="icons-product-box">
-						<? if($arItem["PROPERTIES"]["NOVINKA"]["VALUE"] == 'Y'): ?>
-						<img src="<?=SITE_TEMPLATE_PATH?>/img/icon1.png">
-						<? endif; ?>
-						<? if($arItem["PROPERTIES"]["DOSTAVKA"]["VALUE"] == 'Y'): ?>
-						<img src="<?=SITE_TEMPLATE_PATH?>/img/icon2.png">
-						<? endif; ?>
-						<? if($arItem["PROPERTIES"]["KACHESTVO"]["VALUE"] == 'Y'): ?>
-						<img src="<?=SITE_TEMPLATE_PATH?>/img/icon3.png">
-						<? endif; ?>
-						<? if($arItem["PROPERTIES"]["AKCYIA"]["VALUE"] == 'Y'): ?>
-						<img src="<?=SITE_TEMPLATE_PATH?>/img/icon4.png">
-						<? endif; ?>
+						<!--
+						<?// if($arItem["PROPERTIES"]["NOVINKA"]["VALUE"] == 'Y'): ?>
+						<img src="<?//=SITE_TEMPLATE_PATH?>/img/icon1.png">
+						<?// endif; ?>
+						<?// if($arItem["PROPERTIES"]["DOSTAVKA"]["VALUE"] == 'Y'): ?>
+						<img src="<?//=SITE_TEMPLATE_PATH?>/img/icon2.png">
+						<?// endif; ?>
+						<?// if($arItem["PROPERTIES"]["KACHESTVO"]["VALUE"] == 'Y'): ?>
+						<img src="<?//=SITE_TEMPLATE_PATH?>/img/icon3.png">
+						<?// endif; ?>
+						<?// if($arItem["PROPERTIES"]["AKCYIA"]["VALUE"] == 'Y'): ?>
+						<img src="<?//=SITE_TEMPLATE_PATH?>/img/icon4.png">
+						<?// endif; ?>
+						-->
 					</div>
 
 					<a href="<?=$arItem['PREVIEW_PICTURE']['SRC']?>" class="image fancybox-one" data-fancybox-group="thumb<?=$arItem['ID']?>">

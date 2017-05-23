@@ -33,18 +33,20 @@ foreach ($arResult['ITEMS'] as $arItem) {
 	<div class="tovar_wr list_tov col-md-6" id="bx_328740560_37864" style="padding-left: 10px;padding-right: 10px">
 		<div class="col-md-4  col-sm-6 col-xs-12 element padding-left_0" style="padding-right: 0px;text-align: center;">
 			<div class="icons-product-box">
-				<? if($arItem["PROPERTIES"]["NOVINKA"]["VALUE"] == 'Y'): ?>
-					<img src="<?=SITE_TEMPLATE_PATH?>/img/icon1.png">
-				<? endif; ?>
-				<? if($arItem["PROPERTIES"]["DOSTAVKA"]["VALUE"] == 'Y'): ?>
-					<img src="<?=SITE_TEMPLATE_PATH?>/img/icon2.png">
-				<? endif; ?>
-				<? if($arItem["PROPERTIES"]["KACHESTVO"]["VALUE"] == 'Y'): ?>
-					<img src="<?=SITE_TEMPLATE_PATH?>/img/icon3.png">
-				<? endif; ?>
-				<? if($arItem["PROPERTIES"]["AKCYIA"]["VALUE"] == 'Y'): ?>
-					<img src="<?=SITE_TEMPLATE_PATH?>/img/icon4.png">
-				<? endif; ?>
+				<!--
+				<?// if($arItem["PROPERTIES"]["NOVINKA"]["VALUE"] == 'Y'): ?>
+					<img src="<?//=SITE_TEMPLATE_PATH?>/img/icon1.png">
+				<?// endif; ?>
+				<?// if($arItem["PROPERTIES"]["DOSTAVKA"]["VALUE"] == 'Y'): ?>
+					<img src="<?//=SITE_TEMPLATE_PATH?>/img/icon2.png">
+				<?// endif; ?>
+				<?// if($arItem["PROPERTIES"]["KACHESTVO"]["VALUE"] == 'Y'): ?>
+					<img src="<?//=SITE_TEMPLATE_PATH?>/img/icon3.png">
+				<?// endif; ?>
+				<?// if($arItem["PROPERTIES"]["AKCYIA"]["VALUE"] == 'Y'): ?>
+					<img src="<?//=SITE_TEMPLATE_PATH?>/img/icon4.png">
+				<?// endif; ?>
+				-->
 			</div>
 
 			<?
