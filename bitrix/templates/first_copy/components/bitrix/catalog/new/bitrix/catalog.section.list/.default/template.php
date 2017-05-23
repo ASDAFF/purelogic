@@ -58,7 +58,7 @@ if ('Y' == $arParams['SHOW_PARENT_NAME'] && 0 < $arResult['SECTION']['ID'])
 			<?=$uf_value['UF_PAPKA_ZAGOLOVOK']?>
 			</h3>
 			<p>
-			<?=$uf_value['~UF_SAYT_PAPKA_OPIS']?>
+			<?=preg_replace("/(\r\n)/", "<br/>", $uf_value['~UF_SAYT_PAPKA_OPIS'])?>
 			</p>
 			<?
 		}
