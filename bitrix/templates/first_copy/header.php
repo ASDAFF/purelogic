@@ -220,7 +220,7 @@ $(this).append($("#"+$(this).attr("data-id")));
 
 				<div class="col-md-4 col-lg-3 hidden-xs hidden-sm">
 					<div class="call_back_header">
-						<span>Обратный звонок</span>
+					<!--	<span>Обратный звонок</span> -->
 					</div>
 				</div>
 					<?/*<div class="col-md-4 col-lg-5 hidden-xs hidden-sm">
