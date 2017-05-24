@@ -71,8 +71,8 @@ if (0 < $arResult["SECTIONS_COUNT"])
 				$this->AddEditAction($arSection['ID'], $arSection['EDIT_LINK'], $strSectionEdit);
 				$this->AddDeleteAction($arSection['ID'], $arSection['DELETE_LINK'], $strSectionDelete, $arSectionDeleteParams);
 				if($arSection["DEPTH_LEVEL"]==1){?>
-				
-				<li data-id="uli_<?=$arSection["ID"];?>">
+
+				<li data-id="uli_<?=$arSection["ID"];?>" onclick="window.location.href='<?=$arSection['SECTION_PAGE_URL']?>'">
 					<span style="background-image: url(<?=$oneImgSrctionIco?>)"></span>
 					<div class="text-name-section"><?=$arSection['NAME']?></div>
 				</li>
