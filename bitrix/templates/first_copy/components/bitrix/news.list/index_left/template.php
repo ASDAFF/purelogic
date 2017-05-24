@@ -14,7 +14,7 @@ $this->setFrameMode(true);
 ?>
 <div class="news_left">
 	<div class="title_news" onclick="window.open('/support/news/')">Новости</div>
-	<div id="content-news-scroll" class="content-news-scroll" style="height: 400px;">
+	<div id="content-news-scroll" class="content-news-scroll" style="height: 501px;">
 		<? foreach($arResult["ITEMS"] as $arItem):?>
 
 			<div class="scroll-box">
@@ -51,7 +51,7 @@ $this->setFrameMode(true);
 			scrollbarPosition:"inside",
 			callbacks: {
 				onTotalScroll: function () {
-					myCallback(this)
+				//	myCallback(this)
 				},
 			}
 		});
