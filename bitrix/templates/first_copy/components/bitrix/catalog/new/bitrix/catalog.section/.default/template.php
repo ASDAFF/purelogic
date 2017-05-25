@@ -127,7 +127,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 
 		</div>
 
-		<div class="col-md-12 col-sm-6 col-xs-12 product-block-all" style="padding-right: 0px;">
+		<div class="col-md-12 col-sm-6 col-xs-12 product-block-all" style="padding: 0px;">
 			<div class="box-products-group">
 				<? foreach($arSection['ELEMENT'] as $element){
 					$db_res_p = CPrice::GetList(array(), array("PRODUCT_ID" => $element['ID']));
