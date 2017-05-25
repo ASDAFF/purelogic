@@ -228,7 +228,7 @@ h5 a:hover{
 }
 
 .col-md-6 > .btn-product-docs{
-    margin-left: 114px;
+    float: right;
 }
 
 .col-md-6 > .price-element-product{
