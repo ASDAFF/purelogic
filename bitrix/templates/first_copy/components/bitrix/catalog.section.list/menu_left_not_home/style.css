@@ -50,7 +50,7 @@
 .for_left_b{
     width: 180px;
     position: absolute;
-    left: -180px;
+    left: -190px;
 }
 
 @media (max-width: 1290px) { /* это будет показано при разрешении монитора до 930 пикселей */

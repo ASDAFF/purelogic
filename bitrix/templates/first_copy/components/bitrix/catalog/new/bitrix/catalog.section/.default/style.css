@@ -11,7 +11,7 @@
 }
 .tovar_wr h4 > a{
     color: #323232;
-    font-size: 15px;
+    font-size: 17px;
     font-family: 'DINPro Medium';
 }
 .preview-text{
@@ -52,13 +52,13 @@
 .box-product-gr{
     min-height: 51px;
     position: relative;
-    border-bottom: 1px dotted #DADADA;
+
 }
 
 .box-product-gr .add_in_card {
     position: absolute;
     top: 12px;
-    right: 0px;
+    right: 8px;
 }
 .box-product-price{
     position: absolute;
@@ -314,4 +314,28 @@ h5 a:hover{
     font-size: 13px;
     font-family: 'DINPro Light';
     color: black;
+}
+
+.box-product-gr:nth-child(odd){
+    background: #EBEBEB;
+}
+
+.box-product-gr h5{
+    display: inline-block;
+    margin-top: 4px;
+    margin-left: 5px;
+    margin-bottom: 0px;
+}
+
+.tovar_wr .box-product-gr p{
+    margin: 7px 5px;
+}
+
+.free-shiping{
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    font-size: 12px;
+    background: #dfeac0;
+    border: 1px solid #D5D5D5;
 }

@@ -36,6 +36,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 	?>
 	<div class="tovar_wr" id="bx_3966226736_37864">
 		<div class="col-md-2  col-sm-6 col-xs-12  padding-left_0 padding-right-null">
+			<div class="free-shiping">БЕСПЛАТНАЯ ДОСТАВКА</div>
 			<div class="icons-product-box">
 				<!--
 				<?// if($arSection['UF_NOVINKA'] == 1): ?>
@@ -64,7 +65,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 			</a>
 			<?endforeach;?>
 		</div>
-		<div class="col-md-10 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;padding-bottom: 15px;">
+		<div class="col-md-10 col-sm-6 col-xs-12 back-fon-yelow" style="padding-right: 0px;padding-bottom: 20px;">
 			<div class="col-md-6 padding_0">
 				<div class="head-product-box">
 					<h4><a href="javascript:void(0);"><?=$arSection['UF_PAPKA_ZAGOLOVOK']?></a></h4>
