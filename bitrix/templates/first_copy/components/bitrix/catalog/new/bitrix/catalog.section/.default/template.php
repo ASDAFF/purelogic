@@ -104,7 +104,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 
 					<? if(isset($oneProp[0])):?>
 						<div class="prod-btn-docs">
-							<a href="<?=$oneProp[0]?>"><?=$oneProp[1]?></a>
+							<a href="<?=$oneProp[0]?>" style="<?if(empty($arPropBtnEnd)){?>border-right: 1px solid #c7c7c7;<?}?>"><?=$oneProp[1]?></a>
 						</div>
 					<? endif; ?>
 
