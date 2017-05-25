@@ -12,17 +12,17 @@ foreach($arResult["ITEMS"] as $key => $arElement)
 }
 
 $arFilter = array('IBLOCK_ID' => $arResult['IBLOCK_ID'],'ID' => $arResult['ID'],'GLOBAL_ACTIVE'=>'Y');
-$rsSect = CIBlockSection::GetList(array("UF_SORTIROVKA"=>"ASC","SORT"=>"ASC"),$arFilter,false,array("UF_BUY_WITH_ORDER"));
+$rsSect = CIBlockSection::GetList(array("UF_SORTIROVKA"=>"ASC","SORT"=>"ASC"),$arFilter,false,array("UF_REKOMENDUEM_T"));
 if($arSect = $rsSect->GetNext())
 {
-	$arResult['UF_BUY_WITH_ORDER'] = $arSect['UF_BUY_WITH_ORDER'];
+	$arResult['UF_BUY_WITH_ORDER'] = $arSect['UF_REKOMENDUEM_T'];
 }
 
 
-$uf_arresult = CIBlockSection::GetList(Array(), Array("IBLOCK_ID" => $arResult["IBLOCK_ID"], "ID" => $arResult['ID']), false, array('UF_OPTIM_DESC','UF_OPTIM_TITLE'));
+$uf_arresult = CIBlockSection::GetList(Array(), Array("IBLOCK_ID" => $arResult["IBLOCK_ID"], "ID" => $arResult['ID']), false, array('UF_SAYT_PAPKA_INFO','UF_SAYT_PAPKA_INFO_Z'));
 if($uf_value = $uf_arresult->GetNext()) {
 
-	$arResult['UF_OPTIM_TITLE'] = $uf_value['UF_OPTIM_TITLE'];
-	$arResult['UF_OPTIM_DESC'] = $uf_value['UF_OPTIM_DESC'];
+	$arResult['UF_SAYT_PAPKA_INFO_Z'] = $uf_value['UF_SAYT_PAPKA_INFO_Z'];
+	$arResult['UF_SAYT_PAPKA_INFO'] = $uf_value['~UF_SAYT_PAPKA_INFO'];
 }
 ?>

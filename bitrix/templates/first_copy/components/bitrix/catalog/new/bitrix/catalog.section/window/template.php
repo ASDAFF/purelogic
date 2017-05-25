@@ -12,11 +12,11 @@
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 ?>
-<?if(!empty($arResult['UF_OPTIM_TITLE'])):?>
+<?if(!empty($arResult['UF_SAYT_PAPKA_INFO_Z'])):?>
 	<div class="col-md-12">
 		<div class="title-optim" onclick="window.location.hash='#text-optim'">
 			<img src="/img/q.png">
-			<h1><?=$arResult['UF_OPTIM_TITLE'];?></h1>
+			<h1><?=$arResult['UF_SAYT_PAPKA_INFO_Z'];?></h1>
 		</div>
 	</div>
 <?endif;?>
@@ -164,12 +164,12 @@ foreach ($arResult['ITEMS'] as $arItem) {
 	?>
 </div>
 
-	<? if(!empty($arResult['UF_OPTIM_DESC'])): ?>
+	<? if(!empty($arResult['UF_SAYT_PAPKA_INFO'])): ?>
 
 		<div class="col-md-12" id="text-optim" style="margin-bottom: 20px">
-			<h1 style="font-family: 'DINPro light';"><?=$arResult['UF_OPTIM_TITLE']?></h1>
+			<h1 style="font-family: 'DINPro light';"><?=$arResult['UF_SAYT_PAPKA_INFO_Z']?></h1>
 			<div class="text-optim">
-				<span><?=$arResult['UF_OPTIM_DESC']?></span>
+				<span><?=$arResult['UF_SAYT_PAPKA_INFO']?></span>
 			</div>
 		</div>
 

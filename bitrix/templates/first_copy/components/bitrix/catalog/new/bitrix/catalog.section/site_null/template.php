@@ -39,18 +39,18 @@ $this->setFrameMode(true);
 
 </div>
 
-<? if(!empty($arResult['UF_OPTIM_TITLE'])): ?>
+<? if(!empty($arResult['UF_SAYT_PAPKA_INFO_Z'])): ?>
 <div class="col-md-12">
 	<div class="title-optim">
 		<img src="/img/q.png">
-		<h1><?=$arResult['UF_OPTIM_TITLE']?></h1>
+		<h1><?=$arResult['UF_SAYT_PAPKA_INFO_Z']?></h1>
 	</div>
 </div>
 <? endif; ?>
-<? if(!empty($arResult['UF_OPTIM_DESC'])): ?>
+<? if(!empty($arResult['UF_SAYT_PAPKA_INFO'])): ?>
 <div class="col-md-12">
 	<div class="text-optim">
-		<span><?=$arResult['UF_OPTIM_DESC']?></span>
+		<span><?=$arResult['UF_SAYT_PAPKA_INFO']?></span>
 	</div>
 </div>
 <? endif; ?>
