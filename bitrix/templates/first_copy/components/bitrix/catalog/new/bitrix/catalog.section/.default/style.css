@@ -230,8 +230,7 @@ h5 a:hover{
 }
 
 .col-md-6 > .btn-product-docs{
-    margin-top: 22px;
-    margin-left: 90px;
+    margin-left: 114px;
 }
 
 .col-md-6 > .price-element-product{
@@ -272,7 +271,6 @@ h5 a:hover{
 
 .btn-product-docs .prod-btn-docs{
     float: left;
-    margin-left: 5px;
 }
 
 .btn-product-docs .prod-btn-docs.hover{
@@ -339,4 +337,22 @@ h5 a:hover{
     font-size: 12px;
     background: #dfeac0;
     border: 1px solid #D5D5D5;
+}
+
+.box-products-group{
+    border: 1px solid #EBEBEB;
+}
+.tovar_wr .btn-product-docs .prod-btn-docs > a{
+    display: block;
+    width: 147px;
+    font-size: 15px;
+    padding: 2px 0;
+    border-top: 1px solid #c7c7c7;
+    border-bottom: 1px solid #c7c7c7;
+    border-left: 1px solid #c7c7c7;
+    text-align: center;
+    color: #000;
+}
+.tovar_wr .btn-product-docs .prod-btn-docs.hover{
+    border-right: 1px solid #c7c7c7;
 }

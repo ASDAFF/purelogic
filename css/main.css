@@ -2065,15 +2065,7 @@ body > section.about_we > div > div.container > div > div:nth-child(3) > a > img
 .tovar_wr p>span{
 	font-weight: 500;
 }
-.tovar_wr .btn-product-docs .prod-btn-docs > a{
-	display: block;
-	width: 147px;
-	font-size: 15px;
-	padding: 2px 0;
-	border: 1px solid #c7c7c7;
-	text-align: center;
-	color: #000;
-}
+
 .tovar_wr .btn-product-docs .prod-btn-docs > a:hover{
 	background-color: #94b82f;
 	color: #fff;
