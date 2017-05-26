@@ -332,8 +332,8 @@ h5 a:hover{
 .free-shiping{
     position: absolute;
     top: 0px;
-    width: 100%;
-    font-size: 12px;
+    width: 85%;
+    font-size: 9px;
     background: #dfeac0;
     border: 1px solid #D5D5D5;
 }
@@ -353,4 +353,8 @@ h5 a:hover{
 }
 .tovar_wr .btn-product-docs .prod-btn-docs.hover{
     border-right: 1px solid #c7c7c7;
+}
+
+.bx_sitemap{
+    margin-bottom: 20px;
 }

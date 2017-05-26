@@ -122,6 +122,7 @@ if ($verticalGrid)
 
 <?
 
+
 $APPLICATION->IncludeComponent(
 	"bitrix:catalog.section.list",
 	"",

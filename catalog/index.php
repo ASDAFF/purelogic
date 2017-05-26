@@ -4,8 +4,8 @@ require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 $APPLICATION->SetTitle("");
 
 ?><?$APPLICATION->IncludeComponent(
-	"bitrix:catalog", 
-	"new", 
+	"bitrix:catalog",
+	"new",
 	array(
 		"ACTION_VARIABLE" => "action",
 		"ADD_ELEMENT_CHAIN" => "N",
