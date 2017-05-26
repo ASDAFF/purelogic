@@ -123,8 +123,11 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 				<div class="clear"></div>
 				</div>
 			</div>
-			<div class="preview-text"><?=preg_replace("/(\r\n)/", "<br/>", $arSection['~UF_SAYT_PAPKA_OPIS'])?></div>
-
+			<div class="col-md-10 padding_0">
+				<div class="preview-text">
+					<?=preg_replace("/(\r\n)/", "<br/>", $arSection['~UF_SAYT_PAPKA_OPIS'])?>
+				</div>
+			</div>
 		</div>
 
 		<div class="col-md-12 col-sm-6 col-xs-12 product-block-all" style="padding: 0px;">

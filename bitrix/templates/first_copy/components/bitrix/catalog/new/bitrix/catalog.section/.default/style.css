@@ -335,7 +335,9 @@ h5 a:hover{
     width: 85%;
     font-size: 9px;
     background: #dfeac0;
-    border: 1px solid #D5D5D5;
+    border-bottom: 1px solid #D5D5D5;
+    border-left: 1px solid #D5D5D5;
+    border-right: 1px solid #D5D5D5;
 }
 
 .box-products-group{
