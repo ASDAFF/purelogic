@@ -114,7 +114,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 							<a href="#" class="toggle">ЗАГРУЗКИ <span class="">▼</span></a>
 							<ul>
 								<? foreach($arPropBtnEnd as $p){ ?>
-									<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
+									<li><a href="<?=$p[0]?>"><sapn class="link-back-fon"></sapn><?=$p[1]?></a></li>
 								<?}?>
 							</ul>
 						</div>

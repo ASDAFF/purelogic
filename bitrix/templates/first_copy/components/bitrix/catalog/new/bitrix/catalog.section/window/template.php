@@ -138,7 +138,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 									</div>
 									<ul>
 										<? foreach($arPropBtnEnd as $p){ ?>
-											<li><a href="<?=$p[0]?>"><?=$p[1]?></a></li>
+											<li><a href="<?=$p[0]?>"><sapn class="link-back-fon"></sapn><?=$p[1]?></a></li>
 										<?}?>
 									</ul>
 								<? endif; ?>
