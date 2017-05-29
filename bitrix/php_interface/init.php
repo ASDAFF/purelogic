@@ -47,13 +47,7 @@ class ElementUpdate
     // создаем обработчик события "OnBeforeIBlockElementUpdate"
     function OnBeforeIBlockElementUpdateHandler(&$arFields)
     {
-        if(CModule::IncludeModule('iblock')) {
-
-            $db_props = CIBlockElement::GetProperty($arFields['IBLOCK_ID'], $arFields['ID'], array("sort" => "asc"), Array("CODE"=>"SAYT_SORTIROVKA"));
-            if($ar_props = $db_props->Fetch()){
-                $arFields['SORT'] = $ar_props['VALUE'];
-            }
-        }
+        $arFields['SORT'] = $arFields['PROPERTY_VALUES']['656']['1355451']['VALUE'];
     }
 }
 
