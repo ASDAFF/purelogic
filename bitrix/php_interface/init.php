@@ -47,8 +47,9 @@ class ElementUpdate
     // создаем обработчик события "OnBeforeIBlockElementUpdate"
     function OnBeforeIBlockElementUpdateHandler(&$arFields)
     {
-        $sort = array_shift($arFields['PROPERTY_VALUES'][656]);
-        $arFields['SORT'] = $sort['VALUE'];
+        foreach($arFields['PROPERTY_VALUES'][656] as $sort){
+            $arFields['SORT'] = $sort['VALUE'];
+        }
     }
 }
 
