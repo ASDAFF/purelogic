@@ -164,51 +164,54 @@ if (0 < $arResult["SECTIONS_COUNT"])
 
 <script>
 
-jQuery(".lftnnv.section_leftnav").prepend('<ul class="its_first_l"></ul>');
-jQuery(".lftnnv.section_leftnav").each(function(){
-jQuery(this).children().children().sort(function (a, b) {
-    return $(a).height() < $(b).height() ? 1 : -1;  
-}).appendTo(jQuery(this).find('.its_first_l'));
-});
-jQuery('.lftnnv.section_leftnav').each(function(){
-var all_height=0;
-var yo_height=0;
-var elem=jQuery(this);
-elem.find('.its_first_l>li').each(function(){
-all_height=all_height+jQuery(this).height();
-});
+	$('.lftnnv.section_leftnav > ul').addClass('its_first_l');
 
-elem.find('.its_first_l>li').each(function(){
+	/*
+	 jQuery(".lftnnv.section_leftnav").html('<ul class="its_first_l"></ul>');
+	 jQuery(".lftnnv.section_leftnav").each(function(){
+	 jQuery(this).children().children().sort(function (a, b) {
+	 return $(a).height() < $(b).height() ? 1 : -1;
+	 }).append(jQuery(this).find('.its_first_l')); //
+	 });
+	 jQuery('.lftnnv.section_leftnav').each(function(){
+	 var all_height=0;
+	 var yo_height=0;
+	 var elem=jQuery(this);
+	 elem.find('.its_first_l>li').each(function(){
+	 all_height=all_height+jQuery(this).height();
+	 });
 
-yo_height=yo_height+jQuery(this).height();
-if(yo_height>(all_height+100)/2)
-elem.find(".its_second_l").append(jQuery(this));
-});
+	 elem.find('.its_first_l>li').each(function(){
 
-});
+	 yo_height=yo_height+jQuery(this).height();
+	 if(yo_height>(all_height+100)/2)
+	 elem.find(".its_second_l").append(jQuery(this));
+	 });
 
-jQuery(".lftnnv.section_leftnav > ul > li").append('<ul class="its_first_perents_l"></ul><ul class="its_second_perents_l"></ul>');
-jQuery(".lftnnv.section_leftnav > ul > li").each(function(){
-	jQuery(this).children().children().sort(function (a, b) {
-		return $(a).height() < $(b).height() ? 1 : -1;
-	}).appendTo(jQuery(this).find('.its_first_perents_l'));
-});
-jQuery('.lftnnv.section_leftnav > ul > li').each(function(){
-	var all_height=0;
-	var yo_height=0;
-	var elem=jQuery(this);
-	elem.find('.its_first_perents_l>li').each(function(){
-		all_height=all_height+jQuery(this).height();
+	 });
+	 */
+	jQuery(".lftnnv.section_leftnav > ul > li").append('<ul class="its_first_perents_l"></ul><ul class="its_second_perents_l"></ul>');
+	jQuery(".lftnnv.section_leftnav > ul > li").each(function(){
+		jQuery(this).children().children().sort(function (a, b) {
+			return $(a).height() < $(b).height() ? 1 : -1;
+		}).appendTo(jQuery(this).find('.its_first_perents_l'));
 	});
+	jQuery('.lftnnv.section_leftnav > ul > li').each(function(){
 
-	elem.find('.its_first_perents_l>li').each(function(){
+		var all_height=0;
+		var yo_height=0;
+		var elem = jQuery(this);
+		elem.find('.its_first_perents_l>li').each(function(){
+			all_height = all_height + jQuery(this).height();
+		});
 
-		yo_height=yo_height+jQuery(this).height();
-		if(yo_height>(all_height+20)/2)
-			elem.find(".its_second_perents_l").append(jQuery(this));
+		elem.find('.its_first_perents_l>li').each(function(){
+			yo_height = yo_height + jQuery(this).height();
+			if(yo_height > (all_height + 20)/2)
+				elem.find(".its_second_perents_l").append(jQuery(this));
+		});
+
 	});
-
-});
 
 	$(".lftnnv.section_leftnav > ul > li > ul").each(function(){
 		if($(this).attr('class') == undefined){

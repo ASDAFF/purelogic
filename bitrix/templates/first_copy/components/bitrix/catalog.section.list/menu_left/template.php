@@ -131,6 +131,7 @@ if (0 < $arResult["SECTIONS_COUNT"])
 			$link = '<a href="'.$arSection["SECTION_PAGE_URL"].'">'.$arSection["NAME"].$count.'</a>';
 		}
 
+
 		echo "\n",str_repeat("\t", $arSection["DEPTH_LEVEL"]-$TOP_DEPTH);
 		?><li <?=$selected;?> id="<?=$this->GetEditAreaId($arSection['ID']);?>"><?=$link?><?
 
@@ -166,11 +167,14 @@ if (0 < $arResult["SECTIONS_COUNT"])
 
 <script>
 
-jQuery(".lftnnv.section_leftnav").prepend('<ul class="its_first_l"></ul>');
+$('.lftnnv.section_leftnav > ul').addClass('its_first_l');
+
+/*
+jQuery(".lftnnv.section_leftnav").html('<ul class="its_first_l"></ul>');
 jQuery(".lftnnv.section_leftnav").each(function(){
 jQuery(this).children().children().sort(function (a, b) {
     return $(a).height() < $(b).height() ? 1 : -1;  
-}).appendTo(jQuery(this).find('.its_first_l'));
+}).append(jQuery(this).find('.its_first_l')); //
 });
 jQuery('.lftnnv.section_leftnav').each(function(){
 var all_height=0;
@@ -188,7 +192,7 @@ elem.find(".its_second_l").append(jQuery(this));
 });
 
 });
-
+ */
 jQuery(".lftnnv.section_leftnav > ul > li").append('<ul class="its_first_perents_l"></ul><ul class="its_second_perents_l"></ul>');
 jQuery(".lftnnv.section_leftnav > ul > li").each(function(){
 	jQuery(this).children().children().sort(function (a, b) {
@@ -217,5 +221,6 @@ jQuery('.lftnnv.section_leftnav > ul > li').each(function(){
 			$(this).remove();
 		}
 	});
+
 </script>
 </div>
