@@ -30,8 +30,22 @@ foreach ($arResult['ITEMS'] as $arItem) {
 	$db_res_p = CPrice::GetList(array(), array("PRODUCT_ID" => $arItem['ID']));
 	$price = $db_res_p->Fetch();
 	?>
-	<div class="tovar_wr list_tov col-md-6" id="bx_328740560_37864" style="padding-left: 10px;padding-right: 10px">
-		<div class="col-md-4  col-sm-6 col-xs-12 element padding-left_0" style="padding-right: 0px;text-align: center;">
+	<div class="tovar_wr list_tov col-md-6" id="bx_328740560_37864">
+		<div class="col-md-12  col-sm-6 col-xs-12 element padding_0 border-top-line">
+			<div class="articul">
+				<?
+				foreach($arItem['PROPERTIES']['CML2_TRAITS']['DESCRIPTION'] as $k => $code){
+					$arCode[$code] = $arItem['PROPERTIES']['CML2_TRAITS']['VALUE'][$k];
+				}
+				print 'Код '.$arCode['Код'];
+				?>
+			</div>
+			<div class="free-shiping">БЕСПЛАТНАЯ ДОСТАВКА</div>
+			<div class="head-product-box">
+				<h4><a href="javascript:void(0);"><?=$arItem['PROPERTIES']['SAYT_NAIMENOVANIEDLYASAYTA']['VALUE'] ?> </a></h4>
+			</div>
+		</div>
+		<div class="col-md-3  col-sm-6 col-xs-12 element padding-left_0" style="padding-right: 0px;text-align: center;">
 			<div class="icons-product-box">
 				<!--
 				<?// if($arItem["PROPERTIES"]["NOVINKA"]["VALUE"] == 'Y'): ?>
@@ -49,25 +63,37 @@ foreach ($arResult['ITEMS'] as $arItem) {
 				-->
 			</div>
 
-			<?
-			if(empty($arItem['PREVIEW_PICTURE']['SRC'])){$arItem['PREVIEW_PICTURE']['SRC'] = SITE_TEMPLATE_PATH.'/img/no_photo.png';} ?>
-			<a href="<?=$arItem['PREVIEW_PICTURE']['SRC']?>" class="image fancybox-one" data-fancybox-group="thumb<?=$arItem['ID']?>">
-				<img style="max-width: 165px;margin-top:10px;" src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>" alt="<?=$arItem['NAME'] ?>">
-			</a>
-
-			<?
-			foreach($arItem["PROPERTIES"]["MORE_PHOTO"]["VALUE"] as $img) {
-				?>
-				<a href="<?=CFile::GetPath($img)?>" data-alt="<?=$arItem['NAME'] ?>" class="image fancybox-thumbs" data-fancybox-group="thumb<?=$arItem['ID']?>" style="display: none">
-					<img src="<?=CFile::GetPath($img);?>">
+			<div class="images-order">
+				<?
+				if(empty($arItem['PREVIEW_PICTURE']['SRC'])){$arItem['PREVIEW_PICTURE']['SRC'] = SITE_TEMPLATE_PATH.'/img/no_photo.png';} ?>
+				<a href="<?=$arItem['PREVIEW_PICTURE']['SRC']?>" class="image fancybox-one" data-fancybox-group="thumb<?=$arItem['ID']?>">
+					<img style="max-height: 93px;" src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>" alt="<?=$arItem['NAME'] ?>">
 				</a>
-			<?}?>
-		</div>
-		<div class="col-md-8 col-sm-12" style="padding-right: 0px;">
 
-			<div class="head-product-box">
-				<h4><a href="javascript:void(0);"><?=$arItem['PROPERTIES']['SAYT_NAIMENOVANIEDLYASAYTA']['VALUE'] ?> </a></h4>
+				<?
+				foreach($arItem["PROPERTIES"]["MORE_PHOTO"]["VALUE"] as $img) {
+					?>
+					<a href="<?=CFile::GetPath($img)?>" data-alt="<?=$arItem['NAME'] ?>" class="image fancybox-thumbs" data-fancybox-group="thumb<?=$arItem['ID']?>" style="display: none">
+						<img src="<?=CFile::GetPath($img);?>">
+					</a>
+				<?}?>
+
+				<div class="images-litl-order">
+					<?
+					for ($i = 0; $i <= 5; $i++) {
+						if(!empty($arItem["PROPERTIES"]["MORE_PHOTO"]["VALUE"][$i])){
+							$images_slim = CFile::GetPath($arItem["PROPERTIES"]["MORE_PHOTO"]["VALUE"][$i]);
+
+					?>
+						<a href="javascript:void(0);" class="hover-small-img"><img src="<?=$images_slim?>"></a>
+					<?
+						}
+					}
+					?>
+				</div>
 			</div>
+		</div>
+		<div class="col-md-9 col-sm-12" style="padding-right: 0px;">
 
 			<table>
 				<tr>
@@ -151,7 +177,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 			<div class="clear"></div>
 
 		</div>
-		<div class="col-md-12 col-sm-6 col-xs-12 back-fon-yelow" style="padding-left: 0px">
+		<div class="col-md-9 col-sm-6 col-xs-12 back-fon-yelow">
 
 			<div class="preview-text"><?= $arItem['DETAIL_TEXT'] ?></div>
 		</div>
@@ -220,6 +246,12 @@ foreach ($arResult['ITEMS'] as $arItem) {
 				$('span',this).text('▼');
 				$('ul',this).css('display','none');
 			});
+
+			$('.hover-small-img').mouseenter(function(){
+				var hoverImg = $(this).find('img').attr('src');
+				$('.image.fancybox-one',$(this).parents().get(1)).find('img').attr('src',hoverImg);
+				$('.image.fancybox-one',$(this).parents().get(1)).attr('href',hoverImg);
+			});
 			/*
 			$('.btn-product-docs-element .toggle').mouseenter(function(){
 				var link = $('a',this);
@@ -240,7 +272,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 
 			$('.preview-text').readmore({
 				speed: 75,
-				maxHeight: 70,
+				maxHeight: 88,
 				moreLink: '<a href="#" style="color:#7BB3E8">[Показать полностью]</a>',
 				lessLink: '<a href="#" style="color:#7BB3E8">[Скрыть текст]</a>'
 			});

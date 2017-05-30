@@ -95,6 +95,9 @@
 .tovar_wr h4 > a:hover {
     color: #8FBC3F;
 }
+.tovar_wr h4{
+    margin-bottom: 12px;
+}
 
 .preview-text {
     font-size: 13px;
@@ -213,4 +216,63 @@
     width: 100%;
     height: 19px;
     left: 0px;
+}
+
+.images-order .images-litl-order img{
+    width: 25px;
+    height: 25px;
+}
+.images-order > a{
+    display: block;
+    border: 1px solid #c7c7c7;
+    width: 116px;
+    overflow: hidden;
+}
+.images-order .images-litl-order a{
+    border: 1px solid #c7c7c7;
+    display: block;
+    width: 36px;
+    height: 35px;
+    padding: 5px;
+    float: left;
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
+.images-order .images-litl-order a:nth-child(3n+3){
+    margin-right: 0px;
+}
+.images-order .images-litl-order{
+    margin-top: 4px;
+}
+
+.border-top-line{
+    border-top: 1px solid #c7c7c7;
+    position: relative;
+}
+
+.free-shiping {
+    position: absolute;
+    top: -14px;
+    right: 0px;
+    padding: 1px;
+    font-size: 9px;
+    background: #dfeac0;
+    border-top: 1px solid #D5D5D5;
+    border-left: 1px solid #D5D5D5;
+    border-right: 1px solid #D5D5D5;
+}
+
+.bx_sitemap{
+    margin-bottom: 40px;
+}
+
+.articul{
+    position: absolute;
+    top: -14px;
+    left: 0px;
+    padding: 1px;
+    font-size: 9px;
+    border-top: 1px solid #D5D5D5;
+    border-left: 1px solid #D5D5D5;
+    border-right: 1px solid #D5D5D5;
 }

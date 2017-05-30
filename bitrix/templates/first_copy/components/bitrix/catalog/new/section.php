@@ -218,15 +218,16 @@ if(empty($type_site_now)){
 }
 
 ?>
+<div class="plitka" style="margin-bottom: 20px;display: none">
 <? if($type_two != 2 and !empty($type_site_now)){ ?>
-<div class="plitka" style="margin-bottom: 20px"><div class="pltk <?if($_SESSION["template"]=="window"){?>current<?}?>">
-	<form method="get" action="">
-		<input name="template" type="hidden" value="window">
-		<button class="for_image">
-			<img src="/img/plitka1.png" alt=""/>
-		</button>
-	</form>
-</div>
+	<div class="pltk <?if($_SESSION["template"]=="window"){?>current<?}?>">
+		<form method="get" action="">
+			<input name="template" type="hidden" value="window">
+			<button class="for_image">
+				<img src="/img/plitka1.png" alt=""/>
+			</button>
+		</form>
+	</div>
 <? } ?>
 <? if($type_two != 2 and !empty($type_site_now)){ ?>
 	<div class="pltk <?if($_SESSION["template"]==""){?>current<?}?>">

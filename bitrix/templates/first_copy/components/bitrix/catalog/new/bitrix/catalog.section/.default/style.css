@@ -379,3 +379,10 @@ h5 a:hover{
     height: 19px;
     left: 0px;
 }
+
+.articul{
+    float: right;
+    font-size: 12px;
+    margin-top: 4px;
+    color: #828080;
+}
