@@ -32,17 +32,19 @@ foreach ($arResult['ITEMS'] as $arItem) {
 	?>
 	<div class="tovar_wr list_tov col-md-6" id="bx_328740560_37864">
 		<div class="col-md-12  col-sm-6 col-xs-12 element padding_0 border-top-line">
-			<div class="articul">
-				<?
-				foreach($arItem['PROPERTIES']['CML2_TRAITS']['DESCRIPTION'] as $k => $code){
-					$arCode[$code] = $arItem['PROPERTIES']['CML2_TRAITS']['VALUE'][$k];
-				}
-				print 'Код '.$arCode['Код'];
-				?>
-			</div>
 			<div class="free-shiping">БЕСПЛАТНАЯ ДОСТАВКА</div>
 			<div class="head-product-box">
-				<h4><a href="javascript:void(0);"><?=$arItem['PROPERTIES']['SAYT_NAIMENOVANIEDLYASAYTA']['VALUE'] ?> </a></h4>
+				<h4>
+					<a href="javascript:void(0);"><?=$arItem['PROPERTIES']['SAYT_NAIMENOVANIEDLYASAYTA']['VALUE'] ?></a>,
+					<span class="articul">
+						<?
+						foreach($arItem['PROPERTIES']['CML2_TRAITS']['DESCRIPTION'] as $k => $code){
+							$arCode[$code] = $arItem['PROPERTIES']['CML2_TRAITS']['VALUE'][$k];
+						}
+						print 'код '.$arCode['Код'];
+						?>
+					</span>
+				</h4>
 			</div>
 		</div>
 		<div class="col-md-3  col-sm-6 col-xs-12 element padding-left_0" style="padding-right: 0px;text-align: center;">
@@ -67,7 +69,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 				<?
 				if(empty($arItem['PREVIEW_PICTURE']['SRC'])){$arItem['PREVIEW_PICTURE']['SRC'] = SITE_TEMPLATE_PATH.'/img/no_photo.png';} ?>
 				<a href="<?=$arItem['PREVIEW_PICTURE']['SRC']?>" class="image fancybox-one" data-fancybox-group="thumb<?=$arItem['ID']?>">
-					<img style="max-height: 93px;" src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>" alt="<?=$arItem['NAME'] ?>">
+					<img style="max-width: 118px;" src="<?=$arItem['PREVIEW_PICTURE']['SRC']?>" alt="<?=$arItem['NAME'] ?>">
 				</a>
 
 				<?
@@ -78,7 +80,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 					</a>
 				<?}?>
 
-				<div class="images-litl-order">
+				<div class="images-litl-order" one-img="<?=$arItem['PREVIEW_PICTURE']['SRC']?>">
 					<?
 					for ($i = 0; $i <= 5; $i++) {
 						if(!empty($arItem["PROPERTIES"]["MORE_PHOTO"]["VALUE"][$i])){
@@ -251,6 +253,11 @@ foreach ($arResult['ITEMS'] as $arItem) {
 				var hoverImg = $(this).find('img').attr('src');
 				$('.image.fancybox-one',$(this).parents().get(1)).find('img').attr('src',hoverImg);
 				$('.image.fancybox-one',$(this).parents().get(1)).attr('href',hoverImg);
+			});
+
+			$('.images-litl-order').mouseleave(function(){
+				var srcImg = $(this).attr('one-img');
+				$('.image.fancybox-one',$(this).parent()).find('img').attr('src',srcImg);
 			});
 			/*
 			$('.btn-product-docs-element .toggle').mouseenter(function(){
