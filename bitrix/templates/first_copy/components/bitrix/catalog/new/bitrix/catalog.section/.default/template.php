@@ -138,13 +138,13 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 				?>
 					<div class="box-product-gr">
 						<h5>
-							<a href="javascript:void(0);"><?=$element['NAME']?></a>,
+							<a href="javascript:void(0);"><?=$element['NAME']?></a>,&nbsp;
 							<div class="articul">
 								<?
 								foreach($element['PROPERTIES']['CML2_TRAITS']['DESCRIPTION'] as $k => $code){
 									$arCode[$code] = $element['PROPERTIES']['CML2_TRAITS']['VALUE'][$k];
 								}
-								print 'Код '.$arCode['Код'];
+								print 'код '.$arCode['Код'];
 								?>
 							</div>
 							<div class="clear"></div>
