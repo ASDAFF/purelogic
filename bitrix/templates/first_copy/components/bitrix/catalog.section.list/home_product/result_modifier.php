@@ -96,4 +96,34 @@ if (0 < $arResult['SECTIONS_COUNT'])
 		}
 	}
 }
+
+
+foreach($arResult['SECTIONS'] as $key => $s){
+
+	$arSelect = Array("ID","IBLOCK_ID", "NAME","PROPERTY_*");
+	$arFilter = Array("IBLOCK_ID" => $arParams['IBLOCK_ID'],"SECTION_ID" => $s['ID'], "ACTIVE"=>"Y");
+	$res = CIBlockElement::GetList(Array(), $arFilter, false, false, $arSelect);
+
+	$idElement = array();
+	while($ob = $res->GetNextElement())
+	{
+		$arProps = $ob->GetProperties();
+		$idElement[$s['ID']] = $arProps['ADD_ORDER']['VALUE'];
+	}
+
+	foreach($idElement[$s['ID']] as $item => $section){
+		$uf_arresult = CIBlockSection::GetList(Array(), Array("IBLOCK_ID" => 18, "ID" => $section), false, Array("UF_*"));
+		if($uf_value = $uf_arresult->GetNext()):
+			$img = explode(';',$uf_value['UF_KARTINKI']);
+			foreach($img as $i){
+				if(preg_match('/min/',$i,$preg)){
+					$images = $i;
+				}
+			}
+			$arResult['SECTIONS'][$key]['ITEM_SECTION'][$item]['NAME'] = $uf_value['NAME'];
+			$arResult['SECTIONS'][$key]['ITEM_SECTION'][$item]['SECTION_PAGE_URL'] = $uf_value['SECTION_PAGE_URL'];
+			$arResult['SECTIONS'][$key]['ITEM_SECTION'][$item]['IMG'] = $images;
+		endif;
+	}
+}
 ?>
