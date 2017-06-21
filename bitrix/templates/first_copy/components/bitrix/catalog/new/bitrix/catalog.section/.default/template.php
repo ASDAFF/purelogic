@@ -17,7 +17,7 @@ $this->setFrameMode(true);
 	<div class="col-md-12">
 		<div class="title-optim" onclick="window.location.hash='#text-optim'">
 			<img src="/img/q.png">
-			<h1><?=$arResult['UF_SAYT_PAPKA_INFO_Z'];?></h1>
+			<span><?=$arResult['UF_SAYT_PAPKA_INFO_Z'];?></span>
 		</div>
 	</div>
 <?endif;?>
@@ -170,8 +170,15 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 
 	<? if(!empty($arResult['UF_SAYT_PAPKA_INFO'])): ?>
 
+
+
+
+
 	<div class="col-md-12" id="text-optim" style="margin-bottom: 20px">
-		<h1 style="font-family: 'DINPro light';"><?=$arResult['UF_SAYT_PAPKA_INFO_Z']?></h1>
+		<div class="title-optim">
+			<img src="/img/q.png">
+			<span><?=$arResult['UF_SAYT_PAPKA_INFO_Z'];?></span>
+		</div>
 		<div class="text-optim">
 		<span><?=$arResult['UF_SAYT_PAPKA_INFO']?></span>
 		</div>

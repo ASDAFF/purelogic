@@ -303,6 +303,7 @@ h5 a:hover{
 }
 .title-optim{
     cursor: pointer;
+    margin-bottom: 15px;
 }
 
 .title-optim img{
@@ -385,4 +386,11 @@ h5 a:hover{
     font-size: 12px;
     margin-top: 4px;
     color: #828080;
+}
+
+.title-optim span{
+    font-size: 16px;
+    color: #94b82f;
+    text-decoration: underline;
+    font-family: 'DINPro Medium';
 }
