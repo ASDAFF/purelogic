@@ -492,7 +492,7 @@ $arResult['GROUP_BLOCK'] = 'N';
 			$arResult['ITEMS_SECTION'][] = $arSect;
 			$arSelect = Array("ID", "IBLOCK_ID", "NAME", "DATE_ACTIVE_FROM","SORT","PREVIEW_TEXT","DETAIL_TEXT","DETAIL_TEXT_TYPE","DATE_CREATE","IBLOCK_SECTION_ID","DETAIL_PAGE_URL","PREVIEW_PICTURE","DETAIL_PICTURE","LANG_DIR","EXTERNAL_ID","IBLOCK_TYPE_ID","LID","CATALOG_PRICE_ID_1","CATALOG_PRICE_1","CATALOG_CURRENCY_1","PROPERTY_*");
 			$arFilter = Array("IBLOCK_ID"=>$arResult['IBLOCK_ID'],"SECTION_ID"=>$arSect['ID'], "ACTIVE"=>"Y");
-			$res = CIBlockElement::GetList(Array(), $arFilter, false, Array("nPageSize"=>50), $arSelect);
+			$res = CIBlockElement::GetList(Array("SORT"=>"ASC"), $arFilter, false, false, $arSelect);
 			while($ob = $res->GetNextElement()){
 				$arFields = $ob->GetFields();
 				$arProps = $ob->GetProperties();
