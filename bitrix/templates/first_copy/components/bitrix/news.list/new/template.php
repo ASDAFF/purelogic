@@ -28,7 +28,7 @@ $this->setFrameMode(true);
 			<? if(!empty($arItem["PREVIEW_TEXT"])){?>
 			<div class="ms-slider-text-box"><?=$arItem["PREVIEW_TEXT"];?></div>
 			<?}?>
-			<img src="http://www.masterslider.com/wp-content/plugins/masterslider/public/assets/css/blank.gif" alt="" title="" data-src="<?=$arItem["PREVIEW_PICTURE"]["SRC"];?>" />
+			<img src="http://www.masterslider.com/wp-content/plugins/masterslider/public/assets/css/blank.gif" alt="<?=$arItem['PROPERTIES']['ALT']['VALUE']?>" title="<?=$arItem['NAME']?>" data-src="<?=$arItem["PREVIEW_PICTURE"]["SRC"];?>" />
 			<?}?>
 		</div>
 		<?endforeach;?>
