@@ -47,7 +47,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 				</h4>
 			</div>
 		</div>
-		<div class="col-md-3  col-sm-6 col-xs-12 element padding-left_0" style="padding-right: 0px;text-align: center;">
+		<div class="col-md-3  col-sm-6 col-xs-12 element padding-left_0" style="width:26%;padding-right: 0px;text-align: center;">
 			<div class="icons-product-box">
 				<!--
 				<?// if($arItem["PROPERTIES"]["NOVINKA"]["VALUE"] == 'Y'): ?>
@@ -96,7 +96,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 				</div>
 			</div>
 		</div>
-		<div class="col-md-9 col-sm-12" style="padding-right: 0px;">
+		<div class="col-md-9 col-sm-12" style="width:74%;padding-right: 0px;">
 
 			<table>
 				<tr>
@@ -180,7 +180,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 			<div class="clear"></div>
 
 		</div>
-		<div class="col-md-9 col-sm-6 col-xs-12 back-fon-yelow">
+		<div class="col-md-9 col-sm-6 col-xs-12 back-fon-yelow" style="width:74%;">
 
 			<div class="preview-text"><?= $arItem['DETAIL_TEXT'] ?></div>
 		</div>
