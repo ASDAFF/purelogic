@@ -54,8 +54,8 @@ $this->setFrameMode(true);
 
 	// slider setup
 	masterslider_6f57.setup("MS5877436886f57", {
-		width           : 860,
-		height          : 405,
+		width           : 740,
+		height          : 250,
 		minHeight       : 0,
 		space           : 0,
 		start           : 1,
