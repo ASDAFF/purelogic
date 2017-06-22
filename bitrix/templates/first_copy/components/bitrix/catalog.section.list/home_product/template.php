@@ -45,6 +45,11 @@ $this->setFrameMode(true);
         }
         ?>
         </table>
+        <? if($section["DETAIL_PICTURE"]):?>
+        <div class="baner">
+            <a href="<?=$section['CODE']?>"><img src="<?=CFile::GetPath($section["DETAIL_PICTURE"]);?>"></a>
+        </div>
+        <?endif;?>
     </div>
         <?
     }
