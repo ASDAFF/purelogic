@@ -32,7 +32,11 @@ $this->setFrameMode(true);
                 <td>
                     <div class="box-home-product">
                         <a href="<?=$elem['SECTION_PAGE_URL'];?>">
+                            <? if(empty($elem['IMG'])): ?>
+                            <img src="/img/nophoto.png">
+                            <?else:?>
                             <img src="/kartinki_dlya_razdelov/<?=$elem['IMG'];?>">
+                            <?endif?>
                             <div class="name-home-product"><?=$elem['NAME'];?></div>
                         </a>
                     </div>

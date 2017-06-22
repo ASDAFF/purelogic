@@ -16,6 +16,7 @@ $this->setFrameMode(true);
 <?
 	foreach($arResult['ITEMS_SECTION'] as $arSection){
 		$arImgSection = explode(';',$arSection['UF_KARTINKI']);
+		$oneImgSrction = '';
 		foreach($arImgSection as $key => $img){
 			if(preg_match('/min.jpg/',$img)){
 				$oneImgSrction = '/kartinki_dlya_razdelov/' . $img;
@@ -23,11 +24,16 @@ $this->setFrameMode(true);
 			}
 			if(empty($img)){unset($arImgSection[$key]);}
 		}
+
 ?>
 
 	<div class="section-item">
 		<a href="<?=$arSection['SECTION_PAGE_URL'];?>">
-			<img src="<?=$oneImgSrction?>">
+			<? if(empty($oneImgSrction)): ?>
+				<img src="/img/nophoto.png">
+			<?else:?>
+				<img src="<?=$oneImgSrction?>">
+			<?endif?>
 			<p><?=$arSection['NAME'];?></p>
 		</a>
 	</div>

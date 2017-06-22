@@ -57,7 +57,11 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 				-->
 			</div>
 			<a href="<?=$oneImgSrction?>" class="image fancybox-one" data-fancybox-group="thumb<?=$arSection['ID']?>">
-			<img src="<?=$oneImgSrction;?>" alt="<?=$arSection['UF_PAPKA_ZAGOLOVOK']?>">
+				<? if(empty($oneImgSrction)): ?>
+					<img src="/img/nophoto.png">
+				<?else:?>
+					<img src="<?=$oneImgSrction;?>" alt="<?=$arSection['UF_PAPKA_ZAGOLOVOK']?>">
+				<?endif?>
 			</a>
 			<? foreach($arImgSection as $img):?>
 			<a href="/kartinki_dlya_razdelov/<?=$img?>" data-alt="<?=$arSection['UF_PAPKA_ZAGOLOVOK'] ?>" class="image fancybox-thumbs" data-fancybox-group="thumb<?=$arSection['ID']?>" style="display: none">
