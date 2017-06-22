@@ -58,7 +58,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 			</div>
 			<a href="<?=$oneImgSrction?>" class="image fancybox-one" data-fancybox-group="thumb<?=$arSection['ID']?>">
 				<? if(empty($oneImgSrction)): ?>
-					<img src="/img/nophoto.png">
+					<img style="width: 125px;height: 100px" src="/img/nophoto.png">
 				<?else:?>
 					<img src="<?=$oneImgSrction;?>" alt="<?=$arSection['UF_PAPKA_ZAGOLOVOK']?>">
 				<?endif?>
