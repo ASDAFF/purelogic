@@ -108,7 +108,7 @@ foreach($arResult['SECTIONS'] as $key => $s){
 	while($ob = $res->GetNextElement())
 	{
 		$arProps = $ob->GetProperties();
-		$idElement[$s['ID']] = $arProps['ADD_ORDER']['VALUE'];
+		$idElement[$s['ID']] = $arProps['PIN']['VALUE'];
 	}
 
 	foreach($idElement[$s['ID']] as $item => $section){
