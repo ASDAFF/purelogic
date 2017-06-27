@@ -20,7 +20,7 @@ $this->setFrameMode(true);
 	<div id="MS5877436886f57" class="master-slider ms-skin-light-3" >
 
 		<?foreach($arResult["ITEMS"] as $arItem):?>
-		<div  class="ms-slide" data-delay="10" data-fill-mode="fill"   >
+		<div  class="ms-slide" onclick="window.location.href='<?=$arItem['PROPERTIES']['BUTTON_URL']['VALUE']?>'" data-delay="10" data-fill-mode="fill"   >
 
 			<? if(preg_match('/iframe/',$arItem["PREVIEW_TEXT"],$preg)){?>
 			<?=$arItem["PREVIEW_TEXT"];?>
