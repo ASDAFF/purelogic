@@ -175,9 +175,9 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 	</div>
 	<div class="right_index">
 		 <?$APPLICATION->IncludeComponent(
-	"bitrix:news.list",
-	"new",
-	Array(
+	"bitrix:news.list", 
+	"new", 
+	array(
 		"ACTIVE_DATE_FORMAT" => "d.m.Y",
 		"ADD_SECTIONS_CHAIN" => "N",
 		"AJAX_MODE" => "N",
@@ -198,7 +198,10 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"DISPLAY_PICTURE" => "N",
 		"DISPLAY_PREVIEW_TEXT" => "Y",
 		"DISPLAY_TOP_PAGER" => "N",
-		"FIELD_CODE" => array(0=>"",1=>"",),
+		"FIELD_CODE" => array(
+			0 => "",
+			1 => "",
+		),
 		"FILTER_NAME" => "",
 		"HIDE_LINK_WHEN_NO_DETAIL" => "N",
 		"IBLOCK_ID" => "11",
@@ -217,7 +220,15 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"PARENT_SECTION" => "",
 		"PARENT_SECTION_CODE" => "",
 		"PREVIEW_TRUNCATE_LEN" => "",
-		"PROPERTY_CODE" => array(0=>"TEMPLATE",1=>"BUTTON_TEXT",2=>"BUTTON_URL",3=>"TITLE_DOP",4=>"",),
+		"PROPERTY_CODE" => array(
+			0 => "",
+			1 => "TEMPLATE",
+			2 => "BUTTON_TEXT",
+			3 => "ALT",
+			4 => "BUTTON_URL",
+			5 => "TITLE_DOP",
+			6 => "",
+		),
 		"SET_BROWSER_TITLE" => "N",
 		"SET_LAST_MODIFIED" => "N",
 		"SET_META_DESCRIPTION" => "N",
@@ -228,8 +239,11 @@ $APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
 		"SORT_BY1" => "ACTIVE_FROM",
 		"SORT_BY2" => "SORT",
 		"SORT_ORDER1" => "DESC",
-		"SORT_ORDER2" => "ASC"
-	)
+		"SORT_ORDER2" => "ASC",
+		"COMPOSITE_FRAME_MODE" => "A",
+		"COMPOSITE_FRAME_TYPE" => "AUTO"
+	),
+	false
 );?> <?
 			if($_SESSION['news_hidden_home'] != 'N') {
 				$APPLICATION->IncludeComponent("bitrix:news.list", "news_home_right", Array(
