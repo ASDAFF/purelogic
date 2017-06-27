@@ -51,7 +51,8 @@
 }
 
 .ms-grab-cursor {
-    cursor: url(../img/grab.png), move;
+    /*cursor: url(../img/grab.png), move;*/
+    cursor: pointer;
 }
 .ms-view .ms-slide-container {
     position: relative;
