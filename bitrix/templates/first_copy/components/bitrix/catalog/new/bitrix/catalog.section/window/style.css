@@ -274,3 +274,11 @@
     margin-top: 4px;
     color: #828080;
 }
+
+.preview-text .option p{
+    margin: 0px;
+}
+.preview-text .option p.opt_title{
+    margin-top: 15px;
+    font-weight: 500;
+}

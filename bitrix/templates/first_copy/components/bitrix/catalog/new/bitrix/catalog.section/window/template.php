@@ -182,7 +182,30 @@ foreach ($arResult['ITEMS'] as $arItem) {
 		</div>
 		<div class="col-md-9 col-sm-6 col-xs-12 back-fon-yelow" style="width:73%;">
 
-			<div class="preview-text"><?= $arItem['DETAIL_TEXT'] ?></div>
+			<div class="preview-text">
+				<?= $arItem['DETAIL_TEXT'] ?>
+				<div class="option">
+					<? if(!empty($arItem["PROPERTIES"]["__1"]["VALUE"])): ?>
+					<p class="opt_title">Технические характеристики:</p>
+					<?
+					$tech = explode(';',$arItem["PROPERTIES"]["__1"]["VALUE"]);
+					foreach($tech as $t){
+						echo '<p>'.$t.'</p>';
+					}
+					?>
+					<?endif;?>
+
+					<? if(!empty($arItem["PROPERTIES"]["_"]["VALUE"])): ?>
+					<p class="opt_title">Комплект поставки:</p>
+					<?
+					$complect = explode(';',$arItem["PROPERTIES"]["_"]["VALUE"]);
+					foreach($complect as $c){
+						echo '<p>'.$c.'</p>';
+					}
+					?>
+					<?endif;?>
+				</div>
+			</div>
 		</div>
 
 		<div class="clear"></div>
