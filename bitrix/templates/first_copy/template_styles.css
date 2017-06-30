@@ -320,7 +320,7 @@ header {
 .select_language .wSelect-selected {
     padding: 0px;
 }
-.main_logo_menu{margin-left:0px;}
+.main_logo_menu{margin-left:10px;}
 .main_logo .main_logo_menu{margin-top:0px}
 .main_logo .main_logo_menu li a {
     color: #fff;
@@ -367,7 +367,7 @@ header {
 }
 .paddrght0{padding-right:0px;}
 #search .input {
-    width: 100%;
+    width: 105%;
     height: 34px;
     padding: 0 37px 1px 15px;
     color: #555;

@@ -14,8 +14,9 @@
 
 $this->setFrameMode(true);
 
+
 ?>
-<h1 class="dbl_lines">Весь каталог</h1>
+
 <?$APPLICATION->IncludeComponent(
 	"bitrix:catalog.section.list",
 	"new_cat",

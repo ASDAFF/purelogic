@@ -24,10 +24,11 @@
 }
 .catalog-title{
     position: relative;
+    padding: 0px 15px;
 }
 .catalog-title .lines{
     position: absolute;
-    width: 35%;
+    width: 30%;
     bottom: 5px;
 }
 .catalog-title .lines:last-child{
