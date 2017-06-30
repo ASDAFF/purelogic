@@ -1,6 +1,6 @@
 .onoffswitch {
     margin: 20px 0px;
-    position: relative; width: 65px;
+    position: relative; width: 151px;
     -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
 }
 .onoffswitch-checkbox {
@@ -20,12 +20,12 @@
     box-sizing: border-box;
 }
 .onoffswitch-inner:before {
-    content: "on";
+    content: "свернуть все";
     padding-left: 12px;
     background-color: #4FB845; color: #FFFFFF;
 }
 .onoffswitch-inner:after {
-    content: "off";
+    content: "развернуть все";
     padding-right: 12px;
     background-color: #ECEEEF; color: #AAACAC;
     text-align: right;
@@ -34,7 +34,7 @@
     display: block; width: 25px; margin: 2px;
     background: #FFFFFF;
     position: absolute; top: 0; bottom: 0;
-    right: 36px;
+    right: 122px;
     border: 2px solid #E3E3E3; border-radius: 50px;
     transition: all 0.3s ease-in 0s;
 }

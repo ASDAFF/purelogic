@@ -38,15 +38,19 @@ $strTitle = "";
             <div class="row">
                 <div class="col-md-12 padding_0">
                     <div class="catalog-title">
+                        <!--
                         <div class="lines">
                             <span></span>
                             <span></span>
                         </div>
+                        -->
                         <h1><a href="<?=$section['SECTION_PAGE_URL'];?>"><?=$section['NAME']?></a></h1>
+                        <!--
                         <div class="lines">
                             <span></span>
                             <span></span>
                         </div>
+                        -->
                     </div>
 
                     <?
@@ -55,9 +59,9 @@ $strTitle = "";
                         ?>
                         <? foreach($section['SECTION_1'] as $sect){?>
                         <div class="col-md-4">
-                                <div class="section-block">
+                                <div class="section-block <?if(!empty($sect['SECTION_2'])):?>toggle-all<?endif;?>">
                                     <div class="section-name"><span></span><a href="<?=$sect['SECTION_PAGE_URL']?>"><?=$sect["NAME"]?></a></div>
-                                    <ul>
+                                    <?if(!empty($sect['SECTION_2'])):?><ul><?endif;?>
                                         <?
                                         foreach($sect['SECTION_2'] as $section_two) {
                                             ?>
@@ -65,7 +69,7 @@ $strTitle = "";
                                             <?
                                         }
                                         ?>
-                                    </ul>
+                                    <?if(!empty($sect['SECTION_2'])):?></ul><?endif;?>
                                 </div>
                         </div>
                         <?}?>
@@ -76,9 +80,9 @@ $strTitle = "";
                         <div class="col-md-4">
 
                             <? foreach ($section_drop[0] as $one) { ?>
-                                <div class="section-block">
+                                <div class="section-block <?if(!empty($one['SECTION_2'])):?>toggle-all<?endif;?>"">
                                     <div class="section-name"><span></span><a href="<?=$one['SECTION_PAGE_URL']?>"><?= $one["NAME"] ?></a></div>
-                                    <ul>
+                                    <?if(!empty($one['SECTION_2'])):?><ul><?endif;?>
                                         <?
                                         foreach ($one['SECTION_2'] as $section_two) {
                                             ?>
@@ -86,7 +90,7 @@ $strTitle = "";
                                             <?
                                         }
                                         ?>
-                                    </ul>
+                                    <?if(!empty($one['SECTION_2'])):?></ul><?endif;?>
                                 </div>
                             <?
                             } ?>
@@ -95,9 +99,9 @@ $strTitle = "";
                         <div class="col-md-4">
 
                             <? foreach ($section_drop[1] as $two) { ?>
-                                <div class="section-block">
+                                <div class="section-block <?if(!empty($two['SECTION_2'])):?>toggle-all<?endif;?>"">
                                     <div class="section-name"><span></span><a href="<?=$two['SECTION_PAGE_URL']?>"><?= $two["NAME"] ?></a></div>
-                                    <ul>
+                                    <?if(!empty($two['SECTION_2'])):?><ul><?endif;?>
                                         <?
                                         foreach ($two['SECTION_2'] as $section_two) {
                                             ?>
@@ -105,7 +109,7 @@ $strTitle = "";
                                             <?
                                         }
                                         ?>
-                                    </ul>
+                                    <?if(!empty($two['SECTION_2'])):?></ul><?endif;?>
                                 </div>
                             <?
                             } ?>
@@ -114,9 +118,9 @@ $strTitle = "";
                         <div class="col-md-4">
 
                             <? foreach ($section_drop[2] as $three) { ?>
-                                <div class="section-block">
+                                <div class="section-block <?if(!empty($three['SECTION_2'])):?>toggle-all<?endif;?>"">
                                     <div class="section-name"><span></span><a href="<?=$three['SECTION_PAGE_URL']?>"><?= $three["NAME"] ?></a></div>
-                                    <ul>
+                                    <?if(!empty($three['SECTION_2'])):?><ul><?endif;?>
                                         <?
                                         foreach ($three['SECTION_2'] as $section_two) {
                                             ?>
@@ -124,7 +128,7 @@ $strTitle = "";
                                             <?
                                         }
                                         ?>
-                                    </ul>
+                                    <?if(!empty($three['SECTION_2'])):?></ul><?endif;?>
                                 </div>
                             <?
                             } ?>
@@ -158,14 +162,14 @@ $strTitle = "";
                    }
                });
 
-               $('.section-block').find('ul').toggle(check);
+               $('.toggle-all').find('ul').toggle(check);
                if (check) {
-                   $('.section-block').find('.section-name span').html('- ');
+                   $('.toggle-all').find('.section-name span').html('- ');
                } else {
-                   $('.section-block').find('.section-name span').html('+ ');
+                   $('.toggle-all').find('.section-name span').html('+ ');
                }
            });
-            $('.section-block').allToggle({open:<?=$_SESSION['allToggle_status']?>});
+            $('.toggle-all').allToggle({open:<?=$_SESSION['allToggle_status']?>});
 
         });
     </script>
