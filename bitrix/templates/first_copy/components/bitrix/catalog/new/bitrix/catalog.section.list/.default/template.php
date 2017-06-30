@@ -54,9 +54,11 @@ if ('Y' == $arParams['SHOW_PARENT_NAME'] && 0 < $arResult['SECTION']['ID'])
 		$uf_arresult = CIBlockSection::GetList(Array(), Array("IBLOCK_ID" => $arParams["IBLOCK_ID"], "ID" => $arResult['SECTION']['ID']), false, array('UF_PAPKA_ZAGOLOVOK','UF_SAYT_PAPKA_OPIS'));
 		if($uf_value = $uf_arresult->GetNext()) {
 			?>
+			<?if(!empty($uf_value['UF_PAPKA_ZAGOLOVOK'])):?>
 			<h3 class="name_section">
 			<?=$uf_value['UF_PAPKA_ZAGOLOVOK']?>
 			</h3>
+			<? endif; ?>
 			<p>
 			<?=preg_replace("/(\r\n)/", "<br/>", $uf_value['~UF_SAYT_PAPKA_OPIS'])?>
 			</p>

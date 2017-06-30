@@ -12,38 +12,52 @@
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 ?>
-<div class="section-win">
-<?
-	foreach($arResult['ITEMS_SECTION'] as $arSection){
-		$arImgSection = explode(';',$arSection['UF_KARTINKI']);
-		$oneImgSrction = '';
-		foreach($arImgSection as $key => $img){
-			if(preg_match('/min.jpg/',$img)){
-				$oneImgSrction = '/kartinki_dlya_razdelov/' . $img;
-				unset($arImgSection[$key]);
+<div class="products-home">
+	<div class="product-home">
+
+		<table>
+			<?
+			$arSect = array_chunk($arResult['ITEMS_SECTION'], 5);
+			for($i = 0; $i < count($arSect); $i++ ){
+				?>
+				<tr>
+					<?
+					foreach($arSect[$i] as $elem){
+						$arImgSection = explode(';',$elem['UF_KARTINKI']);
+						$oneImgSrction = '';
+						foreach($arImgSection as $key => $img){
+							if(preg_match('/min.jpg/',$img)){
+								$oneImgSrction = '/kartinki_dlya_razdelov/' . $img;
+								unset($arImgSection[$key]);
+							}
+							if(empty($img)){unset($arImgSection[$key]);}
+						}
+						?>
+						<td>
+							<div class="box-home-product">
+								<a href="<?=$elem['SECTION_PAGE_URL'];?>">
+									<? if(empty($oneImgSrction)): ?>
+										<img src="/img/nophoto.png">
+									<?else:?>
+										<img src="<?=$oneImgSrction?>">
+									<?endif?>
+									<div class="name-home-product"><?=$elem['NAME'];?></div>
+								</a>
+							</div>
+						</td>
+						<?
+					}
+					?>
+				</tr>
+				<?
 			}
-			if(empty($img)){unset($arImgSection[$key]);}
-		}
+			?>
+		</table>
 
-?>
-
-	<div class="section-item">
-		<a href="<?=$arSection['SECTION_PAGE_URL'];?>">
-			<? if(empty($oneImgSrction)): ?>
-				<img src="/img/nophoto.png">
-			<?else:?>
-				<img src="<?=$oneImgSrction?>">
-			<?endif?>
-			<p><?=$arSection['NAME'];?></p>
-		</a>
 	</div>
 
-	<?
-
-	}
-	?>
-
 </div>
+
 
 <? if(!empty($arResult['UF_SAYT_PAPKA_INFO_Z'])): ?>
 <div class="col-md-12">
