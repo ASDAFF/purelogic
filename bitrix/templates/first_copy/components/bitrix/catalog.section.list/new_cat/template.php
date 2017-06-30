@@ -140,9 +140,8 @@ $strTitle = "";
             <?
         }
     }
+    if(empty($_SESSION['allToggle_status'])){$_SESSION['allToggle_status'] = 'false';}
     ?>
-
-
     <script type="text/javascript" src="/js/all-toggle.js"></script>
     <link type="text/css" rel="stylesheet" href="/css/swith.css"/>
     <script>
@@ -166,7 +165,6 @@ $strTitle = "";
                    $('.section-block').find('.section-name span').html('+ ');
                }
            });
-
             $('.section-block').allToggle({open:<?=$_SESSION['allToggle_status']?>});
 
         });
