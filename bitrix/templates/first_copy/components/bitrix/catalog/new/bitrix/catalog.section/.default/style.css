@@ -303,7 +303,7 @@ h5 a:hover{
 }
 .title-optim{
     cursor: pointer;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .title-optim img{
@@ -339,14 +339,36 @@ h5 a:hover{
 }
 
 .free-shiping{
+    cursor: default;
     position: absolute;
-    top: 0px;
+    top: -12px;
     width: 85%;
     font-size: 9px;
     background: #dfeac0;
-    border-bottom: 1px solid #D5D5D5;
+    border-top: 1px solid #D5D5D5;
     border-left: 1px solid #D5D5D5;
     border-right: 1px solid #D5D5D5;
+}
+.free-shiping-no {
+    width: 218px;
+    cursor: default;
+    z-index: 2;
+    display: none;
+    position: absolute;
+    top: -24px;
+    padding: 1px;
+    font-size: 9px;
+    background: #dfeac0;
+    border-top: 1px solid #D5D5D5;
+    border-left: 1px solid #D5D5D5;
+    border-right: 1px solid #D5D5D5;
+    text-align: left;
+}
+.nds-enable {
+    position: absolute;
+    top: -14px;
+    right: 5px;
+    font-size: 9px;
 }
 
 .box-products-group{

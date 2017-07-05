@@ -254,9 +254,10 @@
 }
 
 .free-shiping {
+    cursor: default;
+    z-index: 1;
     position: absolute;
     top: -14px;
-    right: 0px;
     padding: 1px;
     font-size: 9px;
     background: #dfeac0;
@@ -264,7 +265,26 @@
     border-left: 1px solid #D5D5D5;
     border-right: 1px solid #D5D5D5;
 }
-
+.free-shiping-no {
+    cursor: default;
+    z-index: 2;
+    display: none;
+    position: absolute;
+    top: -24px;
+    padding: 1px;
+    font-size: 9px;
+    background: #dfeac0;
+    border-top: 1px solid #D5D5D5;
+    border-left: 1px solid #D5D5D5;
+    border-right: 1px solid #D5D5D5;
+}
+.nds-enable {
+    position: absolute;
+    top: -14px;
+    right: 0px;
+    padding: 1px;
+    font-size: 9px;
+}
 .bx_sitemap{
     margin-bottom: 40px;
 }

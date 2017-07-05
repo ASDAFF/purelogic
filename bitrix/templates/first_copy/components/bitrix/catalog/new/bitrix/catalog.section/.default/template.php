@@ -36,7 +36,8 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 	?>
 	<div class="tovar_wr" id="bx_3966226736_37864">
 		<div class="col-md-2  col-sm-6 col-xs-12  padding-left_0 padding-right-null">
-			<div class="free-shiping">БЕСПЛАТНАЯ ДОСТАВКА</div>
+			<div class="free-shiping">ДОСТАВКА - АКЦИЯ!</div>
+			<div class="free-shiping-no">Возможна бесплатная доставка до терминала в<br>Вашем городе. Подробности по контактному тел.</div>
 			<div class="icons-product-box">
 				<!--
 				<?// if($arSection['UF_NOVINKA'] == 1): ?>
@@ -135,6 +136,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 		</div>
 
 		<div class="col-md-12 col-sm-6 col-xs-12 product-block-all" style="padding: 0px;">
+			<div class="nds-enable">НДС ВКЛЮЧЕН</div>
 			<div class="box-products-group">
 				<? foreach($arSection['ELEMENT'] as $element){
 					$db_res_p = CPrice::GetList(array(), array("PRODUCT_ID" => $element['ID']));
@@ -225,6 +227,12 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 
 	<script>
 		$(function(){
+			$('.free-shiping').hover(function(){
+				$(this).parent().find('.free-shiping-no').css('display','block');
+			});
+			$('.free-shiping-no').mouseleave(function(){
+				$(this).css('display','none');
+			});
 
 			$('.prod-btn-docs.hover').mouseenter(function(){
 				$('.toggle',this).addClass('open');

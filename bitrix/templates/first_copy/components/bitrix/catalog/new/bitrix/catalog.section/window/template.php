@@ -32,7 +32,9 @@ foreach ($arResult['ITEMS'] as $arItem) {
 	?>
 	<div class="tovar_wr list_tov col-md-6" id="bx_328740560_37864">
 		<div class="col-md-12  col-sm-6 col-xs-12 element padding_0 border-top-line">
-			<div class="free-shiping">БЕСПЛАТНАЯ ДОСТАВКА</div>
+			<div class="free-shiping">ДОСТАВКА - АКЦИЯ!</div>
+			<div class="free-shiping-no">Возможна бесплатная доставка до терминала в<br>Вашем городе. Подробности по контактному тел.</div>
+			<div class="nds-enable">НДС ВКЛЮЧЕН</div>
 			<div class="head-product-box">
 				<h4>
 					<a href="javascript:void(0);"><?=$arItem['PROPERTIES']['SAYT_NAIMENOVANIEDLYASAYTA']['VALUE'] ?></a>,
@@ -262,6 +264,14 @@ foreach ($arResult['ITEMS'] as $arItem) {
 
 	<script>
 		$(function(){
+
+			$('.free-shiping').hover(function(){
+				$(this).parent().find('.free-shiping-no').css('display','block');
+			});
+			$('.free-shiping-no').mouseleave(function(){
+				$(this).css('display','none');
+			});
+
 			$('.hover-tab').mouseenter(function(){
 				$('.toggle',this).addClass('open');
 				$('span',this).text('▲');
