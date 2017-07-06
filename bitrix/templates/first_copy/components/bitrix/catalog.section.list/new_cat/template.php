@@ -59,8 +59,8 @@ $strTitle = "";
                         ?>
                         <? foreach($section['SECTION_1'] as $sect){?>
                         <div class="col-md-4">
-                                <div class="section-block <?if(!empty($sect['SECTION_2'])):?>toggle-all<?endif;?>">
-                                    <div class="section-name"><span></span><a href="<?=$sect['SECTION_PAGE_URL']?>"><?=$sect["NAME"]?></a></div>
+                                <div class="section-block ">
+                                    <div class="section-name <?if(!empty($sect['SECTION_2'])):?>toggle-all<?endif;?>"><span></span><a href="<?=$sect['SECTION_PAGE_URL']?>"><?=$sect["NAME"]?></a></div>
                                     <?if(!empty($sect['SECTION_2'])):?><ul><?endif;?>
                                         <?
                                         foreach($sect['SECTION_2'] as $section_two) {
@@ -80,8 +80,8 @@ $strTitle = "";
                         <div class="col-md-4">
 
                             <? foreach ($section_drop[0] as $one) { ?>
-                                <div class="section-block <?if(!empty($one['SECTION_2'])):?>toggle-all<?endif;?>"">
-                                    <div class="section-name"><span></span><a href="<?=$one['SECTION_PAGE_URL']?>"><?= $one["NAME"] ?></a></div>
+                                <div class="section-block ">
+                                    <div class="section-name <?if(!empty($one['SECTION_2'])):?>toggle-all<?endif;?>"><span></span><a href="<?=$one['SECTION_PAGE_URL']?>"><?= $one["NAME"] ?></a></div>
                                     <?if(!empty($one['SECTION_2'])):?><ul><?endif;?>
                                         <?
                                         foreach ($one['SECTION_2'] as $section_two) {
@@ -99,8 +99,8 @@ $strTitle = "";
                         <div class="col-md-4">
 
                             <? foreach ($section_drop[1] as $two) { ?>
-                                <div class="section-block <?if(!empty($two['SECTION_2'])):?>toggle-all<?endif;?>"">
-                                    <div class="section-name"><span></span><a href="<?=$two['SECTION_PAGE_URL']?>"><?= $two["NAME"] ?></a></div>
+                                <div class="section-block ">
+                                    <div class="section-name <?if(!empty($two['SECTION_2'])):?>toggle-all<?endif;?>"><span></span><a href="<?=$two['SECTION_PAGE_URL']?>"><?= $two["NAME"] ?></a></div>
                                     <?if(!empty($two['SECTION_2'])):?><ul><?endif;?>
                                         <?
                                         foreach ($two['SECTION_2'] as $section_two) {
@@ -118,8 +118,8 @@ $strTitle = "";
                         <div class="col-md-4">
 
                             <? foreach ($section_drop[2] as $three) { ?>
-                                <div class="section-block <?if(!empty($three['SECTION_2'])):?>toggle-all<?endif;?>"">
-                                    <div class="section-name"><span></span><a href="<?=$three['SECTION_PAGE_URL']?>"><?= $three["NAME"] ?></a></div>
+                                <div class="section-block">
+                                    <div class="section-name <?if(!empty($three['SECTION_2'])):?>toggle-all<?endif;?>"><span></span><a href="<?=$three['SECTION_PAGE_URL']?>"><?= $three["NAME"] ?></a></div>
                                     <?if(!empty($three['SECTION_2'])):?><ul><?endif;?>
                                         <?
                                         foreach ($three['SECTION_2'] as $section_two) {
@@ -162,11 +162,11 @@ $strTitle = "";
                    }
                });
 
-               $('.toggle-all').find('ul').toggle(check);
+               $('.toggle-all').parent().find('ul').toggle(check);
                if (check) {
-                   $('.toggle-all').find('.section-name span').html('- ');
+                   $('.toggle-all').find('span').html('- ');
                } else {
-                   $('.toggle-all').find('.section-name span').html('+ ');
+                   $('.toggle-all').find('span').html('+ ');
                }
            });
             $('.toggle-all').allToggle({open:<?=$_SESSION['allToggle_status']?>});

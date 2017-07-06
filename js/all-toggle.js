@@ -24,17 +24,17 @@
 
         var opts = $.extend(defaults, options);
 
-            this.find('ul').toggle(opts.open);
+            this.parent().find('ul').toggle(opts.open);
             if (opts.open) {
-                this.find('.section-name span').html('- ');
+                this.find('span').html('- ');
             } else {
-                this.find('.section-name span').html('+ ');
+                this.find('span').html('+ ');
             }
 
 
         this.click(function(){
 
-            $(this).find('ul').slideToggle("fast",methods.status);
+            $(this).parent().find('ul').slideToggle("fast",methods.status);
             return false;
 
         });
