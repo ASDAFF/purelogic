@@ -110,9 +110,10 @@ foreach($arResult['SECTIONS'] as $key => $s){
 		$arProps = $ob->GetProperties();
 		$idElement[$s['ID']] = $arProps['PIN']['VALUE'];
 	}
+//	var_dump($idElement[$s['ID']]);
 
 	foreach($idElement[$s['ID']] as $item => $section){
-		$uf_arresult = CIBlockSection::GetList(Array(), Array("IBLOCK_ID" => 18, "ID" => $section), false, Array("UF_*"));
+		$uf_arresult = CIBlockSection::GetList(Array(), Array("IBLOCK_ID" => 18, "XML_ID" => $section), false, Array("UF_*"));
 		if($uf_value = $uf_arresult->GetNext()):
 			$img = explode(';',$uf_value['UF_KARTINKI']);
 			foreach($img as $i){

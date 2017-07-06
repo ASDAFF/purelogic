@@ -53,12 +53,6 @@ class ElementUpdate
                 $arFields['SORT'] = $sort['VALUE'];
             }
         }
-        if($arFields['IBLOCK_ID'] == 28) {
-            $arFields['PROPERTY_VALUES'][701] = array();
-            foreach($arFields['PROPERTY_VALUES'][658] as $key => $val){
-                $arFields['PROPERTY_VALUES'][701][] = $val;
-            }
-        }
     }
 }
 
