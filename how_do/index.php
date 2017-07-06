@@ -160,6 +160,12 @@ $APPLICATION->SetTitle("Как заказать у нас?");
 
 
 <style>
+    .dbl_lines:before {
+        margin-right: 10px;
+    }
+    .dbl_lines:after {
+        margin-left: 10px!important;
+    }
 .col-md-1 .num-order h1{
     color: #94B82F;
     font-weight: 300;
@@ -181,7 +187,7 @@ $APPLICATION->SetTitle("Как заказать у нас?");
     height: 100%;
     border-right: 2px solid #DADADA;
     position: absolute;
-    right: 189px;
+    right: 177px;
 }
 .num-order-block-text{
     background: #94B730;
