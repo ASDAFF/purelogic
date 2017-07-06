@@ -11,6 +11,7 @@
     color: #323232;
     font-size: 17px;
     font-family: 'DINPro Medium';
+    cursor: default;
 }
 .preview-text{
     display: inline-block;
@@ -37,9 +38,8 @@
     right: 0px;
 }
 
-.tovar_wr h4 > a:hover{
-    color: #8FBC3F;
-}
+
+
 
 
 
@@ -114,6 +114,7 @@
     right: 5px;
 }
 h5 a{
+    cursor: default;
     font-family: 'DINPro', sans-serif;
     font-weight: 500;
     line-height: 1;
@@ -122,8 +123,10 @@ h5 a{
     margin: 0.4em 0 0.4em;
 }
 h5 a:hover{
-    color: #8FBC3F;
+    color: #333;
 }
+
+
 
 
 .price-element-product{

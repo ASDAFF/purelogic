@@ -91,10 +91,10 @@
     color: #323232;
     font-size: 15px;
     font-family: 'DINPro Medium';
+    cursor: default;
 }
-.tovar_wr h4 > a:hover {
-    color: #8FBC3F;
-}
+
+
 .tovar_wr h4{
     margin-bottom: 12px;
 }
