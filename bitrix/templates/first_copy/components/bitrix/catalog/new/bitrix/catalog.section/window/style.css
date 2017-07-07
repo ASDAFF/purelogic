@@ -87,11 +87,11 @@
     background-color: #fafbf4;
 }
 
-.tovar_wr h4 > a {
+.tovar_wr h4 > span {
     color: #323232;
     font-size: 15px;
     font-family: 'DINPro Medium';
-    cursor: default;
+
 }
 
 
@@ -289,7 +289,7 @@
     margin-bottom: 40px;
 }
 
-.articul{
+.tovar_wr h4 > span.articul{
     font-size: 12px;
     margin-top: 4px;
     color: #828080;

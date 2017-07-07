@@ -37,7 +37,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 			<div class="nds-enable">НДС ВКЛЮЧЕН</div>
 			<div class="head-product-box">
 				<h4>
-					<a href="javascript:void(0);"><?=$arItem['PROPERTIES']['SAYT_NAIMENOVANIEDLYASAYTA']['VALUE'] ?></a>,
+					<span><?=$arItem['PROPERTIES']['SAYT_NAIMENOVANIEDLYASAYTA']['VALUE'] ?></span>,
 					<span class="articul">
 						<?
 						foreach($arItem['PROPERTIES']['CML2_TRAITS']['DESCRIPTION'] as $k => $code){
