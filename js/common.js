@@ -224,7 +224,7 @@ e.preventDefault();
 $.ajax({
 			type: "GET",
 			url: $(this).attr("href"),
-			
+
 		}).done(function(data) {
 		$("#basket_form_container").html($(data).find("#basket_form_container").html());
 		});

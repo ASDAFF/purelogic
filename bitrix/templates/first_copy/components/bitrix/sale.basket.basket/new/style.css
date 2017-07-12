@@ -968,3 +968,36 @@ input.bt2:active{border:1px solid #d2d2d2}
 }
 
 .bx-touch .quantity_control{ display: none; }
+
+
+
+.table_wr table{
+	width: 100%;
+	text-align: left;
+	border-collapse: collapse;
+	font-size: 14px;
+}
+.table_wr table th a{
+	color: black;
+}
+.table_wr table th {
+	padding: 20px 10px;
+	border: 1px solid #c5c5c5;
+	width: 20%;
+}
+.table_wr table td {
+	padding: 10px;
+	border: 1px solid #c5c5c5;
+}
+.table_wr table th.del {
+	position: relative;
+}
+.table_wr table th.del a{
+	position: absolute;
+	top: 2px;
+	right: 2px;
+}
+
+.card{
+	min-height: 500px;
+}
