@@ -973,7 +973,6 @@ input.bt2:active{border:1px solid #d2d2d2}
 
 .table_wr table{
 	width: 100%;
-	text-align: left;
 	border-collapse: collapse;
 	font-size: 14px;
 }
@@ -983,7 +982,6 @@ input.bt2:active{border:1px solid #d2d2d2}
 .table_wr table th {
 	padding: 20px 10px;
 	border: 1px solid #c5c5c5;
-	width: 20%;
 }
 .table_wr table td {
 	padding: 10px;
@@ -1000,4 +998,7 @@ input.bt2:active{border:1px solid #d2d2d2}
 
 .card{
 	min-height: 500px;
+}
+.add_in_card{
+	margin-left: 16px;
 }

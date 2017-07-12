@@ -37,10 +37,10 @@ if ($normalCount > 0):
 					}
 					?>
 						 <tr>
-							 <th>
+							 <th style="width: 585px;text-align: left">
 								 <?=$name;?>
 							 </th>
-							 <th>
+							 <th style="width: 105px;">
 								 <div class="add_in_card">
 								 <?
 								 $ratio = isset($arItem["MEASURE_RATIO"]) ? $arItem["MEASURE_RATIO"] : 0;
@@ -51,10 +51,13 @@ if ($normalCount > 0):
 								 <input
 									 type="text"
 									 size="3"
+									 maxlength="3"
+									 pattern="[0-9]{3}"
 									 id="QUANTITY_INPUT_<?=$arItem["ID"]?>"
+									 id_n="<?=$arItem["ID"]?>"
 									 name="QUANTITY_INPUT_<?=$arItem["ID"]?>"
 									 size="2"
-									 maxlength="18"
+									 class="chenge"
 									 min="0"
 									 <?=$max?>
 									 step="<?=$ratio?>"
@@ -65,8 +68,8 @@ if ($normalCount > 0):
 								 <input type="hidden" id="QUANTITY_<?=$arItem['ID']?>" name="QUANTITY_<?=$arItem['ID']?>" value="<?=$arItem["QUANTITY"]?>" />
 								</div>
 							 </th>
-							 <th><?=str_replace('RUB','₽',$arItem["FULL_PRICE_FORMATED"]);?></th>
-							 <th class="del"><?=str_replace('RUB','₽',$arItem["SUM"]);?> <a href="?basketAction=delete&id=<?=$arItem["ID"]?>" class="card_reset">x</a></th>
+							 <th style="width: 155px;"><?=str_replace('RUB','₽',$arItem["FULL_PRICE_FORMATED"]);?></th>
+							 <th style="width: 155px;" class="del"><?=str_replace('RUB','₽',$arItem["SUM"]);?> <a href="?basketAction=delete&id=<?=$arItem["ID"]?>" class="card_reset">x</a></th>
 
 						 </tr>
 				<?}?>
@@ -85,7 +88,46 @@ if ($normalCount > 0):
 						<div class="back_butt_buy"><a href="/catalog/" class="btn_grey btn_back">вернуться к покупкам</a></div>
                 	</div>	
                 </div> 
-			</div>										
+			</div>
+
+	<script>
+		$('.chenge').focusout(function(){
+			var data = $(this).val();
+			var id = $(this).attr('id_n');
+			$.ajax({
+				type: "GET",
+				url: "/ajax/change_count.php?count="+data+'&id='+id,
+				success: function(msg){
+					console.log(msg);
+					if(msg!="error")
+					{
+						UpdateBigBasket();
+					}
+					else
+					{
+						//alertify.error("");
+					}
+				}
+			});
+		});
+		function UpdateBigBasket(){
+			$.ajax({
+				type: "GET",
+				url: "/ajax/big_basket.php",
+				data:"",
+				success: function(msg){
+					if(msg!="error")
+					{
+						$("#basket_form_container").html(msg);
+					}
+					else
+					{
+						//alertify.error("Произошла ошибка. Попробуйте повторить запрос позже");
+					}
+				}
+			});
+		}
+	</script>
 <?
 else:
 ?>
