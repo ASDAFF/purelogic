@@ -51,15 +51,15 @@ if ($normalCount > 0):
 								 <input
 									 type="text"
 									 size="3"
+									 min="1"
 									 maxlength="3"
-									 pattern="[0-9]{3}"
+									 pattern=""
 									 id="QUANTITY_INPUT_<?=$arItem["ID"]?>"
 									 id_n="<?=$arItem["ID"]?>"
 									 name="QUANTITY_INPUT_<?=$arItem["ID"]?>"
 									 size="2"
 									 class="chenge"
-									 min="0"
-									 <?=$max?>
+									 max="999"
 									 step="<?=$ratio?>"
 									 style="max-width: 50px"
 									 value="<?=$arItem["QUANTITY"]?>"
@@ -69,7 +69,9 @@ if ($normalCount > 0):
 								</div>
 							 </th>
 							 <th style="width: 155px;"><?=str_replace('RUB','₽',$arItem["FULL_PRICE_FORMATED"]);?></th>
-							 <th style="width: 155px;" class="del"><?=str_replace('RUB','₽',$arItem["SUM"]);?> <a href="?basketAction=delete&id=<?=$arItem["ID"]?>" class="card_reset">x</a></th>
+							 <th style="width: 155px;" class="del"><?=str_replace('RUB','₽',$arItem["SUM"]);?>
+								 <a href="javascript:void(0);" del-id="<?=$arItem["ID"]?>" class="card_reset">x</a>
+							 </th>
 
 						 </tr>
 				<?}?>
@@ -91,8 +93,32 @@ if ($normalCount > 0):
 			</div>
 
 	<script>
+		$('.card_reset').click(function(){
+			var id = $(this).attr('del-id');
+			var data = 0;
+			$.ajax({
+				type: "GET",
+				url: "/ajax/change_count.php?count="+data+'&id='+id,
+				success: function(msg){
+					console.log(msg);
+					if(msg!="error")
+					{
+						UpdateBigBasket();
+					}
+					else
+					{
+						//alertify.error("");
+					}
+				}
+			});
+		});
+
 		$('.chenge').focusout(function(){
 			var data = $(this).val();
+			if(data < 1){
+				$(this).val(1);
+				data = 1;
+			}
 			var id = $(this).attr('id_n');
 			$.ajax({
 				type: "GET",
