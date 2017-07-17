@@ -248,7 +248,7 @@ if (strlen($arResult["PREPAY_ADIT_FIELDS"]) > 0)
 						
 							?>
 							<div class="bx_block r3x1">
-								<input type="text" placeholder="<?=$arProperties["NAME"]?>" maxlength="250" size="<?=$arProperties["SIZE"]?>" value="<?=$arProperties["VALUE"][0]?>" name="ORDER_PROP_<?=$arProperties["ID"]?>" id="ORDER_PROP_<?=$arProperties["ID"]?>" />
+								<input type="text" placeholder="<?=$arProperties["NAME"]?>" maxlength="250" size="<?=$arProperties["SIZE"]?>" value="<?//=$arProperties["VALUE"][0]?>" name="ORDER_PROP_<?=$arProperties["ID"]?>" id="ORDER_PROP_<?=$arProperties["ID"]?>" />
 								<?if (strlen(trim($arProperties["DESCRIPTION"])) > 0):?>
 									<div class="bx_description"><?=$arProperties["DESCRIPTION"]?></div>
 								<?endif?>
@@ -673,10 +673,10 @@ if (strlen($arResult["PREPAY_ADIT_FIELDS"]) > 0)
 						<?}}?>
 						
 					<div class="clear"></div>
-					<h3 class="dbl_lines">Способы оплаты</h3>
-					<div class="choice_del_text">Выберите желаемый способ оплаты:</div>
+					<h3 class="dbl_lines" style="display: none">Способы оплаты</h3>
+					<div class="choice_del_text" style="display: none">Выберите желаемый способ оплаты:</div>
 					<div class="pays">
-					<div class="in_pays">
+					<div class="in_pays" style="display: none">
 					<?
 					$ps_id=$_POST["PAY_SYSTEM_ID"];
 					
