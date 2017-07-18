@@ -72,3 +72,24 @@
     width: 100%;
 }
 
+.title-optim {
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+.title-optim span {
+    font-size: 16px;
+    color: #94b82f;
+    text-decoration: underline;
+    font-family: 'DINPro Medium';
+}
+.title-optim img {
+    vertical-align: sub;
+}
+.text-optim {
+    background: #DDEBC2;
+    padding: 10px;
+    border: 1px solid #DADADA;
+    font-size: 13px;
+    font-family: 'DINPro Light';
+    color: black;
+}

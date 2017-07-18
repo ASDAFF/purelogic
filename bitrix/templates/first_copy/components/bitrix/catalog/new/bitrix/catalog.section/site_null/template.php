@@ -63,7 +63,7 @@ $this->setFrameMode(true);
 <div class="col-md-12">
 	<div class="title-optim">
 		<img src="/img/q.png">
-		<h1><?=$arResult['UF_SAYT_PAPKA_INFO_Z']?></h1>
+		<span><?=$arResult['UF_SAYT_PAPKA_INFO_Z']?></span>
 	</div>
 </div>
 <? endif; ?>

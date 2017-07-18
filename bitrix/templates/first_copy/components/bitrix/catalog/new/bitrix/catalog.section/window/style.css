@@ -192,6 +192,7 @@
 
 .title-optim{
     cursor: pointer;
+    margin-bottom: 20px;
 }
 
 .title-optim img{
@@ -301,4 +302,17 @@
 .preview-text .option p.opt_title{
     margin-top: 15px;
     font-weight: 500;
+}
+.title-optim span {
+    font-size: 16px;
+    color: #94b82f;
+    text-decoration: underline;
+    font-family: 'DINPro Medium';
+}
+
+.title-optim span {
+    font-size: 16px;
+    color: #94b82f;
+    text-decoration: underline;
+    font-family: 'DINPro Medium';
 }
