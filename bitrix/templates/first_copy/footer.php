@@ -324,43 +324,8 @@
 <footer class="footer-end">
 	<div class="container">
 		<div class="row">
-			<div class="col-md-3 col-lg-2 padding_right_0 col-sm-5 hidden-xs">
-			<?if (!function_exists('substrwords')) {
-			function substrwords($text, $maxchar, $end='...') {
-    if (strlen($text) > $maxchar || $text == '') {
-        $words = preg_split('/\s/', $text);      
-        $output = '';
-        $i      = 0;
-        while (1) {
-            $length = strlen($output)+strlen($words[$i]);
-            if ($length > $maxchar) {
-                break;
-            } 
-            else {
-                $output .= " " . $words[$i];
-                ++$i;
-            }
-        }
-        $output .= $end;
-    } 
-    else {
-        $output = $text;
-    }
-    return $output;
-}
-}
-?>
-			<?if(count($_SESSION["history"])>2){?>
-			<ul class="footer_nav">
-			<?foreach($_SESSION["history"] as $ss){?>
-			<li><a href="<?=$ss["URL"];?>"><?=substrwords($ss["TITLE"],20);?></a></li>
-			<?}?>
-			</ul>
-			<?}?>
-			
-				
-				
-			</div>
+
+
 			<div class="col-md-3 hidden-sm hidden-xs">
 				<div class="footer_adres">
 					
@@ -370,7 +335,7 @@
 				</div>
 				
 			</div>
-			<div class="col-md-3 hidden-sm hidden-xs">
+			<div class="col-md-5 hidden-sm hidden-xs">
 			<p style="color: #fff">Все цены на товары и услуги указаны с учетом НДС.</p>
 			<p></p>
 			<p></p>
