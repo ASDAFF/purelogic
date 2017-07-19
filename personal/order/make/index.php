@@ -1,10 +1,12 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 $APPLICATION->SetTitle("Заказы");
-?><?$APPLICATION->IncludeComponent(
-	"bitrix:sale.order.ajax", 
-	"new", 
-	array(
+?>
+<div class="container" style="margin-top: 20px">
+<?$APPLICATION->IncludeComponent(
+	"bitrix:sale.order.ajax",
+	"",
+	Array(
 		"ACTION_VARIABLE" => "action",
 		"ADDITIONAL_PICT_PROP_18" => "-",
 		"ADDITIONAL_PICT_PROP_19" => "-",
@@ -33,12 +35,10 @@ $APPLICATION->SetTitle("Заказы");
 		"PAY_FROM_ACCOUNT" => "N",
 		"PAY_SYSTEMS_PER_PAGE" => "8",
 		"PICKUPS_PER_PAGE" => "5",
-		"PRODUCT_COLUMNS_HIDDEN" => array(
-		),
-		"PRODUCT_COLUMNS_VISIBLE" => array(
-			0 => "PREVIEW_PICTURE",
-			1 => "PROPS",
-		),
+		"PRODUCT_COLUMNS_HIDDEN" => array(),
+		"PRODUCT_COLUMNS_VISIBLE" => array("PREVIEW_PICTURE","PROPS"),
+		"PROPS_FADE_LIST_3" => array(),
+		"PROPS_FADE_LIST_4" => array(),
 		"SEND_NEW_USER_NOTIFY" => "Y",
 		"SERVICES_IMAGES_SCALING" => "standard",
 		"SET_TITLE" => "Y",
@@ -66,8 +66,8 @@ $APPLICATION->SetTitle("Заказы");
 		"USE_ENHANCED_ECOMMERCE" => "N",
 		"USE_PRELOAD" => "Y",
 		"USE_PREPAYMENT" => "N",
-		"USE_YM_GOALS" => "N",
-		"COMPONENT_TEMPLATE" => "new"
-	),
-	false
-);?><?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
+		"USE_YM_GOALS" => "N"
+	)
+);?>
+</div>
+<?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
