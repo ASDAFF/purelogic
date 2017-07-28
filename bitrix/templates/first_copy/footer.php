@@ -320,7 +320,7 @@
 );?>
 <?}?>
 
-
+<div class="stop-left-menu"></div>
 <footer class="footer-end">
 	<div class="container">
 		<div class="row">
@@ -410,12 +410,12 @@ return $newData;
 
 		$('#breadcrumbs-two').airStickyBlock({
 			offsetTop: 0,
-			stopBlock: '.footer-end'
+			stopBlock: '.stop-left-menu'
 		});
 
 		$('.for_left_b > .bx_sitemap > .new_left_menu').airStickyBlock({
 			offsetTop: 3,
-			stopBlock: '.footer-end'
+			stopBlock: '.stop-left-menu'
 		});
 
 
