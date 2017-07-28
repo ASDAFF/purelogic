@@ -34,8 +34,16 @@ class SectionUpdate
 {
     function OnBeforeIBlockSectionUpdateHandler(&$arFields)
     {
-        if($arFields['IBLOCK_ID'] == 18)
-        $arFields['SORT'] = $arFields['UF_SORTIROVKA'];
+        if($arFields['IBLOCK_ID'] == 18){
+
+            foreach($arFields as $key => $item){
+                if($item == "~"){
+                    $arFields[$key] = "";
+                }
+            }
+            $arFields['SORT'] = $arFields['UF_SORTIROVKA'];
+        }
+
     }
 }
 
@@ -49,6 +57,17 @@ class ElementUpdate
     function OnBeforeIBlockElementUpdateHandler(&$arFields)
     {
         if($arFields['IBLOCK_ID'] == 18) {
+
+
+            foreach($arFields['PROPERTY_VALUES'] as $key_one => $prop){
+                foreach($prop as $key_two => $val){
+                    if($val['VALUE'] == "~"){
+                        $arFields['PROPERTY_VALUES'][$key_one][$key_two]['VALUE'] = "";
+                    }
+                }
+            }
+
+
             foreach ($arFields['PROPERTY_VALUES'][656] as $sort) {
                 $arFields['SORT'] = $sort['VALUE'];
             }
