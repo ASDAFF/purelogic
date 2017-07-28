@@ -93,3 +93,6 @@
     font-family: 'DINPro Light';
     color: black;
 }
+.container{
+    min-height: 500px;
+}
