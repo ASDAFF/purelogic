@@ -21,14 +21,6 @@
 					</div>
 				</div>
 				
-				<div class="col-md-4 col-sm-4 col-xs-6 padding_0">
-					<div class="icon_but_wr">
-						<a href="/support/" class="icon_but">
-							<img src="/img/icon/cal.png" alt="">
-						</a>
-						<p>Поддержка</p>
-					</div>
-				</div>
 			</div>
 			
 	
