@@ -16,7 +16,7 @@ $this->setFrameMode(true);
 	<div class="col-md-12">
 		<div class="title-optim" onclick="window.location.hash='#text-optim'">
 			<img src="/img/q.png">
-			<span><?=$arResult['UF_SAYT_PAPKA_INFO_Z'];?></span>
+			<span><?=preg_replace("/(\r\n)/", "<br/>", $arResult['UF_SAYT_PAPKA_INFO_Z']);?></span>
 		</div>
 	</div>
 <?endif;?>
@@ -223,10 +223,10 @@ foreach ($arResult['ITEMS'] as $arItem) {
 		<div class="col-md-12" id="text-optim" style="margin-bottom: 20px">
 			<div class="title-optim">
 				<img src="/img/q.png">
-				<span>Как выбрать универсальный станок?</span>
+				<span><?=$arResult['UF_SAYT_PAPKA_INFO_Z'];?></span>
 			</div>
 			<div class="text-optim">
-				<span><?=$arResult['UF_SAYT_PAPKA_INFO']?></span>
+				<span><?=preg_replace("/(\r\n)/", "<br/>", $arResult['UF_SAYT_PAPKA_INFO'])?></span>
 			</div>
 		</div>
 
