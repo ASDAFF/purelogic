@@ -1429,3 +1429,13 @@ span{
 .home-baner-jpg img{
     width: 100%;
 }
+.its_first_l{
+    max-height: 500px;
+    overflow: auto;
+}
+
+.its_first_l::-webkit-scrollbar
+{
+    width: 10px;
+    background-color: #FFFFFF;
+}
