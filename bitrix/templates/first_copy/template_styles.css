@@ -925,7 +925,7 @@ a.btn_grey.btn_back:hover{color:#fff !important;}
     background: #8FBB3F;
 }
 .its_first_l > .selected > a {
-    width: 100%;
+    width: 99%;
     display: block;
     background:#DBE9C0;
 }
@@ -1436,9 +1436,7 @@ span{
     max-height: 500px;
     overflow: auto;
 }
-
-
 .its_first_l::-webkit-scrollbar
 {
-   margin-left: 5px;
+    width: 4px;
 }
