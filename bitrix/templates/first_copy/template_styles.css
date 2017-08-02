@@ -1429,13 +1429,18 @@ span{
 .home-baner-jpg img{
     width: 100%;
 }
+
+
+/*Скролл для выпадающего меню*/
 .its_first_l{
     max-height: 500px;
     overflow: auto;
 }
-
+.its_first_l::-webkit-scrollbar-thumb
+{
+    display: none;
+}
 .its_first_l::-webkit-scrollbar
 {
-    width: 10px;
-    background-color: #FFFFFF;
+    width: 0px;
 }
