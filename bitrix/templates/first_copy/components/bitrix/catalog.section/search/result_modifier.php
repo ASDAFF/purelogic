@@ -463,4 +463,13 @@ if (!empty($arResult['ITEMS']))
 		}
 	}
 }
+
+foreach($arResult["ITEMS"] as $arItem){
+		$arFilter = Array('IBLOCK_ID'=> $arItem['IBLOCK_ID'], "ID" => $arItem['IBLOCK_SECTION_ID']);
+		$db_list = CIBlockSection::GetList(Array("SORT" => "asc"), $arFilter, true);
+		if($ar_result = $db_list->GetNext())
+		{
+			$arResult["SECTIONS"][] = $ar_result;
+		}
+}
 ?>

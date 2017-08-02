@@ -42,37 +42,16 @@ $arElements = $APPLICATION->IncludeComponent(
 );?>
 
 
-<form action="" id="sort_form" method="get">
-<div class="choice_search_select"><div >Результатов на странице</div>
-<input name="q" type="hidden" value="<?=$_GET["q"];?>">
-<div><select name="cnt" class="wSelect-el">
-<option value="10" <?if(!$_GET["cnt"]){?>selected<?}?>>10</option>
-<option value="20" <?if($_GET["cnt"]==20){?>selected<?}?>>20</option>
-<option value="50" <?if($_GET["cnt"]==50){?>selected<?}?>>50</option>
-<option value="100" <?if($_GET["cnt"]==100){?>selected<?}?>>100</option>
-</select>
-</div>
-</div>
 <div class="clear"></div>
-<div class="table_th_search">
-<div class="col-md-1 padding-left_0">
-Код
-</div>
-<div class="col-md-2 " style="text-align:center">
-Информация
-</div>
-<div class="col-md-6 ">
-Наименование <span data-sort="name" class="sort_up"><img src="/img/sort_up.png" alt=""/></span><span data-sort="name" class="sort_down"><img src="/img/sort_down.png" alt=""/> </span> <input type="hidden" value="<?if($_GET["name"]){ echo $_GET["sort_name"];}else{?>name<?}?>" id="sort_name" name="sort_name"> <input type="hidden" id="firs_sort" value="<?if($_GET["firs_sort"]){ echo $_GET["firs_sort"];}else{?>ASC<?}?>" class="sortt" name="firs_sort">
-</div>
-<div class="col-md-2">
-Стоимость <span data-sort="catalog_PRICE_1" class="sort_up"><img src="/img/sort_up.png" alt=""/></span><span data-sort="catalog_PRICE_1" class="sort_down"><img src="/img/sort_down.png" alt=""/></span>
-</div>
-<div class="col-md-1 padding_right_0">
-В корзину
-</div>
-</div>
 
-</form>
+
+
+<!--<div class="table_th_search">-->
+<!--	<div class="col-md-6 ">-->
+<!--		Наименование-->
+<!--	</div>-->
+<!--</div>-->
+
 <?
 if (!empty($arElements) && is_array($arElements))
 {
