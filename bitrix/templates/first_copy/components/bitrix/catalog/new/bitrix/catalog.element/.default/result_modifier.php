@@ -14,6 +14,10 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 
 
 
+	//Редирект с детальной страницы на раздел.
+	LocalRedirect($arResult["SECTION"]["SECTION_PAGE_URL"]);
+
+
    global $APPLICATION;
    global $USER;
    $user_id = CSaleBasket::GetBasketUserID();
