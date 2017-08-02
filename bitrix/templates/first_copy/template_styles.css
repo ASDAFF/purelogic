@@ -1436,11 +1436,9 @@ span{
     max-height: 500px;
     overflow: auto;
 }
-.its_first_l::-webkit-scrollbar-thumb
-{
-    display: none;
-}
+
+
 .its_first_l::-webkit-scrollbar
 {
-    width: 0px;
+   margin-left: 5px;
 }
