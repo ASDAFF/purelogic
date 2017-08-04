@@ -27,6 +27,51 @@ function _Check404Error(){
 
 ////////////////////////
 
+AddEventHandler("iblock", "OnBeforeIBlockSectionAdd", Array("SectionAdd", "OnBeforeIBlockSectionAddHandler"));
+
+class SectionAdd
+{
+    function OnBeforeIBlockSectionAddHandler(&$arFields)
+    {
+        if($arFields['IBLOCK_ID'] == 18){
+
+            $arFields['SORT'] = $arFields['UF_SORTIROVKA'];
+
+            foreach($arFields as $key => $item){
+                if($item == "~"){
+                    $arFields[$key] = "";
+                }
+            }
+        }
+    }
+}
+
+// регистрируем обработчик
+AddEventHandler("iblock", "OnBeforeIBlockElementAdd", Array("ElementAdd", "OnBeforeIBlockElementAddHandler"));
+
+class ElementAdd
+{
+    // создаем обработчик события "OnBeforeIBlockElementUpdate"
+    function OnBeforeIBlockElementAddHandler(&$arFields)
+    {
+        if($arFields['IBLOCK_ID'] == 18) {
+
+
+            foreach($arFields['PROPERTY_VALUES'] as $key_one => $prop){
+                foreach($prop as $key_two => $val){
+                    if($val['VALUE'] == "~"){
+                        $arFields['PROPERTY_VALUES'][$key_one][$key_two]['VALUE'] = "";
+                    }
+                }
+            }
+
+
+            foreach ($arFields['PROPERTY_VALUES'][656] as $sort) {
+                $arFields['SORT'] = $sort['VALUE'];
+            }
+        }
+    }
+}
 
 AddEventHandler("iblock", "OnBeforeIBlockSectionUpdate", Array("SectionUpdate", "OnBeforeIBlockSectionUpdateHandler"));
 
@@ -36,14 +81,14 @@ class SectionUpdate
     {
         if($arFields['IBLOCK_ID'] == 18){
 
+            $arFields['SORT'] = $arFields['UF_SORTIROVKA'];
+
             foreach($arFields as $key => $item){
                 if($item == "~"){
                     $arFields[$key] = "";
                 }
             }
-            $arFields['SORT'] = $arFields['UF_SORTIROVKA'];
         }
-
     }
 }
 
