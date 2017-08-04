@@ -48,12 +48,12 @@ class SectionUpdate
 }
 
 
-// ������������ ����������
+// регистрируем обработчик
 AddEventHandler("iblock", "OnBeforeIBlockElementUpdate", Array("ElementUpdate", "OnBeforeIBlockElementUpdateHandler"));
 
 class ElementUpdate
 {
-    // ������� ���������� ������� "OnBeforeIBlockElementUpdate"
+    // создаем обработчик события "OnBeforeIBlockElementUpdate"
     function OnBeforeIBlockElementUpdateHandler(&$arFields)
     {
         if($arFields['IBLOCK_ID'] == 18) {
@@ -73,6 +73,53 @@ class ElementUpdate
             }
         }
     }
+}
+
+
+
+AddEventHandler("sale", "OnOrderNewSendEmail", "bxModifySaleMails");
+
+function bxModifySaleMails($orderID, &$eventName, &$arFields)
+{
+    $arOrder = CSaleOrder::GetByID($orderID);
+    //-- получаем телефоны и адрес
+    $order_props = CSaleOrderPropsValue::GetOrderProps($orderID);
+    while ($arProps = $order_props->Fetch())
+    {
+        if($arProps["TYPE"] == "FILE"){
+            $arFile = array();
+            foreach(unserialize($arProps['VALUE']) as $file){
+                $arFile[] = SITE_SERVER_NAME.CFile::GetPath($file);
+            }
+            $arFields[$arProps['CODE']] = implode("<br>", $arFile);
+        }else{
+            $arFields[$arProps['CODE']] = $arProps['VALUE'];
+        }
+    }
+    //-- получаем название службы доставки
+    $arDeliv = CSaleDelivery::GetByID($arOrder["DELIVERY_ID"]);
+    $delivery_name = "";
+    if ($arDeliv)
+    {
+        $delivery_name = $arDeliv["NAME"];
+    }
+
+    //-- получаем название платежной системы
+    $arPaySystem = CSalePaySystem::GetByID($arOrder["PAY_SYSTEM_ID"]);
+    $pay_system_name = "";
+    if ($arPaySystem)
+    {
+        $pay_system_name = $arPaySystem["NAME"];
+    }
+    if ($arPersType = CSalePersonType::GetByID($arOrder['PERSON_TYPE_ID']))
+    {
+        $arFields["PERSON_TYPE"] = $arPersType['NAME'];
+    }
+
+    $arFields["ORDER_DESCRIPTION"] = $arOrder["USER_DESCRIPTION"];
+    $arFields["DELIVERY_NAME"] =  $delivery_name;
+    $arFields["PAY_SYSTEM_NAME"] =  $pay_system_name;
+
 }
 
 ?>
