@@ -15,7 +15,9 @@ use Bitrix\Main\Loader;
 use Bitrix\Main\ModuleManager;
 
 $this->setFrameMode(true);
+?>
 
+<?
 
 if (!isset($arParams['FILTER_VIEW_MODE']) || (string)$arParams['FILTER_VIEW_MODE'] == '')
 	$arParams['FILTER_VIEW_MODE'] = 'VERTICAL';
@@ -120,7 +122,6 @@ if ($verticalGrid)
 	?><div class="bx_content_section"><?
 }
 ?>
-
 <?
 
 
@@ -219,6 +220,7 @@ if(empty($type_site_now)){
 }
 
 ?>
+
 <div class="plitka" style="margin-bottom: 20px;display: none">
 <? if($type_two != 2 and !empty($type_site_now)){ ?>
 	<div class="pltk <?if($_SESSION["template"]=="window"){?>current<?}?>">

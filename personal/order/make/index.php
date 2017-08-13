@@ -4,16 +4,16 @@ $APPLICATION->SetTitle("Заказы");
 ?>
 <div class="container" style="margin-top: 20px">
 <?$APPLICATION->IncludeComponent(
-	"bitrix:sale.order.ajax",
-	"",
-	Array(
+	"bitrix:sale.order.ajax", 
+	".default", 
+	array(
 		"ACTION_VARIABLE" => "action",
 		"ADDITIONAL_PICT_PROP_18" => "-",
 		"ADDITIONAL_PICT_PROP_19" => "-",
 		"ADDITIONAL_PICT_PROP_32" => "-",
 		"ADDITIONAL_PICT_PROP_33" => "-",
 		"ADDITIONAL_PICT_PROP_6" => "-",
-		"ALLOW_AUTO_REGISTER" => "N",
+		"ALLOW_AUTO_REGISTER" => "Y",
 		"ALLOW_NEW_PROFILE" => "N",
 		"ALLOW_USER_PROFILES" => "N",
 		"BASKET_IMAGES_SCALING" => "standard",
@@ -35,17 +35,23 @@ $APPLICATION->SetTitle("Заказы");
 		"PAY_FROM_ACCOUNT" => "N",
 		"PAY_SYSTEMS_PER_PAGE" => "8",
 		"PICKUPS_PER_PAGE" => "5",
-		"PRODUCT_COLUMNS_HIDDEN" => array(),
-		"PRODUCT_COLUMNS_VISIBLE" => array("PREVIEW_PICTURE","PROPS"),
-		"PROPS_FADE_LIST_3" => array(),
-		"PROPS_FADE_LIST_4" => array(),
+		"PRODUCT_COLUMNS_HIDDEN" => array(
+		),
+		"PRODUCT_COLUMNS_VISIBLE" => array(
+			0 => "PREVIEW_PICTURE",
+			1 => "PROPS",
+		),
+		"PROPS_FADE_LIST_3" => array(
+		),
+		"PROPS_FADE_LIST_4" => array(
+		),
 		"SEND_NEW_USER_NOTIFY" => "Y",
 		"SERVICES_IMAGES_SCALING" => "standard",
 		"SET_TITLE" => "Y",
 		"SHOW_BASKET_HEADERS" => "N",
-		"SHOW_COUPONS_BASKET" => "Y",
-		"SHOW_COUPONS_DELIVERY" => "Y",
-		"SHOW_COUPONS_PAY_SYSTEM" => "Y",
+		"SHOW_COUPONS_BASKET" => "N",
+		"SHOW_COUPONS_DELIVERY" => "N",
+		"SHOW_COUPONS_PAY_SYSTEM" => "N",
 		"SHOW_DELIVERY_INFO_NAME" => "Y",
 		"SHOW_DELIVERY_LIST_NAMES" => "Y",
 		"SHOW_DELIVERY_PARENT_NAMES" => "Y",
@@ -64,10 +70,12 @@ $APPLICATION->SetTitle("Заказы");
 		"USE_CUSTOM_ERROR_MESSAGES" => "N",
 		"USE_CUSTOM_MAIN_MESSAGES" => "N",
 		"USE_ENHANCED_ECOMMERCE" => "N",
-		"USE_PRELOAD" => "Y",
+		"USE_PRELOAD" => "N",
 		"USE_PREPAYMENT" => "N",
-		"USE_YM_GOALS" => "N"
-	)
+		"USE_YM_GOALS" => "N",
+		"COMPONENT_TEMPLATE" => ".default"
+	),
+	false
 );?>
 </div>
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>

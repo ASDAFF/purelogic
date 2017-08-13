@@ -19,6 +19,11 @@ ErrorDocument 404 /404.php
 	RewriteCond %{REQUEST_FILENAME} !/bitrix/urlrewrite.php$
 	RewriteRule ^(.*)$ /bitrix/urlrewrite.php [L]
 	RewriteRule .* - [E=REMOTE_USER:%{HTTP:Authorization}]
+
+#Переадресация	
+RewriteCond %{HTTP_HOST} ^www.ticiana.ru$ [NC]
+RewriteRule ^(.*)$ http://ticiana.ru/$1 [R=301,L]
+	
 </IfModule>
 
 <IfModule mod_dir.c>

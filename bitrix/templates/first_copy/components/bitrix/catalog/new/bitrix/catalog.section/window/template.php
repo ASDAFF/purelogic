@@ -16,7 +16,7 @@ $this->setFrameMode(true);
 	<div class="col-md-12">
 		<div class="title-optim" onclick="window.location.hash='#text-optim'">
 			<img src="/img/q.png">
-			<span><?=preg_replace("/(\r\n)/", "<br/>", $arResult['UF_SAYT_PAPKA_INFO_Z']);?></span>
+			<span><?=preg_replace("/(\n)/", "<br/>", $arResult['UF_SAYT_PAPKA_INFO_Z']);?></span>
 		</div>
 	</div>
 <?endif;?>
@@ -226,8 +226,9 @@ foreach ($arResult['ITEMS'] as $arItem) {
 				<span><?=$arResult['UF_SAYT_PAPKA_INFO_Z'];?></span>
 			</div>
 			<div class="text-optim">
-				<span><?=preg_replace("/(\r\n)/", "<br/>", $arResult['UF_SAYT_PAPKA_INFO'])?></span>
+				<span><?=preg_replace("/(\n)/", "<br/>", $arResult['UF_SAYT_PAPKA_INFO'])?></span>
 			</div>
+
 		</div>
 
 	<?endif;?>

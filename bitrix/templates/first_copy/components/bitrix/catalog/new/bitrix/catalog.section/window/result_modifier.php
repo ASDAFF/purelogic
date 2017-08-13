@@ -24,5 +24,6 @@ if($uf_value = $uf_arresult->GetNext()) {
 
 	$arResult['UF_SAYT_PAPKA_INFO_Z'] = $uf_value['UF_SAYT_PAPKA_INFO_Z'];
 	$arResult['UF_SAYT_PAPKA_INFO'] = $uf_value['~UF_SAYT_PAPKA_INFO'];
+
 }
 ?>
