@@ -98,7 +98,8 @@ $(this).append($("#"+$(this).attr("data-id")));
 	<link rel="shortcut icon" href="/img/favicon/favicon.png" type="image/x-icon">
 	
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="viewport" content="width=1200">
+<!--	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">-->
 	
 <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,300,300italic,700,500,500italic,400italic,700italic" rel="stylesheet" type="text/css">
 

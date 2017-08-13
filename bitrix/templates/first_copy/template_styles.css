@@ -1440,3 +1440,17 @@ span{
 {
     width: 4px;
 }
+
+body{
+    min-width: 1200px!important;
+}
+
+html{
+    min-width: 1200px!important;
+}
+
+@-ms-viewport { width: 1200px; }
+@-webkit-viewport { width: 1200px; }
+@-moz-viewport { width: 1200px; }
+@-o-viewport { width: 1200px; }
+@viewport { width: 1200px; }
