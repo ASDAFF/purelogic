@@ -175,7 +175,7 @@ if (strlen($arResult["ERROR_MESSAGE"]) <= 0)
 else
 {?>
 
-<div id="basket_form_container">
+<div class="card" id="basket_form_container">
 	<?ShowError($arResult["ERROR_MESSAGE"]);?>
 	</div>
 <?}
