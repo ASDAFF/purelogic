@@ -157,7 +157,7 @@ if ($normalCount > 0):
 <?
 else:
 ?>
-<div id="basket_items_list">
+<div id="basket_items_list" class="card">
 	<table>
 		<tbody>
 			<tr>

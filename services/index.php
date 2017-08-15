@@ -101,23 +101,20 @@ $APPLICATION->SetTitle("Title");
 				<p>Заполните все поля формы, оставив контактные данные, и наши специалисты оперативно свяжутся с Вами</p>
 			</div>
 			<div class="col-md-6">
-				<?$APPLICATION->IncludeComponent(
-	"bitrix:form.result.new", 
-	".default", 
-	array(
-		"AJAX_MODE" => "Y",
-		"CACHE_TIME" => "3600",
-		"CACHE_TYPE" => "A",
-		"CHAIN_ITEM_LINK" => "",
-		"CHAIN_ITEM_TEXT" => "",
+				<?$APPLICATION->IncludeComponent("bitrix:form.result.new", "forma", Array(
+	"AJAX_MODE" => "Y",
+		"CACHE_TIME" => "3600",	// Время кеширования (сек.)
+		"CACHE_TYPE" => "A",	// Тип кеширования
+		"CHAIN_ITEM_LINK" => "",	// Ссылка на дополнительном пункте в навигационной цепочке
+		"CHAIN_ITEM_TEXT" => "",	// Название дополнительного пункта в навигационной цепочке
 		"COMPONENT_TEMPLATE" => ".default",
-		"EDIT_URL" => "",
-		"IGNORE_CUSTOM_TEMPLATE" => "N",
-		"LIST_URL" => "",
-		"SEF_MODE" => "N",
-		"SUCCESS_URL" => "",
-		"USE_EXTENDED_ERRORS" => "N",
-		"WEB_FORM_ID" => "4",
+		"EDIT_URL" => "",	// Страница редактирования результата
+		"IGNORE_CUSTOM_TEMPLATE" => "N",	// Игнорировать свой шаблон
+		"LIST_URL" => "",	// Страница со списком результатов
+		"SEF_MODE" => "N",	// Включить поддержку ЧПУ
+		"SUCCESS_URL" => "",	// Страница с сообщением об успешной отправке
+		"USE_EXTENDED_ERRORS" => "N",	// Использовать расширенный вывод сообщений об ошибках
+		"WEB_FORM_ID" => "4",	// ID веб-формы
 		"VARIABLE_ALIASES" => array(
 			"WEB_FORM_ID" => "WEB_FORM_ID",
 			"RESULT_ID" => "RESULT_ID",

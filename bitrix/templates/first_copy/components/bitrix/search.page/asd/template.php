@@ -86,5 +86,5 @@
 	</div><br /><?
 endif;?>
 <div class="title_search">Результаты поиска</div>
-По Вашему запросу шпиндель <b><?=$_GET["q"];?></b> найдено результатов: <?=$arResult["NAV_RESULT"]->NavRecordCount;?>
+По Вашему запросу <b><?=$_GET["q"];?></b> найдено результатов: <?=$arResult["NAV_RESULT"]->NavRecordCount;?>
 </div>

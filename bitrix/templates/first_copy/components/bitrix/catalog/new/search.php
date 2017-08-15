@@ -128,8 +128,8 @@ else
 		'SHOW_CLOSE_POPUP' => isset($arParams['COMMON_SHOW_CLOSE_POPUP']) ? $arParams['COMMON_SHOW_CLOSE_POPUP'] : '',
 		'COMPARE_PATH' => $arResult['FOLDER'].$arResult['URL_TEMPLATES']['compare']
 	),
-	$component,
-	array("HIDE_ICONS" => "Y")
+	$component
+	//array("HIDE_ICONS" => "Y")
 );
 unset($basketAction);
 ?>

@@ -88,9 +88,14 @@ if (0 < $arResult["SECTIONS_COUNT"])
 	$TOP_DEPTH = $arResult["SECTION"]["DEPTH_LEVEL"];
 	$CURRENT_DEPTH = $TOP_DEPTH;
 
-	foreach($arResult["SECTIONS"] as $k => $arSection){if($arSection['UF_SAYT_PAPKA_TIP'] == 2){ unset($arResult["SECTIONS"][$k]); }}
-	foreach($arResult["SECTIONS"] as $k => $arSection)
+
+	foreach($arResult["SECTIONS"] as $k => &$arSection){if($arSection['UF_SAYT_PAPKA_TIP'] == 2){ unset($arResult["SECTIONS"][$k]); }}
+
+
+
+	foreach($arResult["SECTIONS"] as $k => &$arSection)
 	{
+		
 	if($arSection["DEPTH_LEVEL"]>1){
 	$stra="";
 	$selected="";
@@ -129,6 +134,7 @@ if (0 < $arResult["SECTIONS_COUNT"])
 		else
 		{
 			$link = '<a href="'.$arSection["SECTION_PAGE_URL"].'">'.$arSection["NAME"].$count.'</a>';
+			
 		}
 
 
@@ -139,7 +145,7 @@ if (0 < $arResult["SECTIONS_COUNT"])
 	}
 	else
 	{
-	
+
 	while($CURRENT_DEPTH > $TOP_DEPTH)
 	{
 		echo "</li>";
@@ -152,6 +158,7 @@ if (0 < $arResult["SECTIONS_COUNT"])
 	<div id="uli_<?=$arSection["ID"];?>" class="go_menu_left"><div class="lftnnv section_leftnav">
 
 	<?}
+
 	}
 
 
@@ -164,6 +171,7 @@ if (0 < $arResult["SECTIONS_COUNT"])
 	?>
 </div>
 </div>
+
 
 <script>
 

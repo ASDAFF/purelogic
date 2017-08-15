@@ -3,76 +3,70 @@ require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 $APPLICATION->SetTitle("Заказы");
 ?>
 <div class="container" style="margin-top: 20px">
-<?$APPLICATION->IncludeComponent(
-	"bitrix:sale.order.ajax", 
-	".default", 
-	array(
-		"ACTION_VARIABLE" => "action",
-		"ADDITIONAL_PICT_PROP_18" => "-",
-		"ADDITIONAL_PICT_PROP_19" => "-",
-		"ADDITIONAL_PICT_PROP_32" => "-",
-		"ADDITIONAL_PICT_PROP_33" => "-",
-		"ADDITIONAL_PICT_PROP_6" => "-",
-		"ALLOW_AUTO_REGISTER" => "Y",
-		"ALLOW_NEW_PROFILE" => "N",
-		"ALLOW_USER_PROFILES" => "N",
-		"BASKET_IMAGES_SCALING" => "standard",
-		"BASKET_POSITION" => "after",
-		"COMPATIBLE_MODE" => "Y",
-		"COMPOSITE_FRAME_MODE" => "A",
-		"COMPOSITE_FRAME_TYPE" => "AUTO",
-		"DELIVERIES_PER_PAGE" => "8",
-		"DELIVERY_FADE_EXTRA_SERVICES" => "N",
-		"DELIVERY_NO_AJAX" => "N",
-		"DELIVERY_NO_SESSION" => "Y",
-		"DELIVERY_TO_PAYSYSTEM" => "d2p",
-		"DISABLE_BASKET_REDIRECT" => "N",
-		"ONLY_FULL_PAY_FROM_ACCOUNT" => "N",
-		"PATH_TO_AUTH" => "/auth/",
-		"PATH_TO_BASKET" => "basket.php",
-		"PATH_TO_PAYMENT" => "payment.php",
-		"PATH_TO_PERSONAL" => "index.php",
-		"PAY_FROM_ACCOUNT" => "N",
-		"PAY_SYSTEMS_PER_PAGE" => "8",
-		"PICKUPS_PER_PAGE" => "5",
-		"PRODUCT_COLUMNS_HIDDEN" => array(
-		),
-		"PRODUCT_COLUMNS_VISIBLE" => array(
+<?$APPLICATION->IncludeComponent("bitrix:sale.order.ajax", "order", Array(
+	"ACTION_VARIABLE" => "action",	// Название переменной, в которой передается действие
+		"ADDITIONAL_PICT_PROP_18" => "-",	// Дополнительная картинка [Основной каталог товаров]
+		"ADDITIONAL_PICT_PROP_19" => "-",	// Дополнительная картинка [Пакет предложений (Основной каталог товаров)]
+		"ADDITIONAL_PICT_PROP_32" => "-",	// Дополнительная картинка [Каталог товаров 8D6E7147]
+		"ADDITIONAL_PICT_PROP_33" => "-",	// Дополнительная картинка [Пакет предложений (Каталог товаров 8D6E7147)]
+		"ADDITIONAL_PICT_PROP_6" => "-",	// Дополнительная картинка [Пакет предложений (Основной каталог товаров)]
+		"ALLOW_AUTO_REGISTER" => "Y",	// Оформлять заказ с автоматической регистрацией пользователя
+		"ALLOW_NEW_PROFILE" => "N",	// Разрешить множество профилей покупателей
+		"ALLOW_USER_PROFILES" => "N",	// Разрешить использование профилей покупателей
+		"BASKET_IMAGES_SCALING" => "standard",	// Режим отображения изображений товаров
+		"BASKET_POSITION" => "after",	// Расположение списка товаров
+		"COMPATIBLE_MODE" => "Y",	// Режим совместимости для предыдущего шаблона
+		"COMPOSITE_FRAME_MODE" => "A",	// Голосование шаблона компонента по умолчанию
+		"COMPOSITE_FRAME_TYPE" => "AUTO",	// Содержимое компонента
+		"DELIVERIES_PER_PAGE" => "8",	// Количество доставок на странице
+		"DELIVERY_FADE_EXTRA_SERVICES" => "N",	// Дополнительные услуги, которые будут показаны в пройденном (свернутом) блоке
+		"DELIVERY_NO_AJAX" => "N",	// Рассчитывать сразу доставки с внешним доступом к сервисам
+		"DELIVERY_NO_SESSION" => "Y",	// Проверять сессию при оформлении заказа
+		"DELIVERY_TO_PAYSYSTEM" => "d2p",	// Последовательность оформления
+		"DISABLE_BASKET_REDIRECT" => "N",	// Оставаться на странице оформления заказа, если список товаров пуст
+		"ONLY_FULL_PAY_FROM_ACCOUNT" => "N",	// Разрешить оплату с внутреннего счета только в полном объеме
+		"PATH_TO_AUTH" => "/auth/",	// Путь к странице авторизации
+		"PATH_TO_BASKET" => "basket.php",	// Путь к странице корзины
+		"PATH_TO_PAYMENT" => "payment.php",	// Страница подключения платежной системы
+		"PATH_TO_PERSONAL" => "index.php",	// Путь к странице персонального раздела
+		"PAY_FROM_ACCOUNT" => "N",	// Разрешить оплату с внутреннего счета
+		"PAY_SYSTEMS_PER_PAGE" => "8",	// Количество платежных систем на странице
+		"PICKUPS_PER_PAGE" => "5",	// Количество пунктов самовывоза на странице
+		"PRODUCT_COLUMNS_HIDDEN" => "",	// Свойства товаров отображаемые в свернутом виде в списке товаров
+		"PRODUCT_COLUMNS_VISIBLE" => array(	// Выбранные колонки таблицы списка товаров
 			0 => "PREVIEW_PICTURE",
 			1 => "PROPS",
 		),
-		"PROPS_FADE_LIST_3" => array(
-		),
-		"PROPS_FADE_LIST_4" => array(
-		),
-		"SEND_NEW_USER_NOTIFY" => "Y",
-		"SERVICES_IMAGES_SCALING" => "standard",
-		"SET_TITLE" => "Y",
-		"SHOW_BASKET_HEADERS" => "N",
-		"SHOW_COUPONS_BASKET" => "N",
-		"SHOW_COUPONS_DELIVERY" => "N",
-		"SHOW_COUPONS_PAY_SYSTEM" => "N",
-		"SHOW_DELIVERY_INFO_NAME" => "Y",
-		"SHOW_DELIVERY_LIST_NAMES" => "Y",
-		"SHOW_DELIVERY_PARENT_NAMES" => "Y",
-		"SHOW_MAP_IN_PROPS" => "N",
-		"SHOW_NEAREST_PICKUP" => "N",
-		"SHOW_NOT_CALCULATED_DELIVERIES" => "L",
-		"SHOW_ORDER_BUTTON" => "final_step",
-		"SHOW_PAY_SYSTEM_INFO_NAME" => "Y",
-		"SHOW_PAY_SYSTEM_LIST_NAMES" => "Y",
-		"SHOW_STORES_IMAGES" => "Y",
-		"SHOW_TOTAL_ORDER_BUTTON" => "N",
-		"SKIP_USELESS_BLOCK" => "Y",
-		"TEMPLATE_LOCATION" => "popup",
-		"TEMPLATE_THEME" => "site",
-		"USE_CUSTOM_ADDITIONAL_MESSAGES" => "N",
-		"USE_CUSTOM_ERROR_MESSAGES" => "N",
-		"USE_CUSTOM_MAIN_MESSAGES" => "N",
-		"USE_ENHANCED_ECOMMERCE" => "N",
-		"USE_PRELOAD" => "N",
-		"USE_PREPAYMENT" => "N",
-		"USE_YM_GOALS" => "N",
+		"PROPS_FADE_LIST_3" => "",	// Свойства заказа, которые будут показаны в пройденном (свернутом) блоке (Физическое лицо)[s1]
+		"PROPS_FADE_LIST_4" => "",	// Свойства заказа, которые будут показаны в пройденном (свернутом) блоке (Юридическое лицо)[s1]
+		"SEND_NEW_USER_NOTIFY" => "Y",	// Отправлять пользователю письмо, что он зарегистрирован на сайте
+		"SERVICES_IMAGES_SCALING" => "standard",	// Режим отображения вспомагательных изображений
+		"SET_TITLE" => "Y",	// Устанавливать заголовок страницы
+		"SHOW_BASKET_HEADERS" => "N",	// Показывать заголовки колонок списка товаров
+		"SHOW_COUPONS_BASKET" => "N",	// Показывать поле ввода купонов в блоке списка товаров
+		"SHOW_COUPONS_DELIVERY" => "N",	// Показывать поле ввода купонов в блоке доставки
+		"SHOW_COUPONS_PAY_SYSTEM" => "N",	// Показывать поле ввода купонов в блоке оплаты
+		"SHOW_DELIVERY_INFO_NAME" => "Y",	// Отображать название в блоке информации по доставке
+		"SHOW_DELIVERY_LIST_NAMES" => "Y",	// Отображать названия в списке доставок
+		"SHOW_DELIVERY_PARENT_NAMES" => "Y",	// Показывать название родительской доставки
+		"SHOW_MAP_IN_PROPS" => "N",	// Показывать карту в блоке свойств заказа
+		"SHOW_NEAREST_PICKUP" => "N",	// Показывать ближайшие пункты самовывоза
+		"SHOW_NOT_CALCULATED_DELIVERIES" => "L",	// Отображение доставок с ошибками расчета
+		"SHOW_ORDER_BUTTON" => "final_step",	// Отображать кнопку оформления заказа (для неавторизованных пользователей)
+		"SHOW_PAY_SYSTEM_INFO_NAME" => "Y",	// Отображать название в блоке информации по платежной системе
+		"SHOW_PAY_SYSTEM_LIST_NAMES" => "Y",	// Отображать названия в списке платежных систем
+		"SHOW_STORES_IMAGES" => "Y",	// Показывать изображения складов в окне выбора пункта выдачи
+		"SHOW_TOTAL_ORDER_BUTTON" => "N",	// Отображать дополнительную кнопку оформления заказа
+		"SKIP_USELESS_BLOCK" => "Y",	// Пропускать шаги, в которых один элемент для выбора
+		"TEMPLATE_LOCATION" => "popup",	// Визуальный вид контрола выбора местоположений
+		"TEMPLATE_THEME" => "site",	// Цветовая тема
+		"USE_CUSTOM_ADDITIONAL_MESSAGES" => "N",	// Заменить стандартные фразы на свои
+		"USE_CUSTOM_ERROR_MESSAGES" => "N",	// Заменить стандартные фразы на свои
+		"USE_CUSTOM_MAIN_MESSAGES" => "N",	// Заменить стандартные фразы на свои
+		"USE_ENHANCED_ECOMMERCE" => "N",	// Отправлять данные электронной торговли в Google и Яндекс
+		"USE_PRELOAD" => "N",	// Автозаполнение оплаты и доставки по предыдущему заказу
+		"USE_PREPAYMENT" => "N",	// Использовать предавторизацию для оформления заказа (PayPal Express Checkout)
+		"USE_YM_GOALS" => "N",	// Использовать цели счетчика Яндекс.Метрики
 		"COMPONENT_TEMPLATE" => ".default"
 	),
 	false

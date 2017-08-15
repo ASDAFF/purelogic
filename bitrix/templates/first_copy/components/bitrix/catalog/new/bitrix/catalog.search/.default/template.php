@@ -15,30 +15,42 @@ $this->setFrameMode(true);
 <div class="container">
 <?
 $arElements = $APPLICATION->IncludeComponent(
-	"bitrix:search.page",
-	"asd",
-	Array(
-		"RESTART" => $arParams["RESTART"],
-		"NO_WORD_LOGIC" => $arParams["NO_WORD_LOGIC"],
-		"USE_LANGUAGE_GUESS" => $arParams["USE_LANGUAGE_GUESS"],
-		"CHECK_DATES" => $arParams["CHECK_DATES"],
-		"arrFILTER" => array("iblock_".$arParams["IBLOCK_TYPE"]),
-		"arrFILTER_iblock_".$arParams["IBLOCK_TYPE"] => array($arParams["IBLOCK_ID"]),
+	"bitrix:search.page", 
+	"asd", 
+	array(
+		"RESTART" => "N",
+		"NO_WORD_LOGIC" => "Y",
+		"USE_LANGUAGE_GUESS" => "N",
+		"CHECK_DATES" => "N",
+		"arrFILTER" => array(
+		),
+		"={\"arrFILTER_iblock_\".\$arParams[\"IBLOCK_TYPE\"]}" => array(
+			0 => $arParams["IBLOCK_ID"],
+		),
 		"USE_TITLE_RANK" => "N",
 		"DEFAULT_SORT" => "rank",
 		"FILTER_NAME" => "",
 		"SHOW_WHERE" => "N",
-		"arrWHERE" => array(),
+		"arrWHERE" => "",
 		"SHOW_WHEN" => "N",
-		"PAGE_RESULT_COUNT" => 200,
+		"PAGE_RESULT_COUNT" => "500",
 		"DISPLAY_TOP_PAGER" => "N",
 		"DISPLAY_BOTTOM_PAGER" => "N",
 		"PAGER_TITLE" => "",
 		"PAGER_SHOW_ALWAYS" => "N",
 		"PAGER_TEMPLATE" => "N",
+		"COMPONENT_TEMPLATE" => "asd",
+		"AJAX_MODE" => "N",
+		"AJAX_OPTION_JUMP" => "N",
+		"AJAX_OPTION_STYLE" => "Y",
+		"AJAX_OPTION_HISTORY" => "N",
+		"AJAX_OPTION_ADDITIONAL" => "",
+		"CACHE_TYPE" => "A",
+		"CACHE_TIME" => "3600",
+		"COMPOSITE_FRAME_MODE" => "A",
+		"COMPOSITE_FRAME_TYPE" => "AUTO"
 	),
-	$component,
-	array('HIDE_ICONS' => 'Y')
+	false
 );?>
 
 
@@ -56,7 +68,7 @@ $arElements = $APPLICATION->IncludeComponent(
 if (!empty($arElements) && is_array($arElements))
 {
 
-$elcnt=10;
+$elcnt=500;
 
 if($_GET["cnt"])
 $elcnt=$_GET["cnt"];
@@ -165,8 +177,8 @@ $arParams["ELEMENT_SORT_ORDER"]=$_GET["firs_sort"];
 			'SHOW_CLOSE_POPUP' => (isset($arParams['SHOW_CLOSE_POPUP']) ? $arParams['SHOW_CLOSE_POPUP'] : ''),
 			'COMPARE_PATH' => $arParams['COMPARE_PATH']
 		),
-		$arResult["THEME_COMPONENT"],
-		array('HIDE_ICONS' => 'Y')
+		$arResult["THEME_COMPONENT"]
+			//array('HIDE_ICONS' => 'Y')
 	);
 }
 else

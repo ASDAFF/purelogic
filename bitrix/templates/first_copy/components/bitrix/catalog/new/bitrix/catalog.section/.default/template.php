@@ -130,7 +130,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 			</div>
 			<div class="col-md-10 padding_0">
 				<div class="preview-text">
-					<?=preg_replace("/(\r\n)/", "<br/>", $arSection['~UF_SAYT_PAPKA_OPIS'])?>
+					<?=preg_replace("/(\n)/", "<br/>", $arSection['~UF_SAYT_PAPKA_OPIS'])?>
 				</div>
 			</div>
 		</div>

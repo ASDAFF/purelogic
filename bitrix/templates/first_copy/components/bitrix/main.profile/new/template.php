@@ -91,18 +91,21 @@ var cookie_prefix = '<?=$arResult["COOKIE_PREFIX"]?>';
 				<input type="text" style="display:none" class="user_name" name="EMAIL" maxlength="50" value="<? echo $arResult["arUser"]["EMAIL"]?>" />
 				
 
-						<div class="col-md-12 col-lg-3">
+						<div class="col-md-12 col-lg-3" style="overflow: hidden;width: auto;float: none;">
 							<h4>Личная информация</h4>
 						</div>
-						<div class="col-md-12 col-lg-7 ">
+
+						<div class="col-md-12 col-lg-7 " style="overflow: hidden;width: auto;float: none;">
 							<p>Поля, отмеченные звездочкой, обязательны для заполнения</p>
 						</div>
+
 						<div class="col-md-5 col-sm-5 col-lg-3">
 							<label for="text"><?=GetMessage('NAME')?>*</label>
 						</div>
 						<div class="col-md-7 col-sm-7">
 							<input type="text" name="NAME" required maxlength="50" value="<?=$arResult["arUser"]["NAME"]?>" />
 						</div>
+
 						<div class="col-md-5 col-sm-5 col-lg-3">
 							<label for="text"><?=GetMessage('LAST_NAME')?></label>
 						</div>
@@ -120,7 +123,7 @@ var cookie_prefix = '<?=$arResult["COOKIE_PREFIX"]?>';
 						<div class="col-md-5 col-sm-5 col-lg-3">
 							<label for="password">Для смены пароля введите новый:</label>
 						</div>
-						<div class="col-md-7 col-sm-7">
+						<div class="col-md-7 col-sm-7" style="    height: 52px;">
 							<input type="password" name="NEW_PASSWORD" maxlength="50" value="" autocomplete="off" class="bx-auth-input" />
 						</div>
 						<div class="col-md-5 col-sm-5 col-lg-3">
