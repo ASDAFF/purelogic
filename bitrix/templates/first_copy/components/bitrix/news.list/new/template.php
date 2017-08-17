@@ -47,7 +47,7 @@ $this->setFrameMode(true);
 	var masterslider_6f57 = new MasterSlider();
 
 	// slider controls
-	//masterslider_6f57.control('arrows'     ,{ autohide:false, overVideo:true  });
+	masterslider_6f57.control('arrows'     ,{ autohide:true, overVideo:true  });
 	masterslider_6f57.control('bullets'    ,{ autohide:false, overVideo:true, dir:'h', align:'bottom', space:5 , margin:10  });
 	masterslider_6f57.control('timebar'    ,{ autohide:false, overVideo:true, align:'bottom', color:'#8FBB3F'  , width:4 });
 
