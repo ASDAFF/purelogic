@@ -100,6 +100,10 @@ $( ".new_left_menu li" ).mouseleave(function() {
 
     });
 
+    $( ".new_left_menu" ).mouseleave(function() {
+        delete_yes();
+        $(".big-back-formenu").removeClass("yes");
+    });
 
 
 
