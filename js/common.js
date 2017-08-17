@@ -11,7 +11,7 @@ $(document).ready(function() {
 
 var itemShowTimeout = false;
 var itemHideTimeout = false;
-var Timeout = 1000;
+var Timeout = 700;
 var Elem;
 /*
 $( ".new_left_menu li" ).mouseenter(function() {
