@@ -1423,7 +1423,7 @@ span{
 #breadcrumbs-two.airSticky_fixed{
     padding-top: 3px;
     background-color: #fff;
-    z-index: 1;
+    z-index: 5;
 }
 
 .home-baner-jpg img{
