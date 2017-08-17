@@ -1,20 +1,20 @@
-2017-Aug-15 16:51:33 Наличие необходимых модулей php (check_php_modules): Ok
+2017-Aug-16 16:51:35 Наличие необходимых модулей php (check_php_modules): Ok
 Все необходимые модули установлены
-2017-Aug-15 16:51:33 Обязательные параметры PHP (check_php_settings): Ok
+2017-Aug-16 16:51:35 Обязательные параметры PHP (check_php_settings): Ok
 Настройки правильные
-2017-Aug-15 16:51:33 Модули веб-сервера (check_security): Warning
+2017-Aug-16 16:51:35 Модули веб-сервера (check_security): Warning
 Замечание. Загружен модуль mod_dav/mod_dav_fs, WebDav не будет работать
-2017-Aug-15 16:51:33 Значения переменных сервера (check_server_vars): Ok
+2017-Aug-16 16:51:35 Значения переменных сервера (check_server_vars): Ok
 Корректные
-2017-Aug-15 16:51:33 Сохранение сессии (check_session): Ok
+2017-Aug-16 16:51:35 Сохранение сессии (check_session): Ok
 50% done
-2017-Aug-15 16:51:33 Параметры настройки UTF (mbstring и константа BX_UTF) (check_mbstring): Ok
+2017-Aug-16 16:51:35 Параметры настройки UTF (mbstring и константа BX_UTF) (check_mbstring): Ok
 Правильные. Сайт работает в UTF кодировке
-2017-Aug-15 16:51:33 Служебные скрипты в корне сайта (check_install_scripts): Ok
+2017-Aug-16 16:51:35 Служебные скрипты в корне сайта (check_install_scripts): Ok
 Отсутствуют
-2017-Aug-15 16:51:33 Работа с сокетами (check_socket): Ok
+2017-Aug-16 16:51:35 Работа с сокетами (check_socket): Ok
 Connection to new.purelogic.ru:80	Success
 
 Успешно
-2017-Aug-15 16:51:33 Выполнение агентов на cron (check_bx_crontab): Warning
+2017-Aug-16 16:51:35 Выполнение агентов на cron (check_bx_crontab): Warning
 Замечание. Агенты выполняются на хитах, рекомендуется перевести выполнение агентов на cron
