@@ -76,13 +76,13 @@ $( ".new_left_menu li" ).mouseleave(function() {
 
 
         }, function() {
-
-        $(".big-back-formenu").removeClass("yes");
+        
         var that = this;
         $('.background-icon-menu',this).css('display','block');
         $('.uf-menu-pic-hover',this).css('display','none');
             itemHideTimeout = setTimeout(function () {
                 $("#" + $(that).attr("data-id")).removeClass("yes");
+                $(".big-back-formenu").removeClass("yes");
             }, Timeout);
 
     });
