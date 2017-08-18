@@ -9,5 +9,5 @@
 	<li><a class="pen" href="http://purelogicrnd.livejournal.com/"><span class="pen_icon"></span></a></li>
 </ul>
 <p class="podpis">
-	 © Purelogic R&amp;D, 2005-2016
+	 © Purelogic R&amp;D, 2005-2017
 </p>

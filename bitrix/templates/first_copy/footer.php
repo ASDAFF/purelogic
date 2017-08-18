@@ -371,15 +371,15 @@ return $newData;
 				}
 				?>
 					<p>Сейчас <span><?echo EditData(date(CDatabase::DateFormatToPHP(CSite::GetDateFormat("FULL")), time()));?></span> </p>
-					<? $APPLICATION->IncludeComponent(
-	"terkulov:date_yo", 
-	".default", 
-	array(
-		"COMPONENT_TEMPLATE" => ".default",
+					<? $APPLICATION->IncludeComponent("terkulov:date_yo", ".default", array(
+	"COMPONENT_TEMPLATE" => ".default",
 		"WHEN" => "12:00",
 		"TIME" => "01:30"
 	),
-	false
+	false,
+	array(
+	"ACTIVE_COMPONENT" => "N"
+	)
 );?>
 
 					<?$APPLICATION->IncludeComponent("bitrix:main.include", "", array("AREA_FILE_SHOW" => "file", "PATH" => SITE_DIR."include/soccop.php"), false);?>

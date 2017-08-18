@@ -101,7 +101,7 @@ $APPLICATION->SetTitle("Title");
 				<p>Заполните все поля формы, оставив контактные данные, и наши специалисты оперативно свяжутся с Вами</p>
 			</div>
 			<div class="col-md-6">
-				<?$APPLICATION->IncludeComponent("bitrix:form.result.new", "forma", Array(
+				<?/* $APPLICATION->IncludeComponent("bitrix:form.result.new", "forma", Array(
 	"AJAX_MODE" => "Y",
 		"CACHE_TIME" => "3600",	// Время кеширования (сек.)
 		"CACHE_TYPE" => "A",	// Тип кеширования
@@ -121,7 +121,7 @@ $APPLICATION->SetTitle("Title");
 		)
 	),
 	false
-);?>
+);*/ ?>
 			</div>
 
 		</div>
