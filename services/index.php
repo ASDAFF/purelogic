@@ -1,107 +1,52 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
-$APPLICATION->SetTitle("Title");
+$APPLICATION->SetTitle("Сервисная служба - Purelogic R&D");
 ?>
 <section class="service">
-	<div class="container">
+	<div class="container"><center><font size=6>Сервис</font></center>
 		<div class="row">
-			<div class="col-md-12">
-				<h2>Услуги по токарной обработке материалов</h2>
-			</div>
-			<div class="col-md-6">
-				<p>Компания "Purelogic R&D" предлагает услуги по токарной обработке.</p>
-				<h5>Возможны следующие виды работ: </h5>
-				<ul>
-					<li>• Пооперационные токарные работы на заказ (точение, <br/>нарезание резьбы, и т.д.)</li>
-					<li>• Изготовление токарных изделий (втулки, фланцы, оси и др.)</li>
-					<li>• Изготовление токарных изделий (втулки, фланцы, оси и др.)</li>
-					
-				</ul>
-				<h5>Параметры обрабатываемых изделий: </h5>
-				<ul>
-					<li>• Стали низко и высокоуглеродистые, легированные</li>
-					<li>• Стали с поверхностной и глубокой закалкой (с предварительным отпуском и последующей закалкой в индукционной печи)</li>
-					<li>• Алюминий и его сплавы</li>
-					<li>• Полиамид</li>
-					<li>• Капролон и другие синтетические материалы. </li>
-					<li>• Материал может быть предоставлен, как Вами, так и нашей компанией.</li>
-					
-				</ul>
-			</div>
-			<div class="col-md-6 ser_ul_2">
-				<h5>Производится обработка следующих материалов: </h5>
-				<ul>
-					<li>• Диаметр обработки — от 3 до 500 мм.</li>
-					<li>• Наибольший диаметр обрабатываемого прутка — 50 мм</li>
-					<li>• Наибольшая длина обтачивания — 645 мм.</li>
-					<li>• Масса заготовки — не более 30 кг.</li>
-					<li> Материал может быть предоставлен, как Вами, так и нашей компанией.</li>
-					
-				</ul>
-				<h5>Стоимость токарных работ:</h5>
-				<ul>
-					<li>от 300 р. за 1 нормо-час. </li>
-					<li>Точная стоимость определяется исходя из объема партии заказа, технологического времени обработки, типа станка.</li>
-				</ul>
-			</div>
-		</div>	
+			<p>Уважаемые клиенты, Вам доступно 2 способа связи с технической поддержкой.</p>
+<p>1) <strong>Электронная служба <a href="http://help.purelogic.ru">help.purelogic.ru</a></strong><br /><br />Для регистрации запроса перейдите на <a href="http://help.purelogic.ru">help.purelogic.ru</a> и оформите обращение, укажите номер заказа, а так же на какого контрагента был оформлен счет. К обращению необходимо приложить заполненную заявку, бланки заявок доступны для скачивания в таблице ниже.</p>
+<p>Для получения логина и пароля свяжитесь с нами по телефону 8 800 555-63-74 (Звонок по России бесплатный) или электронной почте <a class="order_container" rel="nofollow" href="mailto:info@purelogic.ru" target="_blank">info@purelogic.ru</a></p>
+<p><br />2) <strong>Запрос по электронной почте</strong><br /><br />Для регистрации запроса:<br />- направьте письмо на адрес электронной почты <a class="order_container" rel="nofollow" href="mailto:ticket@purelogic.ru" target="_blank">ticket@purelogic.ru</a>;<br />- в теме письма укажите краткое описание заявки и название предприятия;<br />- основное описание укажите в типовой заявке, которую необходимо приложить к письму.<br /><br />Бланки заявок доступны для скачивания ниже.</p>
+<table style="border-collapse: collapse; width: 300px;" cellpadding="3">
+<tbody>
+<tr>
+<td style="padding: 0px; border-bottom: 1px solid #858585;" width="100">&nbsp;</td>
+<td style="padding: 0px; border: 1px solid #858585;" width="80" align="center">MS Word</td>
+</tr>
+<tr>
+<td style="padding: 0px; border: 1px solid #858585;">&nbsp;Ремонт/диагностика</td>
+<td style="padding: 0px; border: 1px solid #858585;" align="center"><a href="../images/cms/data/support/remont.docx">скачать</a></td>
+</tr>
+<tr>
+<td style="padding: 0px; border: 1px solid #858585;">&nbsp;Консультация</td>
+<td style="padding: 0px; border: 1px solid #858585;" align="center"><a href="../images/cms/data/support/consultacia.docx">скачать</a></td>
+</tr>
+<tr>
+<td style="padding: 0px; border: 1px solid #858585;">&nbsp;Разработка<br /></td>
+<td style="padding: 0px; border: 1px solid #858585;" align="center"><a href="../images/cms/data/support/razrabotka.docx">скачать</a></td>
+</tr>
+</tbody>
+</table>
+<p><br />Бланки в формате OpenOffice и примеры заполнения в <a href="/files/downloads/company/blanki.zip">zip-архиве</a>.<br />Время ответа на обращение строго регламентировано, максимальное время ответа на запрос составляет 3 дня.</p>
+
+<div class="container"><center><font size=6>Гарантийное и послепродажное обслуживание</font></center>
 		<div class="row">
-			<div class="col-md-4">
-				<div class="ser_img_wr">
-					<img src="/img/ser_1.jpg" alt="">
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="ser_img_wr">
-					<img src="/img/ser_2.jpg" alt="">
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="ser_img_wr">
-					<img src="/img/ser_3.jpg" alt="">
-				</div>
-			</div>
-			<div class="col-md-12">
-				<p>Токарная обработка провоизводится по чертежам, трехмерной модели, эскизу или образцу. Если у Вас нет готового чертежа, то возможно изготовление его по Вашему эскизу. Более подробно об этом Вы можете узнать у наших менеджеров.</p>
-				<p>Токарные работы проводятся, как в плановом, так и в срочном порядке. Готовы рассмотреть и принять заказы не только на крупные, но и на 
-				мелкосерийные партии и даже штучные изделия. Сроки исполнения зависят от технологической сложности изделия, объема партии и наличия материалов. 
-				Предлагаемые услуги являются оптимальными по соотношению цены и качества. Наличие материалов и сроки исполнения заказа - уточняйте у наших 
-				менеджеров.
-				</p>
-				<h5>Требования к чертежно-конструкторской документации:</h5>
-				<p>Чертежи или эскизы деталей должны содержать все размеры деталей и допуски на них, материал для изготовления, технические требования, 
-				шероховатости поверхностей. Необходимое количество изделий указать в спецификации или непосредственно в чертеже. Чертежи и 3D модели 
-				принимаются в форматах: КОМПАС-3D V13, AutoCAD и JPEG.
-				</p>
+<p>
+	<a href="/services/pravila-otpravki">Правила отправки в ремонт</a><br>
+	<a href="/services/dopolnit-garantia">Дополнительная гарантия</a><br>
+	<a href="/services/prodlenie-garantii">Продление гарантии</a><br>
+</p>
 
-				
+	</div>
 			</div>
-			<div class="primer_service">
-				<div class="col-md-12">
-					<h2>Примеры токарной обработки:</h2>
-				</div>
-				<div class="col-md-3 col-sm-6 col-xs-12">
-					<img src="/img/Layer-73.jpg" alt="">
-				</div>
-				<div class="col-md-3 col-sm-6 col-xs-12">
-					<img src="/img/ser_1.jpg" alt="">
-				</div>
-				<div class="col-md-3 col-sm-6 col-xs-12">
-					<img src="/img/Layer-73.jpg" alt="">
-				</div>
 
-				<div class="col-md-3 col-sm-6 col-xs-12">
-					<img src="/img/ser_1.jpg" alt="">
-				</div>
-				
-					
-			</div>
-			<div class="col-md-6">
-				<h2>Заказ обработки:</h2>
-				<p>Заполните все поля формы, оставив контактные данные, и наши специалисты оперативно свяжутся с Вами</p>
-			</div>
-			<div class="col-md-6">
-				<?/* $APPLICATION->IncludeComponent("bitrix:form.result.new", "forma", Array(
+
+
+
+
+<?/* $APPLICATION->IncludeComponent("bitrix:form.result.new", "forma", Array(
 	"AJAX_MODE" => "Y",
 		"CACHE_TIME" => "3600",	// Время кеширования (сек.)
 		"CACHE_TYPE" => "A",	// Тип кеширования
@@ -125,7 +70,7 @@ $APPLICATION->SetTitle("Title");
 			</div>
 
 		</div>
-	</div>
+	
 </section>	
 
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>

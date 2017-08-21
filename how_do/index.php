@@ -1,6 +1,6 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
-$APPLICATION->SetTitle("Как заказать у нас?");
+$APPLICATION->SetTitle("Как заказать у нас? | Purelogic R&D");
 ?>
 <h1 class="dbl_lines">Как заказать у нас? <span class="green"> &nbsp;Очень просто!</span></h1>
 

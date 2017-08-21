@@ -1,5 +1,5 @@
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
-$APPLICATION->SetTitle("Задайте вопрос");
+$APPLICATION->SetTitle("Контакты - Purelogic R&D");
 ?>
 <div class="contacts">
 <div class="left_contact"><h3 class="name_section">Контакты</h3>
@@ -7,15 +7,9 @@ $APPLICATION->SetTitle("Задайте вопрос");
 </div>
 <div class="right_contact">
 <?$APPLICATION->IncludeComponent("bitrix:main.include", "", array("AREA_FILE_SHOW" => "file", "PATH" => SITE_DIR."include/contacts_2.php"), false);?>
-
 	<h3 class="name_section">Мы в соцсетях</h3>
-
-				
 					<?$APPLICATION->IncludeComponent("bitrix:main.include", "", array("AREA_FILE_SHOW" => "file", "PATH" => SITE_DIR."include/contacts_3.php"), false);?>
-	
 	</div>			
-
-
 				<h3 class="name_section">Быстрая связь</h3>
 				<div id="user_form" class="card_company">
 				<?$APPLICATION->IncludeComponent(
@@ -39,28 +33,15 @@ $APPLICATION->SetTitle("Задайте вопрос");
 	)
 );?>
 				</div>
-
-			
-				
 			</div>
-		</div>
-		</div>
-	</div>
-</section>
+<p>Схема проезда, г.Воронеж / Location in Voronezh</p>
+<p><iframe frameborder="0" src="//maps.google.ru/maps/ms?msa=0&amp;msid=203083242483772114921.0004bf09b1e8a9a2fa57d&amp;hl=ru&amp;ie=UTF8&amp;t=m&amp;ll=51.689159,39.270415&amp;spn=0.009312,0.011158&amp;z=15&amp;output=embed" width="980" height="650"></iframe><br /><small>Просмотреть <a style="color: #0000ff; text-align: left;" href="//maps.google.ru/maps/ms?msa=0&amp;msid=203083242483772114921.0004bf09b1e8a9a2fa57d&amp;hl=ru&amp;ie=UTF8&amp;t=m&amp;ll=51.689159,39.270415&amp;spn=0.009312,0.011158&amp;z=15&amp;source=embed">Purelogic R&amp;D, г.Воронеж</a> на карте большего размера</small></p>
+<p>&nbsp;</p>
+<p>Схема проезда, г.Москва / Location in Moscow</p>
+<p><iframe frameborder="0" src="//maps.google.ru/maps/ms?msa=0&amp;msid=212863317379938281315.0004ec4f56addb49211f2&amp;hl=ru&amp;ie=UTF8&amp;ll=55.725436,37.620218&amp;spn=0.009312,0.011158&amp;z=15&amp;output=embed" width="980" height="650"></iframe><br /><small>Просмотреть <a style="color: #0000ff; text-align: left;" href="//maps.google.ru/maps/ms?msa=0&amp;msid=212863317379938281315.0004ec4f56addb49211f2&amp;hl=ru&amp;ie=UTF8&amp;ll=55.725436,37.620218&amp;spn=0.009312,0.011158&amp;z=15&amp;source=embed">Purelogic R&amp;D, г.Москва</a> на карте большего размера</small></p>
+<p>&nbsp;</p>
+<p>Схема проезда, г.Санкт-Петербург / Location in Saint Petersburg</p>
+<p><iframe frameborder="0" src="//maps.google.ru/maps/ms?msa=0&amp;msid=1e_hyHSw75YlmyeAM6cqqLSQNaGY&amp;hl=ru&amp;ie=UTF8&amp;ll=59.98618, 30.32042&amp;spn=0.009312,0.011158&amp;z=15&amp;output=embed" width="980" height="650"></iframe><br /><small>Просмотреть <a style="color: #0000ff; text-align: left;" href="//maps.google.ru/maps/ms?msa=0&amp;msid=1e_hyHSw75YlmyeAM6cqqLSQNaGY&amp;hl=ru&amp;ie=UTF8&amp;ll=59.98618, 30.32042&amp;spn=0.009312,0.011158&amp;z=15&amp;output=embed">Purelogic R&amp;D, г.Санкт-Петербург</a> на карте большего размера</small></p>
 
-<section class="contacts_map">
-	<div class="map_name">
-		<h3>Схема проезда:</h3>
-		<span class="active_map voroneg">г.Воронеж</span>
-		<span class="moskva">г.Москва</span>
-	</div>
-	<div class="voroneg_map">
-	 	<?$APPLICATION->IncludeComponent("bitrix:main.include", "", array("AREA_FILE_SHOW" => "file", "PATH" => SITE_DIR."include/contacts_map1.php"), false);?>
-	
-		</div> 	
 
-	<div class="moskov_map map_none">	
-	 	<?$APPLICATION->IncludeComponent("bitrix:main.include", "", array("AREA_FILE_SHOW" => "file", "PATH" => SITE_DIR."include/contacts_map2.php"), false);?>
-	
-		
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php")?>

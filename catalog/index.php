@@ -1,7 +1,7 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 
-$APPLICATION->SetTitle("");
+$APPLICATION->SetTitle("Каталог комплектующих для станков с ЧПУ - огромный выбор");
 
 ?><?$APPLICATION->IncludeComponent(
 	"bitrix:catalog", 

@@ -2,7 +2,7 @@
 //тест
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 
-$APPLICATION->SetTitle("1С-Битрикс: Управление сайтом");
+$APPLICATION->SetTitle("Purelogic R&amp;D: комплектующие для станков ЧПУ и систем автоматизации");
 ?><section class="double_block">
 <div class="container">
 	<div class="left_index">

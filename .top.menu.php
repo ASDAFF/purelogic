@@ -16,7 +16,7 @@ $aMenuLinks = Array(
 	),
 	Array(
 		"О компании", 
-		"about/pochemu-my", 
+		"about/", 
 		Array(), 
 		Array(), 
 		"" 
@@ -29,7 +29,7 @@ $aMenuLinks = Array(
 		"" 
 	),
 	Array(
-		"Услуги", 
+		"Сервис", 
 		"services", 
 		Array(), 
 		Array(), 
