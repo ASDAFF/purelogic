@@ -128,10 +128,7 @@ $APPLICATION->SetTitle("Как заказать у нас? | Purelogic R&D");
             <p>
                 Примерные тарифы на перевозку грузов Вы можете найти на сайтах перевозчиков по указанным ссылкам: "Деловые линии", ПЭК, СПСР, EMS.
             </p>
-            <div class="down-img" style="height: 100px">
-                <img src="/img/linker.png">
-                <span class="border-link"></span>
-            </div>
+
         </div>
         <div class="col-md-4 col-md-4-width">
             <div class="num-order-block-text">

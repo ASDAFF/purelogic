@@ -3,8 +3,75 @@ require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 $APPLICATION->SetTitle("Сервисная служба - Purelogic R&D");
 ?>
 <section class="service">
-	<div class="container"><center><font size=6>Сервис</font></center>
+	<div class="container">
+
+
+
+		<center><font size=6>Сервис</font></center>
+
+
 		<div class="row">
+
+			<?$APPLICATION->IncludeComponent(
+				"bitrix:news.list",
+				"new",
+				Array(
+					"ACTIVE_DATE_FORMAT" => "d.m.Y",
+					"ADD_SECTIONS_CHAIN" => "N",
+					"AJAX_MODE" => "N",
+					"AJAX_OPTION_ADDITIONAL" => "",
+					"AJAX_OPTION_HISTORY" => "N",
+					"AJAX_OPTION_JUMP" => "N",
+					"AJAX_OPTION_STYLE" => "N",
+					"CACHE_FILTER" => "N",
+					"CACHE_GROUPS" => "Y",
+					"CACHE_TIME" => "36000000",
+					"CACHE_TYPE" => "N",
+					"CHECK_DATES" => "Y",
+					"COMPONENT_TEMPLATE" => "new",
+					"COMPOSITE_FRAME_MODE" => "A",
+					"COMPOSITE_FRAME_TYPE" => "AUTO",
+					"DETAIL_URL" => "",
+					"DISPLAY_BOTTOM_PAGER" => "N",
+					"DISPLAY_DATE" => "N",
+					"DISPLAY_NAME" => "Y",
+					"DISPLAY_PICTURE" => "N",
+					"DISPLAY_PREVIEW_TEXT" => "Y",
+					"DISPLAY_TOP_PAGER" => "N",
+					"FIELD_CODE" => array(0=>"",1=>"",),
+					"FILTER_NAME" => "",
+					"HIDE_LINK_WHEN_NO_DETAIL" => "N",
+					"IBLOCK_ID" => "11",
+					"IBLOCK_TYPE" => "data",
+					"INCLUDE_IBLOCK_INTO_CHAIN" => "N",
+					"INCLUDE_SUBSECTIONS" => "Y",
+					"MESSAGE_404" => "",
+					"NEWS_COUNT" => "10",
+					"PAGER_BASE_LINK_ENABLE" => "N",
+					"PAGER_DESC_NUMBERING" => "N",
+					"PAGER_DESC_NUMBERING_CACHE_TIME" => "36000",
+					"PAGER_SHOW_ALL" => "N",
+					"PAGER_SHOW_ALWAYS" => "N",
+					"PAGER_TEMPLATE" => ".default",
+					"PAGER_TITLE" => "Новости",
+					"PARENT_SECTION" => "",
+					"PARENT_SECTION_CODE" => "",
+					"PREVIEW_TRUNCATE_LEN" => "",
+					"PROPERTY_CODE" => array(0=>"",1=>"TEMPLATE",2=>"BUTTON_TEXT",3=>"ALT",4=>"BUTTON_URL",5=>"TITLE_DOP",6=>"",),
+					"SET_BROWSER_TITLE" => "N",
+					"SET_LAST_MODIFIED" => "N",
+					"SET_META_DESCRIPTION" => "N",
+					"SET_META_KEYWORDS" => "N",
+					"SET_STATUS_404" => "N",
+					"SET_TITLE" => "N",
+					"SHOW_404" => "N",
+					"SORT_BY1" => "ACTIVE_FROM",
+					"SORT_BY2" => "SORT",
+					"SORT_ORDER1" => "DESC",
+					"SORT_ORDER2" => "ASC"
+				)
+			);?>
+
 			<p>Уважаемые клиенты, Вам доступно 2 способа связи с технической поддержкой.</p>
 <p>1) <strong>Электронная служба <a href="http://help.purelogic.ru">help.purelogic.ru</a></strong><br /><br />Для регистрации запроса перейдите на <a href="http://help.purelogic.ru">help.purelogic.ru</a> и оформите обращение, укажите номер заказа, а так же на какого контрагента был оформлен счет. К обращению необходимо приложить заполненную заявку, бланки заявок доступны для скачивания в таблице ниже.</p>
 <p>Для получения логина и пароля свяжитесь с нами по телефону 8 800 555-63-74 (Звонок по России бесплатный) или электронной почте <a class="order_container" rel="nofollow" href="mailto:info@purelogic.ru" target="_blank">info@purelogic.ru</a></p>
@@ -68,6 +135,8 @@ $APPLICATION->SetTitle("Сервисная служба - Purelogic R&D");
 	false
 );*/ ?>
 			</div>
+
+
 
 		</div>
 	
