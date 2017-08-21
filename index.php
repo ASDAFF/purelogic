@@ -308,7 +308,7 @@ $APPLICATION->SetTitle("Purelogic R&amp;D: комплектующие для с�
 	)
 );?> <section class="about_main">
 		<div class="h2-about-home">
-			 PureLogic R&amp;D
+			 Наши клиенты
 		</div>
 		<div class="green-bg">
 			 <?$APPLICATION->IncludeComponent(
