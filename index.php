@@ -27,7 +27,8 @@ $APPLICATION->SetTitle("Purelogic R&amp;D: комплектующие для с�
 		"TOP_DEPTH" => "4",
 		"VIEW_MODE" => "LIST"
 	)
-);?> <?$APPLICATION->IncludeComponent(
+);?>
+	<?$APPLICATION->IncludeComponent(
 	"bitrix:news.list",
 	"index_left",
 	Array(

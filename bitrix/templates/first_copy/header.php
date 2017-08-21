@@ -211,6 +211,11 @@ $(this).append($("#"+$(this).attr("data-id")));
 			<div class="col-md-9 col-lg-9 col-sm-9 hidden-xs col-xs-12 padding_left_xs_0">
 				<div class="icon_wr_sm">
 					<div class="col-md-4 col-lg-3 hidden-xs hidden-sm">
+						<div class="call_back_header">
+							<!--	<span>Обратный звонок</span> -->
+						</div>
+					</div>
+					<div class="col-md-4 col-lg-4 hidden-xs hidden-sm">
 					<div class="header_phone">
 					<span class="icon_phone_header"><i class="fa fa-phone" aria-hidden="true"></i></span>
 				
@@ -219,11 +224,7 @@ $(this).append($("#"+$(this).attr("data-id")));
 				</div>
 				</div>
 
-				<div class="col-md-4 col-lg-3 hidden-xs hidden-sm">
-					<div class="call_back_header">
-					<!--	<span>Обратный звонок</span> -->
-					</div>
-				</div>
+
 					<?/*<div class="col-md-4 col-lg-5 hidden-xs hidden-sm">
 					<?$APPLICATION->IncludeComponent(
 	"bitrix:search.title", 
@@ -317,7 +318,7 @@ $(this).append($("#"+$(this).attr("data-id")));
 	                        </div>
 
 
-					<div class="col-md-5 col-lg-5 col-sm-2 col-xs-3">
+					<div class="col-md-4 col-lg-4 col-sm-2 col-xs-3 padding_0">
 						<div class="korzina">
 						<div id="cucuca">
 							<?$APPLICATION->IncludeComponent(
