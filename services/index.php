@@ -12,7 +12,7 @@ $APPLICATION->SetTitle("Сервисная служба - Purelogic R&D");
 
 		<div class="row">
 
-			<?$APPLICATION->IncludeComponent(
+			<? /* $APPLICATION->IncludeComponent(
 				"bitrix:news.list",
 				"new",
 				Array(
@@ -70,7 +70,7 @@ $APPLICATION->SetTitle("Сервисная служба - Purelogic R&D");
 					"SORT_ORDER1" => "DESC",
 					"SORT_ORDER2" => "ASC"
 				)
-			);?>
+) */;?>
 
 			<p>Уважаемые клиенты, Вам доступно 2 способа связи с технической поддержкой.</p>
 <p>1) <strong>Электронная служба <a href="http://help.purelogic.ru">help.purelogic.ru</a></strong><br /><br />Для регистрации запроса перейдите на <a href="http://help.purelogic.ru">help.purelogic.ru</a> и оформите обращение, укажите номер заказа, а так же на какого контрагента был оформлен счет. К обращению необходимо приложить заполненную заявку, бланки заявок доступны для скачивания в таблице ниже.</p>
@@ -84,19 +84,19 @@ $APPLICATION->SetTitle("Сервисная служба - Purelogic R&D");
 </tr>
 <tr>
 <td style="padding: 0px; border: 1px solid #858585;">&nbsp;Ремонт/диагностика</td>
-<td style="padding: 0px; border: 1px solid #858585;" align="center"><a href="../images/cms/data/support/remont.docx">скачать</a></td>
+	<td style="padding: 0px; border: 1px solid #858585;" align="center"><a href="https://purelogic.ru/images/cms/data/support/remont.docx">скачать</a></td>
 </tr>
 <tr>
 <td style="padding: 0px; border: 1px solid #858585;">&nbsp;Консультация</td>
-<td style="padding: 0px; border: 1px solid #858585;" align="center"><a href="../images/cms/data/support/consultacia.docx">скачать</a></td>
+<td style="padding: 0px; border: 1px solid #858585;" align="center"><a href="https://purelogic.ru/images/cms/data/support/consultacia.docx">скачать</a></td>
 </tr>
 <tr>
 <td style="padding: 0px; border: 1px solid #858585;">&nbsp;Разработка<br /></td>
-<td style="padding: 0px; border: 1px solid #858585;" align="center"><a href="../images/cms/data/support/razrabotka.docx">скачать</a></td>
+<td style="padding: 0px; border: 1px solid #858585;" align="center"><a href="https://purelogic.ru/images/cms/data/support/razrabotka.docx">скачать</a></td>
 </tr>
 </tbody>
 </table>
-<p><br />Бланки в формате OpenOffice и примеры заполнения в <a href="/files/downloads/company/blanki.zip">zip-архиве</a>.<br />Время ответа на обращение строго регламентировано, максимальное время ответа на запрос составляет 3 дня.</p>
+<p><br />Бланки в формате OpenOffice и примеры заполнения в <a href="https://purelogic.ru/files/downloads/company/blanki.zip">zip-архиве</a>.<br />Время ответа на обращение строго регламентировано, максимальное время ответа на запрос составляет 3 дня.</p>
 
 <div class="container"><center><font size=6>Гарантийное и послепродажное обслуживание</font></center>
 		<div class="row">

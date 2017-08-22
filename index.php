@@ -308,8 +308,8 @@ $APPLICATION->SetTitle("Purelogic R&amp;D: комплектующие для с�
 		"VIEW_MODE" => "LINE"
 	)
 );?> <section class="about_main">
-		<div class="h2-about-home">
-			 Наши клиенты
+			 <div class="h2-about-home" style="text-align: left;">
+			Наши клиенты
 		</div>
 		<div class="green-bg">
 			 <?$APPLICATION->IncludeComponent(

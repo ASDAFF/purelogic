@@ -3,7 +3,7 @@ $APPLICATION->SetTitle("Контакты - Purelogic R&D");
 ?>
 <div class="contacts">
 <div class="left_contact"><h3 class="name_section">Контакты</h3>
-	<?$APPLICATION->IncludeComponent(
+	<?/* $APPLICATION->IncludeComponent(
 		"bitrix:news.list",
 		"new",
 		Array(
@@ -61,7 +61,7 @@ $APPLICATION->SetTitle("Контакты - Purelogic R&D");
 			"SORT_ORDER1" => "DESC",
 			"SORT_ORDER2" => "ASC"
 		)
-	);?>
+) ; */ ?>
 	
 <?$APPLICATION->IncludeComponent("bitrix:main.include", "", array("AREA_FILE_SHOW" => "file", "PATH" => SITE_DIR."include/contacts_1.php"), false);?>
 </div>
