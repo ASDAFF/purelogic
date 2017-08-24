@@ -165,11 +165,8 @@
 <?}?>
 
 <? if ($APPLICATION->GetCurPage(false) == '/catalog/'&&!$_GET["q"]||defined('ERROR_404') || ERROR_404 == 'Y'||$APPLICATION->GetCurPage(false) == '/support/'||$APPLICATION->GetCurPage(false) == '/support/help/'||$APPLICATION->GetCurPage() == '/vhod/registration.php'){?>
-	<?$APPLICATION->IncludeComponent(
-	"bitrix:sale.bestsellers", 
-	"new", 
-	array(
-		"ACTION_VARIABLE" => "action",
+	<?$APPLICATION->IncludeComponent("bitrix:sale.bestsellers", "new", array(
+	"ACTION_VARIABLE" => "action",
 		"ADDITIONAL_PICT_PROP_18" => "MORE_PHOTO",
 		"ADDITIONAL_PICT_PROP_5" => "MORE_PHOTO",
 		"ADDITIONAL_PICT_PROP_6" => "MORE_PHOTO",
@@ -223,8 +220,7 @@
 		"PAGE_ELEMENT_COUNT" => "30",
 		"PARTIAL_PRODUCT_PROPERTIES" => "N",
 		"PERIOD" => "30",
-		"PRICE_CODE" => array(
-		),
+		"PRICE_CODE" => "",
 		"PRICE_VAT_INCLUDE" => "Y",
 		"PRODUCT_ID_VARIABLE" => "id",
 		"PRODUCT_PROPS_VARIABLE" => "prop",
@@ -255,7 +251,10 @@
 		"USE_PRODUCT_QUANTITY" => "N",
 		"COMPONENT_TEMPLATE" => "new"
 	),
-	false
+	false,
+	array(
+	"ACTIVE_COMPONENT" => "N"
+	)
 );?>
 <?}?>
 	<? if (CSite::InDir('/catalog/')&&!$_GET["q"]){?>
@@ -300,11 +299,8 @@
 </style>
 <?}}?>
 <? if ($APPLICATION->GetCurPage(false) == '/personal/'||$APPLICATION->GetCurPage(false) == '/personal/order/make/'||$APPLICATION->GetCurPage(false) == '/about/contacts/'||$APPLICATION->GetCurPage(false) == '/about/'||$APPLICATION->GetCurPage(false) == '/company/'||$APPLICATION->GetCurPage(false) == '/services/'||CSite::InDir('/support/')&&$APPLICATION->GetCurPage(false) != '/support/'&&$APPLICATION->GetCurPage(false) != '/support/help/'&&$APPLICATION->GetCurPage(false) != '/support/video/'||$_GET["q"]||defined('ERROR_404') || ERROR_404 == 'Y'){?>
-<?$APPLICATION->IncludeComponent(
-	"bitrix:news.list",
-	"down_news",
-	Array(
-		"ACTIVE_DATE_FORMAT" => "d.m.Y",
+<?$APPLICATION->IncludeComponent("bitrix:news.list", "down_news", array(
+	"ACTIVE_DATE_FORMAT" => "d.m.Y",
 		"ADD_SECTIONS_CHAIN" => "N",
 		"AJAX_MODE" => "N",
 		"AJAX_OPTION_ADDITIONAL" => "",
@@ -323,7 +319,10 @@
 		"DISPLAY_PICTURE" => "Y",
 		"DISPLAY_PREVIEW_TEXT" => "Y",
 		"DISPLAY_TOP_PAGER" => "N",
-		"FIELD_CODE" => array(0=>"",1=>"",),
+		"FIELD_CODE" => array(
+			0 => "",
+			1 => "",
+		),
 		"FILTER_NAME" => "",
 		"HIDE_LINK_WHEN_NO_DETAIL" => "N",
 		"IBLOCK_ID" => "14",
@@ -342,7 +341,10 @@
 		"PARENT_SECTION" => "",
 		"PARENT_SECTION_CODE" => "",
 		"PREVIEW_TRUNCATE_LEN" => "",
-		"PROPERTY_CODE" => array(0=>"",1=>"",),
+		"PROPERTY_CODE" => array(
+			0 => "",
+			1 => "",
+		),
 		"SET_BROWSER_TITLE" => "N",
 		"SET_LAST_MODIFIED" => "N",
 		"SET_META_DESCRIPTION" => "N",
@@ -354,6 +356,10 @@
 		"SORT_BY2" => "SORT",
 		"SORT_ORDER1" => "DESC",
 		"SORT_ORDER2" => "ASC"
+	),
+	false,
+	array(
+	"ACTIVE_COMPONENT" => "N"
 	)
 );?>
 <?}?>
@@ -363,62 +369,26 @@
 	<div class="container">
 		<div class="row">
 
-
-			<div class="col-md-3 hidden-sm hidden-xs">
 				<div class="footer_adres">
 					
 					<?$APPLICATION->IncludeComponent("bitrix:main.include", "", array("AREA_FILE_SHOW" => "file", "PATH" => SITE_DIR."include/footer.php"), false);?>
 					
 
 				</div>
-				
-			</div>
-			<div class="col-md-5 hidden-sm hidden-xs">
-			<p style="color: #fff">Все цены на товары и услуги указаны с учетом НДС.</p>
+
+		</div>
+		<div class="row">
+
+			<div class="col-md-8 hidden-sm hidden-xs">
+			<p style="color: #fff;margin-top: 5px;">Все цены на товары и услуги указаны с учетом НДС.</p>
 			<p></p>
 			<p></p>
 			<p style="color: #fff">Обращаем Ваше внимание, что цены на товары и услуги не являются публичной офертой. Информация о товаре, услугах и ценах носит исключительно информационный характер. Актуальную стоимость и наличие товара и услуг просьба уточнять дополнительно в офисах продаж.</p>
 			</div>
 
 			<div class="col-md-4 col-lg-4 col-sm-7">
-				<div class="footer_social">
-				<?
-				if (!function_exists('EditData')) {function EditData ($DATA) // конвертирует формат даты с 04.11.2008 в 04 Ноября, 2008
-{
-$MES = array( 
-"01" => "Января", 
-"02" => "Февраля", 
-"03" => "Марта", 
-"04" => "Апреля", 
-"05" => "Мая", 
-"06" => "Июня", 
-"07" => "Июля", 
-"08" => "Августа", 
-"09" => "Сентября", 
-"10" => "Октября", 
-"11" => "Ноября", 
-"12" => "Декабря"
-);
-$arData = explode(".", $DATA); 
-$d = ($arData[0] < 10) ? substr($arData[0], 1) : $arData[0];
+				<div class="footer_social" style="margin-top: 0px;">
 
-$newData = $d." ".$MES[$arData[1]].", ".$arData[2]; 
-return $newData;
-}
-				
-				}
-				?>
-					<p>Сейчас <span><?echo EditData(date(CDatabase::DateFormatToPHP(CSite::GetDateFormat("FULL")), time()));?></span> </p>
-					<? $APPLICATION->IncludeComponent("terkulov:date_yo", ".default", array(
-	"COMPONENT_TEMPLATE" => ".default",
-		"WHEN" => "12:00",
-		"TIME" => "01:30"
-	),
-	false,
-	array(
-	"ACTIVE_COMPONENT" => "N"
-	)
-);?>
 
 					<?$APPLICATION->IncludeComponent("bitrix:main.include", "", array("AREA_FILE_SHOW" => "file", "PATH" => SITE_DIR."include/soccop.php"), false);?>
 					

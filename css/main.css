@@ -4659,3 +4659,22 @@ font.errortext {
 	max-width:100%;
 	height: 30px;" 
 }
+.ok_icon {
+    background-image: url(/img/okok.png);
+    display: inline-block;
+    width: 100%;
+    background-size: contain;
+    height: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.social_icon li .ok {
+    font-size: 0;
+    display: inline-block;
+    padding: 0px 1px;
+    margin-top: -10px;
+    width: 55px;
+    height: 44px;
+    padding: 11px;
+    position: relative;
+}

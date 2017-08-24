@@ -7,7 +7,7 @@ $APPLICATION->SetTitle("Сервисная служба - Purelogic R&D");
 
 
 
-		<center><font size=6>Сервис</font></center>
+		<center><font style="font-size: 25px;">Сервис</font></center>
 
 
 		<div class="row">
@@ -71,7 +71,7 @@ $APPLICATION->SetTitle("Сервисная служба - Purelogic R&D");
 					"SORT_ORDER2" => "ASC"
 				)
 ) */;?>
-
+			<p><center><img src="/images/about/cervices.png"></center></p>
 			<p>Уважаемые клиенты, Вам доступно 2 способа связи с технической поддержкой.</p>
 <p>1) <strong>Электронная служба <a href="http://help.purelogic.ru">help.purelogic.ru</a></strong><br /><br />Для регистрации запроса перейдите на <a href="http://help.purelogic.ru">help.purelogic.ru</a> и оформите обращение, укажите номер заказа, а так же на какого контрагента был оформлен счет. К обращению необходимо приложить заполненную заявку, бланки заявок доступны для скачивания в таблице ниже.</p>
 <p>Для получения логина и пароля свяжитесь с нами по телефону 8 800 555-63-74 (Звонок по России бесплатный) или электронной почте <a class="order_container" rel="nofollow" href="mailto:info@purelogic.ru" target="_blank">info@purelogic.ru</a></p>
@@ -98,13 +98,15 @@ $APPLICATION->SetTitle("Сервисная служба - Purelogic R&D");
 </table>
 <p><br />Бланки в формате OpenOffice и примеры заполнения в <a href="https://purelogic.ru/files/downloads/company/blanki.zip">zip-архиве</a>.<br />Время ответа на обращение строго регламентировано, максимальное время ответа на запрос составляет 3 дня.</p>
 
-<div class="container"><center><font size=6>Гарантийное и послепродажное обслуживание</font></center>
+			<div class="container"><center><font style="font-size: 25px;">Гарантийное и послепродажное обслуживание</font></center>
 		<div class="row">
 <p>
 	<a href="/services/pravila-otpravki">Правила отправки в ремонт</a><br>
 	<a href="/services/dopolnit-garantia">Дополнительная гарантия</a><br>
 	<a href="/services/prodlenie-garantii">Продление гарантии</a><br>
 </p>
+<p>В компании Purelogic R&D действует строгая система входного контроля качества продукции. Однако, если в течении гарантийного срока изделие отказало - для наших клиентов всегда доступно гарантийное и послегарантийное обслуживание.
+Комплектующие, поставляемые нашей организаций (как собственного так и стороннего производства) проходят обслуживание в сервисном центре Purelogic R&D или в сервисных центрах официальных представителей поставщиков.</p>
 
 	</div>
 			</div>
