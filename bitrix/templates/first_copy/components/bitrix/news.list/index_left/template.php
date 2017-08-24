@@ -30,7 +30,11 @@ $this->setFrameMode(true);
 
 				<div class="media-body">
 						<span class="scroll-text-date"><?=$arItem['DATE_ACTIVE_FROM'];?></span>
-						<p class="scroll-text"><a href="<?=$arItem['DETAIL_PAGE_URL']?>"><?=$arItem['NAME'];?></a></p>
+						<p class="scroll-text">
+							<a href="<?=$arItem['DETAIL_PAGE_URL']?>">
+								<?=TruncateText($arItem['NAME'],50);?>
+							</a>
+						</p>
 				</div>
 
 			</div>
@@ -102,7 +106,7 @@ $this->setFrameMode(true);
 
 <style>
 	.scroll-box{
-		min-height: 100px;
+		min-height: 71px;
 	}
 	.scroll-box > .media{
 		padding: 10px 15px;
