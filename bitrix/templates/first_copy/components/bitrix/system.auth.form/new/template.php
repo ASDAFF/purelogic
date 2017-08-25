@@ -24,7 +24,7 @@ if ($arResult['SHOW_ERRORS'] == 'Y' && $arResult['ERROR'])
 
 		<li><input type="text" placeholder="Логин" name="USER_LOGIN"  required value="<?=$arResult["USER_LOGIN"]?>"  /></li>
 		<li><input type="password" placeholder="Пароль" name="USER_PASSWORD"   required autocomplete="off" /></li>
-		<li><span class="reg-hover"><i class="fa fa-key" aria-hidden="true"></i><a href="/vhod/registration.php">Регистрация</a></span><input type="submit" value="войти"></li>
+		<li><span class="reg-hover"><a href="/vhod/?forgot_password=yes"><i class="fa fa-key" aria-hidden="true"></i></a><a href="/vhod/registration.php">Регистрация</a></span><input type="submit" value="войти"></li>
 
 
 
