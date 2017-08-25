@@ -21,7 +21,7 @@ $strTitle = "";
         <div class="col-md-12">
 
             <label>
-                <input type="checkbox" id="myonoffswitch" <?if($_SESSION['allToggle_status'] == 'true'):?>checked<?endif?>>
+                <input type="checkbox" class="myonoffswitch" <?if($_SESSION['allToggle_status'] == 'true'):?>checked<?endif?>>
                 <span>
                     Развернуть все
                 </span>
@@ -44,7 +44,7 @@ $strTitle = "";
 
                     <?
 
-                    if($section['UF_VERTICAL_POS'] == 1){
+                    if(empty($section['UF_VERTICAL_POS'])){
                         ?>
                         <? foreach($section['SECTION_1'] as $sect){?>
                         <div class="col-md-4">
@@ -135,13 +135,27 @@ $strTitle = "";
     }
     if(empty($_SESSION['allToggle_status'])){$_SESSION['allToggle_status'] = 'false';}
     ?>
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <label>
+                <input type="checkbox" class="myonoffswitch" <?if($_SESSION['allToggle_status'] == 'true'):?>checked<?endif?>>
+                <span>
+                    Развернуть все
+                </span>
+
+            </label>
+        </div>
+    </div>
+
     <script type="text/javascript" src="/js/all-toggle.js"></script>
     <link type="text/css" rel="stylesheet" href="/css/swith.css"/>
     <script>
         $(function(){
 
 
-           $('#myonoffswitch').click(function(){
+           $('.myonoffswitch').click(function(){
                var check = $(this).is(':checked');
 
                $.ajax({
@@ -164,6 +178,7 @@ $strTitle = "";
 
         });
     </script>
+
 
 
 </div>
