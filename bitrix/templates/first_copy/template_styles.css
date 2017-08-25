@@ -370,7 +370,7 @@ header {
 }
 .paddrght0{padding-right:0px;}
 #search .input {
-    width: 105%;
+    width: 100%;
     height: 34px;
     padding: 0 37px 1px 15px;
     color: #555;

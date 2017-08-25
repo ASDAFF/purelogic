@@ -122,7 +122,7 @@ $(this).append($("#"+$(this).attr("data-id")));
 		<div class="container">
 
 			<div class="row" style="margin-bottom: 0px">
-				<div class="col-md-4 padding_0">
+				<div class="col-md-4">
 					<div class="logo-new">
 						<?$APPLICATION->IncludeComponent("bitrix:main.include", "", array("AREA_FILE_SHOW" => "file", "PATH" => SITE_DIR."include/logo.php"), false);?>
 					</div>
@@ -138,7 +138,7 @@ $(this).append($("#"+$(this).attr("data-id")));
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4 padding_0">
+				<div class="col-md-4">
 
 					<div class="personal-new">
 
@@ -188,7 +188,7 @@ $(this).append($("#"+$(this).attr("data-id")));
 				</div>
 			</div>
 			<div class="row" style="margin-bottom: 0px">
-				<div class="col-md-9 padding_0">
+				<div class="col-md-9">
 					<div class="menu-new">
 						<ul>
 
