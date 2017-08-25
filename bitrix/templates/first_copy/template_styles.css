@@ -287,7 +287,7 @@ header {
 .icon_phone_header_number{
     color: #94b82f;
     font-size: 15px;
-    font-weight: 500;
+    font-weight: 700;
 }
 .call_back_header{
     font-family: "Ubuntu",sans-serif;
@@ -300,7 +300,10 @@ header {
     font-size: 15px;
     font-weight: 400;
 }
-.cnea{color:#94b82f !important;}
+.cnea{
+    color: #ffffff!important;
+    font-weight: 700;
+}
 
 
 .select_language .wSelect-theme-classic.wSelect {
@@ -1440,6 +1443,123 @@ span{
 {
     width: 4px;
 }
+
+
+ .header-new{
+    background: #333133;
+    height: 110px;
+}
+ .header-new .logo-new img{
+    max-height: 60px;
+}
+ .header-new .logo-new{
+    margin: 5px auto;
+}
+
+ .header-new .menu-new{
+    text-transform: uppercase;
+    font-size: 17px;
+    color: #ffffff;
+    margin-top: 12px;
+}
+ .header-new .menu-new li a{
+    color: #ffffff;
+}
+ .header-new .menu-new li a:hover{
+    color: #94b82f;
+}
+.header-new .menu-new li a.selected {
+    color: #94b82f;
+}
+
+ .header-new .menu-new li{
+    display: inline-block;
+    margin-right: 38px;
+}
+
+.header-new .number-block-new{
+    color: #ffffff;
+}
+.header-new .number-block-new{
+    margin-top: 18px;
+}
+
+.header-new .number-block-new .phone-logo{
+    float: left;
+    border: 1px solid #94b82f;
+    font-size: 20px;
+    padding: 5px 10px;
+    margin-right: 5px;
+}
+
+.header-new .personal-new{
+    color: #ffffff;
+}
+.header-new .personal-new ul{
+    color: #ffffff;
+    display: inline-block;
+}
+.header-new .personal-new .personal-line{
+    margin: auto 8px;
+    background: #b1acac;
+    height: 45px;
+    width: 1px;
+    display: inline-block;
+}
+.header-new .personal-new .personal-one .cart-name{
+    color: #94b82f;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: underline;
+    line-height: 10px;
+    text-underline-position: under;
+}
+.header-new .personal-new .personal-two input[type="text"]{
+    margin-bottom: 2px;
+}
+
+.header-new .personal-new .personal-two input[type="text"],input[type="password"]{
+    width: 151px;
+    height: 20px;
+    border: none;
+    padding: 0px 5px;
+    background: #E7E5E7;
+    font-size: 11px;
+}
+.header-new .personal-new .personal-two input[type="submit"]{
+    width: 50px;
+    height: 15px;
+    font-size: 9px;
+    border: none;
+    background: #B3B1B3;
+}
+.header-new .personal-new .personal-two a{
+    color: #ffffff;
+    font-size: 14px;
+    margin: 2px;
+    vertical-align: middle;
+    text-decoration: underline;
+}
+.header-new .personal-new .personal-two i{
+    vertical-align: bottom;
+}
+.header-new .personal-new{
+    margin-top: 5px;
+    text-align: right;
+}
+.header-new .personal-new .personal-two .reg-hover:hover{
+    color: #94b82f!important;;
+}
+.header-new .personal-new .personal-two .reg-hover a:hover{
+    color: #94b82f!important;
+}
+
+.header-new .personal-new .personal-two input[type="submit"]:hover{
+    background: #94b82f!important;
+}
+
+
+
 
 body{
     min-width: 1200px!important;
