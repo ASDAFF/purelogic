@@ -6,8 +6,10 @@
             var root = $(this).parent().find('span');
             var statusUl = $(this).css('display');
             if(statusUl == 'block'){
+                $(this).parent().find('.section-name').addClass('open');
                 root.html('- ');
             }else{
+                $(this).parent().find('.section-name').removeClass('open');
                 root.html('+ ');
             }
         }
@@ -26,8 +28,10 @@
 
             this.parent().find('ul').toggle(opts.open);
             if (opts.open) {
+                this.parent().find('.section-name').addClass('open');
                 this.find('span').html('- ');
             } else {
+                this.parent().find('.section-name').removeClass('open');
                 this.find('span').html('+ ');
             }
 

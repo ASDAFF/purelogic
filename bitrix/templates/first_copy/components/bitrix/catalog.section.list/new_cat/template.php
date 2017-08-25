@@ -19,13 +19,14 @@ $strTitle = "";
 
     <div class="row">
         <div class="col-md-12">
-            <div class="onoffswitch">
-                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" <?if($_SESSION['allToggle_status'] == 'true'):?>checked<?endif?>>
-                <label class="onoffswitch-label" for="myonoffswitch">
-                    <span class="onoffswitch-inner"></span>
-                    <span class="onoffswitch-switch"></span>
-                </label>
-            </div>
+
+            <label>
+                <input type="checkbox" id="myonoffswitch" <?if($_SESSION['allToggle_status'] == 'true'):?>checked<?endif?>>
+                <span>
+                    Развернуть все
+                </span>
+
+            </label>
         </div>
     </div>
 
@@ -38,19 +39,7 @@ $strTitle = "";
             <div class="row">
                 <div class="col-md-12 padding_0">
                     <div class="catalog-title">
-                        <!--
-                        <div class="lines">
-                            <span></span>
-                            <span></span>
-                        </div>
-                        -->
-                        <h1><a href="<?=$section['SECTION_PAGE_URL'];?>"><?=$section['NAME']?></a></h1>
-                        <!--
-                        <div class="lines">
-                            <span></span>
-                            <span></span>
-                        </div>
-                        -->
+                        <a href="<?=$section['SECTION_PAGE_URL'];?>"><?=$section['NAME']?></a>
                     </div>
 
                     <?
@@ -164,8 +153,10 @@ $strTitle = "";
 
                $('.toggle-all').parent().find('ul').toggle(check);
                if (check) {
+                   $('.toggle-all').addClass('open');
                    $('.toggle-all').find('span').html('- ');
                } else {
+                   $('.toggle-all').removeClass('open');
                    $('.toggle-all').find('span').html('+ ');
                }
            });
