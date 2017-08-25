@@ -152,20 +152,20 @@
 
 
 .ms-skin-light-3 .ms-nav-next, .ms-skin-light-3 .ms-nav-prev {
-    width: 50px;
+    width: 40px;
     background: url(../img/light-skin-3.png);
-    background-position: -82px -22px;
+    background-position: -92px -22px;
     height: 50px;
     cursor: pointer;
     top: 50%;
-    left: 30px;
+    left: 0px;
     margin-top: -25px;
     position: absolute;
     z-index: 20;
 }
 
 .ms-skin-light-3 .ms-nav-next {
-    right: 30px;
+    right: 0px;
     left: auto;
     background-position: -81px -99px;
 }
