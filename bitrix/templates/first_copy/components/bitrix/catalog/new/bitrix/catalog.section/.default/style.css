@@ -406,7 +406,7 @@ h5 a:hover{
 }
 
 .articul{
-    float: right;
+    display: inline-block;
     font-size: 12px;
     margin-top: 4px;
     color: #828080;

@@ -66,6 +66,7 @@ $APPLICATION->SetAdditionalCSS("/css/fancybox/jquery.fancybox-thumbs.css");
 	<script src="/js/fancybox/jquery.fancybox-thumbs.js"></script>
 	<script src="/js/readmore.js"></script>
 	<script src="/js/StickyBlock/jquery.airStickyBlock.js"></script>
+	<script src="/js/clipboard.min.js"></script>
 
 
 

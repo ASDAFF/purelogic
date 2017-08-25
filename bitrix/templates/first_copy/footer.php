@@ -416,6 +416,8 @@
 <script>
 	$(function(){
 
+		new Clipboard('.btn-clipboard'); // Не забываем инициализировать библиотеку на нашей кнопке
+
 		$('#breadcrumbs-two').airStickyBlock({
 			offsetTop: 0,
 			stopBlock: '.stop-left-menu'

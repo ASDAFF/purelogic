@@ -38,7 +38,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
       <div class="head-product-box">
         <h4>
           <span><?=$arItem['PROPERTIES']['SAYT_NAIMENOVANIEDLYASAYTA']['VALUE'] ?></span>,
-          <span class="articul">
+          <span class="articul" id="copy<?=$arItem['ID']?>">
             <?
             foreach($arItem['PROPERTIES']['CML2_TRAITS']['DESCRIPTION'] as $k => $code){
               $arCode[$code] = $arItem['PROPERTIES']['CML2_TRAITS']['VALUE'][$k];
@@ -46,6 +46,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
             print 'код '.$arCode['Код'];
             ?>
           </span>
+          <img style="cursor: pointer" class="btn-clipboard" data-clipboard-target="#copy<?=$arItem['ID']?>" src="/img/copy.png">
         </h4>
       </div>
     </div>

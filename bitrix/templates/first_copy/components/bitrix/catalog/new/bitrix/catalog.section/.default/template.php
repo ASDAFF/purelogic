@@ -145,7 +145,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 					<div class="box-product-gr">
 						<h5>
 							<span><?=$element['PROPERTIES']['SAYT_NAIMENOVANIEDLYASAYTA']['VALUE']?></span>,&nbsp;
-							<div class="articul">
+							<div class="articul" id="copy<?=$element['ID']?>">
 								<?
 								foreach($element['PROPERTIES']['CML2_TRAITS']['DESCRIPTION'] as $k => $code){
 									$arCode[$code] = $element['PROPERTIES']['CML2_TRAITS']['VALUE'][$k];
@@ -153,6 +153,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 								print 'код '.$arCode['Код'];
 								?>
 							</div>
+							<img style="cursor: pointer" class="btn-clipboard" data-clipboard-target="#copy<?=$element['ID']?>" src="/img/copy.png">
 							<div class="clear"></div>
 						</h5>
 						<p><?=$element['DETAIL_TEXT']?></p>
