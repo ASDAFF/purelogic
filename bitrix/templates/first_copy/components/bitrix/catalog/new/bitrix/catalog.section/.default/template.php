@@ -153,7 +153,7 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 								print 'код '.$arCode['Код'];
 								?>
 							</div>
-							<img style="cursor: pointer" class="btn-clipboard" data-clipboard-target="#copy<?=$element['ID']?>" src="/img/copy.png">
+							<img style="cursor: pointer" data-tooltip="копировать" class="btn-clipboard" data-clipboard-target="#copy<?=$element['ID']?>" src="/img/copy.png">
 							<div class="clear"></div>
 						</h5>
 						<p><?=$element['DETAIL_TEXT']?></p>

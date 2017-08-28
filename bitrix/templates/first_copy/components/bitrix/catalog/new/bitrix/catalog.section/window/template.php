@@ -46,7 +46,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
             print 'код '.$arCode['Код'];
             ?>
           </span>
-          <img style="cursor: pointer" class="btn-clipboard" data-clipboard-target="#copy<?=$arItem['ID']?>" src="/img/copy.png">
+          <img style="cursor: pointer" data-tooltip="копировать" class="btn-clipboard" data-clipboard-target="#copy<?=$arItem['ID']?>" src="/img/copy.png">
         </h4>
       </div>
     </div>

@@ -399,8 +399,7 @@
 		</div>
 	</div>
 </footer>
-
-
+<div id="tooltip"></div>
 
 
 
@@ -417,6 +416,27 @@
 	$(function(){
 
 		new Clipboard('.btn-clipboard'); // Не забываем инициализировать библиотеку на нашей кнопке
+
+		$("[data-tooltip]").mousemove(function (eventObject) {
+
+			$data_tooltip = $(this).attr("data-tooltip");
+
+			$("#tooltip").text($data_tooltip)
+				.css({
+					"top" : eventObject.pageY - 35,
+					"left" : eventObject.pageX + 10
+				})
+				.show();
+
+		}).mouseout(function () {
+
+			$("#tooltip").hide()
+				.text("")
+				.css({
+					"top" : 0,
+					"left" : 0
+				});
+		});
 
 		$('#breadcrumbs-two').airStickyBlock({
 			offsetTop: 0,
@@ -456,5 +476,6 @@
 	$_SESSION['history'][] =array("URL"=> $_SERVER['REQUEST_URI'],"TITLE"=>$ttl);
 	}
 	}}?>
+
 </body>
 </html>
