@@ -143,9 +143,9 @@ if($arResult['GROUP_BLOCK'] == 'Y'){
 					$price = $db_res_p->Fetch();
 				?>
 					<div class="box-product-gr">
-						<h5>
+						<h5 id="copy<?=$element['ID']?>">
 							<span><?=$element['PROPERTIES']['SAYT_NAIMENOVANIEDLYASAYTA']['VALUE']?></span>,&nbsp;
-							<div class="articul" id="copy<?=$element['ID']?>">
+							<div class="articul">
 								<?
 								foreach($element['PROPERTIES']['CML2_TRAITS']['DESCRIPTION'] as $k => $code){
 									$arCode[$code] = $element['PROPERTIES']['CML2_TRAITS']['VALUE'][$k];

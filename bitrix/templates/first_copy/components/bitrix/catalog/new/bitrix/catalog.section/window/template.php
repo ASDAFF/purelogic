@@ -36,9 +36,9 @@ foreach ($arResult['ITEMS'] as $arItem) {
       <div class="free-shiping-no">Возможна бесплатная доставка до терминала в<br>Вашем городе. Подробности по контактному тел.</div>
       <div class="nds-enable">НДС ВКЛЮЧЕН</div>
       <div class="head-product-box">
-        <h4>
+        <h4 id="copy<?=$arItem['ID']?>">
           <span><?=$arItem['PROPERTIES']['SAYT_NAIMENOVANIEDLYASAYTA']['VALUE'] ?></span>,
-          <span class="articul" id="copy<?=$arItem['ID']?>">
+          <span class="articul">
             <?
             foreach($arItem['PROPERTIES']['CML2_TRAITS']['DESCRIPTION'] as $k => $code){
               $arCode[$code] = $arItem['PROPERTIES']['CML2_TRAITS']['VALUE'][$k];
