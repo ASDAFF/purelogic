@@ -3,15 +3,12 @@
 <?if(!$_GET["q"]){?></div><?}?></div></section> 
 <?}?>
 <? endif; ?> 
-<? if ($APPLICATION->GetCurPage(false) != '/support/news/'&&CSite::InDir('/support/news/')||$APPLICATION->GetCurPage() == '/vhod/registration.php'){?>
+<? if ($APPLICATION->GetCurPage(false) != '/support/news/'&&CSite::InDir('/support/news/')){?>
 <section class="novosti_slider">
 	<div class="container">
 		<h2>Новости</h2>
-		<?$APPLICATION->IncludeComponent(
-	"bitrix:news.list", 
-	"news_new", 
-	array(
-		"ACTIVE_DATE_FORMAT" => "d.m.Y",
+		<?$APPLICATION->IncludeComponent("bitrix:news.list", "news_new", array(
+	"ACTIVE_DATE_FORMAT" => "d.m.Y",
 		"ADD_SECTIONS_CHAIN" => "N",
 		"AJAX_MODE" => "N",
 		"AJAX_OPTION_ADDITIONAL" => "",
@@ -71,7 +68,10 @@
 		"SORT_ORDER2" => "ASC",
 		"COMPONENT_TEMPLATE" => "news_new"
 	),
-	false
+	false,
+	array(
+	"ACTIVE_COMPONENT" => "N"
+	)
 );?>
 	</div>
 </section>
@@ -380,6 +380,7 @@
 		<div class="row">
 
 			<div class="col-md-8 hidden-sm hidden-xs">
+<br>
 			<p style="color: #fff;margin-top: 5px;">Все цены на товары и услуги указаны с учетом НДС.</p>
 			<p></p>
 			<p></p>
