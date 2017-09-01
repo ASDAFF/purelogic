@@ -146,26 +146,34 @@ $(this).append($("#"+$(this).attr("data-id")));
 						<ul class="personal-one">
 
 								<?$APPLICATION->IncludeComponent(
-									"bitrix:sale.basket.basket.line",
-									"new",
-									array(
-										"PATH_TO_BASKET" => SITE_DIR."cart/",
-										"PATH_TO_PERSONAL" => SITE_DIR."personal/",
-										"SHOW_PERSONAL_LINK" => "N",
-										"SHOW_NUM_PRODUCTS" => "Y",
-										"SHOW_TOTAL_PRICE" => "Y",
-										"SHOW_PRODUCTS" => "N",
-										"POSITION_FIXED" => "N",
-										"SHOW_AUTHOR" => "N",
-										"PATH_TO_REGISTER" => SITE_DIR."login/",
-										"PATH_TO_PROFILE" => SITE_DIR."personal/",
-										"COMPONENT_TEMPLATE" => "new",
-										"PATH_TO_ORDER" => SITE_DIR."personal/order/make/",
-										"SHOW_EMPTY_VALUES" => "Y",
-										"HIDE_ON_BASKET_PAGES" => "N"
-									),
-									false
-								);?>
+	"bitrix:sale.basket.basket.line", 
+	"new", 
+	array(
+		"PATH_TO_BASKET" => SITE_DIR."cart/",
+		"PATH_TO_PERSONAL" => SITE_DIR."personal/",
+		"SHOW_PERSONAL_LINK" => "N",
+		"SHOW_NUM_PRODUCTS" => "Y",
+		"SHOW_TOTAL_PRICE" => "Y",
+		"SHOW_PRODUCTS" => "N",
+		"POSITION_FIXED" => "N",
+		"SHOW_AUTHOR" => "N",
+		"PATH_TO_REGISTER" => SITE_DIR."login/",
+		"PATH_TO_PROFILE" => SITE_DIR."personal/",
+		"COMPONENT_TEMPLATE" => "new",
+		"PATH_TO_ORDER" => SITE_DIR."personal/order/make/",
+		"SHOW_EMPTY_VALUES" => "Y",
+		"HIDE_ON_BASKET_PAGES" => "N",
+		"SHOW_DELAY" => "Y",
+		"SHOW_NOTAVAIL" => "Y",
+		"SHOW_SUBSCRIBE" => "Y",
+		"SHOW_IMAGE" => "Y",
+		"SHOW_PRICE" => "Y",
+		"SHOW_SUMMARY" => "Y",
+		"COMPOSITE_FRAME_MODE" => "A",
+		"COMPOSITE_FRAME_TYPE" => "AUTO"
+	),
+	false
+);?>
 						</ul>
 
 						<div class="personal-line"></div>
