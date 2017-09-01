@@ -6,7 +6,7 @@
 }
 
 .section-block .section-name{
-    background-color: #95B831;
+    background-color: #AECE70;
     padding: 3px 5px;
 }
 
@@ -24,7 +24,7 @@
 .catalog-title{
     position: relative;
     padding: 5px 15px;
-    margin: 10px auto;
+    margin: 10px 15px;
     background: #F1EFF1;
     border-bottom: 4px solid #CAC8CA;
 }
@@ -59,7 +59,7 @@
 }
 
 .section-block a{
-    color: black;
+    color: #333!important;
 
 }
 
@@ -78,8 +78,8 @@
 }
 
 
-.section-block .section-name.open{  color: #ffffff;  }
-.section-block .section-name.open a{  color: #ffffff;  }
+.section-block .section-name.open{  color: #333;  }
+.section-block .section-name.open a{  color: #333;  }
 
 
 
