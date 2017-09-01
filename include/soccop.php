@@ -1,4 +1,6 @@
-<p class="podpis" style="margin-top: 5px;">Горячая линия: 8(800) 555-63-74</p>
+<p class="podpis" style="margin-top: 5px;">
+	Бесплатные звонки по РФ: 8(800) 555-63-74
+</p>
 <ul class="social_icon" style="margin-top: 18px;">
 	<li><a class="vk" href="http://vk.com/purelogic">
 	<div class="vk_icon">
