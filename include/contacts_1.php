@@ -47,10 +47,10 @@
 	<div class="col-md-9 col-sm-9">
 		<h5>Телефоны: </h5>
 		<p>
-			 +7(495) 505-63-74 (Москва)
+			 +7(473) 204-51-56 (Воронеж)
 		</p>
 		<p>
-			 +7(473) 204-51-56 (Воронеж)
+			 +7(495) 505-63-74 (Москва)
 		</p>
 		<p>
 			 +7(812) 425-17-35 (Санкт-Петербург)
@@ -141,7 +141,7 @@ Russia, Voronezh, Leninsky prospect, 160 ( "Gidrogaz" factory building)
 	<div class="col-md-9 col-sm-9">
 		<h5>E-mail: </h5>
 		<p class="mar_bot_20">
- <a href="mailto:order@purelogic.ru">order@purelogic.ru</a> - sales department<br><a href="mailto:info@purelogic.ru">info@purelogic.ru</a> - general issues
+ <a href="mailto:info@purelogic.ru">info@purelogic.ru</a> - general issues
 
 		</p>
 		

@@ -29,9 +29,9 @@ $APPLICATION->SetTitle("Purelogic R&amp;D: комплектующие для с�
 	)
 );?>
 	<?$APPLICATION->IncludeComponent(
-	"bitrix:news.list",
-	"index_left",
-	Array(
+	"bitrix:news.list", 
+	"index_left", 
+	array(
 		"ACTIVE_DATE_FORMAT" => "d.m.Y",
 		"ADD_SECTIONS_CHAIN" => "N",
 		"AJAX_MODE" => "N",
@@ -54,7 +54,12 @@ $APPLICATION->SetTitle("Purelogic R&amp;D: комплектующие для с�
 		"DISPLAY_PICTURE" => "N",
 		"DISPLAY_PREVIEW_TEXT" => "Y",
 		"DISPLAY_TOP_PAGER" => "N",
-		"FIELD_CODE" => array(0=>"NAME",1=>"PREVIEW_PICTURE",2=>"DATE_ACTIVE_FROM",3=>"",),
+		"FIELD_CODE" => array(
+			0 => "NAME",
+			1 => "PREVIEW_PICTURE",
+			2 => "DATE_ACTIVE_FROM",
+			3 => "",
+		),
 		"FILTER_NAME" => "",
 		"HIDE_LINK_WHEN_NO_DETAIL" => "N",
 		"IBLOCK_ID" => "14",
@@ -62,7 +67,7 @@ $APPLICATION->SetTitle("Purelogic R&amp;D: комплектующие для с�
 		"INCLUDE_IBLOCK_INTO_CHAIN" => "N",
 		"INCLUDE_SUBSECTIONS" => "N",
 		"MESSAGE_404" => "",
-		"NEWS_COUNT" => "5",
+		"NEWS_COUNT" => "6",
 		"PAGER_BASE_LINK_ENABLE" => "N",
 		"PAGER_DESC_NUMBERING" => "N",
 		"PAGER_DESC_NUMBERING_CACHE_TIME" => "36000",
@@ -73,7 +78,10 @@ $APPLICATION->SetTitle("Purelogic R&amp;D: комплектующие для с�
 		"PARENT_SECTION" => "",
 		"PARENT_SECTION_CODE" => "",
 		"PREVIEW_TRUNCATE_LEN" => "",
-		"PROPERTY_CODE" => array(0=>"",1=>"",),
+		"PROPERTY_CODE" => array(
+			0 => "",
+			1 => "",
+		),
 		"SET_BROWSER_TITLE" => "N",
 		"SET_LAST_MODIFIED" => "N",
 		"SET_META_DESCRIPTION" => "N",
@@ -85,7 +93,8 @@ $APPLICATION->SetTitle("Purelogic R&amp;D: комплектующие для с�
 		"SORT_BY2" => "ID",
 		"SORT_ORDER1" => "DESC",
 		"SORT_ORDER2" => "ASC"
-	)
+	),
+	false
 );?> <!-- При адаптиве меню --> <?
 		/*
 		$APPLICATION->IncludeComponent(

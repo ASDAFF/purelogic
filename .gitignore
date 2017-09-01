@@ -6,3 +6,4 @@ bitrix/managed_cache/*
 bitrix/cache/*
 bitrix/stack_cache/*
 access/*
+bitrix/html_pages/*
