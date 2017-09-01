@@ -18,16 +18,13 @@ $this->setFrameMode(true);
 
 if(!empty($arResult["SECTIONS"])){
 
-    foreach ($arResult["ITEMS"] as $arItem) {
-        $name_sec[$arItem["IBLOCK_SECTION_ID"]]=$arItem["NAME"]; 
-    }
 
     foreach($arResult["SECTIONS"] as $section):?>
 
     <div class="table_td_wr">
 
         <div class="col-md-6 name_search " data-label="Название">
-            <a href="<?= $section["SECTION_PAGE_URL"]; ?>"><?if($name_sec[$section["ID"]]){echo $name_sec[$section["ID"]];}else{$section["NAME"];} ?></a>
+            <a href="<?= $section["SECTION_PAGE_URL"]; ?>"><?=$section["NAME"];?></a>
         </div>
 
     </div>
