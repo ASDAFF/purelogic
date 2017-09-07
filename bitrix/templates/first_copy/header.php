@@ -362,7 +362,7 @@ $(this).append($("#"+$(this).attr("data-id")));
 					?>
 
 
-<div class="col-md-12 padding_0">
+<div class="col-md-12">
 
 		<div class="col-md-12 padding_0 breadcrumb-height">
 				<?$APPLICATION->IncludeComponent(

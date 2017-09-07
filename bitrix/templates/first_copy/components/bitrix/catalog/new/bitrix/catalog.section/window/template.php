@@ -13,7 +13,7 @@
 $this->setFrameMode(true);
 ?>
 <?if(!empty($arResult['UF_SAYT_PAPKA_INFO_Z'])):?>
-  <div class="col-md-12">
+  <div class="col-md-12 padding_0">
     <div class="title-optim" onclick="window.location.hash='#text-optim'">
       <img src="/img/q.png">
       <span><?=preg_replace("/(\n)/", "<br/>", $arResult['UF_SAYT_PAPKA_INFO_Z']);?></span>
@@ -229,7 +229,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
 
   <? if(!empty($arResult['UF_SAYT_PAPKA_INFO'])): ?>
 
-    <div class="col-md-12" id="text-optim" style="margin-bottom: 20px">
+    <div class="col-md-12 padding_0" id="text-optim" style="margin-bottom: 20px">
       <div class="title-optim">
         <img src="/img/q.png">
         <span><?=$arResult['UF_SAYT_PAPKA_INFO_Z'];?></span>

@@ -180,7 +180,6 @@
 }
 .section-buy{
     display: block;
-    margin-left: 20px;
 }
 .section-buy h1{
     border-bottom: 1px solid black;
@@ -315,4 +314,7 @@
     color: #94b82f;
     text-decoration: underline;
     font-family: 'DINPro Medium';
+}
+.tovar_wr.col-md-6{
+    padding-right: unset;
 }

@@ -11,6 +11,7 @@ $APPLICATION->SetTitle("Сервисная служба - Purelogic R&D");
 
 
 		<div class="row">
+			<div class="col-md-12">
 
 			<? /* $APPLICATION->IncludeComponent(
 				"bitrix:news.list",
@@ -71,7 +72,7 @@ $APPLICATION->SetTitle("Сервисная служба - Purelogic R&D");
 					"SORT_ORDER2" => "ASC"
 				)
 ) */;?>
-			<p><center><img src="/images/about/cervices.png"></center></p>
+			<p><img src="/images/about/cervices.png" style="max-width: 970px"></p>
 			<p>Уважаемые клиенты, Вам доступно 2 способа связи с технической поддержкой.</p>
 <p>1) <strong>Электронная служба <a href="http://help.purelogic.ru">help.purelogic.ru</a></strong><br /><br />Для регистрации запроса перейдите на <a href="http://help.purelogic.ru">help.purelogic.ru</a> и оформите обращение, укажите номер заказа, а так же на какого контрагента был оформлен счет. К обращению необходимо приложить заполненную заявку, бланки заявок доступны для скачивания в таблице ниже.</p>
 <p>Для получения логина и пароля свяжитесь с нами по телефону 8 800 555-63-74 (Звонок по России бесплатный) или электронной почте <a class="order_container" rel="nofollow" href="mailto:info@purelogic.ru" target="_blank">info@purelogic.ru</a></p>
@@ -136,6 +137,10 @@ $APPLICATION->SetTitle("Сервисная служба - Purelogic R&D");
 	),
 	false
 );*/ ?>
+
+
+
+			</div>
 			</div>
 
 
