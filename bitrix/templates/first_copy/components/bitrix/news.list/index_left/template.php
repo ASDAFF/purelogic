@@ -14,7 +14,7 @@ $this->setFrameMode(true);
 ?>
 <div class="news_left">
 	<div class="title_news" onclick="window.open('/support/news/')">Новости</div>
-	<div id="content-news-scroll" class="content-news-scroll" style="height: 356px;">
+	<div id="content-news-scroll" class="content-news-scroll" <?/*style="height: 356px;"*/?>>
 		<? foreach($arResult["ITEMS"] as $arItem):?>
 
 			<div class="scroll-box">
