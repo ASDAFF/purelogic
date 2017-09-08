@@ -188,7 +188,7 @@ $APPLICATION->SetTitle("Как заказать у нас? | Purelogic R&D");
     right: 177px;
 }
 .num-order-block-text{
-    background: #94B730;
+    background: #E7E5E7;
     padding: 10px 25px;
 }
 .num-order-block-text p {
