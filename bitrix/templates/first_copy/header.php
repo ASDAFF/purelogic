@@ -25,7 +25,7 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 $APPLICATION->SetAdditionalCSS("/css/jquery-ui.css");
 $APPLICATION->SetAdditionalCSS("/css/dbpasCarousel-master/jquery.dbpas.carousel.css");
 
-$APPLICATION->SetAdditionalCSS("/libs/font-awesome-4.2.0/css/font-awesome.min.css");
+$APPLICATION->SetAdditionalCSS("/libs/font-awesome-4.7.0/css/font-awesome.min.css");
 $APPLICATION->SetAdditionalCSS("/libs/bootstrap/css/bootstrap-grid.min.css");
 $APPLICATION->SetAdditionalCSS("/libs/popup/magnific-popup.css");
 $APPLICATION->SetAdditionalCSS("/libs/owl-carousel/owl.carousel.css");

@@ -13,40 +13,38 @@
 $this->setFrameMode(true);
 ?>
 <div class="news_left">
-	<div class="title_news" onclick="window.open('/support/news/')">Новости</div>
+	<div class="title_news" <?/*onclick="window.open('/support/news/')"*/?>>Новости</div>
 	<div id="content-news-scroll" class="content-news-scroll" <?/*style="height: 356px;"*/?>>
-		<? foreach($arResult["ITEMS"] as $arItem):?>
-
+		<?foreach($arResult["ITEMS"] as $arItem):?>
 			<div class="scroll-box">
-
-			<div class="media">
-				<!--
-				<div class="media-left">
-					<a href="<?//$arItem['DETAIL_PAGE_URL']?>">
-						<img alt="64x64" class="media-object" src="<?//$arItem['PREVIEW_PICTURE']['SRC'];?>" data-holder-rendered="true">
-					</a>
+				<div class="media">
+					<!--
+					<div class="media-left">
+						<a href="<?//$arItem['DETAIL_PAGE_URL']?>">
+							<img alt="64x64" class="media-object" src="<?//$arItem['PREVIEW_PICTURE']['SRC'];?>" data-holder-rendered="true">
+						</a>
+					</div>
+					-->
+					<div class="media-body">
+							<span class="scroll-text-date"><?=$arItem['DATE_ACTIVE_FROM'];?></span>
+							<p class="scroll-text">
+								<a href="<?=$arItem['DETAIL_PAGE_URL']?>">
+									<?=TruncateText($arItem['NAME'],50);?>
+								</a>
+							</p>
+					</div>
 				</div>
-				-->
-
-				<div class="media-body">
-						<span class="scroll-text-date"><?=$arItem['DATE_ACTIVE_FROM'];?></span>
-						<p class="scroll-text">
-							<a href="<?=$arItem['DETAIL_PAGE_URL']?>">
-								<?=TruncateText($arItem['NAME'],50);?>
-							</a>
-						</p>
-				</div>
-
 			</div>
-
-			</div>
-
-		<? endforeach; ?>
-
+		<?endforeach;?>
+		<div class="bottom" style="text-align: right;padding: 5px 10px;font-size: 12px;">
+			<a href="<?=$arResult['URL']?>"><i class="fa fa-angle-double-right" aria-hidden="true"></i> Все Новости</a>
+		</div>
 	</div>
 
 </div>
 
+<?/* SCRIPT отвечающи за прокрутку новостей в блок. Если нужно включить прокрутку раскомментировать строки */?>
+<?/*
 <script>
 	$(function(){
 		$(".content-news-scroll").mCustomScrollbar({
@@ -103,7 +101,9 @@ $this->setFrameMode(true);
 
 	});
 </script>
-
+*/?>
+<? /*Стили */?>
+<?/*
 <style>
 	.scroll-box{
 		min-height: 71px;
@@ -189,3 +189,4 @@ $this->setFrameMode(true);
 	}
 
 </style>
+*/?>

@@ -76,6 +76,7 @@ $( ".new_left_menu li" ).mouseleave(function() {
         itemShowTimeout = setTimeout(function() {
             delete_yes();
             $(".big-back-formenu").addClass("yes");
+			$("ul.new_left_menu").addClass("yes");
             $("#"+$(that).attr("data-id")).addClass( "yes" );
         }, Timeout);
 
@@ -93,6 +94,7 @@ $( ".new_left_menu li" ).mouseleave(function() {
             itemHideTimeout = setTimeout(function () {
 
                 $("#" + $(that).attr("data-id")).removeClass("yes");
+				$("ul.new_left_menu").removeClass("yes");
                 $(".big-back-formenu").removeClass("yes");
 
             }, Timeout);

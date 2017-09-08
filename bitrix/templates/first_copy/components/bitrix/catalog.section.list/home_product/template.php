@@ -51,7 +51,7 @@ $this->setFrameMode(true);
         </table>
         <? if($section["DETAIL_PICTURE"]):?>
         <div class="baner">
-            <a href="<?=$section['CODE']?>"><img src="<?=CFile::GetPath($section["DETAIL_PICTURE"]);?>"></a>
+            <a href="<?=$section['CODE']?>"><img class="bindex-<?=$section["ID"]?>" src="<?=CFile::GetPath($section["DETAIL_PICTURE"]);?>"></a>
         </div>
         <?endif;?>
     </div>

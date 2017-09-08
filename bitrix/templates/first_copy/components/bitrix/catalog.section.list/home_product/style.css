@@ -55,13 +55,13 @@
     border-right: 1px solid #DADADA;
     padding: 7px 10px;
     margin: 0px;
-    background: #FAFBF5;
+    background: #dadada/*#FAFBF5*/;
 }
 
 
 
 .products-home .product-home{
-    margin: 11px 0px;
+    margin: 10px 0px;
 }
 
 .products-home .product-home .baner{

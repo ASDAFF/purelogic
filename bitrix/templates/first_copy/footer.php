@@ -449,6 +449,11 @@
 			stopBlock: '.stop-left-menu'
 		});
 
+		$('.contacts .social_icon.lf_fix').airStickyBlock({
+			offsetTop: 3,
+			stopBlock: '.stop-left-menu'
+		});
+
 
 	});
 

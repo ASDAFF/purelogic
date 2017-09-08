@@ -58,3 +58,88 @@
     position: relative;
     width: 1000000px;
 }
+/* Стили из tempate.php */
+.scroll-box{
+		min-height: 71px;
+	}
+	.scroll-box > .media{
+		padding: 10px 15px;
+	}
+	.media-body > .scroll-text,
+	.media-body > .scroll-text-date{
+		font-size: 12px;
+		margin: 0px;
+	}
+
+	.media-body > .scroll-text > a{
+		color: black;
+	}
+
+	.media-body > .scroll-text-date{
+		font-style: italic;
+		font-weight: 500;
+	}
+	.media > .media-left{
+		padding-right: 10px;
+		display: table-cell;
+		vertical-align: top;
+	}
+	.media > .media-body{
+		display: table-cell;
+		vertical-align: top;
+	}
+
+	#content-news-scroll .scroll-box:nth-child(2n) {
+		background: #f8f8f8/*#FAFBF5*/;
+	}
+	#content-news-scroll{
+		border-right: 1px solid #DADADA;
+		border-left: 1px solid #DADADA;
+		border-bottom: 1px solid #DADADA;
+	}
+
+	.media-left a {
+		background: #fff;
+		border: 2px solid #DADADA;
+		width: 100px;
+		height: 78px;
+		display: block;
+	}
+
+	.media-left > a > img{
+		height: 100%;
+		width: 100%;
+		object-fit: contain;
+	}
+
+	.scroll-box:hover{
+		background: #AECE70!important;
+	}
+
+	.mCSB_inside > .mCSB_container{
+		margin-right: 0px;
+	}
+	.mCSB_scrollTools{
+		margin: 10px auto;
+	}
+
+	.mCS-3d.mCSB_scrollTools .mCSB_draggerRail, .mCS-3d-dark.mCSB_scrollTools .mCSB_draggerRail{
+		background-color: transparent;
+		box-shadow: none;
+	}
+
+	.news_left .title_news{
+		cursor: pointer;
+		padding: 5px;
+		text-transform: uppercase;
+		text-align: center;
+		font-weight: 400;
+		font-size: 22px;
+		background: #dadada/*#FAFBF5*/;
+		border-bottom: 1px solid #DADADA;
+		border-top: 2px solid #94B830;
+		border-left: 1px solid #DADADA;
+		border-right: 1px solid #DADADA;
+		font-family:'DINPro Medium';
+	}
+

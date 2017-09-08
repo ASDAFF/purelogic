@@ -18,7 +18,7 @@
     overflow: hidden;
     padding: 0px;
     position: absolute;
-    background-color: #f0f0f0;
+    background-color: #f6f6f6/*#f0f0f0*/;
     margin-left: 220px;
 /*    transition: all 0.5s ease; */
 }
@@ -1385,12 +1385,13 @@ header{height:100px;}
     text-align: center;
     font-weight: 400;
     font-size: 22px;
-    background: #FAFBF5;
+    background: #dadada/*#FAFBF5*/;
     border-top: 2px solid #94B830;
     border-bottom: 1px solid #DADADA;
     border-left: 1px solid #DADADA;
     border-right: 1px solid #DADADA;
     margin: 0px;
+	font-family:'DINPro Medium';
 }
 .about_main .green-bg{
     padding: 10px;
